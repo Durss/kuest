@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<labels>
+		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
+		
+		<label code="editWindow-place-title"><![CDATA[Lieu de l'évènement]]></label>
+		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
+		<label code="editWindow-place-kubeTT"><![CDATA[Kube]]></label>
+		<label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
+		<label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
+		<label code="editWindow-place-kubeHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.]]></label>
+		
+		<label code="editWindow-type-title"><![CDATA[Type de l'évènement]]></label>
+		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
+		<label code="editWindow-type-objectTT"><![CDATA[Prise/pose d'objet]]></label>
+		<label code="editWindow-type-take"><![CDATA[Prendre]]></label>
+		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
+		
+		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
+		<label code="editWindow-time-noneTT"><![CDATA[Toujours]]></label>
+		<label code="editWindow-time-calendarTT"><![CDATA[Certains jours précis]]></label>
+		<label code="editWindow-time-periodicTT"><![CDATA[Certaines tranches horaires]]></label>
+		
+		<label code="month1"><![CDATA[Janvier]]></label>
+		<label code="month2"><![CDATA[Février]]></label>
+		<label code="month3"><![CDATA[Mars]]></label>
+		<label code="month4"><![CDATA[Avril]]></label>
+		<label code="month5"><![CDATA[Mai]]></label>
+		<label code="month6"><![CDATA[Juin]]></label>
+		<label code="month7"><![CDATA[Juillet]]></label>
+		<label code="month8"><![CDATA[Août]]></label>
+		<label code="month9"><![CDATA[Septembre]]></label>
+		<label code="month10"><![CDATA[Octobre]]></label>
+		<label code="month11"><![CDATA[Novembre]]></label>
+		<label code="month12"><![CDATA[Décembre]]></label>
+		
+		<label code="day1"><![CDATA[Lun]]></label>
+		<label code="day2"><![CDATA[Mar]]></label>
+		<label code="day3"><![CDATA[Mer]]></label>
+		<label code="day4"><![CDATA[Jeu]]></label>
+		<label code="day5"><![CDATA[Ven]]></label>
+		<label code="day6"><![CDATA[Sam]]></label>
+		<label code="day7"><![CDATA[Dim]]></label>
+	</labels>
+	
+</root>

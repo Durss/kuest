@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<styleSheets>
+		<styleSheet><![CDATA[css/flashstyles.css?v={v_version}]]></styleSheet>
+	</styleSheets>
+	
+	<fonts>
+		<font><![CDATA[swf/fonts/fonts.swf?v={v_version}]]></font>
+	</fonts>
+	
+	<labels>
+		<file><![CDATA[xml/i18n/labels_{v_lang}.xml?v={v_version}]]></file>
+	</labels>
+	
+	<vars>
+		<var code="lang"><![CDATA[fr]]></var>
+		<var code="root"><![CDATA[http://fevermap.org/kuest/]]></var>
+	</vars>
+	
+	<paths>
+	</paths>
+	
+	<dependencies />
+	
+</root>

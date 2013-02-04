@@ -1,0 +1,44 @@
+﻿.debug { font-family:Verdana; font-size:12; color:#CC0000; flash-glow:[1.3,10,ffffff]}
+.error { font-family:Verdana; font-size:12; color:#CC0000; }
+.errorBig { font-family:Verdana; font-weight:bold; font-size:14; color:#cc0000; }
+
+.link { color:#CC0000; text-decoration:underline; }
+.tooltipContent { font-family:Verdana; font-size:10; color:#ffffff; }
+.tooltipContentBig { font-family:Verdana; font-size:17; color:#ffffff; }
+.tooltipContentWarn { font-family:Verdana; font-weight:bold; font-size:10; color:#aa0000; }
+
+.input { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#265367; }
+.inputDefault { font-family:Verdana; font-size:12; font-weight:normal; font-style:italic; color:#265367; }
+
+.button { font-family:Verdana; font-size:12; font-weight:bold; color:#265367; flash-alpha:1; }
+.button_over { font-family:Verdana; font-size:12; font-weight:bold; color:#36748D; }
+.button_down { font-family:Verdana; font-size:12; font-weight:bold; color:#234B5C; }
+.button_disabled { font-family:Verdana; font-size:12; font-weight:bold; color:#234B5C; flash-alpha:.4; }
+
+.comboboxButtonItem { font-family:Verdana; font-size:20; font-weight:bold; color:#265367; flash-alpha:1; }
+.comboboxButtonItem_over { font-family:Verdana; font-size:20; font-weight:bold; color:#36748D; }
+.comboboxButtonItem_down { font-family:Verdana; font-size:20; font-weight:bold; color:#36748D; }
+.comboboxButtonItem_disabled { font-family:Verdana; font-size:20; font-weight:bold; color:#234B5C; flash-alpha:.4; }
+
+.comboboxButtonItemSelected { font-family:Verdana; font-size:20; font-weight:bold; color:#8E2424; flash-alpha:1; }
+.comboboxButtonItemSelected_over { font-family:Verdana; font-size:20; font-weight:bold; color:#A22B2B; }
+.comboboxButtonItemSelected_down { font-family:Verdana; font-size:20; font-weight:bold; color:#792020; }
+.comboboxButtonItemSelected_disabled { font-family:Verdana; font-size:20; font-weight:bold; color:#8E2424; flash-alpha:.4; }
+
+.checkBox { font-family:Verdana; font-size:12; color:#ffffff; }
+.checkBox_selected { font-family:Verdana; font-size:12; color:#ffffff; }
+/*.checkBox_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }*/
+
+.radioButton { font-family:Verdana; font-size:12; color:#ffffff; }
+.radioButton_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }
+
+
+.promptWindowTitle { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }
+.promptWindowContent { font-family:Verdana; font-size:12; color:#ffffff; }
+.promptWindowContentError { font-family:Verdana; font-size:12; color:#cc0000; }
+.promptWindowContentZoneTitle { font-family:Verdana; font-size:14; color:#ffffff; }
+
+.calendarMonth { font-family:Verdana; font-weight:bold; font-size:12; color:#ffffff; text-align:center; flash-charcase:upper; }
+.calendarDay { font-family:Verdana; font-size:12; color:#ffffff; text-align:center; }
+.calendarItem { font-family:Verdana; font-weight:bold; font-size:12; color:#ffffff; }
+.calendarItem-selected { font-family:Verdana; font-weight:bold; font-size:12; color:#265367; }
