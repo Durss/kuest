@@ -1,5 +1,5 @@
 package com.twinoid.kube.quest {
-	import com.twinoid.kube.quest.components.calendar.Calendar;
+	import com.twinoid.kube.quest.views.SideMenuView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -83,8 +83,8 @@ package com.twinoid.kube.quest {
 			addChild(new BackgroundView());
 			addChild(new BoxesView());
 			addChild(new EditBoxView());
+			addChild(new SideMenuView());
 			addChild(new ToolTipView());
-			addChild(new Calendar());
 			
 			var types:Array = [AbstractNurunButton, CssTextField, Input];
 			NurunButtonKeyFocusManager.getInstance().initialize(stage, new KeyFocusGraphics(), types);

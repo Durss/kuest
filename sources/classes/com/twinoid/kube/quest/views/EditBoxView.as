@@ -1,4 +1,10 @@
 package com.twinoid.kube.quest.views {
+	import com.twinoid.kube.quest.vo.KuestEvent;
+	import com.nurun.utils.pos.roundPos;
+	import com.muxxu.kub3dit.graphics.CancelIcon;
+	import com.muxxu.kub3dit.graphics.SubmitIcon;
+	import flash.events.MouseEvent;
+	import com.twinoid.kube.quest.components.buttons.ButtonKube;
 	import com.twinoid.kube.quest.components.form.edit.EditEventTime;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.utils.Closable;
@@ -36,6 +42,9 @@ package com.twinoid.kube.quest.views {
 		private var _type:EditEventType;
 		private var _closed:Boolean;
 		private var _times:EditEventTime;
+		private var _submit:ButtonKube;
+		private var _cancel:ButtonKube;
+		private var _data:KuestEvent;
 		
 		
 		
@@ -47,7 +56,7 @@ package com.twinoid.kube.quest.views {
 		 * Creates an instance of <code>EditBoxView</code>.
 		 */
 		public function EditBoxView() {
-			initialize();
+			addEventListener(Event.ADDED_TO_STAGE, initialize);
 		}
 
 		
@@ -75,7 +84,11 @@ package com.twinoid.kube.quest.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
+			
+			TweenLite.killTweensOf(this);
+			
 			if(model.currentBoxToEdit != null) {
+				_data = model.currentBoxToEdit;
 				if(_closed) {
 					_closed = false;
 					scaleX = scaleY = 1;
@@ -107,15 +120,17 @@ package com.twinoid.kube.quest.views {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize():void {
-			_holder = addChild(new Sprite()) as Sprite;
-			_place = _holder.addChild(new EditEventPlace(_WIDTH)) as EditEventPlace;
-			_type = _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
-			_times = _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
+		private function initialize(event:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, initialize);
+			
+			_holder	= addChild(new Sprite()) as Sprite;
+			_place	= _holder.addChild(new EditEventPlace(_WIDTH)) as EditEventPlace;
+			_type	= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
+			_times	= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
+			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
+			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
 			_window = addChild(new PromptWindow(Label.getLabel("editWindow-title"), _holder)) as PromptWindow;
-			
-			addEventListener(Event.RESIZE, computePositions);
 			
 			_closed = true;
 			visible = false;
@@ -123,6 +138,11 @@ package com.twinoid.kube.quest.views {
 			
 			makeEscapeClosable(this);
 			computePositions();
+			
+			addEventListener(Event.RESIZE, computePositions);
+			_submit.addEventListener(MouseEvent.CLICK, clickButtonHandler);
+			_cancel.addEventListener(MouseEvent.CLICK, clickButtonHandler);
+			stage.addEventListener(MouseEvent.CLICK, clickStageHandler, true, 199999999);
 		}
 		
 		/**
@@ -136,11 +156,44 @@ package com.twinoid.kube.quest.views {
 			len = _holder.numChildren;
 			for(i = 0; i < len; ++i) {
 				item = _holder.getChildAt(i);
+				if(item == _cancel) break;
 				item.y = py;
 				py += item.height + 20;
 			}
 			
+			_cancel.y = _submit.y;
+			_submit.x = _WIDTH * .5 - _submit.width - 10;
+			_cancel.x = _WIDTH * .5 + 10;
+			roundPos(_submit, _cancel);
+			
+			_window.forcedContentHeight = py;
 			_window.updateSizes();
+		}
+		
+		/**
+		 * Called when submit or close button is clicked.
+		 */
+		private function clickButtonHandler(event:MouseEvent):void {
+			if(event.currentTarget == _cancel) close();
+			if(event.currentTarget == _submit) submit();
+		}
+		
+		/**
+		 * Called when stage is clicked to close the window
+		 */
+		private function clickStageHandler(event:MouseEvent):void {
+			if(!contains(event.target as DisplayObject)) {
+				close();
+			}
+		}
+		
+		/**
+		 * Submit the form
+		 */
+		private function submit():void {
+			_place.save( _data );
+			_type.save( _data );
+			_times.save( _data );
 		}
 		
 	}

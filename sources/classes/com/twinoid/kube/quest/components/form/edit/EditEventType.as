@@ -6,6 +6,7 @@ package com.twinoid.kube.quest.components.form.edit {
 	import com.twinoid.kube.quest.components.form.input.TextArea;
 	import com.twinoid.kube.quest.graphics.EventTypeDialogueIcon;
 	import com.twinoid.kube.quest.graphics.EventTypeObjectIcon;
+	import com.twinoid.kube.quest.vo.KuestEvent;
 
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -48,6 +49,12 @@ package com.twinoid.kube.quest.components.form.edit {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Saves the configuration to the value object
+		 */
+		public function save(data:KuestEvent):void {
+			
+		}
 
 
 		

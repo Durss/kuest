@@ -20,6 +20,7 @@ package com.twinoid.kube.quest.components.window {
 		private var _content:DisplayObject;
 		private var _titleTf:CssTextField;
 		private var _width:Number;
+		private var _forcedContentHeight:Number;
 		
 		
 		
@@ -55,6 +56,20 @@ package com.twinoid.kube.quest.components.window {
 		override public function set width(value:Number):void {
 			_width = value;
 			computePositions();
+		}
+		
+		/**
+		 * Gets the forced virtual content height
+		 */
+		public function get forcedContentHeight():Number {
+			return _forcedContentHeight;
+		}
+		
+		/**
+		 * Forces a virtual content's height
+		 */
+		public function set forcedContentHeight(forcedContentHeight:Number):void {
+			_forcedContentHeight = forcedContentHeight;
 		}
 
 
@@ -102,14 +117,16 @@ package com.twinoid.kube.quest.components.window {
 			_titleTf.autoSize = TextFieldAutoSize.LEFT;
 			
 			var w:int = isNaN(_width)? _content.width : _width;
+			var h:int = isNaN(_forcedContentHeight)? _content.height : _forcedContentHeight;
 			
 			_titleTf.width = w;
 			_background.width = _titleTf.width + 15;
-			_background.height = 36 + _content.height;
+			_background.height = 36 + h;
 			_titleTf.x = Math.round((_background.width - _titleTf.width) * .5);
 			_titleTf.y = 3;
 			_content.y = 40;
-			_content.x = 10;//Math.round((_background.width - w) * .5);
+			_content.x = 10;
+			// Math.round((_background.width - w) * .5);
 		}
 		
 	}

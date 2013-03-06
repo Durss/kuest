@@ -67,6 +67,13 @@ package com.twinoid.kube.quest.components.form.input {
 			textfield.tabEnabled = value;
 			alpha = value? 1 : .5;
 		}
+		
+		/**
+		 * Gets the input's value as a number.
+		 */
+		public function get numValue():Number {
+			return parseFloat(text);
+		}
 
 
 

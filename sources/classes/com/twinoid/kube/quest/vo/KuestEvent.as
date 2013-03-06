@@ -14,6 +14,7 @@ package com.twinoid.kube.quest.vo {
 		private var _dependents:Vector.<KuestEvent>;
 		private var _guid:String;
 		private var _boxPos:Point;
+		private var _actionPlace:ActionPlace;
 		
 		
 		
@@ -47,6 +48,18 @@ package com.twinoid.kube.quest.vo {
 		 * Gets the boxe's position
 		 */
 		public function get position():Point { return _boxPos; }
+		
+		/**
+		 * Gets action's place.
+		 * Represents a zone's coordinates or a kube's coordinates.
+		 */
+		public function get actionPlace():ActionPlace { return _actionPlace.clone(); }
+		
+		/**
+		 * Sets action's place.
+		 * Represents a zone's coordinates or a kube's coordinates.
+		 */
+		public function set actionPlace(value:ActionPlace):void { _actionPlace = value; }
 
 
 

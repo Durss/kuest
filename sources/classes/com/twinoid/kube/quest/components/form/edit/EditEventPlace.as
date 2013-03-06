@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.components.form.edit {
+	import com.twinoid.kube.quest.vo.ActionPlace;
+	import com.twinoid.kube.quest.vo.KuestEvent;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
@@ -19,6 +21,11 @@ package com.twinoid.kube.quest.components.form.edit {
 		private var _zone:Sprite;
 		private var _kube:Sprite;
 		private var _width:int;
+		private var _kubeX:InputKube;
+		private var _kubeY:InputKube;
+		private var _kubeZ:InputKube;
+		private var _zoneX:InputKube;
+		private var _zoneY:InputKube;
 		
 		
 		
@@ -45,6 +52,18 @@ package com.twinoid.kube.quest.components.form.edit {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Saves the configuration to the value object
+		 */
+		public function save(data:KuestEvent):void {
+			var isZone:Boolean = selectedIndex == 0;
+			
+			if(isZone) {
+				data.actionPlace = new ActionPlace(_zoneX.numValue, _zoneY.numValue);
+			}else{
+				data.actionPlace = new ActionPlace(_kubeX.numValue, _kubeY.numValue, _kubeZ.numValue);
+			}
+		}
 
 
 		
@@ -71,16 +90,16 @@ package com.twinoid.kube.quest.components.form.edit {
 		private function buildZone():void {
 			_zone = new Sprite();
 			var label:CssTextField = _zone.addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			var inputX:InputKube = addChild(new InputKube("0", true, -99999999, 99999999)) as InputKube;
-			var inputY:InputKube = addChild(new InputKube("0", true, -99999999, 99999999)) as InputKube;
+			_zoneX = addChild(new InputKube("0", true, -99999999, 99999999)) as InputKube;
+			_zoneY = addChild(new InputKube("0", true, -99999999, 99999999)) as InputKube;
 			_zone.addChild(label);
-			_zone.addChild(inputX);
-			_zone.addChild(inputY);
+			_zone.addChild(_zoneX);
+			_zone.addChild(_zoneY);
 			
 			label.text = Label.getLabel("editWindow-place-zone");
 			
-			inputX.width = inputY.width = Math.floor((_width - label.width - 20) * .5);
-			PosUtils.hPlaceNext(10, label, inputX, inputY);
+			_zoneX.width = _zoneY.width = Math.floor((_width - label.width - 20) * .5);
+			PosUtils.hPlaceNext(10, label, _zoneX, _zoneY);
 		}
 
 		/**
@@ -90,21 +109,21 @@ package com.twinoid.kube.quest.components.form.edit {
 			_kube = new Sprite();
 			var help:CssTextField = _kube.addChild(new CssTextField("promptWindowContent")) as CssTextField;
 			var label:CssTextField = _kube.addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			var inputX:InputKube = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
-			var inputY:InputKube = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
-			var inputZ:InputKube = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
+			_kubeX = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
+			_kubeY = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
+			_kubeZ = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
 			_kube.addChild(label);
-			_kube.addChild(inputX);
-			_kube.addChild(inputY);
-			_kube.addChild(inputZ);
+			_kube.addChild(_kubeX);
+			_kube.addChild(_kubeY);
+			_kube.addChild(_kubeZ);
 			
 			help.text = Label.getLabel("editWindow-place-kubeHelp");
 			label.text = Label.getLabel("editWindow-place-kube");
 			
 			help.width = _width;
-			label.y = inputX.y = inputY.y = inputZ.y = Math.round(help.height) + 5;
-			inputX.width = inputY.width = inputZ.width = Math.floor((_width - label.width - 30) / 3);
-			PosUtils.hPlaceNext(10, label, inputX, inputY, inputZ);
+			label.y = _kubeX.y = _kubeY.y = _kubeZ.y = Math.round(help.height) + 5;
+			_kubeX.width = _kubeY.width = _kubeZ.width = Math.floor((_width - label.width - 30) / 3);
+			PosUtils.hPlaceNext(10, label, _kubeX, _kubeY, _kubeZ);
 		}
 		
 	}
