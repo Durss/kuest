@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.components.form.edit {
+	import flash.events.MouseEvent;
+	import com.nurun.components.button.GraphicButton;
 	import gs.TweenLite;
 
 	import com.nurun.components.button.IconAlign;
@@ -34,14 +36,17 @@ package com.twinoid.kube.quest.components.form.edit {
 
 		private var _title:CssTextField;
 		private var _titleStr:String;
-		private var _buttons:Vector.<ToggleButtonKube>;
-		private var _contents:Vector.<Sprite>;
+		protected var _buttons:Vector.<ToggleButtonKube>;
+		protected var _contents:Vector.<Sprite>;
 		private var _contentsHolder:Sprite;
 		private var _buttonsHolder:Sprite;
 		private var _contentsMask:Shape;
 		private var _width:int;
-		private var _group:FormComponentGroup;
+		protected var _group:FormComponentGroup;
 		private var _itemToIndex:Dictionary;
+		private var _openCloseBt:GraphicButton;
+		private var _closed:Boolean;
+		private var _currentContent:Sprite;
 
 		
 		
@@ -67,6 +72,11 @@ package com.twinoid.kube.quest.components.form.edit {
 		 * ***************** */
 		override public function get width():Number { return _width; }
 		override public function get height():Number { return _contentsMask.y + _contentsMask.height; }
+		
+		/**
+		 * Gets the currently selected button index
+		 */
+		public function get selectedIndex():Number { return _itemToIndex[ _group.selectedItem ]; }
 
 
 
@@ -110,7 +120,7 @@ package com.twinoid.kube.quest.components.form.edit {
 				Sprite(_contents[i]).x = i * _width;
 			}
 			
-			_contentsMask.height = _contents[0].height;
+			if(_currentContent == null) _currentContent = content;
 		}
 
 
@@ -129,16 +139,22 @@ package com.twinoid.kube.quest.components.form.edit {
 			_itemToIndex = new Dictionary();
 			
 			_title = addChild(new CssTextField("promptWindowContentZoneTitle")) as CssTextField;
-			_buttonsHolder = addChild(new Sprite()) as Sprite;
+			_openCloseBt = addChild(new GraphicButton(createRect())) as GraphicButton;
 			_contentsHolder = addChild(new Sprite()) as Sprite;
+			_buttonsHolder = addChild(new Sprite()) as Sprite;
 			_contentsMask = addChild(createRect(0xffff0000, _width, 100)) as Shape;
 			
+			_closed = true;
 			_title.text = _titleStr;
 			_title.background = true;
 			_title.backgroundColor = 0x8BC9E2;
+			_openCloseBt.buttonMode = true;
 			
+			_contentsMask.height = 0;
 			_contentsHolder.mask = _contentsMask;
 			
+			_openCloseBt.addEventListener(MouseEvent.CLICK, openCloseHandler);
+			_buttonsHolder.addEventListener(MouseEvent.CLICK, changeSelectionHandler);
 			_group.addEventListener(FormComponentGroupEvent.CHANGE, changeSelectionHandler);
 			
 			computePositions();
@@ -150,17 +166,29 @@ package com.twinoid.kube.quest.components.form.edit {
 		protected function computePositions():void {
 			_title.width = _width;
 			_contentsHolder.y = _contentsMask.y = Math.round(_title.height) + 5;
+			
+			_openCloseBt.width = _width;
+			_openCloseBt.height = _title.height;
+		}
+		
+		/**
+		 * Toggles the open state of the tab.
+		 */
+		private function openCloseHandler(event:MouseEvent):void {
+			_closed = !_closed;
+			var e:Event = new Event(Event.RESIZE, true);
+			TweenLite.killTweensOf(_contentsMask);
+			TweenLite.to(_contentsMask, .25, {height:_closed? 0 : _currentContent.height, onUpdate:dispatchEvent, onUpdateParams:[e]});
 		}
 		
 		/**
 		 * Called when a new item is selected
 		 */
-		protected function changeSelectionHandler(event:FormComponentGroupEvent):void {
-			//Add all the content back to the stage
-			for(var i:int = 0; i < _contents.length; ++i) _contentsHolder.addChild(_contents[i]);
-			
-			var index:int = _itemToIndex[_group.selectedItem];
-			_contents[index].mouseEnabled = _contents[index].mouseChildren = true;
+		protected function changeSelectionHandler(event:Event):void {
+			_closed = false;
+			var index:int = selectedIndex;
+			_currentContent = _contents[index];
+			_contentsHolder.addChild(_contents[index]);
 			var e:Event = new Event(Event.RESIZE, true);
 			
 			TweenLite.killTweensOf(_contentsMask);
@@ -177,7 +205,7 @@ package com.twinoid.kube.quest.components.form.edit {
 		 */
 		private function removeInvisibleItems(indexToKeep:int):void {
 			for(var i:int = 0; i < _contents.length; ++i) {
-				if(i != indexToKeep) _contentsHolder.removeChild(_contents[i]);
+				if(i != indexToKeep && _contentsHolder.contains(_contents[i])) _contentsHolder.removeChild(_contents[i]);
 			}
 		}
 		

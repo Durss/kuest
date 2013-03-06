@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<label code="menu-chars"><![CDATA[Bibliothèque de personnages]]></label>
+		
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
+		<label code="editWindow-submit"><![CDATA[Valider]]></label>
+		<label code="editWindow-cancel"><![CDATA[Annuler]]></label>
 		
 		<label code="editWindow-place-title"><![CDATA[Lieu de l'évènement]]></label>
 		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
@@ -19,7 +23,11 @@
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
 		<label code="editWindow-time-noneTT"><![CDATA[Toujours]]></label>
 		<label code="editWindow-time-calendarTT"><![CDATA[Certains jours précis]]></label>
-		<label code="editWindow-time-periodicTT"><![CDATA[Certaines tranches horaires]]></label>
+		<label code="editWindow-time-periodicTT"><![CDATA[Certain tranches horaires]]></label>
+		<label code="editWindow-time-hourIntervalStart"><![CDATA[Heure de début : ]]></label>
+		<label code="editWindow-time-hourIntervalEnd"><![CDATA[Heure de fin : ]]></label>
+		<label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
+		<label code="editWindow-time-hourInterval-miutesLabel"><![CDATA[m]]></label>
 		
 		<label code="month1"><![CDATA[Janvier]]></label>
 		<label code="month2"><![CDATA[Février]]></label>

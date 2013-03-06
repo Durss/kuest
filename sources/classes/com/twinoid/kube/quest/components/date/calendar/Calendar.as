@@ -1,4 +1,4 @@
-package com.twinoid.kube.quest.components.calendar {
+package com.twinoid.kube.quest.components.date.calendar {
 	import com.nurun.utils.date.DateUtils;
 	import flash.events.MouseEvent;
 	import com.nurun.utils.draw.createRect;
