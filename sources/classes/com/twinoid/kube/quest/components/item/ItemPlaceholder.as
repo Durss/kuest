@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.components.item {
+	import flash.display.MovieClip;
+	import flash.display.DisplayObject;
+	import com.twinoid.kube.quest.graphics.AddBigIcon;
 	import com.twinoid.kube.quest.vo.IItemData;
 	import com.twinoid.kube.quest.events.ItemSelectorEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
@@ -28,15 +31,16 @@ package com.twinoid.kube.quest.components.item {
 	 */
 	public class ItemPlaceholder extends Sprite implements Disposable {
 		
-		private const WIDTH:int = 140;
-		private const HEIGHT:int = 140;
+		private const WIDTH:int = 100;
+		private const HEIGHT:int = 100;
 		
 		private var _browseMode:Boolean;
 		private var _selectMode:Boolean;
 		private var _frame:Shape;
 		private var _img:ImageResizer;
-		private var _icon:BrowseIcon;
+		private var _icon:DisplayObject;
 		private var _browseCmd:BrowseForFileCmd;
+		private var _selectType:String;
 		
 		
 		
@@ -47,7 +51,8 @@ package com.twinoid.kube.quest.components.item {
 		 * Creates an instance of <code>ItemPlaceholder</code>.
 		 */
 
-		public function ItemPlaceholder(browseMode:Boolean = false, selectMode:Boolean = false) {
+		public function ItemPlaceholder(browseMode:Boolean = false, selectMode:Boolean = false, selectType:String = ItemSelectorEvent.ITEM_TYPE_CHAR) {
+			_selectType = selectType;
 			_selectMode = selectMode;
 			_browseMode = browseMode;
 			initialize();
@@ -79,7 +84,13 @@ package com.twinoid.kube.quest.components.item {
 		 * Sets the image.
 		 */
 		public function set image(value:BitmapData):void {
+			if(value == null) {
+				_img.visible = false;
+				return;
+			}
+			_img.visible = true;
 			_img.setBitmapData(value);
+			if(_icon != null && contains(_icon)) removeChild(_icon); 
 		}
 
 
@@ -127,12 +138,16 @@ package com.twinoid.kube.quest.components.item {
 				_icon.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 				buttonMode = true;
 				addEventListener(MouseEvent.CLICK, clickHandler);
-			
 				computePositions();
 			}
 			
 			if(_selectMode) {
+				_icon = addChild(new AddBigIcon()) as AddBigIcon;
+				MovieClip(_icon).stop();
+				_icon.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
+				buttonMode = true;
 				addEventListener(MouseEvent.CLICK, clickHandler);
+				computePositions();
 			}
 			
 			_img = addChild(new ImageResizer()) as ImageResizer;
@@ -145,7 +160,7 @@ package com.twinoid.kube.quest.components.item {
 		 */
 		private function clickHandler(event:MouseEvent):void {
 			if(_selectMode){
-				ViewLocator.getInstance().dispatchToViews(new ItemSelectorEvent(ItemSelectorEvent.SELECT_ITEM, ItemSelectorEvent.ITEM_TYPE_CHAR, selectCallback));
+				ViewLocator.getInstance().dispatchToViews(new ItemSelectorEvent(ItemSelectorEvent.SELECT_ITEM, _selectType, selectCallback));
 			}else{
 				_browseCmd.execute();
 			}
@@ -155,15 +170,16 @@ package com.twinoid.kube.quest.components.item {
 		 * Called when an image's loading completes
 		 */
 		private function loadImageCompleteHandler(event:CommandEvent):void {
+			if(contains(_icon)) removeChild(_icon);
 			_img.setBitmapData(event.data as BitmapData);
 			dispatchEvent(new Event(Event.CHANGE));
 		}
-
+		
+		//TODO
 		private function selectCallback(data:IItemData):void {
 			_img.setBitmapData(data.image);
 		}
 
-		
 		/**
 		 * Resizes and replaces the elements.
 		 */

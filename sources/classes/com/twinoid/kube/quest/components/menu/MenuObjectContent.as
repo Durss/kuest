@@ -1,15 +1,20 @@
 package com.twinoid.kube.quest.components.menu {
-	import com.twinoid.kube.quest.controler.FrontControler;
-	import com.twinoid.kube.quest.vo.ObjectItemData;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.components.menu.obj.ObjectItem;
+	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.graphics.AddBigIcon;
+	import com.twinoid.kube.quest.vo.ObjectItemData;
+
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	/**
 	 * 
@@ -17,6 +22,9 @@ package com.twinoid.kube.quest.components.menu {
 	 * @date 10 févr. 2013;
 	 */
 	public class MenuObjectContent extends AbstractMenuContent {
+		
+		[Embed(source="../../../../../../../assets/spritesheet_objs.png")]
+		private var _sheetBmp:Class;
 		
 		private var _addItem:GraphicButtonKube;
 		private var _items:Vector.<ObjectItem>;
@@ -60,9 +68,9 @@ package com.twinoid.kube.quest.components.menu {
 			super.initialize(event);
 			
 			_addItem = _holder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
-			
 			_items = new Vector.<ObjectItem>();
-			addItem();
+			
+			createDefaultObjects();
 			_label.text = Label.getLabel("menu-objects");
 			_addItem.width = _items[0].width;
 			_addItem.height = _items[0].height;
@@ -72,14 +80,38 @@ package com.twinoid.kube.quest.components.menu {
 		}
 		
 		/**
+		 * Creates the default faces
+		 */
+		private function createDefaultObjects():void {
+			var names:Array = ["Cerpe", "Arrosoir", "Canne à pèche", "Coffre", "Binette", "Graines", "Clef", "Bijou", "Argent"];
+			var bmp:Bitmap = new _sheetBmp() as Bitmap;
+			var src:BitmapData = bmp.bitmapData;
+			var i:int, len:int, bmd:BitmapData, rect:Rectangle, pt:Point;
+			len = names.length;
+			rect = new Rectangle(0, 0, 100, 100);
+			pt = new Point();
+			for(i = 0; i < len; ++i) {
+				rect.x = i * 100;
+				bmd = new BitmapData(100, 100, true, 0);
+				bmd.copyPixels(src, rect, pt);
+				bmd.lock();
+				var item:ObjectItem = addItem();
+				item.image = bmd;
+				item.name = names[i];
+			}
+			refreshObjectListOnModel();
+		}
+		
+		/**
 		 * Adds an item to the list.
 		 */
-		private function addItem():void {
+		private function addItem():ObjectItem {
 			var item:ObjectItem = new ObjectItem();
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
 			item.addEventListener(FormComponentEvent.SUBMIT, submitItemHandler);
 			_holder.addChild(item);
 			_items.push( item );
+			return item;
 		}
 		
 		/**
@@ -114,11 +146,11 @@ package com.twinoid.kube.quest.components.menu {
 		 * Resizes and replaces the elements.
 		 */
 		override protected function computePositions(event:Event = null):void {
-			super.computePositions(event);
-			
 			var items:Array = VectorUtils.toArray(_items);
 			items.push(_addItem);
 			PosUtils.hDistribute(items, _width, 5, 20, true);
+			
+			super.computePositions(event);
 		}
 		
 		/**

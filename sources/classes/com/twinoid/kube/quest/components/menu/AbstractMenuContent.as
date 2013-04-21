@@ -68,17 +68,21 @@ package com.twinoid.kube.quest.components.menu {
 			_scrollpane.autoHideScrollers = true;
 			
 			stage.addEventListener(Event.RESIZE, computePositions);
+			addEventListener(Event.ADDED_TO_STAGE, computePositions);
 		}
 		
 		/**
 		 * Resizes and replaces the elements.
 		 */
 		 protected function computePositions(event:Event = null):void {
+			if(stage == null) return;
+			
 			_label.width = _width;
 			
 			_scrollpane.y = _label.height;
 			_scrollpane.width = _width;
 			_scrollpane.height = stage.stageHeight - _scrollpane.y;
+			_scrollpane.validate();
 		}
 		
 	}

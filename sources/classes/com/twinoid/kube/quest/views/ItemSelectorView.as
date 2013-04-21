@@ -1,4 +1,8 @@
 package com.twinoid.kube.quest.views {
+	import com.nurun.components.scroll.events.ScrollerEvent;
+	import com.twinoid.kube.quest.vo.EmptyItemData;
+	import flash.geom.Rectangle;
+	import com.nurun.utils.touch.SwipeManager;
 	import com.twinoid.kube.quest.utils.makeEscapeClosable;
 	import com.twinoid.kube.quest.utils.Closable;
 	import com.nurun.utils.pos.PosUtils;
@@ -39,6 +43,7 @@ package com.twinoid.kube.quest.views {
 		private var _objectList:Vector.<ObjectItemData>;
 		private var _engine:TileEngine2DSwipeWrapper;
 		private var _closed:Boolean;
+		private var _swiper:SwipeManager;
 		
 		
 		
@@ -69,6 +74,7 @@ package com.twinoid.kube.quest.views {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		
 		/**
 		 * Called on model's update
 		 */
@@ -96,19 +102,46 @@ package com.twinoid.kube.quest.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			alpha = 0;
 			visible = false;
+			_closed = true;
+			
 			_disableLayer = addChild(new Sprite()) as Sprite;
-			_engine = new TileEngine2DSwipeWrapper(SelectorItem, (SelectorItem.WIDTH+5) * 5, SelectorItem.HEIGHT * 5, SelectorItem.WIDTH, SelectorItem.HEIGHT);
+			_engine = new TileEngine2DSwipeWrapper(SelectorItem, (SelectorItem.WIDTH+5) * 5, (SelectorItem.HEIGHT+5) * 3, SelectorItem.WIDTH, SelectorItem.HEIGHT);
 			_scrollpane = new ScrollPane(_engine, new ScrollbarKube());
 			_window = addChild(new PromptWindow("", _scrollpane)) as PromptWindow;
+			_swiper = new SwipeManager(_engine, new Rectangle());
 			
-			_engine.lockX = true;
+//			_scrollpane.autoHideScrollers = true;
+			
+			_engine.addLine([]);//Without that, no rendering of items
+//			_engine.lockX = true;
 			_engine.lockToLimits = true;
+			_swiper.roundYValue = SelectorItem.HEIGHT + 5;
+			_scrollpane.width = _engine.visibleWidth + 15;//15 = scrollbar's width
+			_scrollpane.height = _engine.visibleHeight;
+			_engine.validate();
 			makeEscapeClosable(this, 1);
 			
 			ViewLocator.getInstance().addEventListener(ItemSelectorEvent.SELECT_ITEM, openSelectorHandler);
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler, true, 2);
+			_scrollpane.vScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);
+			_scrollpane.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler);
+		}
+		
+		/**
+		 * Scroll problem patch.
+		 * By default the scrollpane doesn't works very well with TileEngine2DSwipeWrapper.
+		 * The SwipeManager moves the content constantly to an "end" position.
+		 * If that end position isn't updated when the mouse wheel is used over
+		 * the scrollpane, the scrollpane will scroll the content, but right
+		 * after, the SwipeManager will move it back to its previous "end"
+		 * position.
+		 * Here we force the SwipeManager to synch with the content's position.
+		 */
+		private function scrollHandler(event:Event):void {
+			_swiper.syncWithContent();
 		}
 		
 		/**
@@ -117,6 +150,14 @@ package com.twinoid.kube.quest.views {
 		private function clickHandler(event:MouseEvent):void {
 			if(event.target == _disableLayer) close();
 			event.stopPropagation();
+			
+			if (event.target is SelectorItem && !_swiper.hasMovedMoreThan()) {
+				var item:SelectorItem = event.target as SelectorItem;
+				if( !(item.data is EmptyItemData) && item.data != null ) {
+					_callback(item.data);
+					close();
+				}
+			}
 		}
 		
 		/**
@@ -149,17 +190,22 @@ package com.twinoid.kube.quest.views {
 		 * Populates the list.
 		 */
 		private function populate(list:Array):void {
-			var i:int, len:int, data:IItemData, line:Array;
-			len = list.length;
-			var cols:int = _engine.hVisibleItems;
-			for(i = 0; i < len; ++i) {
+			_engine.clear();
+			
+			var i:int, len:int, data:IItemData, line:Array, empty:EmptyItemData;
+			var cols:int = 5;//_engine.hVisibleItems;
+			len = Math.max(Math.ceil(list.length/cols) * cols, 15);
+			empty = new EmptyItemData();
+			
+			for(i = 0; i <= len; ++i) {
 				if(i%cols == 0) {
 					if(i > 0) _engine.addLine(line);
 					line = [];
 				}
-				data = list[i] as IItemData;
+				data = (i > list.length-1)? empty : list[i] as IItemData;
 				line.push(data);
 			}
+			computePositions();
 		}
 		
 		/**
@@ -175,11 +221,18 @@ package com.twinoid.kube.quest.views {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
+			_disableLayer.graphics.clear();
 			_disableLayer.graphics.beginFill(0, .35);
 			_disableLayer.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 			_disableLayer.graphics.endFill();
 			
-			_window.width = _engine.visibleWidth + 60;
+			_swiper.viewport.width = _engine.visibleWidth;
+			_swiper.viewport.height = _engine.visibleHeight;
+			_swiper.start(true, true);
+			_scrollpane.update();
+			
+			_window.forcedContentHeight = _scrollpane.height + 20;
+			_window.updateSizes();
 			PosUtils.centerInStage(_window);
 		}
 	}

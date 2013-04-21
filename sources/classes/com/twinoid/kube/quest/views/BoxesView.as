@@ -34,6 +34,7 @@ package com.twinoid.kube.quest.views {
 	 * @date 3 févr. 2013;
 	 */
 	public class BoxesView extends AbstractView {
+		
 		private var _dataToBox:Dictionary;
 		private var _timeout:uint;
 		private var _tempBox:Sprite;
@@ -117,6 +118,7 @@ package com.twinoid.kube.quest.views {
 			b.x = -b.width * .5;
 			b.y = -b.height * .5;
 			_tempBox.addChild(b);
+			_tempBox.mouseChildren = false;
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -130,17 +132,22 @@ package com.twinoid.kube.quest.views {
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			addEventListener(MouseEvent.DOUBLE_CLICK, doubleClick);
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
 			
+			doubleClickEnabled = true;
 			_scrollOffset = new Point(stage.stageWidth * .5, stage.stageHeight * .5);
 			
 			_boxesHolder.x = _endX = _scrollOffset.x;
 			_boxesHolder.y = _endY = _scrollOffset.y;
 			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
-			_boxesHolder.graphics.beginFill(0xff0000);
-			_boxesHolder.graphics.drawCircle(0, 0, 20);
 			computePositions();
+		}
+
+		private function doubleClick(event:MouseEvent):void {
+			if(event.target != this) return;
+			addTempItem();
 		}
 		
 		/**
@@ -246,6 +253,7 @@ package com.twinoid.kube.quest.views {
 		 * Start timer to add a new item
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
+			if (event.target == _tempBox) return;
 			if(event.target != this) {
 				if (_boxesHolder.contains(event.target as DisplayObject)) {
 					//Go up until we find a box (or the stage..)
@@ -314,7 +322,7 @@ package com.twinoid.kube.quest.views {
 			
 			//Clean stuffs that need to be
 			clearTimeout(_timeout);
-			if(_draggedItem != null) _draggedItem.stopDrag();
+			if (_draggedItem != null) _draggedItem.stopDrag();
 			_draggedItem = null;
 		}
 		

@@ -27,6 +27,8 @@ package com.twinoid.kube.quest.utils {
 		}
 		
 		function keyUpHandler(event:KeyboardEvent):void {
+			if(event.keyCode != Keyboard.ESCAPE) return;
+			
 			var f:InteractiveObject = DisplayObjectContainer(target).stage.focus;
 			if(f == null) {
 				if(!target.isClosed && DisplayObject(target).hitTestPoint(DisplayObject(target).stage.mouseX, DisplayObject(target).stage.mouseY, true)) {
@@ -37,7 +39,7 @@ package com.twinoid.kube.quest.utils {
 				return;
 			}
 			
-			if(!target.isClosed && event.keyCode == Keyboard.ESCAPE && (DisplayObjectContainer(target).contains(f) || target == f)) {
+			if(!target.isClosed && (DisplayObjectContainer(target).contains(f) || target == f)) {
 				event.stopPropagation();
 				event.stopImmediatePropagation();
 				target.close();

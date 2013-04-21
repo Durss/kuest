@@ -1,9 +1,11 @@
 package com.twinoid.kube.quest.components.form.input {
 	import com.muxxu.kub3dit.graphics.InputSkin;
-	import flash.text.TextFieldType;
-	import com.twinoid.kube.quest.components.form.ScrollbarKube;
-	import com.nurun.components.scroll.scrollable.ScrollableTextField;
 	import com.nurun.components.scroll.ScrollPane;
+	import com.nurun.components.scroll.scrollable.ScrollableTextField;
+	import com.nurun.utils.string.StringUtils;
+	import com.twinoid.kube.quest.components.form.ScrollbarKube;
+	import flash.events.FocusEvent;
+	import flash.text.TextFieldType;
 	
 	/**
 	 * 
@@ -13,6 +15,7 @@ package com.twinoid.kube.quest.components.form.input {
 	public class TextArea extends ScrollPane {
 		private var _back:InputSkin;
 		private var _tf:ScrollableTextField;
+		private var _defaultLabel:String;
 		
 		
 		
@@ -23,13 +26,20 @@ package com.twinoid.kube.quest.components.form.input {
 		/**
 		 * Creates an instance of <code>TextArea</code>.
 		 */
-		public function TextArea(css:String = "input") {
+
+		public function TextArea(css:String = "input", defaultLabel:String = "") {
+			_defaultLabel = defaultLabel;
 			_tf = new ScrollableTextField("", css);
 			_tf.type = TextFieldType.INPUT;
 			_tf.autoWrap = false;
+			_tf.text = _defaultLabel;
 			_back = addChild(new InputSkin()) as InputSkin;
 			super(_tf, new ScrollbarKube(), new ScrollbarKube());
 			autoHideScrollers = true;
+			if(_defaultLabel.length > 0) {
+				addEventListener(FocusEvent.FOCUS_IN, focusHandler);
+				addEventListener(FocusEvent.FOCUS_OUT, focusHandler);
+			}
 		}
 
 		
@@ -37,6 +47,10 @@ package com.twinoid.kube.quest.components.form.input {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		public function get text():String {
+			if(_tf.text == _defaultLabel) return "";
+			return _tf.text;
+		}
 
 
 
@@ -55,6 +69,16 @@ package com.twinoid.kube.quest.components.form.input {
 		/* ******* *
 		 * PRIVATE *
 		 * ******* */
+		/**
+		 * Called when textfield receives or looses the focus.
+		 */
+		private function focusHandler(event:FocusEvent):void {
+			if(event.type == FocusEvent.FOCUS_IN) {
+				if(_tf.text == _defaultLabel) _tf.text = "";
+			}else{
+				if(StringUtils.trim(_tf.text).length == 0) _tf.text = _defaultLabel;
+			}
+		}
 		
 	}
 }

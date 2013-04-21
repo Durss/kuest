@@ -27,7 +27,9 @@
 		
 		<label code="editWindow-type-title"><![CDATA[Type de l'évènement]]></label>
 		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
+		<label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
 		<label code="editWindow-type-objectTT"><![CDATA[Prise/pose d'objet]]></label>
+		<label code="editWindow-type-objectDefault"><![CDATA[Description de l'objet...]]></label>
 		<label code="editWindow-type-take"><![CDATA[Prendre]]></label>
 		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
 		
