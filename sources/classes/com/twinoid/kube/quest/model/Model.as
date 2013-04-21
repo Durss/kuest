@@ -66,6 +66,13 @@ package com.twinoid.kube.quest.model {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Stats the application
+		 */
+		public function start():void {
+			update();
+		}
+		
 		public function setText(txt:String):void {
 			_sender.send("_lc_mx_kube_", "_setText", txt, "");
 		}

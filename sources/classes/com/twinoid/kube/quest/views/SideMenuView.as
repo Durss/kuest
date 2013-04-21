@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.views {
+	import flash.display.Shape;
 	import gs.TweenLite;
 
 	import com.nurun.components.form.FormComponentGroup;
@@ -25,10 +26,20 @@ package com.twinoid.kube.quest.views {
 	/**
 	 * Displays the side menu with file, objects and characters menus.
 	 * 
+	 * File menu displays classic save/load possibilities.
+	 * 
+	 * Objects menu provides a way to define the objects that can be grabbed
+	 * and put during the quest.
+	 * 
+	 * Characters menu provides a way to create characters that will talk to us
+	 * during the quest.
+	 * 
+	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;
 	 */
 	public class SideMenuView extends AbstractView {
+		
 		private var _buttons:Vector.<SideMenuButton>;
 		private var _contents:Vector.<Sprite>;
 		private var _width:int;
@@ -37,6 +48,7 @@ package com.twinoid.kube.quest.views {
 		private var _buttonToIndex:Dictionary;
 		private var _opened:Boolean;
 		private var _selectedIndex:int;
+		private var _back:Shape;
 		
 		
 		
@@ -97,6 +109,7 @@ package com.twinoid.kube.quest.views {
 			
 			_width = 305;
 			_group = new FormComponentGroup();
+			_back = addChild(new Shape()) as Shape;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
 			
 			var icons:Array = [new MenuFileIconGraphic(), new MenuObjectIconGraphic(), new MenuCharactersIconGraphic()];
@@ -117,8 +130,11 @@ package com.twinoid.kube.quest.views {
 				_buttonToIndex[ _buttons[i] ] = i;
 			}
 			
+			_back.filters = [new DropShadowFilter(4, 0, 0, .35, 5, 0, 1, 2)];
+			
 			_opened = true;
 			_buttons[0].selected = true;
+			addChild(_contents[0]);
 			
 			computePositions();
 			stage.addEventListener(Event.RESIZE, computePositions);
@@ -129,10 +145,10 @@ package com.twinoid.kube.quest.views {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			graphics.clear();
-			graphics.beginFill(0x47A9D1, 1);
-			graphics.drawRect(0, 0, _width, stage.stageHeight);
-			graphics.endFill();
+			_back.graphics.clear();
+			_back.graphics.beginFill(0x47A9D1, 1);
+			_back.graphics.drawRect(0, 0, _width, stage.stageHeight);
+			_back.graphics.endFill();
 			
 			PosUtils.vPlaceNext(1, VectorUtils.toArray(_buttons));
 			
@@ -145,6 +161,8 @@ package com.twinoid.kube.quest.views {
 		 * Called when a component is clicked.
 		 */
 		private function clickHandler(event:MouseEvent):void {
+			if(_buttonToIndex[ event.target ] == null) return;
+			
 			var index:int = _buttonToIndex[ event.target ];
 			if(index == _selectedIndex) {
 				if(_opened) close(); else open();

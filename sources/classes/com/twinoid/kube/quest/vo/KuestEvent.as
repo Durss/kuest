@@ -4,6 +4,7 @@ package com.twinoid.kube.quest.vo {
 	import com.nurun.core.lang.io.Serializable;
 	
 	/**
+	 * Contains the data about an event.
 	 * 
 	 * @author Francois
 	 * @date 3 févr. 2013;
@@ -15,6 +16,7 @@ package com.twinoid.kube.quest.vo {
 		private var _guid:String;
 		private var _boxPos:Point;
 		private var _actionPlace:ActionPlace;
+		private var _actionDate:ActionDate;
 		
 		
 		
@@ -24,9 +26,9 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Creates an instance of <code>KuestEvent</code>.
 		 */
-		public function KuestEvent(px:int, py:int) {
+		public function KuestEvent(boxX:int, boxY:int) {
 			initialize();
-			_boxPos = new Point(px, py);
+			_boxPos = new Point(boxX, boxY);
 		}
 
 		
@@ -47,7 +49,7 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Gets the boxe's position
 		 */
-		public function get position():Point { return _boxPos; }
+		public function get boxPosition():Point { return _boxPos; }
 		
 		/**
 		 * Gets action's place.
@@ -60,6 +62,30 @@ package com.twinoid.kube.quest.vo {
 		 * Represents a zone's coordinates or a kube's coordinates.
 		 */
 		public function set actionPlace(value:ActionPlace):void { _actionPlace = value; }
+		
+		/**
+		 * Gets the action's date.
+		 * Can contain a time interval, some specific dates, etc..
+		 */
+		public function get actionDate():ActionDate { return _actionDate; }
+
+		/**
+		 * Sets the action's date.
+		 * Can contain a time interval, some specific dates, etc..
+		 */
+		public function set actionDate(actionDate:ActionDate):void { _actionDate = actionDate; }
+		
+		/**
+		 * Gets the boxe's label
+		 */
+		public function get label():String {
+			return "";
+		}
+		
+		/**
+		 * Gets if the value object is empty
+		 */
+		public function get isEmpty():Boolean { return _actionDate == null || _actionPlace == null; }
 
 
 
@@ -81,7 +107,7 @@ package com.twinoid.kube.quest.vo {
 				len = _dependents.length;
 				for(i = 0; i < len; ++i) {
 					//Already a direct dependent!
-					if(_dependents[i].guid == entry.guid) return false;
+					if(_dependents[i] == entry) return false;
 				}
 				
 				_dependents.push( entry );
@@ -92,16 +118,25 @@ package com.twinoid.kube.quest.vo {
 		}
 		
 		/**
-		 * Removes one off the event's dependents.
+		 * Removes one of the event's dependents.
 		 */
 		public function removeDependent(entry:KuestEvent):void {
-			
+			var i:int, len:int;
+			len = _dependents.length;
+			for(i = 0; i < len; ++i) {
+				if(_dependents[i] == entry) {
+					_dependents.splice(i, 1);
+					i --;
+					len --;
+				}
+			}
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
 		public function deserialize(input:String):void {
+			
 		}
 
 		/**
@@ -141,7 +176,7 @@ package com.twinoid.kube.quest.vo {
 				for(i = 0; i < len; ++i) {
 					//If the dependent entry is the current one, stop everything
 					//we found what we were searching for.
-					if(entry.dependents[i].guid == _guid) return false;
+					if(entry.dependents[i] == this) return false;
 					
 					//The entry doesn't match, check if its children match.
 					if(deepDependencyCheck(entry.dependents[i]) === false) {

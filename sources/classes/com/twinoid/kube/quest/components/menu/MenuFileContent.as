@@ -1,14 +1,15 @@
 package com.twinoid.kube.quest.components.menu {
-	import flash.display.Sprite;
+	import com.nurun.structure.environnement.label.Label;
+
+	import flash.events.Event;
 	
 	/**
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;
 	 */
-	public class MenuFileContent extends Sprite {
+	public class MenuFileContent extends AbstractMenuContent {
 		
-		private var _width:int;
 		
 		
 		
@@ -20,8 +21,7 @@ package com.twinoid.kube.quest.components.menu {
 		 */
 
 		public function MenuFileContent(width:int) {
-			_width = width;
-			initialize();
+			super(width);
 		}
 
 		
@@ -45,7 +45,10 @@ package com.twinoid.kube.quest.components.menu {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize():void {
+		override protected function initialize(event:Event):void {
+			super.initialize(event);
+			
+			_label.text = Label.getLabel("menu-file");
 			
 			computePositions();
 		}
@@ -53,7 +56,8 @@ package com.twinoid.kube.quest.components.menu {
 		/**
 		 * Resizes and replaces the elements.
 		 */
-		private function computePositions():void {
+		override protected function computePositions(event:Event = null):void {
+			super.computePositions(event);
 			
 		}
 		

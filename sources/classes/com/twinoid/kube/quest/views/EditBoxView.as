@@ -139,7 +139,8 @@ package com.twinoid.kube.quest.views {
 			makeEscapeClosable(this);
 			computePositions();
 			
-			addEventListener(Event.RESIZE, computePositions);
+			stage.addEventListener(Event.RESIZE, computePositions);
+			_holder.addEventListener(Event.RESIZE, computePositions);
 			_submit.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_cancel.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			stage.addEventListener(MouseEvent.CLICK, clickStageHandler, true, 199999999);
@@ -149,7 +150,9 @@ package com.twinoid.kube.quest.views {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			if(event != null) event.stopPropagation();
+			//Prevent from firing a RESIZE event to the stage that would be
+			//captured on every views listening for it.
+			if(event != null && event.currentTarget == _holder) event.stopPropagation();
 			
 			_window.width = _WIDTH;
 			var i:int, len:int, item:DisplayObject, py:int;
@@ -168,6 +171,7 @@ package com.twinoid.kube.quest.views {
 			
 			_window.forcedContentHeight = py;
 			_window.updateSizes();
+			PosUtils.centerInStage(this);
 		}
 		
 		/**

@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.views {
-	import flash.geom.Matrix;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.twinoid.kube.quest.model.Model;
@@ -7,6 +6,7 @@ package com.twinoid.kube.quest.views {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 
 	/**
 	 * Draws the application's background
@@ -48,6 +48,17 @@ package com.twinoid.kube.quest.views {
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
 			model;
+		}
+		
+		/**
+		 * Scrolls the background
+		 */
+		public function scrollTo(x:int, y:int):void {
+			if(_matrix.tx == x && _matrix.ty == y) return;
+			
+			_matrix.tx = x;
+			_matrix.ty = y;
+			computePositions();
 		}
 
 

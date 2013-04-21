@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.form.edit {
+	import com.twinoid.kube.quest.vo.ActionDate;
 	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.components.date.DaySelector;
 	import com.twinoid.kube.quest.components.date.TimeInterval;
@@ -12,6 +13,7 @@ package com.twinoid.kube.quest.components.form.edit {
 
 	
 	/**
+	 * DIsplays the time management panel.
 	 * 
 	 * @author Francois
 	 * @date 4 févr. 2013;
@@ -51,10 +53,21 @@ package com.twinoid.kube.quest.components.form.edit {
 		 * PUBLIC *
 		 * ****** */
 		/**
-		 * Saves the configuration to the value object
+		 * Saves the configurations to the value object
 		 */
 		public function save(data:KuestEvent):void {
-			
+			switch(selectedIndex){
+				case 0:
+					data.actionDate = new ActionDate();
+					break;
+				case 1:
+					data.actionDate = new ActionDate(_calendar.selectedDates);
+					break;
+				case 2:
+					data.actionDate = new ActionDate(null, _periodicDaySel.days, _periodicTimeInterval.startTime, _periodicTimeInterval.endTime);
+					break;
+				default:
+			}
 		}
 
 

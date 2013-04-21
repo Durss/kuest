@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
-		<label code="menu-chars"><![CDATA[Bibliothèque de personnages]]></label>
+		<label code="box-empty"><![CDATA[---]]></label>
+		
+		<label code="menu-file"><![CDATA[Menu principal]]></label>
+		
+		<label code="menu-objects"><![CDATA[Objets]]></label>
+		<label code="menu-objects-add-name"><![CDATA[Nom de l'objet...]]></label>
+		
+		<label code="menu-chars"><![CDATA[Personnages]]></label>
+		<label code="menu-chars-add-name"><![CDATA[Nom du personnage...]]></label>
 		
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
 		<label code="editWindow-submit"><![CDATA[Valider]]></label>
@@ -23,7 +31,7 @@
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
 		<label code="editWindow-time-noneTT"><![CDATA[Toujours]]></label>
 		<label code="editWindow-time-calendarTT"><![CDATA[Certains jours précis]]></label>
-		<label code="editWindow-time-periodicTT"><![CDATA[Certain tranches horaires]]></label>
+		<label code="editWindow-time-periodicTT"><![CDATA[Certaines tranches horaires]]></label>
 		<label code="editWindow-time-hourIntervalStart"><![CDATA[Heure de début : ]]></label>
 		<label code="editWindow-time-hourIntervalEnd"><![CDATA[Heure de fin : ]]></label>
 		<label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
