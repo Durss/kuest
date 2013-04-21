@@ -34,15 +34,16 @@ package com.twinoid.kube.quest.components.form.edit {
 	 */
 	public class AbstractEditZone extends Sprite {
 
-		private var _title:CssTextField;
-		private var _titleStr:String;
 		protected var _buttons:Vector.<ToggleButtonKube>;
 		protected var _contents:Vector.<Sprite>;
+		protected var _group:FormComponentGroup;
+		
+		private var _title:CssTextField;
+		private var _titleStr:String;
 		private var _contentsHolder:Sprite;
 		private var _buttonsHolder:Sprite;
 		private var _contentsMask:Shape;
 		private var _width:int;
-		protected var _group:FormComponentGroup;
 		private var _itemToIndex:Dictionary;
 		private var _openCloseBt:GraphicButton;
 		private var _closed:Boolean;

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.date {
+	import flash.events.MouseEvent;
 	import com.nurun.components.button.visitors.applyDefaultFrameVisitorNoTween;
 	import com.nurun.components.form.ToggleButton;
 	import com.nurun.structure.environnement.label.Label;
@@ -7,6 +8,7 @@ package com.twinoid.kube.quest.components.date {
 	import com.twinoid.kube.quest.graphics.DaySelectorItemSkinGraphic;
 
 	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	/**
 	 * 
@@ -16,6 +18,8 @@ package com.twinoid.kube.quest.components.date {
 	public class DaySelector extends Sprite {
 		private var _width:Number;
 		private var _items:Vector.<ToggleButton>;
+		private var _pressed:Boolean;
+		private var _pressedItem:ToggleButton;
 		
 		
 		
@@ -42,6 +46,21 @@ package com.twinoid.kube.quest.components.date {
 		override public function set width(value:Number):void {
 			_width = value;
 			computePositions();
+		}
+		
+		/**
+		 * Gets the selected days.
+		 */
+		public function get days():Array {
+			var i:int, len:int, ret:Array;
+			len = _items.length;
+			ret = [];
+			for(i = 0; i < len; ++i) {
+				if(_items[i].selected) {
+					ret.push(i);
+				}
+			}
+			return ret;
 		}
 
 
@@ -73,19 +92,62 @@ package com.twinoid.kube.quest.components.date {
 				item.textBoundsMode = false;
 				item.validate();
 				item.height = Math.round(item.height);
+				item.addEventListener(MouseEvent.ROLL_OVER, overItemHandler);
 				
 				_items[i] = item;
 			}
 			
+			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			
 			computePositions();
+		}
+		
+		/**
+		 * Called when the stage is available.
+		 */
+		private function addedToStageHandler(event:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 		}
 		
 		/**
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
+			if(_items == null) return;
+			
 			PosUtils.hDistribute(_items, _width*2, 10);
 		}
+		
+		/**
+		 * Called when an item is rolled over to select it if we're in drag select mode.
+		 */
+		private function overItemHandler(event:MouseEvent):void {
+			if(_pressed) {
+				if(_pressedItem !=  null) {
+					_pressedItem.selected = !_pressedItem.selected;
+					_pressedItem = null;
+				}
+				ToggleButton(event.currentTarget).selected = !ToggleButton(event.currentTarget).selected;
+			}
+		}
+		
+		/**
+		 * Called when a component is pressed.
+		 * Start the drag selection.
+		 */
+		private function mouseDownHandler(event:MouseEvent):void {
+			if(event.target is ToggleButton) {
+				_pressed = true;
+				_pressedItem = event.target as ToggleButton;
+			}
+		}
+		
+		/**
+		 * Called when the mouse is released to stop the drag selection
+		 */
+		private function mouseUpHandler(event:MouseEvent):void { _pressed = false; }
 		
 	}
 }

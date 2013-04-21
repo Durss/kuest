@@ -40,6 +40,19 @@ package com.twinoid.kube.quest.components.date {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the start time in seconds
+		 */
+		public function get startTime():int {
+			return _startMinutes.numValue + _startHour.numValue * 60;
+		}
+		
+		/**
+		 * Gets the end time in seconds
+		 */
+		public function get endTime():int {
+			return _endMinutes.numValue + _endHour.numValue * 60;
+		}
 
 
 

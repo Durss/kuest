@@ -1,7 +1,13 @@
 package com.twinoid.kube.quest.components.menu {
 	import com.nurun.structure.environnement.label.Label;
-	import com.nurun.components.text.CssTextField;
-	import flash.display.Sprite;
+	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.utils.vector.VectorUtils;
+	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
+	import com.twinoid.kube.quest.components.menu.char.CharItem;
+	import com.twinoid.kube.quest.graphics.AddBigIcon;
+
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	/**
 	 * Displays the characters creator.
@@ -9,10 +15,10 @@ package com.twinoid.kube.quest.components.menu {
 	 * @author Francois
 	 * @date 10 févr. 2013;
 	 */
-	public class MenuCharsContent extends Sprite {
+	public class MenuCharsContent extends AbstractMenuContent {
 		
-		private var _width:int;
-		private var _label:CssTextField;
+		private var _items:Vector.<CharItem>;
+		private var _addItem:GraphicButtonKube;
 		
 		
 		
@@ -24,8 +30,7 @@ package com.twinoid.kube.quest.components.menu {
 		 * Creates an instance of <code>MenuCharsContent</code>.
 		 */
 		public function MenuCharsContent(width:int) {
-			_width = width;
-			initialize();
+			super(width);
 		}
 
 		
@@ -49,19 +54,68 @@ package com.twinoid.kube.quest.components.menu {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize():void {
-			_label = addChild(new CssTextField("menu-label")) as CssTextField;
+		override protected function initialize(event:Event):void {
+			super.initialize(event);
 			
+			_addItem = _holder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
+			
+			_items = new Vector.<CharItem>();
+			addItem();
 			_label.text = Label.getLabel("menu-chars");
+			_addItem.width = _items[0].width;
+			_addItem.height = _items[0].height;
 			
+			_addItem.addEventListener(MouseEvent.CLICK, clickAddHandler);
+			computePositions();
+		}
+		
+		/**
+		 * Adds an item to the list.
+		 */
+		private function addItem():void {
+			var item:CharItem = new CharItem();
+			item.addEventListener(Event.CLOSE, deleteItemHandler);
+			_holder.addChild(item);
+			_items.push( item );
+		}
+		
+		/**
+		 * Called when an item is delete
+		 */
+		private function deleteItemHandler(event:Event):void {
+			var item:CharItem = event.currentTarget as CharItem;
+			item.dispose();
+			item.removeEventListener(Event.CLOSE, deleteItemHandler);
+			_holder.removeChild(item);
+			var i:int, len:int;
+			len = _items.length;
+			for(i = 0; i < len; ++i) {
+				if(_items[i] == item) {
+					_items.splice(i, 1);
+					i--;
+					len --;
+				}
+			}
 			computePositions();
 		}
 		
 		/**
 		 * Resizes and replaces the elements.
 		 */
-		private function computePositions():void {
+		override protected function computePositions(event:Event = null):void {
+			super.computePositions(event);
 			
+			var items:Array = VectorUtils.toArray(_items);
+			items.push(_addItem);
+			PosUtils.hDistribute(items, _width, 5, 20, true);
+		}
+		
+		/**
+		 * Adds an item to the list.
+		 */
+		private function clickAddHandler(event:MouseEvent):void {
+			addItem();
+			computePositions();
 		}
 		
 	}

@@ -36,6 +36,7 @@ package com.twinoid.kube.quest {
 	[SWF(width="1280", height="900", backgroundColor="0xFFFFFF", frameRate="31")]
 	[Frame(factoryClass="com.twinoid.kube.quest.ApplicationLoader")]
 	public class Application extends MovieClip {
+		private var _model:Model;
 		
 		
 		
@@ -47,7 +48,7 @@ package com.twinoid.kube.quest {
 		 * Creates an instance of <code>Application</code>.
 		 */
 		public function Application() {
-			addEventListener(Event.ADDED_TO_STAGE, initialize);
+			initialize();
 		}
 
 		
@@ -71,14 +72,13 @@ package com.twinoid.kube.quest {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize(event:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, initialize);
+		private function initialize():void {
 			TweenPlugin.activate([TransformAroundCenterPlugin, RemoveChildPlugin, VisiblePlugin]);
 			
-			var model:Model = new Model();
+			_model = new Model();
 			
-			ViewLocator.getInstance().initialise(model);
-			FrontControler.getInstance().initialize(model);
+			ViewLocator.getInstance().initialise(_model);
+			FrontControler.getInstance().initialize(_model);
 			
 			addChild(new BackgroundView());
 			addChild(new BoxesView());
@@ -86,10 +86,19 @@ package com.twinoid.kube.quest {
 			addChild(new SideMenuView());
 			addChild(new ToolTipView());
 			
+			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+		}
+		
+		/**
+		 * Called when stage is available
+		 */
+		private function addedToStageHandler(event:Event):void {
 			var types:Array = [AbstractNurunButton, CssTextField, Input];
 			NurunButtonKeyFocusManager.getInstance().initialize(stage, new KeyFocusGraphics(), types);
 			addChild(NurunButtonKeyFocusManager.getInstance());
 			stage.stageFocusRect = false;
+			
+			_model.start();
 		}
 		
 	}
