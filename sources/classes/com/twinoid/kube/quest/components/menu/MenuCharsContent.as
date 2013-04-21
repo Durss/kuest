@@ -1,4 +1,8 @@
 package com.twinoid.kube.quest.components.menu {
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
@@ -19,6 +23,9 @@ package com.twinoid.kube.quest.components.menu {
 	 * @date 10 févr. 2013;
 	 */
 	public class MenuCharsContent extends AbstractMenuContent {
+		
+		[Embed(source="../../../../../../../assets/spritesheet_chars.png")]
+		private var _sheetBmp:Class;
 		
 		private var _items:Vector.<CharItem>;
 		private var _addItem:GraphicButtonKube;
@@ -61,9 +68,9 @@ package com.twinoid.kube.quest.components.menu {
 			super.initialize(event);
 			
 			_addItem = _holder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
-			
 			_items = new Vector.<CharItem>();
-			addItem();
+			
+			createDefaultFaces();
 			_label.text = Label.getLabel("menu-chars");
 			_addItem.width = _items[0].width;
 			_addItem.height = _items[0].height;
@@ -73,14 +80,39 @@ package com.twinoid.kube.quest.components.menu {
 		}
 		
 		/**
+		 * Creates the default faces
+		 */
+		private function createDefaultFaces():void {
+//			var names:Array = ["Sanka", "Troas", "Jay", "Paolo", "Alfred", "Jack", "Jean", "Don Vito", "Albert", "Winifred", "Robin", "Mike", "Le pêcheur", "Matt", "Ivanhoé", "Elvis"];
+			var names:Array = ["Florence", "Carole", "Louis", "Richard", "Rahema", "Le pêcheur", "Vincent", "Florent", "Arthur", "Win", "Adana", "Marion"];
+			var bmp:Bitmap = new _sheetBmp() as Bitmap;
+			var src:BitmapData = bmp.bitmapData;
+			var i:int, len:int, bmd:BitmapData, rect:Rectangle, pt:Point;
+			len = names.length;
+			rect = new Rectangle(0, 0, 100, 100);
+			pt = new Point();
+			for(i = 0; i < len; ++i) {
+				rect.x = i * 100;
+				bmd = new BitmapData(100, 100, true, 0);
+				bmd.copyPixels(src, rect, pt);
+				bmd.lock();
+				var item:CharItem = addItem();
+				item.image = bmd;
+				item.name = names[i];
+			}
+			refreshObjectListOnModel();
+		}
+		
+		/**
 		 * Adds an item to the list.
 		 */
-		private function addItem():void {
+		private function addItem():CharItem {
 			var item:CharItem = new CharItem();
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
 			item.addEventListener(FormComponentEvent.SUBMIT, submitItemHandler);
 			_holder.addChild(item);
 			_items.push( item );
+			return item;
 		}
 		
 		/**
@@ -115,11 +147,11 @@ package com.twinoid.kube.quest.components.menu {
 		 * Resizes and replaces the elements.
 		 */
 		override protected function computePositions(event:Event = null):void {
-			super.computePositions(event);
-			
 			var items:Array = VectorUtils.toArray(_items);
 			items.push(_addItem);
 			PosUtils.hDistribute(items, _width, 5, 20, true);
+			
+			super.computePositions(event);
 		}
 		
 		/**

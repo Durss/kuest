@@ -4,9 +4,11 @@ package com.twinoid.kube.quest.components.form.edit {
 	import com.twinoid.kube.quest.components.form.RadioButtonKube;
 	import com.twinoid.kube.quest.components.form.input.TextArea;
 	import com.twinoid.kube.quest.components.item.ItemPlaceholder;
+	import com.twinoid.kube.quest.events.ItemSelectorEvent;
 	import com.twinoid.kube.quest.graphics.EventTypeDialogueIcon;
 	import com.twinoid.kube.quest.graphics.EventTypeObjectIcon;
 	import com.twinoid.kube.quest.vo.KuestEvent;
+
 	import flash.display.Sprite;
 
 	
@@ -82,11 +84,11 @@ package com.twinoid.kube.quest.components.form.edit {
 			
 			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true);
 			_dialogue.addChild(photoZone);
-			var textArea:TextArea = new TextArea("promptWindowContent");
+			var textArea:TextArea = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-dialogueDefault"));
 			_dialogue.addChild( textArea );
 			
 			textArea.width = _width - photoZone.width - 5;
-			textArea.height = 80;
+			textArea.height = photoZone.height;
 			textArea.x = photoZone.width + 5;
 		}
 
@@ -97,9 +99,9 @@ package com.twinoid.kube.quest.components.form.edit {
 			_object = new Sprite();
 			_objectGroup = new FormComponentGroup();
 			
-			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true);
+			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true, ItemSelectorEvent.ITEM_TYPE_OBJECT);
 			_object.addChild(photoZone);
-			var textArea:TextArea = new TextArea("promptWindowContent");
+			var textArea:TextArea = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-objectDefault"));
 			_object.addChild( textArea );
 			var cbTake:RadioButtonKube = new RadioButtonKube(Label.getLabel("editWindow-type-take"), _objectGroup);
 			var cbPut:RadioButtonKube = new RadioButtonKube(Label.getLabel("editWindow-type-put"), _objectGroup);
@@ -107,7 +109,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			_object.addChild(cbPut);
 			
 			textArea.width = _width - photoZone.width - 5;
-			textArea.height = 80 - Math.round(cbTake.height + 5);
+			textArea.height = photoZone.height - Math.round(cbTake.height + 5);
 			textArea.x = photoZone.width + 5;
 			textArea.validate();
 			

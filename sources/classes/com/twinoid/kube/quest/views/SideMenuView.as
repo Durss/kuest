@@ -40,9 +40,10 @@ package com.twinoid.kube.quest.views {
 	 */
 	public class SideMenuView extends AbstractView {
 		
+		private var _width:int = 335;
+		
 		private var _buttons:Vector.<SideMenuButton>;
 		private var _contents:Vector.<Sprite>;
-		private var _width:int;
 		private var _buttonsHolder:Sprite;
 		private var _group:FormComponentGroup;
 		private var _buttonToIndex:Dictionary;
@@ -107,7 +108,6 @@ package com.twinoid.kube.quest.views {
 		private function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_width = 305;
 			_group = new FormComponentGroup();
 			_back = addChild(new Shape()) as Shape;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
@@ -128,6 +128,15 @@ package com.twinoid.kube.quest.views {
 				_contents[i] = contents[i];
 				_group.add( _buttons[i] );
 				_buttonToIndex[ _buttons[i] ] = i;
+				
+				//These two stupid lines  provides a way to initialize the
+				//contents directly. Which is necessary as Chars and Objects
+				//menus creates the default items at their initialize.
+				//Without that the ItemSelectorView would be empty.
+				//Yup, I actually should initialize those default items in
+				//the model not in the views...
+				addChild(_contents[i]);
+				removeChild(_contents[i]);
 			}
 			
 			_back.filters = [new DropShadowFilter(4, 0, 0, .35, 5, 0, 1, 2)];

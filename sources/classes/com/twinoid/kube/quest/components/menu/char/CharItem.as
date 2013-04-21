@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.menu.char {
+	import flash.display.BitmapData;
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.core.lang.Disposable;
@@ -66,6 +67,22 @@ package com.twinoid.kube.quest.components.menu.char {
 		 * Gets the item's data
 		 */
 		public function get data():CharItemData { return _data; }
+		
+		/**
+		 * Sets the image.
+		 */
+		public function set image(value:BitmapData):void {
+			_data.image = value;
+			_image.image = value;
+		}
+		
+		/**
+		 * Sets the image.
+		 */
+		override public function set name(value:String):void {
+			_data.name = value;
+			_nameInput.text = value;
+		}
 
 
 

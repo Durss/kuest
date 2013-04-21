@@ -200,7 +200,6 @@ package com.twinoid.kube.quest.views {
 		 * Called when stage is clicked to close the window
 		 */
 		private function clickStageHandler(event:MouseEvent):void {
-			trace("EditBoxView.clickStageHandler(event)");
 			if(!_closed && !contains(event.target as DisplayObject)) {
 				close();
 			}

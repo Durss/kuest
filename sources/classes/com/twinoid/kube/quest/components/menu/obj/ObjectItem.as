@@ -1,6 +1,4 @@
 package com.twinoid.kube.quest.components.menu.obj {
-	import com.twinoid.kube.quest.vo.ObjectItemData;
-	import flash.events.FocusEvent;
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.core.lang.Disposable;
@@ -10,9 +8,12 @@ package com.twinoid.kube.quest.components.menu.obj {
 	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.components.form.input.InputKube;
 	import com.twinoid.kube.quest.components.item.ItemPlaceholder;
+	import com.twinoid.kube.quest.vo.ObjectItemData;
 
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	
 	//Fired when the item is full filled
@@ -65,6 +66,22 @@ package com.twinoid.kube.quest.components.menu.obj {
 		 * Gets the item's data
 		 */
 		public function get data():ObjectItemData { return _data; }
+		
+		/**
+		 * Sets the image.
+		 */
+		public function set image(value:BitmapData):void {
+			_data.image = value;
+			_image.image = value;
+		}
+		
+		/**
+		 * Sets the image.
+		 */
+		override public function set name(value:String):void {
+			_data.name = value;
+			_nameInput.text = value;
+		}
 
 
 
