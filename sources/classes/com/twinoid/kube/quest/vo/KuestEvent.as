@@ -93,12 +93,13 @@ package com.twinoid.kube.quest.vo {
 		 * PUBLIC *
 		 * ****** */
 		/**
-		 * Links an event to the current one.
-		 * When the current event is done, it will unlock the specified one that
-		 * will became accessible.
-		 * Until then, the event won't exist for the end user.
+		 * Adds a node on which this event will depend.<br>
+		 * <br>
+		 * This event will be unlocked only we the dependent event is done.<br>
+		 * Until then, this event won't exist for the end user.<br>
+		 * A dependent node is actually a <strong>PARENT</strong> node.
 		 * 
-		 * @return if the dependency has been made or not. The dependency cannot be built in case of looped dependencies.
+		 * @return if the dependency has been made or not. The dependency cannot be built in case of looped or self dependency.
 		 */
 		public function addDependent(entry:KuestEvent):Boolean {
 			if(deepDependencyCheck(entry)) {
@@ -164,28 +165,33 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Checks deeply for a looped dependency.
 		 * Goes through all the dependencies tree to check if the current
-		 * items is found. If so, the dependency cannot be built 'cause it
+		 * node is found. If so, the dependency cannot be built because it
 		 * wouldn't make sens.
 		 * 
 		 * @return	if the dependency is authorized (true) or not (false).
 		 */
 		private function deepDependencyCheck(entry:KuestEvent):Boolean {
-			while(entry.dependents.length > 0) {
-				var i:int, len:int;
-				len = entry.dependents.length;
-				for(i = 0; i < len; ++i) {
-					//If the dependent entry is the current one, stop everything
-					//we found what we were searching for.
-					if(entry.dependents[i] == this) return false;
-					
-					//The entry doesn't match, check if its children match.
+			var i:int, len:int;
+			len = entry.dependents.length;
+			//Go through all parents
+			for(i = 0; i < len; ++i) {
+				//If the dependent entry is the current one, stop everything
+				//we found what we were searching for.
+				if(entry.dependents[i] == this) return false;
+				
+				try {
+					//The entry doesn't match, check if its parents match.
 					if(deepDependencyCheck(entry.dependents[i]) === false) {
 						return false;
 					}
+				}catch(error:Error) {
+					//Stack overflow. 256 recursion level reached :(.
+					//Let's just consider there are no looped reference :/
+					return true;
 				}
 			}
 			
-			//No problem found or no children, tell that everything's OK.
+			//No problem found or no parent, tell that everything's OK.
 			return true;
 		}
 		

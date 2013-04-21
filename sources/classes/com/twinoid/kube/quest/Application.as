@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest {
+	import com.twinoid.kube.quest.views.ItemSelectorView;
 	import com.twinoid.kube.quest.views.SideMenuView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
@@ -84,6 +85,7 @@ package com.twinoid.kube.quest {
 			addChild(new BoxesView());
 			addChild(new EditBoxView());
 			addChild(new SideMenuView());
+			addChild(new ItemSelectorView());
 			addChild(new ToolTipView());
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);

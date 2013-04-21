@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<label code="selector-char"><![CDATA[Choisir un personnage]]></label>
+		<label code="selector-object"><![CDATA[Choisir un objet]]></label>
+		
 		<label code="box-empty"><![CDATA[---]]></label>
 		
 		<label code="menu-file"><![CDATA[Menu principal]]></label>

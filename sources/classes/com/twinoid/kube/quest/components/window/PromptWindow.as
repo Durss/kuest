@@ -59,18 +59,19 @@ package com.twinoid.kube.quest.components.window {
 		}
 		
 		/**
+		 * Gets the height of the component.
+		 */
+		override public function get height():Number { return isNaN(_forcedContentHeight)? super.height : _forcedContentHeight; }
+		
+		/**
 		 * Gets the forced virtual content height
 		 */
-		public function get forcedContentHeight():Number {
-			return _forcedContentHeight;
-		}
+		public function get forcedContentHeight():Number { return _forcedContentHeight; }
 		
 		/**
 		 * Forces a virtual content's height
 		 */
-		public function set forcedContentHeight(forcedContentHeight:Number):void {
-			_forcedContentHeight = forcedContentHeight;
-		}
+		public function set forcedContentHeight(forcedContentHeight:Number):void { _forcedContentHeight = forcedContentHeight; }
 
 
 

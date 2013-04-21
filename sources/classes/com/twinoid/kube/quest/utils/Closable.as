@@ -14,5 +14,10 @@ package com.twinoid.kube.quest.utils {
 		 */
 		function close():void;
 		
+		/**
+		 * Gets if the component is closed
+		 */
+		function get isClosed():Boolean;
+		
 	}
 }

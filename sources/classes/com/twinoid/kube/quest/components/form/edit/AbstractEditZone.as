@@ -48,6 +48,7 @@ package com.twinoid.kube.quest.components.form.edit {
 		private var _openCloseBt:GraphicButton;
 		private var _closed:Boolean;
 		private var _currentContent:Sprite;
+		private var _renderingHolder:Sprite;
 
 		
 		
@@ -111,6 +112,12 @@ package com.twinoid.kube.quest.components.form.edit {
 			_buttonsHolder.addChild(bt);
 			if(_contents.length == 1) {
 				_contentsHolder.addChild(content);
+			}else{
+				//This weird invisible size less container simply provides a
+				//way to force the rendering of the contents before they are
+				//displayed. This prevent from lags for complexe contents
+				//when they are displayed the first time. Like the calendar.
+				_renderingHolder.addChild(content);
 			}
 			
 			_buttons[0].x = _width - bt.width * _buttons.length;
@@ -139,6 +146,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			_group = new FormComponentGroup();
 			_itemToIndex = new Dictionary();
 			
+			_renderingHolder = addChild(new Sprite()) as Sprite;
 			_title = addChild(new CssTextField("promptWindowContentZoneTitle")) as CssTextField;
 			_openCloseBt = addChild(new GraphicButton(createRect())) as GraphicButton;
 			_contentsHolder = addChild(new Sprite()) as Sprite;
@@ -151,6 +159,8 @@ package com.twinoid.kube.quest.components.form.edit {
 			_title.backgroundColor = 0x8BC9E2;
 			_openCloseBt.buttonMode = true;
 			
+			_renderingHolder.alpha = 0;
+			_renderingHolder.scaleX = _renderingHolder.scaleY = .01;//Don't put it to zero or some texts rendering are weird. Some text are word wrapped.
 			_contentsMask.height = 0;
 			_contentsHolder.mask = _contentsMask;
 			
@@ -188,15 +198,17 @@ package com.twinoid.kube.quest.components.form.edit {
 		protected function changeSelectionHandler(event:Event):void {
 			_closed = false;
 			var index:int = selectedIndex;
+//			_currentContent.cacheAsBitmap = true;
 			_currentContent = _contents[index];
 			_contentsHolder.addChild(_contents[index]);
 			var e:Event = new Event(Event.RESIZE, true);
+			var endX:int = -index * _width + Math.round((_width - _currentContent.width) * .5);
 			
 			TweenLite.killTweensOf(_contentsMask);
 			TweenLite.killTweensOf(_contentsHolder);
 			
 			TweenLite.to(_contentsMask, .25, {height:_contents[index].height, onUpdate:dispatchEvent, onUpdateParams:[e]});
-			TweenLite.to(_contentsHolder, .25, {x:-index * _width, onComplete:removeInvisibleItems, onCompleteParams:[index]});
+			TweenLite.to(_contentsHolder, .25, {x:endX, onComplete:removeInvisibleItems, onCompleteParams:[index]});
 		}
 		
 		/**
@@ -208,6 +220,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			for(var i:int = 0; i < _contents.length; ++i) {
 				if(i != indexToKeep && _contentsHolder.contains(_contents[i])) _contentsHolder.removeChild(_contents[i]);
 			}
+			dispatchEvent(new Event(Event.RESIZE, true));
 		}
 		
 	}

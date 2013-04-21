@@ -1,19 +1,22 @@
 package com.twinoid.kube.quest.components.menu.obj {
-	import com.nurun.core.lang.Disposable;
-	import flash.events.MouseEvent;
+	import com.twinoid.kube.quest.vo.ObjectItemData;
+	import flash.events.FocusEvent;
 	import com.muxxu.kub3dit.graphics.CancelIcon;
-	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
 	import com.nurun.components.form.events.FormComponentEvent;
+	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.string.StringUtils;
-	import com.twinoid.kube.quest.components.char.CharFace;
+	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.components.form.input.InputKube;
+	import com.twinoid.kube.quest.components.item.ItemPlaceholder;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
-	//Fired when the char is full filled
-	[Event(name="submit", type="com.nurun.components.form.events.FormComponentEvent")]
+	//Fired when the item is full filled
+	[Event(name="onSubmitForm", type="com.nurun.components.form.events.FormComponentEvent")]
 	
 	//Fired when delete button is clicked
 	[Event(name="close", type="flash.events.Event")]
@@ -25,9 +28,10 @@ package com.twinoid.kube.quest.components.menu.obj {
 	 * @date 20 avr. 2013;
 	 */
 	public class ObjectItem extends Sprite implements Disposable {
-		private var _face:CharFace;
+		private var _image:ItemPlaceholder;
 		private var _nameInput:InputKube;
 		private var _deleteBt:GraphicButtonKube;
+		private var _data:ObjectItemData;
 		
 		
 		
@@ -36,7 +40,7 @@ package com.twinoid.kube.quest.components.menu.obj {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>CharItem</code>.
+		 * Creates an instance of <code>ObjectItem</code>.
 		 */
 		public function ObjectItem() {
 			initialize();
@@ -47,13 +51,20 @@ package com.twinoid.kube.quest.components.menu.obj {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		override public function get width():Number {
-			return _face.width;
-		}
+		/**
+		 * @inheritDoc
+		 */
+		override public function get width():Number { return _image.width; }
 		
-		override public function get height():Number {
-			return _nameInput.y + _nameInput.height;
-		}
+		/**
+		 * @inheritDoc
+		 */
+		override public function get height():Number { return _nameInput.y + _nameInput.height; }
+		
+		/**
+		 * Gets the item's data
+		 */
+		public function get data():ObjectItemData { return _data; }
 
 
 
@@ -69,9 +80,10 @@ package com.twinoid.kube.quest.components.menu.obj {
 				removeChildAt(0);
 			}
 			
-			_nameInput.removeEventListener(Event.CHANGE, changeHandler);
-			_face.removeEventListener(Event.CHANGE, changeHandler);
+			_image.removeEventListener(Event.CHANGE, changeHandler);
 			_deleteBt.removeEventListener(MouseEvent.CLICK, clickHandler);
+			_nameInput.removeEventListener(FocusEvent.FOCUS_OUT, changeHandler);
+			_nameInput.removeEventListener(FormComponentEvent.SUBMIT, changeHandler);
 		}
 
 
@@ -84,13 +96,16 @@ package com.twinoid.kube.quest.components.menu.obj {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_face = addChild(new CharFace(true)) as CharFace;
+			_data = new ObjectItemData();
+			
+			_image = addChild(new ItemPlaceholder(true)) as ItemPlaceholder;
 			_nameInput = addChild(new InputKube(Label.getLabel("menu-objects-add-name"))) as InputKube;
 			_deleteBt = addChild(new GraphicButtonKube(new CancelIcon(), false)) as GraphicButtonKube;
 			
-			_nameInput.addEventListener(Event.CHANGE, changeHandler);
-			_face.addEventListener(Event.CHANGE, changeHandler);
+			_image.addEventListener(Event.CHANGE, changeHandler);
 			_deleteBt.addEventListener(MouseEvent.CLICK, clickHandler);
+			_nameInput.addEventListener(FocusEvent.FOCUS_OUT, changeHandler);
+			_nameInput.addEventListener(FormComponentEvent.SUBMIT, changeHandler);
 			
 			computePositions();
 		}
@@ -106,19 +121,21 @@ package com.twinoid.kube.quest.components.menu.obj {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			PosUtils.vPlaceNext(2, _face, _nameInput);
-			_nameInput.width = _face.width;
-			_deleteBt.x = Math.round(_face.width - _deleteBt.width);
+			PosUtils.vPlaceNext(2, _image, _nameInput);
+			_nameInput.width = _image.width;
+			_deleteBt.x = Math.round(_image.width - _deleteBt.width);
 		}
 		
 		/**
 		 * Called when a value changes.
 		 */
 		private function changeHandler(event:Event):void {
-			if(StringUtils.trim(_nameInput.value as String).length > 0 && _face.isDefined) {
+			_data.image	= _image.image;
+			_data.name	= _nameInput.text;
+			if(StringUtils.trim(_nameInput.value as String).length > 0 && _image.isDefined) {
 				dispatchEvent(new FormComponentEvent(FormComponentEvent.SUBMIT));
 			}
-			if(event.currentTarget == _face) {
+			if(event.currentTarget == _image) {
 				stage.focus = _nameInput;
 			}
 		}
