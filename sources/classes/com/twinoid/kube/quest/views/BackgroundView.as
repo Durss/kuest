@@ -17,6 +17,7 @@ package com.twinoid.kube.quest.views {
 	public class BackgroundView extends AbstractView {
 		private var _pattern:BitmapData;
 		private var _matrix:Matrix;
+		private var _default:Matrix;
 		
 		
 		
@@ -61,6 +62,14 @@ package com.twinoid.kube.quest.views {
 			computePositions();
 		}
 
+		public function setScale(scaleX:Number):void {
+			_matrix.a = _default.a;
+			_matrix.b = _default.b;
+			_matrix.c = _default.c;
+			_matrix.d = _default.d;
+			_matrix.scale(scaleX, scaleX);
+		}
+
 
 		
 		
@@ -79,7 +88,8 @@ package com.twinoid.kube.quest.views {
 			_pattern.draw(src);
 			
 			_matrix = new Matrix();
-			_matrix.rotate(Math.PI*.25);
+//			_matrix.rotate(Math.PI*.25);
+			_default = _matrix.clone();
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -98,7 +108,7 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function computePositions(event:Event = null):void {
 			graphics.clear();
-			graphics.beginBitmapFill(_pattern, _matrix);
+			graphics.beginBitmapFill(_pattern, _matrix, true, true);
 			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 		}
 		

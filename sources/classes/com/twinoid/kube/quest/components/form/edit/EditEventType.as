@@ -1,15 +1,14 @@
 package com.twinoid.kube.quest.components.form.edit {
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.environnement.label.Label;
-	import com.nurun.utils.draw.createRect;
 	import com.twinoid.kube.quest.components.form.RadioButtonKube;
 	import com.twinoid.kube.quest.components.form.input.TextArea;
+	import com.twinoid.kube.quest.components.item.ItemPlaceholder;
 	import com.twinoid.kube.quest.graphics.EventTypeDialogueIcon;
 	import com.twinoid.kube.quest.graphics.EventTypeObjectIcon;
 	import com.twinoid.kube.quest.vo.KuestEvent;
-
-	import flash.display.Shape;
 	import flash.display.Sprite;
+
 	
 	/**
 	 * Displays the dialogue/object forms.
@@ -81,8 +80,7 @@ package com.twinoid.kube.quest.components.form.edit {
 		private function buildDialogue():void {
 			_dialogue = new Sprite();
 			
-			
-			var photoZone:Shape = createRect(0xff7EC3DF, 80, 80);
+			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true);
 			_dialogue.addChild(photoZone);
 			var textArea:TextArea = new TextArea("promptWindowContent");
 			_dialogue.addChild( textArea );
@@ -99,7 +97,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			_object = new Sprite();
 			_objectGroup = new FormComponentGroup();
 			
-			var photoZone:Shape = createRect(0xff7EC3DF, 80, 80);
+			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true);
 			_object.addChild(photoZone);
 			var textArea:TextArea = new TextArea("promptWindowContent");
 			_object.addChild( textArea );

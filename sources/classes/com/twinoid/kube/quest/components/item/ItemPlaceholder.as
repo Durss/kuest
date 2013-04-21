@@ -1,4 +1,7 @@
-package com.twinoid.kube.quest.components.char {
+package com.twinoid.kube.quest.components.item {
+	import com.twinoid.kube.quest.vo.IItemData;
+	import com.twinoid.kube.quest.events.ItemSelectorEvent;
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.Disposable;
@@ -6,7 +9,6 @@ package com.twinoid.kube.quest.components.char {
 	import com.nurun.utils.pos.PosUtils;
 	import com.twinoid.kube.quest.graphics.BrowseIcon;
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -17,19 +19,20 @@ package com.twinoid.kube.quest.components.char {
 	[Event(name="change", type="flash.events.Event")]
 	
 	/**
-	 * Displays a character's face.
+	 * Displays an item's image.
 	 * If in browseMode, provides a way to select an image file on the
 	 * user's hard drive by clicking on the component.
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;
 	 */
-	public class CharFace extends Sprite implements Disposable {
+	public class ItemPlaceholder extends Sprite implements Disposable {
 		
 		private const WIDTH:int = 140;
 		private const HEIGHT:int = 140;
 		
 		private var _browseMode:Boolean;
+		private var _selectMode:Boolean;
 		private var _frame:Shape;
 		private var _img:ImageResizer;
 		private var _icon:BrowseIcon;
@@ -41,10 +44,11 @@ package com.twinoid.kube.quest.components.char {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>CharFace</code>.
+		 * Creates an instance of <code>ItemPlaceholder</code>.
 		 */
 
-		public function CharFace(browseMode:Boolean = false) {
+		public function ItemPlaceholder(browseMode:Boolean = false, selectMode:Boolean = false) {
+			_selectMode = selectMode;
 			_browseMode = browseMode;
 			initialize();
 		}
@@ -54,8 +58,28 @@ package com.twinoid.kube.quest.components.char {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets if an image has been defined or not
+		 */
 		public function get isDefined():Boolean {
 			return _img.image != null;
+		}
+		
+		/**
+		 * Gets the image's reference.
+		 */
+		public function get image():BitmapData {
+			var bmd:BitmapData = new BitmapData(WIDTH, HEIGHT, true, 0);
+			bmd.draw(_img);
+			bmd.lock();
+			return bmd;
+		}
+		
+		/**
+		 * Sets the image.
+		 */
+		public function set image(value:BitmapData):void {
+			_img.setBitmapData(value);
 		}
 
 
@@ -103,29 +127,42 @@ package com.twinoid.kube.quest.components.char {
 				_icon.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 				buttonMode = true;
 				addEventListener(MouseEvent.CLICK, clickHandler);
+			
+				computePositions();
+			}
+			
+			if(_selectMode) {
+				addEventListener(MouseEvent.CLICK, clickHandler);
 			}
 			
 			_img = addChild(new ImageResizer()) as ImageResizer;
 			_img.width = WIDTH;
 			_img.height = HEIGHT;
-			
-			computePositions();
 		}
 		
 		/**
 		 * Called when the component is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			_browseCmd.execute();
+			if(_selectMode){
+				ViewLocator.getInstance().dispatchToViews(new ItemSelectorEvent(ItemSelectorEvent.SELECT_ITEM, ItemSelectorEvent.ITEM_TYPE_CHAR, selectCallback));
+			}else{
+				_browseCmd.execute();
+			}
 		}
 		
 		/**
 		 * Called when an image's loading completes
 		 */
 		private function loadImageCompleteHandler(event:CommandEvent):void {
-			_img.setImage(new Bitmap(event.data as BitmapData));
+			_img.setBitmapData(event.data as BitmapData);
 			dispatchEvent(new Event(Event.CHANGE));
 		}
+
+		private function selectCallback(data:IItemData):void {
+			_img.setBitmapData(data.image);
+		}
+
 		
 		/**
 		 * Resizes and replaces the elements.

@@ -1,11 +1,13 @@
 package com.twinoid.kube.quest.components.menu {
+	import com.twinoid.kube.quest.controler.FrontControler;
+	import com.twinoid.kube.quest.vo.ObjectItemData;
+	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.components.menu.obj.ObjectItem;
 	import com.twinoid.kube.quest.graphics.AddBigIcon;
-
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
@@ -75,8 +77,16 @@ package com.twinoid.kube.quest.components.menu {
 		private function addItem():void {
 			var item:ObjectItem = new ObjectItem();
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
+			item.addEventListener(FormComponentEvent.SUBMIT, submitItemHandler);
 			_holder.addChild(item);
 			_items.push( item );
+		}
+		
+		/**
+		 * Called when an item's value changes and is valid.
+		 */
+		private function submitItemHandler(event:FormComponentEvent):void {
+			refreshObjectListOnModel();
 		}
 		
 		/**
@@ -97,6 +107,7 @@ package com.twinoid.kube.quest.components.menu {
 				}
 			}
 			computePositions();
+			refreshObjectListOnModel();
 		}
 		
 		/**
@@ -116,6 +127,22 @@ package com.twinoid.kube.quest.components.menu {
 		private function clickAddHandler(event:MouseEvent):void {
 			addItem();
 			computePositions();
+		}
+		
+		/**
+		 * Sends the new items to the model.
+		 */
+		private function refreshObjectListOnModel():void {
+			var i:int, len:int, res:Vector.<ObjectItemData>;
+			res = new Vector.<ObjectItemData>();
+			len = _items.length;
+			for(i = 0; i < len; ++i) {
+				if(_items[i].data.isValid) {
+					res.push(_items[i].data);
+				}
+			}
+			
+			FrontControler.getInstance().refreshObjectsList(res);
 		}
 		
 	}

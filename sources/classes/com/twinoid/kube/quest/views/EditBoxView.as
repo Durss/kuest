@@ -1,29 +1,29 @@
 package com.twinoid.kube.quest.views {
-	import com.twinoid.kube.quest.vo.KuestEvent;
-	import com.nurun.utils.pos.roundPos;
-	import com.muxxu.kub3dit.graphics.CancelIcon;
-	import com.muxxu.kub3dit.graphics.SubmitIcon;
-	import flash.events.MouseEvent;
-	import com.twinoid.kube.quest.components.buttons.ButtonKube;
-	import com.twinoid.kube.quest.components.form.edit.EditEventTime;
-	import com.twinoid.kube.quest.controler.FrontControler;
-	import com.twinoid.kube.quest.utils.Closable;
-	import com.twinoid.kube.quest.utils.makeEscapeClosable;
 	import gs.TweenLite;
 	import gs.easing.Back;
 
+	import com.muxxu.kub3dit.graphics.CancelIcon;
+	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.utils.pos.roundPos;
+	import com.twinoid.kube.quest.components.buttons.ButtonKube;
 	import com.twinoid.kube.quest.components.form.edit.EditEventPlace;
+	import com.twinoid.kube.quest.components.form.edit.EditEventTime;
 	import com.twinoid.kube.quest.components.form.edit.EditEventType;
 	import com.twinoid.kube.quest.components.window.PromptWindow;
+	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.model.Model;
+	import com.twinoid.kube.quest.utils.Closable;
+	import com.twinoid.kube.quest.utils.makeEscapeClosable;
+	import com.twinoid.kube.quest.vo.KuestEvent;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	/**
 	 * Displays the edition window.
@@ -34,7 +34,7 @@ package com.twinoid.kube.quest.views {
 	 */
 	public class EditBoxView extends AbstractView implements Closable {
 		
-		private const _WIDTH:int = 300;
+		private const _WIDTH:int = 400;
 		 
 		private var _window:PromptWindow;
 		private var _holder:Sprite;
@@ -73,6 +73,11 @@ package com.twinoid.kube.quest.views {
 		 * Gets the height of the component.
 		 */
 		override public function get height():Number { return _window.height; }
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get isClosed():Boolean { return _closed; }
 
 
 
@@ -90,12 +95,11 @@ package com.twinoid.kube.quest.views {
 			if(model.currentBoxToEdit != null) {
 				_data = model.currentBoxToEdit;
 				if(_closed) {
-					_closed = false;
 					scaleX = scaleY = 1;
 					PosUtils.centerInStage(this);
 					visible = true;
 					stage.focus = this;
-					TweenLite.from(this, .5, {x:stage.stageWidth * .5, y:stage.stageHeight * .5, scaleX:0, scaleY:0, ease:Back.easeOut});
+					TweenLite.from(this, .5, {x:stage.stageWidth * .5, y:stage.stageHeight * .5, scaleX:0, scaleY:0, ease:Back.easeOut, onComplete:flagOpened});
 				}
 			}else if(!_closed){
 				_closed = true;
@@ -143,7 +147,7 @@ package com.twinoid.kube.quest.views {
 			_holder.addEventListener(Event.RESIZE, computePositions);
 			_submit.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_cancel.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			stage.addEventListener(MouseEvent.CLICK, clickStageHandler, true, 199999999);
+			stage.addEventListener(MouseEvent.CLICK, clickStageHandler);
 		}
 		
 		/**
@@ -175,6 +179,16 @@ package com.twinoid.kube.quest.views {
 		}
 		
 		/**
+		 * Flags the content as opened when opening transition completes.
+		 * This prevents the view to close right after opening.
+		 * When clicking a box it tells the model to open this view which opens
+		 * synchronously. But right after, the stage click is detected which
+		 * makes it close.
+		 */
+		private function flagOpened():void { _closed = false; }
+
+		
+		/**
 		 * Called when submit or close button is clicked.
 		 */
 		private function clickButtonHandler(event:MouseEvent):void {
@@ -186,7 +200,8 @@ package com.twinoid.kube.quest.views {
 		 * Called when stage is clicked to close the window
 		 */
 		private function clickStageHandler(event:MouseEvent):void {
-			if(!contains(event.target as DisplayObject)) {
+			trace("EditBoxView.clickStageHandler(event)");
+			if(!_closed && !contains(event.target as DisplayObject)) {
 				close();
 			}
 		}

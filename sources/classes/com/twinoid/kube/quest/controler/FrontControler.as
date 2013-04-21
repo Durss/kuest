@@ -1,6 +1,9 @@
 package com.twinoid.kube.quest.controler {
-	import com.twinoid.kube.quest.vo.KuestEvent;
 	import com.twinoid.kube.quest.model.Model;
+	import com.twinoid.kube.quest.vo.CharItemData;
+	import com.twinoid.kube.quest.vo.KuestEvent;
+	import com.twinoid.kube.quest.vo.ObjectItemData;
+
 	import flash.errors.IllegalOperationError;
 
 
@@ -74,6 +77,20 @@ package com.twinoid.kube.quest.controler {
 		 */
 		public function cancelBoxEdition():void {
 			_model.cancelBoxEdition();
+		}
+		
+		/**
+		 * Refreshes the objects list
+		 */
+		public function refreshObjectsList(list:Vector.<ObjectItemData>):void {
+			_model.refreshObjectsList(list);
+		}
+		
+		/**
+		 * Refreshes the objects list
+		 */
+		public function refreshCharsList(list:Vector.<CharItemData>):void {
+			_model.refreshCharsList(list);
 		}
 
 

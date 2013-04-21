@@ -3,8 +3,10 @@ package com.twinoid.kube.quest.model {
 
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
+	import com.twinoid.kube.quest.vo.CharItemData;
 	import com.twinoid.kube.quest.vo.KuestData;
 	import com.twinoid.kube.quest.vo.KuestEvent;
+	import com.twinoid.kube.quest.vo.ObjectItemData;
 
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
@@ -28,6 +30,8 @@ package com.twinoid.kube.quest.model {
 		private var _connectTimeout:uint;
 		private var _kuestData:KuestData;
 		private var _currentBoxToEdit:KuestEvent;
+		private var _objects:Vector.<ObjectItemData>;
+		private var _characters:Vector.<CharItemData>;
 		
 		
 		
@@ -50,16 +54,22 @@ package com.twinoid.kube.quest.model {
 		/**
 		 * Gets the data tree
 		 */
-		public function get kuestData():KuestData {
-			return _kuestData;
-		}
+		public function get kuestData():KuestData { return _kuestData; }
 		
 		/**
 		 * Gets the current box data to edit.
 		 */
-		public function get currentBoxToEdit():KuestEvent {
-			return _currentBoxToEdit;
-		}
+		public function get currentBoxToEdit():KuestEvent { return _currentBoxToEdit; }
+		
+		/**
+		 * Gets the objects list
+		 */
+		public function get objects():Vector.<ObjectItemData> { return _objects; }
+
+		/**
+		 * Gets the characters list
+		 */
+		public function get characters():Vector.<CharItemData> { return _characters; }
 
 
 
@@ -98,6 +108,22 @@ package com.twinoid.kube.quest.model {
 		 */
 		public function cancelBoxEdition():void {
 			_currentBoxToEdit = null;
+			update();
+		}
+		
+		/**
+		 * Refreshes the objects list
+		 */
+		public function refreshObjectsList(list:Vector.<ObjectItemData>):void {
+			_objects = list;
+			update();
+		}
+		
+		/**
+		 * Refreshes the objects list
+		 */
+		public function refreshCharsList(list:Vector.<CharItemData>):void {
+			_characters = list;
 			update();
 		}
 

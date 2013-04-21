@@ -31,6 +31,7 @@ package com.twinoid.kube.quest.components.box {
 		private var _dragOffset:Point;
 		private var _outBox:BoxOutGraphic;
 		private var _inBox:BoxInGraphic;
+		private var _links:Vector.<BoxLink>;
 		
 		
 		
@@ -52,6 +53,10 @@ package com.twinoid.kube.quest.components.box {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the component's data
+		 */
+		public function get data():KuestEvent { return _data; }
 
 
 
@@ -63,9 +68,47 @@ package com.twinoid.kube.quest.components.box {
 		 */
 		override public function startDrag(lockCenter:Boolean = false, bounds:Rectangle = null):void {
 			super.startDrag(lockCenter, bounds);
+			
 			_dragOffset.x =  x;
 			_dragOffset.y =  y;
+			var i:int, len:int = _links.length;
+			for(i = 0; i < len; ++i) _links[i].startAutoUpdate();
 		}
+		/**
+		 * @inheritDoc
+		 */
+		override public function stopDrag():void {
+			super.stopDrag();
+			
+			var i:int, len:int = _links.length;
+			for(i = 0; i < len; ++i) _links[i].stopAutoUpdate();
+		}
+		
+		/**
+		 * Adds a link's reference to the box.
+		 * This provides a way to know which links should be updated when
+		 * dragging the box
+		 */
+		public function addlink(link:BoxLink):void {
+			_links.push(link);
+		}
+		
+		/**
+		 * Removes a link's reference
+		 */
+		public function removelink(link:BoxLink):void {
+			_links.push(link);
+			var i:int, len:int;
+			len = _links.length;
+			for(i = 0; i < len; ++i) {
+				if(_links[i] == link) {
+					_links.splice(i, 1);
+					i --;
+					len --;
+				}
+			}
+		}
+
 
 
 		
@@ -77,6 +120,8 @@ package com.twinoid.kube.quest.components.box {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_links		= new Vector.<BoxLink>();
+			
 			_outBox		= addChild(new BoxOutGraphic()) as BoxOutGraphic;
 			_background	= addChild(new BoxEventGraphic()) as BoxEventGraphic;
 			_inBox		= addChild(new BoxInGraphic()) as BoxInGraphic;
