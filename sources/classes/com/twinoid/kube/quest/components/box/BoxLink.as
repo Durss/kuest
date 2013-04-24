@@ -95,9 +95,10 @@ package com.twinoid.kube.quest.components.box {
 			if(objs.length > 0) {
 				var i:int = objs.length - 1;
 				var top:DisplayObject = objs[i];
+				
 				while(top is BoxLink) top = objs[--i];
 				//Search for a Box instance different than the start entry point
-				while(!(top is Box) && !(top is Stage) || top == _startEntry) top = top.parent;
+				while(!(top is Box) && !(top is Stage) && top != null || top == _startEntry) top = top.parent;
 				if(top is Box) {// && top.x > x + distMin * 2.5) {//Refuse boxes that are not far enough to get a good line rendering
 					endX = top.x - x;
 					endY = top.y + top.height * .5 - y;

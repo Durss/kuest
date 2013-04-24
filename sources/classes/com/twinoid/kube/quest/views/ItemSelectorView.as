@@ -153,7 +153,7 @@ package com.twinoid.kube.quest.views {
 			
 			if (event.target is SelectorItem && !_swiper.hasMovedMoreThan()) {
 				var item:SelectorItem = event.target as SelectorItem;
-				if( !(item.data is EmptyItemData) && item.data != null ) {
+				if( ( !(item.data is EmptyItemData) || EmptyItemData(item.data).isDefined ) && item.data != null ) {
 					_callback(item.data);
 					close();
 				}
@@ -198,9 +198,10 @@ package com.twinoid.kube.quest.views {
 			empty = new EmptyItemData();
 			
 			for(i = 0; i <= len; ++i) {
-				if(i%cols == 0) {
+				if(i == 0 || line.length == cols) {
 					if(i > 0) _engine.addLine(line);
 					line = [];
+					if(i == 0) line.push(new EmptyItemData(true));
 				}
 				data = (i > list.length-1)? empty : list[i] as IItemData;
 				line.push(data);

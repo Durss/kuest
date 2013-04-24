@@ -1,13 +1,15 @@
 package com.twinoid.kube.quest.vo {
 	import flash.display.BitmapData;
+	import flash.events.EventDispatcher;
 	
 	/**
 	 * 
 	 * @author Francois
 	 * @date 21 avr. 2013;
 	 */
-	public class EmptyItemData implements IItemData {
+	public class EmptyItemData extends EventDispatcher implements IItemData {
 		
+		private var _isDefined:Boolean;
 		
 		
 		
@@ -17,7 +19,9 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Creates an instance of <code>EmptyItemData</code>.
 		 */
-		public function EmptyItemData() {
+
+		public function EmptyItemData(isDefined:Boolean = false) {
+			_isDefined = isDefined;
 		}
 
 		
@@ -34,11 +38,20 @@ package com.twinoid.kube.quest.vo {
 			return null;
 		}
 
+		public function get isDefined():Boolean {
+			return _isDefined;
+		}
+
 
 
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * @inheritDoc
+		 */
+		public function kill():void {
+		}
 
 
 		

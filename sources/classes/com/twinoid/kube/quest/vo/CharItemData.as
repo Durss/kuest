@@ -1,14 +1,19 @@
 package com.twinoid.kube.quest.vo {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import mx.utils.StringUtil;
 
 	import flash.display.BitmapData;
+	
+	
+	[Event(name="clear", type="flash.events.Event")]
 	
 	/**
 	 * 
 	 * @author Francois
 	 * @date 21 avr. 2013;
 	 */
-	public class CharItemData implements IItemData {
+	public class CharItemData extends EventDispatcher implements IItemData {
 		
 		private var _name:String;
 		private var _image:BitmapData;
@@ -48,6 +53,12 @@ package com.twinoid.kube.quest.vo {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * @inheritDoc
+		 */
+		public function kill():void {
+			dispatchEvent(new Event(Event.CLEAR));
+		}
 
 
 		

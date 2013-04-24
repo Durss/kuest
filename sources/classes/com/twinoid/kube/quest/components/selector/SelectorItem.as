@@ -56,7 +56,7 @@ package com.twinoid.kube.quest.components.selector {
 		 */
 		public function populate(data:*, engineRef:TileEngine2D):void {
 			_data = data as IItemData;
-			if (data is EmptyItemData) {
+			if (data is EmptyItemData && !EmptyItemData(data).isDefined) {
 				_image.image = null;
 				_label.text = "";
 				visible = false;
@@ -107,11 +107,11 @@ package com.twinoid.kube.quest.components.selector {
 		}
 
 		private function rollOverHandler(event:MouseEvent):void {
-			if(_data is EmptyItemData || _data == null) return;
+			if((_data is EmptyItemData && !EmptyItemData(_data).isDefined) || _data == null) return;
 			
 			var margin:int = 5;
 			graphics.beginFill(0x266884, 1);
-			graphics.drawRect(0, 0, _image.width + margin * 2 + 1, _label.y + _label.height + margin * 2);
+			graphics.drawRect(0, 0, _image.width + margin * 2 + 1, _label.y + _label.height + margin * 2 - 1);
 			graphics.endFill();
 		}
 

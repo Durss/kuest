@@ -212,6 +212,8 @@ package com.twinoid.kube.quest.views {
 			_place.save( _data );
 			_type.save( _data );
 			_times.save( _data );
+			_data.submit();
+			close();
 		}
 		
 	}

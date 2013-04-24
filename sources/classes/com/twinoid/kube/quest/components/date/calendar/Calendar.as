@@ -132,7 +132,7 @@ package com.twinoid.kube.quest.components.date.calendar {
 			var i:int, len:int;
 			len = _daysItems.length;
 			for(i = 0; i < len; ++i) {
-				_daysItems[i].selected = !_daysItems[i].selected;
+				if(_daysItems[i].enabled) _daysItems[i].selected = !_daysItems[i].selected;
 			}
 		}
 		
