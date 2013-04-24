@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.form.edit {
+	import com.twinoid.kube.quest.vo.ActionType;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.components.form.RadioButtonKube;
@@ -25,6 +26,10 @@ package com.twinoid.kube.quest.components.form.edit {
 		private var _dialogue:Sprite;
 		private var _object:Sprite;
 		private var _objectGroup:FormComponentGroup;
+		private var _charHolder:ItemPlaceholder;
+		private var _objectHolder:ItemPlaceholder;
+		private var _charDialogue:TextArea;
+		private var _objectDialogue:TextArea;
 		
 		
 		
@@ -54,7 +59,15 @@ package com.twinoid.kube.quest.components.form.edit {
 		 * Saves the configuration to the value object
 		 */
 		public function save(data:KuestEvent):void {
-			
+			switch(selectedIndex){
+				case 0:
+					data.actionType = new ActionType(ActionType.TYPE_OBJECT, _charHolder.data, _charDialogue.text);
+					break;
+				case 1:
+					data.actionType = new ActionType(ActionType.TYPE_OBJECT, _objectHolder.data, _objectDialogue.text);
+					break;
+				default:
+			}
 		}
 
 
@@ -82,14 +95,14 @@ package com.twinoid.kube.quest.components.form.edit {
 		private function buildDialogue():void {
 			_dialogue = new Sprite();
 			
-			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true);
-			_dialogue.addChild(photoZone);
-			var textArea:TextArea = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-dialogueDefault"));
-			_dialogue.addChild( textArea );
+			_charHolder = new ItemPlaceholder(false, true);
+			_dialogue.addChild(_charHolder);
+			_charDialogue = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-dialogueDefault"));
+			_dialogue.addChild( _charDialogue );
 			
-			textArea.width = _width - photoZone.width - 5;
-			textArea.height = photoZone.height;
-			textArea.x = photoZone.width + 5;
+			_charDialogue.width = _width - _charHolder.width - 5;
+			_charDialogue.height = _charHolder.height;
+			_charDialogue.x = _charHolder.width + 5;
 		}
 
 		/**
@@ -99,23 +112,23 @@ package com.twinoid.kube.quest.components.form.edit {
 			_object = new Sprite();
 			_objectGroup = new FormComponentGroup();
 			
-			var photoZone:ItemPlaceholder = new ItemPlaceholder(false, true, ItemSelectorEvent.ITEM_TYPE_OBJECT);
-			_object.addChild(photoZone);
-			var textArea:TextArea = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-objectDefault"));
-			_object.addChild( textArea );
+			_objectHolder = new ItemPlaceholder(false, true, ItemSelectorEvent.ITEM_TYPE_OBJECT);
+			_object.addChild(_objectHolder);
+			_objectDialogue = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-objectDefault"));
+			_object.addChild( _objectDialogue );
 			var cbTake:RadioButtonKube = new RadioButtonKube(Label.getLabel("editWindow-type-take"), _objectGroup);
 			var cbPut:RadioButtonKube = new RadioButtonKube(Label.getLabel("editWindow-type-put"), _objectGroup);
 			_object.addChild(cbTake);
 			_object.addChild(cbPut);
 			
-			textArea.width = _width - photoZone.width - 5;
-			textArea.height = photoZone.height - Math.round(cbTake.height + 5);
-			textArea.x = photoZone.width + 5;
-			textArea.validate();
+			_objectDialogue.width = _width - _objectHolder.width - 5;
+			_objectDialogue.height = _objectHolder.height - Math.round(cbTake.height + 5);
+			_objectDialogue.x = _objectHolder.width + 5;
+			_objectDialogue.validate();
 			
-			cbTake.x = Math.round(textArea.x + textArea.width * .5 - cbTake.width - 5);
-			cbPut.x = Math.round(textArea.x + textArea.width * .5 + 5);
-			cbPut.y = cbTake.y = Math.round(textArea.height + 5);
+			cbTake.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 - cbTake.width - 5);
+			cbPut.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 + 5);
+			cbPut.y = cbTake.y = Math.round(_objectDialogue.height + 5);
 		}
 		
 	}

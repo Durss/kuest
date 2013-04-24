@@ -1,16 +1,18 @@
 package com.twinoid.kube.quest.components.box {
-	import com.twinoid.kube.quest.events.BoxEvent;
+	import com.nurun.utils.string.StringUtils;
+	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.controler.FrontControler;
+	import com.twinoid.kube.quest.events.BoxEvent;
 	import com.twinoid.kube.quest.graphics.BoxEventGraphic;
 	import com.twinoid.kube.quest.graphics.BoxInGraphic;
 	import com.twinoid.kube.quest.graphics.BoxOutGraphic;
 	import com.twinoid.kube.quest.vo.KuestEvent;
 
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -26,7 +28,7 @@ package com.twinoid.kube.quest.components.box {
 		
 		private var _data:KuestEvent;
 		private var _label:CssTextField;
-		private var _image:Bitmap;
+		private var _image:ImageResizer;
 		private var _background:BoxEventGraphic;
 		private var _dragOffset:Point;
 		private var _outBox:BoxOutGraphic;
@@ -125,21 +127,19 @@ package com.twinoid.kube.quest.components.box {
 			_outBox		= addChild(new BoxOutGraphic()) as BoxOutGraphic;
 			_background	= addChild(new BoxEventGraphic()) as BoxEventGraphic;
 			_inBox		= addChild(new BoxInGraphic()) as BoxInGraphic;
-			_image		= addChild(new Bitmap()) as Bitmap;
+			_image		= addChild(new ImageResizer()) as ImageResizer;
 			_label		= addChild(new CssTextField("box-label")) as CssTextField;
 			
 			_dragOffset = new Point();
+			_label.mouseEnabled = false;
 			
 			if(_data != null && _data.boxPosition != null) {
 				x = _data.boxPosition.x;
 				y = _data.boxPosition.y;
 			}
-			if(_data != null && !_data.isEmpty) {
-				_label.text = _data.label;
-			}else{
-				_label.text = Label.getLabel("box-empty");
-				_label.x = Math.round((95 - _label.width) * .5) + 5;
-				_label.y = Math.round((45 - _label.height) * .5);
+			
+			if(_data != null) {
+				_data.addEventListener(Event.CHANGE, dataUpdateHandler);
 			}
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
@@ -149,6 +149,28 @@ package com.twinoid.kube.quest.components.box {
 			_outBox.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_outBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			
+			dataUpdateHandler();
+		}
+		
+		/**
+		 * Called when data changes
+		 */
+		private function dataUpdateHandler(event:Event = null):void {
+			if(_data == null || _data.isEmpty) {
+				_label.text = Label.getLabel("box-empty");
+			}else{
+				if(_data.image != null) {
+					_image.setBitmapData(_data.image);
+				}else{
+					_image.clear();
+				}
+				if(StringUtils.trim(_data.label).length == 0) {
+					_label.text = Label.getLabel("box-empty");
+				}else{
+					_label.text = _data.label;
+				}
+			}
 			
 			computePositions();
 		}
@@ -164,7 +186,7 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when mouse goes out the component.
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
-			cacheAsBitmap = true;//TODO check if that's a enought optimization. If not, remove everything from holder and replace it by a bitmap snapshot
+			cacheAsBitmap = true;//TODO check if that's a sufficient optimization. If not, remove everything from holder and replace it by a bitmap snapshot
 		}
 		
 		/**
@@ -194,8 +216,26 @@ package com.twinoid.kube.quest.components.box {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
+			_background.width = 180;
+			_background.height = 75;
 			_background.x = _inBox.width - 2;
 			_outBox.x = _background.x + _background.width - 2;
+
+			var margin:int = 3;
+			var isImage:Boolean = _data != null && _data.image != null;
+			_image.height = _image.width = _background.height - 5 - margin * 2;
+			_image.x = _background.x + 5 + margin;
+			_image.y = margin;
+			_label.x = _image.x + _image.width + margin;
+			_label.y = margin;
+			_label.width = _background.width - _label.x + _background.x - margin;
+			_label.height = _background.height - margin * 2;
+			if(_data == null || _data.isEmpty || !isImage) {
+				_label.width = _background.width;
+				_label.y = Math.round((_background.height - _label.height) * .5);
+				_label.x = _background.x + 5 + margin;
+				_label.width = _background.width - 5 - margin * 2;
+			}
 			
 			roundPos(_outBox);
 			roundPos(_background);

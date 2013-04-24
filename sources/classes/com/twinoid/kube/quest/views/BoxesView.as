@@ -35,13 +35,15 @@ package com.twinoid.kube.quest.views {
 	 */
 	public class BoxesView extends AbstractView {
 		
+		private const DRAG_GAP:int = 100;
+		
 		private var _dataToBox:Dictionary;
 		private var _timeout:uint;
 		private var _tempBox:Sprite;
 		private var _scrollOffset:Point;
 		private var _boxesHolder:Sprite;
 		private var _canceled:Boolean;
-		private var _pressed:Boolean;
+		private var _stagePressed:Boolean;
 		private var _dragOffset:Point;
 		private var _mouseOffset:Point;
 		private var _background:BackgroundView;
@@ -52,6 +54,8 @@ package com.twinoid.kube.quest.views {
 		private var _tempLink:BoxLink;
 		private var _draggedItem:Sprite;
 		private var _overBoard:Boolean;
+		private var _mousePressed:Boolean;
+		private var _startDragInGap:Boolean;
 		
 		
 		
@@ -130,6 +134,7 @@ package com.twinoid.kube.quest.views {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler2, true);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			addEventListener(MouseEvent.DOUBLE_CLICK, doubleClick);
@@ -176,7 +181,7 @@ package com.twinoid.kube.quest.views {
 				if(top == this) {
 					_overBoard = true;
 					if(Mouse.cursor != MouseCursor.HAND) Mouse.cursor = MouseCursor.HAND;
-					if(_pressed) {
+					if(_stagePressed) {
 						if(Math.abs(_dragOffset.x - _boxesHolder.x) > 5 || Math.abs(_dragOffset.x - _boxesHolder.x) > 5) {
 							clearTimeout(_timeout);//Cancel item's creation
 							_tempBox.stopDrag();
@@ -191,6 +196,23 @@ package com.twinoid.kube.quest.views {
 			}else if(_overBoard){
 				Mouse.cursor = MouseCursor.AUTO;
 				_overBoard = false;
+			}
+			
+			if(_mousePressed) {
+				var addX:int, addY:int;
+				if(stage.mouseX < DRAG_GAP)						addX = (1-stage.mouseX / DRAG_GAP) * 50;
+				if(stage.mouseX > stage.stageWidth - DRAG_GAP)	addX = -(stage.mouseX - stage.stageWidth + DRAG_GAP) / DRAG_GAP * 50;
+				if(stage.mouseY < DRAG_GAP)						addY = (1-stage.mouseY / DRAG_GAP) * 50;
+				if(stage.mouseY > stage.stageHeight - DRAG_GAP)	addY = -(stage.mouseY - stage.stageHeight + DRAG_GAP) / DRAG_GAP * 50;
+				if(_startDragInGap && addX == 0 && addY == 0) _startDragInGap = false;//Allow drag again if we leav the drag zone.
+				if(!_startDragInGap) {
+					if(_draggedItem != null) {
+						_draggedItem.x -= addX;
+						_draggedItem.y -= addY;
+					}
+					_endX = _boxesHolder.x += addX * _boxesHolder.scaleX;
+					_endY = _boxesHolder.y += addY * _boxesHolder.scaleY;
+				}
 			}
 			
 			//Move the board
@@ -273,7 +295,7 @@ package com.twinoid.kube.quest.views {
 			_dragOffset.y = _boxesHolder.y;
 			_mouseOffset.x = _prevMousePos.x = stage.mouseX;
 			_mouseOffset.y = _prevMousePos.x = stage.mouseY;
-			_pressed = true;
+			_stagePressed = true;
 			_canceled = false;
 			_draggingBoard = false;
 			clearTimeout(_timeout);
@@ -281,10 +303,27 @@ package com.twinoid.kube.quest.views {
 		}
 		
 		/**
+		 * The Box instance stops the MOUSE_DOWN propagation if we create a link.
+		 * This prevents from moving the box when we actually want to create a
+		 * link between another box.
+		 * This second handler listen for the event at the "capture" level of
+		 * the event flow so it receives it.
+		 */
+		private function mouseDownHandler2(event:MouseEvent):void {
+			//Do not allow scroll dragging if the element is already inside
+			//the DRAG_GAP zone. That would be borring.
+			_startDragInGap = (stage.mouseX < DRAG_GAP || stage.mouseY < DRAG_GAP
+								|| stage.mouseX > stage.stageWidth - DRAG_GAP
+								|| stage.mouseY > stage.stageHeight - DRAG_GAP);
+			_mousePressed = true;
+		}
+		
+		/**
 		 * Called when mouse is released
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
-			_pressed = false;
+			_mousePressed = false;
+			_stagePressed = false;
 			if(_draggingBoard) {
 				_endX += (stage.mouseX - _prevMousePos.x) * 5;
 				_endY += (stage.mouseY - _prevMousePos.y) * 5;

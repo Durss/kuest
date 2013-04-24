@@ -132,6 +132,7 @@ package com.twinoid.kube.quest.components.menu.char {
 		 * Called when delete button is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
+			_data.kill();
 			dispatchEvent(new Event(Event.CLOSE));
 		}
 		

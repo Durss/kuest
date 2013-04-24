@@ -90,6 +90,7 @@ package com.twinoid.kube.quest.components.date {
 												new DaySelectorItemSelectedSkinGraphic()) ) as ToggleButton;
 				applyDefaultFrameVisitorNoTween(item, item.defaultBackground, item.selectedBackground);
 				item.textBoundsMode = false;
+				item.selected = true;
 				item.validate();
 				item.height = Math.round(item.height);
 				item.addEventListener(MouseEvent.ROLL_OVER, overItemHandler);

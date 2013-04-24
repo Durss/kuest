@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.item {
+	import com.twinoid.kube.quest.vo.EmptyItemData;
 	import flash.display.MovieClip;
 	import flash.display.DisplayObject;
 	import com.twinoid.kube.quest.graphics.AddBigIcon;
@@ -41,6 +42,7 @@ package com.twinoid.kube.quest.components.item {
 		private var _icon:DisplayObject;
 		private var _browseCmd:BrowseForFileCmd;
 		private var _selectType:String;
+		private var _data:IItemData;
 		
 		
 		
@@ -92,6 +94,11 @@ package com.twinoid.kube.quest.components.item {
 			_img.setBitmapData(value);
 			if(_icon != null && contains(_icon)) removeChild(_icon); 
 		}
+		
+		/**
+		 * Gets the selected data.
+		 */
+		public function get data():IItemData { return _data; }
 
 
 
@@ -175,9 +182,18 @@ package com.twinoid.kube.quest.components.item {
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
-		//TODO
+		/**
+		 * Called when an item is selected inside the ItemSelectorView.
+		 */
 		private function selectCallback(data:IItemData):void {
-			_img.setBitmapData(data.image);
+			_data = data;
+			if(data is EmptyItemData) {
+				_img.clear();
+				addChild(_icon);
+			}else{
+				_img.setBitmapData(data.image);
+				if(_icon != null && contains(_icon)) removeChild(_icon);
+			}
 		}
 
 		/**

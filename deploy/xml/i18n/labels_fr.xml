@@ -4,7 +4,7 @@
 		<label code="selector-char"><![CDATA[Choisir un personnage]]></label>
 		<label code="selector-object"><![CDATA[Choisir un objet]]></label>
 		
-		<label code="box-empty"><![CDATA[---]]></label>
+		<label code="box-empty"><![CDATA[<p align="center">Cliquez pour éditer...</p>]]></label>
 		
 		<label code="menu-file"><![CDATA[Menu principal]]></label>
 		
@@ -29,7 +29,7 @@
 		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
 		<label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
 		<label code="editWindow-type-objectTT"><![CDATA[Prise/pose d'objet]]></label>
-		<label code="editWindow-type-objectDefault"><![CDATA[Description de l'objet...]]></label>
+		<label code="editWindow-type-objectDefault"><![CDATA[Texte à afficher lors de la prise/pose...]]></label>
 		<label code="editWindow-type-take"><![CDATA[Prendre]]></label>
 		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
 		
