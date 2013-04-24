@@ -205,7 +205,7 @@ package com.twinoid.kube.quest.views {
 				if(stage.mouseY < DRAG_GAP)						addY = (1-stage.mouseY / DRAG_GAP) * 50;
 				if(stage.mouseY > stage.stageHeight - DRAG_GAP)	addY = -(stage.mouseY - stage.stageHeight + DRAG_GAP) / DRAG_GAP * 50;
 				if(_startDragInGap && addX == 0 && addY == 0) _startDragInGap = false;//Allow drag again if we leav the drag zone.
-				if(!_startDragInGap) {
+				if(!_startDragInGap && (addX != 0 || addY != 0)) {
 					if(_draggedItem != null) {
 						_draggedItem.x -= addX;
 						_draggedItem.y -= addY;
