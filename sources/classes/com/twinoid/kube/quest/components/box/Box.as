@@ -1,14 +1,19 @@
 package com.twinoid.kube.quest.components.box {
-	import com.nurun.utils.string.StringUtils;
+	import com.nurun.components.vo.Margin;
+	import com.nurun.components.button.IconAlign;
 	import com.nurun.components.bitmap.ImageResizer;
+	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.roundPos;
+	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.events.BoxEvent;
 	import com.twinoid.kube.quest.graphics.BoxEventGraphic;
 	import com.twinoid.kube.quest.graphics.BoxInGraphic;
+	import com.twinoid.kube.quest.graphics.BoxLinkIconGraphic;
 	import com.twinoid.kube.quest.graphics.BoxOutGraphic;
+	import com.twinoid.kube.quest.views.BackgroundView;
 	import com.twinoid.kube.quest.vo.KuestEvent;
 
 	import flash.display.Sprite;
@@ -31,8 +36,8 @@ package com.twinoid.kube.quest.components.box {
 		private var _image:ImageResizer;
 		private var _background:BoxEventGraphic;
 		private var _dragOffset:Point;
-		private var _outBox:BoxOutGraphic;
-		private var _inBox:BoxInGraphic;
+		private var _outBox:GraphicButton;
+		private var _inBox:GraphicButton;
 		private var _links:Vector.<BoxLink>;
 		
 		
@@ -69,7 +74,10 @@ package com.twinoid.kube.quest.components.box {
 		 * @inheritDoc
 		 */
 		override public function startDrag(lockCenter:Boolean = false, bounds:Rectangle = null):void {
-			super.startDrag(lockCenter, bounds);
+			lockCenter, bounds;//avoid unused warnigns from FDT
+			//Disabled the defautl startDrag behavior to prevent from lags between
+			//the box and its link. Also mouse was sometimes "loosing" the box.
+//			super.startDrag(lockCenter, bounds);
 			
 			_dragOffset.x =  x;
 			_dragOffset.y =  y;
@@ -80,7 +88,7 @@ package com.twinoid.kube.quest.components.box {
 		 * @inheritDoc
 		 */
 		override public function stopDrag():void {
-			super.stopDrag();
+//			super.stopDrag();
 			
 			var i:int, len:int = _links.length;
 			for(i = 0; i < len; ++i) _links[i].stopAutoUpdate();
@@ -124,14 +132,19 @@ package com.twinoid.kube.quest.components.box {
 		private function initialize():void {
 			_links		= new Vector.<BoxLink>();
 			
-			_outBox		= addChild(new BoxOutGraphic()) as BoxOutGraphic;
 			_background	= addChild(new BoxEventGraphic()) as BoxEventGraphic;
-			_inBox		= addChild(new BoxInGraphic()) as BoxInGraphic;
+			_outBox		= addChild(new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
+			_inBox		= addChild(new GraphicButton(new BoxInGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
 			_image		= addChild(new ImageResizer()) as ImageResizer;
 			_label		= addChild(new CssTextField("box-label")) as CssTextField;
 			
 			_dragOffset = new Point();
 			_label.mouseEnabled = false;
+			
+			_outBox.iconAlign = _inBox.iconAlign = IconAlign.LEFT;
+			_inBox.contentMargin = new Margin(10, 0, 0, 0);
+			_outBox.contentMargin = new Margin(10, 0, 0, 0);
+			_inBox.width = _outBox.width = 30;
 			
 			if(_data != null && _data.boxPosition != null) {
 				x = _data.boxPosition.x;
@@ -145,8 +158,6 @@ package com.twinoid.kube.quest.components.box {
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
-			_inBox.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-			_outBox.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_outBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			
@@ -207,17 +218,11 @@ package com.twinoid.kube.quest.components.box {
 		}
 		
 		/**
-		 * Called when mouse is released over the in/out box
-		 */
-		private function mouseUpHandler(event:MouseEvent):void {
-		}
-		
-		/**
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			_background.width = 180;
-			_background.height = 75;
+			_background.width = BackgroundView.CELL_SIZE * 8 - _inBox.width - _outBox.width + 4;
+			_background.height = _inBox.height = _outBox.height = BackgroundView.CELL_SIZE * 3;
 			_background.x = _inBox.width - 2;
 			_outBox.x = _background.x + _background.width - 2;
 

@@ -3,6 +3,7 @@
 	<labels>
 		<label code="selector-char"><![CDATA[Choisir un personnage]]></label>
 		<label code="selector-object"><![CDATA[Choisir un objet]]></label>
+		<label code="selector-none"><![CDATA[<i>(aucun)</i>]]></label>
 		
 		<label code="box-empty"><![CDATA[<p align="center">Cliquez pour éditer...</p>]]></label>
 		
@@ -24,6 +25,8 @@
 		<label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
 		<label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
 		<label code="editWindow-place-kubeHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.]]></label>
+		<label code="editWindow-place-capture"><![CDATA[Capturer]]></label>
+		<label code="editWindow-place-captureTT"><![CDATA[Lancez le jeu Kube et cliquez sur<br />ce bouton pour remplir les champs<br />avec votre position actuelle.]]></label>
 		
 		<label code="editWindow-type-title"><![CDATA[Type de l'évènement]]></label>
 		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
@@ -32,6 +35,8 @@
 		<label code="editWindow-type-objectDefault"><![CDATA[Texte à afficher lors de la prise/pose...]]></label>
 		<label code="editWindow-type-take"><![CDATA[Prendre]]></label>
 		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
+		<label code="editWindow-type-placeHolderObjectTT"><![CDATA[Sélectionner un objet.]]></label>
+		<label code="editWindow-type-placeHolderCharacterTT"><![CDATA[Sélectionner un personnage.]]></label>
 		
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
 		<label code="editWindow-time-noneTT"><![CDATA[Toujours]]></label>

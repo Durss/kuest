@@ -1,9 +1,10 @@
 package com.twinoid.kube.quest.components.selector {
-	import com.nurun.utils.text.CssManager;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.components.tile.ITileEngineItem2D;
 	import com.nurun.components.tile.TileEngine2D;
 	import com.nurun.core.lang.Disposable;
+	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.utils.text.CssManager;
 	import com.twinoid.kube.quest.components.item.ItemPlaceholder;
 	import com.twinoid.kube.quest.vo.EmptyItemData;
 	import com.twinoid.kube.quest.vo.IItemData;
@@ -64,7 +65,7 @@ package com.twinoid.kube.quest.components.selector {
 				return;
 			}
 			_image.image = _data.image;
-			_label.text = _data.name;
+			_label.text = data is EmptyItemData? Label.getLabel("selector-none") : _data.name;
 			_label.y = WIDTH;
 			_label.width = WIDTH;
 			var size:int = CssManager.getInstance().getTextFormatOf(_label.style).size as int;
@@ -96,7 +97,7 @@ package com.twinoid.kube.quest.components.selector {
 		 */
 		private function initialize():void {
 			_image = addChild(new ItemPlaceholder()) as ItemPlaceholder;
-			_label = addChild(new CssTextField("item-label")) as CssTextField;
+			_label = addChild(new CssTextField("selectorItem-label")) as CssTextField;
 			
 			_image.x = _image.y = 5;
 			

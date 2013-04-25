@@ -17,21 +17,24 @@ package com.twinoid.kube.quest.model {
 
 	
 	/**
+	 * Application's model.
 	 * 
 	 * @author francois.dursus
 	 * @date 3 mai 2012;
 	 */
 	public class Model extends EventDispatcher implements IModel {
+		
 		private var _lcName:String;
 		private var _receiver:LocalConnection;
 		private var _sender:LocalConnection;
-		private var _position:Point;
+		private var _inGamePosition:Point;
 		private var _checkTimeout:uint;
 		private var _connectTimeout:uint;
 		private var _kuestData:KuestData;
 		private var _currentBoxToEdit:KuestEvent;
 		private var _objects:Vector.<ObjectItemData>;
 		private var _characters:Vector.<CharItemData>;
+		private var _connectedToGame:Boolean;
 		
 		
 		
@@ -70,6 +73,17 @@ package com.twinoid.kube.quest.model {
 		 * Gets the characters list
 		 */
 		public function get characters():Vector.<CharItemData> { return _characters; }
+		
+		/**
+		 * Gets the in game's position.
+		 */
+		public function get inGamePosition():Point { return _inGamePosition; }
+		
+		/**
+		 * Gets if the application is connected to the Kube game.
+		 */
+		public function get connectedToGame():Boolean { return _connectedToGame && _inGamePosition.x != int.MAX_VALUE && _inGamePosition.y != int.MAX_VALUE; }
+		
 
 
 
@@ -138,7 +152,7 @@ package com.twinoid.kube.quest.model {
 		 */
 		private function initialize():void {
 			_kuestData = new KuestData();
-			_position = new Point(int.MAX_VALUE, int.MAX_VALUE);
+			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
 			
 			_lcName = "_kuest_"+SHA1.hash(Math.random()+""+Math.random())+"_";
 			
@@ -160,7 +174,10 @@ package com.twinoid.kube.quest.model {
 			}
 			attemptToConnect();
 		}
-
+		
+		/**
+		 * Fires an update to the views
+		 */
 		private function update():void {
 			dispatchEvent(new ModelEvent(ModelEvent.UPDATE, this));
 		}
@@ -182,11 +199,7 @@ package com.twinoid.kube.quest.model {
 		 * Attempts to connect to the game
 		 */
 		private function checkForConnection():void {
-//			if(_texts[_position.x+","+_position.y] != undefined)  {
-//				setText(_texts[_position.x+","+_position.y]);
-//			}else{
-//				setText(null);
-//			}
+			setText(null);
 		}
 
 		/**
@@ -194,13 +207,9 @@ package com.twinoid.kube.quest.model {
 		 */
 		private function onUpdatePosition(px:int, py:int):void {
 			if(px == 0xffffff && py == 0xffffff) return; //first undefined coord fired by the game. Ignore it.
-			_position.x = px;
-			_position.y = py;
-//			if(_texts[px+","+py] != undefined)  {
-//				setText(_texts[px+","+py]);
-//			}else{
-//				setText(null);
-//			}
+			_inGamePosition.x = px;
+			_inGamePosition.y = py;
+			update();
 		}
 		 
 		/**
@@ -214,15 +223,22 @@ package com.twinoid.kube.quest.model {
 		 * Called if a data sending succeeds or fails.
 		 */
 		private function statusHandler(event:StatusEvent):void {
+			clearTimeout(_checkTimeout);
+			clearTimeout(_connectTimeout);
 			switch (event.level) {
 				case "status":
 				//sending success!
-				clearTimeout(_checkTimeout);
+				if(!_connectedToGame) {
+					_connectedToGame = true;
+					update();
+				}
 				_checkTimeout = setTimeout(checkForConnection, 1000);
 				break;
 			case "error":
-//				trace("connection error");
-				clearTimeout(_connectTimeout);
+				if(_connectedToGame) {
+					_connectedToGame = false;
+					update();
+				}
 				_connectTimeout = setTimeout(attemptToConnect, 500);
 				break;
 			}
