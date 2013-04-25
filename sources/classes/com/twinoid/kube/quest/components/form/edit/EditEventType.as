@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.components.form.edit {
+	import com.twinoid.kube.quest.vo.ToolTipAlign;
+	import com.twinoid.kube.quest.events.ToolTipEvent;
+	import flash.events.MouseEvent;
 	import com.twinoid.kube.quest.vo.ActionType;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.environnement.label.Label;
@@ -103,6 +106,8 @@ package com.twinoid.kube.quest.components.form.edit {
 			_charDialogue.width = _width - _charHolder.width - 5;
 			_charDialogue.height = _charHolder.height;
 			_charDialogue.x = _charHolder.width + 5;
+			
+			_charHolder.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 		}
 
 		/**
@@ -129,6 +134,16 @@ package com.twinoid.kube.quest.components.form.edit {
 			cbTake.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 - cbTake.width - 5);
 			cbPut.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 + 5);
 			cbPut.y = cbTake.y = Math.round(_objectDialogue.height + 5);
+			
+			_objectHolder.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+		}
+
+		private function rollOverHandler(event:MouseEvent):void {
+			if(event.currentTarget == _objectHolder) {
+				_objectHolder.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("editWindow-type-placeHolderObjectTT"), ToolTipAlign.TOP_RIGHT));
+			}else{
+				_charHolder.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("editWindow-type-placeHolderCharacterTT"), ToolTipAlign.TOP_RIGHT));
+			}
 		}
 		
 	}

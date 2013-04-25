@@ -15,6 +15,9 @@ package com.twinoid.kube.quest.views {
 	 * @date 3 févr. 2013;
 	 */
 	public class BackgroundView extends AbstractView {
+		
+		public static const CELL_SIZE:int = 29;
+		
 		private var _pattern:BitmapData;
 		private var _matrix:Matrix;
 		private var _default:Matrix;
@@ -82,9 +85,9 @@ package com.twinoid.kube.quest.views {
 		private function initialize():void {
 			var src:Shape = new Shape();
 			src.graphics.beginFill(0x8FC7DE);
-			src.graphics.drawRect(0, 0, 29, 1);
-			src.graphics.drawRect(0, 0, 1, 29);
-			_pattern = new BitmapData(29, 29, false, 0xffBBDDEC);
+			src.graphics.drawRect(0, 0, CELL_SIZE, 1);
+			src.graphics.drawRect(0, 0, 1, CELL_SIZE);
+			_pattern = new BitmapData(CELL_SIZE, CELL_SIZE, false, 0xffBBDDEC);
 			_pattern.draw(src);
 			
 			_matrix = new Matrix();

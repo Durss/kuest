@@ -83,18 +83,6 @@ package com.twinoid.kube.quest.views {
 			model;
 		}
 
-		private function open():void {
-			if(_opened) return;
-			_opened = true;
-			TweenLite.to(this, .25, {x:0});
-		}
-
-		private function close():void {
-			if(!_opened) return;
-			_opened = false;
-			TweenLite.to(this, .25, {x:-_width});
-		}
-
 
 
 		
@@ -163,7 +151,24 @@ package com.twinoid.kube.quest.views {
 			
 			_buttonsHolder.x = _width;
 			_buttonsHolder.y = Math.round((stage.stageHeight - _buttonsHolder.height) * .5);
-			
+		}
+		
+		/**
+		 * Opens the view
+		 */
+		private function open():void {
+			if(_opened) return;
+			_opened = true;
+			TweenLite.to(this, .25, {x:0});
+		}
+		
+		/**
+		 * Closes the view
+		 */
+		private function close():void {
+			if(!_opened) return;
+			_opened = false;
+			TweenLite.to(this, .25, {x:-_width});
 		}
 		
 		/**

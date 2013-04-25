@@ -31,6 +31,7 @@ package com.twinoid.kube.quest.components.box {
 		private var _tmpPt:Point;
 		private var _warning:WarningGraphic;
 		private var _scisors:ScissorsGraphic;
+		private var _isOver:Boolean;
 		
 		
 		
@@ -202,6 +203,7 @@ package com.twinoid.kube.quest.components.box {
 			
 			if (_startEntry != null && _endEntry != null) {
 				update();
+				mouseChildren = false;
 				addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 				addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 				addEventListener(MouseEvent.CLICK, clickHandler);
@@ -232,14 +234,18 @@ package com.twinoid.kube.quest.components.box {
 			_scisors.x = mouseX;
 			_scisors.y = mouseY;
 			_scisors.startDrag();
+			_isOver = true;
+			update();
 		}
 		
 		/**
 		 * Called when link is rolled out
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
+			_isOver = false;
 			Mouse.show();
 			removeChild(_scisors);
+			update();
 		}
 		
 		/**
@@ -262,20 +268,36 @@ package com.twinoid.kube.quest.components.box {
 //			if(endX < ctrl2X + distMin)		endX = ctrl2X + distMin;
 			var halfX:int = endX * .5;
 			var halfY:int = endY * .5;
+			var colors:Array = !_isOver? [0xCD4B4B, 0x348CB1, 0x5AB035] : [0xdf8c8c, 0x7abcd8, 0xa0db88];
 			
 			var a:Number = 0;//Math.atan2(mouseY, mouseX);
 			var m:Matrix = new Matrix();
 			var g:Graphics = graphics;
 			g.clear();
+			if(alpha == 1) {
+				//Hit zone
+				g.moveTo(0, 0);
+				g.lineStyle(30, 0xffffff, 0, false, "normal", CapsStyle.NONE);
+				g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
+				g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+			}
+			
+			//Borders
+			g.moveTo(0, 0);
+			g.lineStyle(14, 0xffffff, 1, false, "normal", CapsStyle.NONE);
+			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
+			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+			
+			//Draw gradient line
 			g.moveTo(0, 0);
 			g.lineStyle(10, 0xffffff, 1, false, "normal", CapsStyle.NONE);
 			
 			m.createGradientBox(halfX, halfY, a);
-			g.lineGradientStyle(GradientType.LINEAR, [0xCD4B4B, 0x348CB1], [1, 1], [0, 0xff], m);
+			g.lineGradientStyle(GradientType.LINEAR, [colors[0], colors[1]], [1, 1], [0, 0xff], m);
 			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 			
 			m.createGradientBox(halfX, halfY, a, halfX, halfY);
-			g.lineGradientStyle(GradientType.LINEAR, [0x348CB1, 0x5AB035], [1, 1], [0, 0xff], m);
+			g.lineGradientStyle(GradientType.LINEAR, [colors[1], colors[2]], [1, 1], [0, 0xff], m);
 			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
 			
 //			g.lineStyle(0, 0, 0);

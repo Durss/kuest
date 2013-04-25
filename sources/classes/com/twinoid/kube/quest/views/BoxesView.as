@@ -56,6 +56,7 @@ package com.twinoid.kube.quest.views {
 		private var _overBoard:Boolean;
 		private var _mousePressed:Boolean;
 		private var _startDragInGap:Boolean;
+		private var _dragItemOffset:Point;
 		
 		
 		
@@ -112,6 +113,7 @@ package com.twinoid.kube.quest.views {
 			_mouseOffset	= new Point();
 			_dragOffset		= new Point();
 			_prevMousePos	= new Point();
+			_dragItemOffset	= new Point();
 			_dataToBox		= new Dictionary();
 			
 			_tempBox		= new Sprite();
@@ -149,7 +151,10 @@ package com.twinoid.kube.quest.views {
 			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
 			computePositions();
 		}
-
+		
+		/**
+		 * Create a box on double click
+		 */
 		private function doubleClick(event:MouseEvent):void {
 			if(event.target != this) return;
 			addTempItem();
@@ -215,6 +220,20 @@ package com.twinoid.kube.quest.views {
 				}
 			}
 			
+			if(_draggedItem != null) {
+				var size:int = BackgroundView.CELL_SIZE;
+				_draggedItem.x = Math.round( (_boxesHolder.mouseX - _dragItemOffset.x) / size) * size;
+				_draggedItem.y = Math.round( (_boxesHolder.mouseY - _dragItemOffset.y) / size) * size;
+				
+				//The default item is atually a sprite containing a centered box.
+				//The fact the box is centered fucks up the rounded position.
+				if (_draggedItem == _tempBox) {
+					var inner:DisplayObject = _draggedItem.getChildAt(0);
+					_draggedItem.x -= inner.x%size;
+					_draggedItem.y -= inner.y%size;
+				}
+			}
+			
 			//Move the board
 			_prevMousePos.x = stage.mouseX;
 			_prevMousePos.y = stage.mouseY;
@@ -252,6 +271,8 @@ package com.twinoid.kube.quest.views {
 			TweenLite.from(_tempBox, .25, {scaleX:0, scaleY:0, ease:Back.easeOut});
 			_tempBox.startDrag();
 			_draggedItem = _tempBox;
+			_dragItemOffset.x = _draggedItem.mouseX;
+			_dragItemOffset.y = _draggedItem.mouseY;
 		}
 		
 		
@@ -285,6 +306,8 @@ package com.twinoid.kube.quest.views {
 					if(target is Box) {
 						Box(target).startDrag();
 						_draggedItem = target as Sprite;
+						_dragItemOffset.x = _draggedItem.mouseX;
+						_dragItemOffset.y = _draggedItem.mouseY;
 						_boxesHolder.addChild(target);//Bring it to front
 					}
 				}
@@ -339,7 +362,7 @@ package com.twinoid.kube.quest.views {
 					_tempLink.showError();
 				} else {
 					var link:BoxLink = _tempLink.clone();
-					_boxesHolder.addChild(link);
+					_boxesHolder.addChildAt(link, 0);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
 				}

@@ -93,14 +93,16 @@ package com.twinoid.kube.quest.views {
 			TweenLite.killTweensOf(this);
 			
 			if(model.currentBoxToEdit != null) {
-				_data = model.currentBoxToEdit;
 				if(_closed) {
+					_data = model.currentBoxToEdit;
 					scaleX = scaleY = 1;
 					PosUtils.centerInStage(this);
 					visible = true;
 					stage.focus = this;
 					TweenLite.from(this, .5, {x:stage.stageWidth * .5, y:stage.stageHeight * .5, scaleX:0, scaleY:0, ease:Back.easeOut, onComplete:flagOpened});
 				}
+				_place.connectedToGame = model.connectedToGame;
+				_place.inGamePosition = model.inGamePosition;
 			}else if(!_closed){
 				_closed = true;
 				TweenLite.to(this, .5, {x:stage.stageWidth * .5, y:stage.stageHeight * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
