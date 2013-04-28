@@ -59,7 +59,7 @@ package com.twinoid.kube.quest.components.menu {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			_holder = new ScrollableDisplayObject();
 			_scrollpane = addChild(new ScrollPane(_holder, new ScrollbarKube())) as ScrollPane;
-			_label = addChild(new CssTextField("menu-label")) as CssTextField;
+			_label = addChild(new CssTextField("menu-title")) as CssTextField;
 			
 			_label.background = true;
 			_label.backgroundColor = 0x2D89B0;
@@ -79,7 +79,7 @@ package com.twinoid.kube.quest.components.menu {
 			
 			_label.width = _width;
 			
-			_scrollpane.y = _label.height;
+			_scrollpane.y = _label.height + 10;
 			_scrollpane.width = _width;
 			_scrollpane.height = stage.stageHeight - _scrollpane.y;
 			_scrollpane.validate();

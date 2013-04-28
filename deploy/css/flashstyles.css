@@ -1,13 +1,15 @@
 ﻿.debug { font-family:Verdana; font-size:12; color:#CC0000; flash-glow:[1.3,10,ffffff]}
 .error { font-family:Verdana; font-size:12; color:#CC0000; }
-.errorBig { font-family:Verdana; font-weight:bold; font-size:14; color:#cc0000; }
+.errorBig { font-family:Verdana; font-weight:bold; font-size:14; color:#cc0000; flash-glow:[2,10,ffffff }
 
-.link { color:#CC0000; text-decoration:underline; }
+.link { color:#FFCC00; font-weight:bold; text-decoration:underline; }
 .tooltipContent { font-family:Verdana; font-size:12; color:#ffffff; }
 .tooltipContentBig { font-family:Verdana; font-size:17; color:#ffffff; }
 .tooltipContentWarn { font-family:Verdana; font-weight:bold; font-size:10; color:#aa0000; }
 
-.menu-label { font-family:Verdana; font-weight:bold; font-size:16; color:#ffffff; text-align:center; }
+.menu-title { font-family:Verdana; font-weight:bold; font-size:16; color:#ffffff; text-align:center; }
+.menu-label { font-family:Verdana; font-size:14; color:#ffffff; }
+.loader-label { font-family:Verdana; font-size:8; color:#ffffff; text-align:center; flash-charcase:upper; }
 
 .input { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#265367; }
 .inputDefault { font-family:Verdana; font-size:12; font-weight:normal; font-style:italic; color:#265367; }
@@ -33,7 +35,6 @@
 
 .radioButton { font-family:Verdana; font-size:12; color:#ffffff; }
 .radioButton_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }
-
 
 .promptWindowTitle { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }
 .promptWindowContent { font-family:Verdana; font-size:12; color:#ffffff; }

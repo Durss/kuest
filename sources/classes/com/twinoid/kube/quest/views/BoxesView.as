@@ -93,10 +93,17 @@ package com.twinoid.kube.quest.views {
 				var item:Box = new Box(lastItem);
 				item.buttonMode = true;
 				item.addEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
+				item.addEventListener(BoxEvent.DELETE, deleteBoxHandler);
 				_boxesHolder.addChild( item );
 			}
 			if(_background == null) {
 				_background = ViewLocator.getInstance().locateViewByType(BackgroundView) as BackgroundView;
+				_scrollOffset = new Point(stage.stageWidth * .5, stage.stageHeight * .5);
+				
+				_boxesHolder.x = _endX = _scrollOffset.x;
+				_boxesHolder.y = _endY = _scrollOffset.y;
+				_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
+				computePositions();
 			}
 		}
 
@@ -144,12 +151,6 @@ package com.twinoid.kube.quest.views {
 			addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
 			
 			doubleClickEnabled = true;
-			_scrollOffset = new Point(stage.stageWidth * .5, stage.stageHeight * .5);
-			
-			_boxesHolder.x = _endX = _scrollOffset.x;
-			_boxesHolder.y = _endY = _scrollOffset.y;
-			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
-			computePositions();
 		}
 		
 		/**
@@ -357,7 +358,7 @@ package com.twinoid.kube.quest.views {
 			//If a link has just been created correctly, try to create the link
 			var success:Boolean = true;
 			if (_tempLink.endEntry != null) {
-				success = _tempLink.endEntry.data.addDependent(_tempLink.startEntry.data);
+				success = _tempLink.endEntry.data.addDependency(_tempLink.startEntry.data);
 				if(!success) {
 					_tempLink.showError();
 				} else {
@@ -384,7 +385,14 @@ package com.twinoid.kube.quest.views {
 			
 			//Clean stuffs that need to be
 			clearTimeout(_createTimeout);
-			if (_draggedItem != null) _draggedItem.stopDrag();
+			if (_draggedItem != null) {
+				if(_draggedItem is Box) {
+					//Update VO if necessary
+					Box(_draggedItem).data.boxPosition.x = _draggedItem.x;
+					Box(_draggedItem).data.boxPosition.y = _draggedItem.y;
+				}
+				_draggedItem.stopDrag();
+			}
 			_draggedItem = null;
 		}
 		
@@ -395,6 +403,37 @@ package com.twinoid.kube.quest.views {
 			_tempLink.startEntry = event.currentTarget as Box;
 			_tempLink.drawToMouse();
 			_boxesHolder.addChildAt(_tempLink, 0);
+		}
+		
+		/**
+		 * Called when a box is delete
+		 */
+		private function deleteBoxHandler(event:BoxEvent):void {
+			var target:Box = event.currentTarget as Box;
+			target.addEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
+			target.addEventListener(BoxEvent.DELETE, deleteBoxHandler);
+			
+			_boxesHolder.removeChild(target);
+			
+			var i:int, len:int, item:DisplayObject, box:Box, link:BoxLink;
+			len = _boxesHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				item = _boxesHolder.getChildAt(i);
+				if(item is Box) {
+					box = item as Box;
+					box.data.removeDependency(target.data);//remove eventual dependency
+				}else
+				if(item is BoxLink) {
+					link = item as BoxLink;
+					if(link.startEntry == target || link.endEntry == target) {
+						link.deleteLink();
+						i--;
+						len--;
+					}
+				}
+			}
+			
+			FrontControler.getInstance().deleteNode(target.data);
 		}
 	}
 }

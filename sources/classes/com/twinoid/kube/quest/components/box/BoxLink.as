@@ -167,6 +167,19 @@ package com.twinoid.kube.quest.components.box {
 		}
 		
 		/**
+		 * Deletes the link.
+		 * Removes itself from its related data.
+		 */
+		public function deleteLink():void {
+			_endEntry.data.removeDependency(_startEntry.data);
+			//self clear/dispose. BoxView has no hard reference to this
+			//component (for now at least..) so we can do that safely.
+			dispose();
+			parent.removeChild(this);
+			Mouse.show();
+		}
+		
+		/**
 		 * Makes the component garbage collectable.
 		 */
 		public function dispose():void {
@@ -214,11 +227,7 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when link is clicked to cut it
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			_endEntry.data.removeDependent(_startEntry.data);
-			//self clear/dispose. BoxView has no hard reference to this
-			//component (at this time at least..) so we can do that safely.
-			dispose();
-			Mouse.show();
+			deleteLink();
 		}
 		
 		/**

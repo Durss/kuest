@@ -1,6 +1,10 @@
 package com.twinoid.kube.quest.components {
+	import gs.TweenLite;
+	import com.nurun.utils.pos.roundPos;
 	import com.muxxu.kube3dit.graphics.SpinGraphic;
+	import com.nurun.components.text.CssTextField;
 
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.DropShadowFilter;
 
@@ -8,7 +12,12 @@ package com.twinoid.kube.quest.components {
 	 * 
 	 * @author Francois
 	 */
-	public class LoaderSpinning extends SpinGraphic {
+	public class LoaderSpinning extends Sprite {
+		
+		private var _label:CssTextField;
+		private var _spin:SpinGraphic;
+		private var _width:Number;
+		private var _height:Number;
 		
 		
 		
@@ -21,7 +30,13 @@ package com.twinoid.kube.quest.components {
 		 */
 		public function LoaderSpinning() {
 			filters = [new DropShadowFilter(0,0,0,.4,5,5,2,2)];
+			alpha = 0;
 			visible = false;
+			_spin = addChild(new SpinGraphic()) as SpinGraphic;
+			_label = new CssTextField("loader-label");
+			_spin.scaleX = _spin.scaleY = 1.5;
+			_width = _spin.width;
+			_height = _spin.height;
 		}
 
 		
@@ -29,6 +44,15 @@ package com.twinoid.kube.quest.components {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the width of the component.
+		 */
+		override public function get width():Number { return _width; }
+		
+		/**
+		 * Gets the height of the component.
+		 */
+		override public function get height():Number { return _height; }
 
 
 
@@ -40,14 +64,30 @@ package com.twinoid.kube.quest.components {
 			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 
-		public function open():void {
-			visible = true;
+		public function open(label:String = null):void {
+			if(label != null) {
+				_label.text = label;
+				addChild(_label);
+				_label.x = -_label.width * .5;
+				_label.y = _height * .5;
+				_label.alpha = 1;
+				_label.visible = true;
+				roundPos(_label);
+				TweenLite.from(_label, .25, {y:"+10", autoAlpha:0, delay:.25});
+			}
+			TweenLite.to(this, .25, {autoAlpha:1});
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 
-		public function close():void {
-			visible = false;
-			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+		public function close(label:String = null):void {
+			if(label != null) {
+				_label.text = label;
+				_label.x = -_label.width * .5;
+			}
+			if(contains(_label)) {
+				TweenLite.to(_label, .25, {y:"+10", removeChild:true, autoAlpha:0, delay:.75});
+			}
+			TweenLite.to(this, .25, {autoAlpha:0, onComplete:killListener, delay:1});
 		}
 
 
@@ -59,7 +99,11 @@ package com.twinoid.kube.quest.components {
 		 * ******* */
 
 		private function enterFrameHandler(event:Event):void {
-			rotation -= 15;
+			_spin.rotation -= 15;
+		}
+
+		private function killListener():void {
+			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 		
 	}

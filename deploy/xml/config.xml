@@ -14,10 +14,11 @@
 	
 	<vars>
 		<var code="lang"><![CDATA[fr]]></var>
-		<var code="root"><![CDATA[http://fevermap.org/kuest/]]></var>
+		<var code="root"><![CDATA[http://localhost/kuest]]></var>
 	</vars>
 	
 	<paths>
+		<path code="loginWS"><![CDATA[{v_root}/php/services/login.php]]></path>
 	</paths>
 	
 	<dependencies />

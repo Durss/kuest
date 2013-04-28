@@ -13,7 +13,7 @@ package com.twinoid.kube.quest.vo {
 	 */
 	public class KuestData implements Serializable {
 		
-		private var _entryPoints:Vector.<KuestEvent>;
+		private var _nodes:Vector.<KuestEvent>;
 		private var _lastItemAdded:KuestEvent;
 		
 		
@@ -44,6 +44,11 @@ package com.twinoid.kube.quest.vo {
 			_lastItemAdded = null;
 			return item;
 		}
+		
+		/**
+		 * Gets all the nodes.
+		 */
+		public function get nodes():Vector.<KuestEvent> { return _nodes; }
 
 
 
@@ -68,8 +73,24 @@ package com.twinoid.kube.quest.vo {
 		 */
 		public function addEntryPoint(px:int, py:int):void {
 			var e:KuestEvent = new KuestEvent(px, py);
-			_entryPoints.push(e);
+			_nodes.push(e);
 			_lastItemAdded = e;
+		}
+		
+		/**
+		 * Deletes a node from the references.
+		 */
+		public function deleteNode(data:KuestEvent):void {
+			var i:int, len:int;
+			len = _nodes.length;
+			for(i = 0; i < len; ++i) {
+				if(_nodes[i] == data) {
+					_nodes.splice(i, 1);
+					i --;
+					len --;
+				}
+			}
+			data.dispose();
 		}
 
 
@@ -82,7 +103,7 @@ package com.twinoid.kube.quest.vo {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_entryPoints = new Vector.<KuestEvent>();
+			_nodes = new Vector.<KuestEvent>();
 		}
 		
 	}

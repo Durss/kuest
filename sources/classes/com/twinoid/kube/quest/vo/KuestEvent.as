@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.vo {
+	import com.nurun.core.lang.Disposable;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.display.BitmapData;
@@ -15,10 +16,10 @@ package com.twinoid.kube.quest.vo {
 	 * @author Francois
 	 * @date 3 févr. 2013;
 	 */
-	public class KuestEvent extends EventDispatcher implements Serializable {
+	public class KuestEvent extends EventDispatcher implements Serializable, Disposable {
 		
 		private var _locked:Boolean;
-		private var _dependents:Vector.<KuestEvent>;
+		private var _dependencies:Vector.<KuestEvent>;
 		private var _guid:String;
 		private var _boxPos:Point;
 		private var _actionPlace:ActionPlace;
@@ -49,9 +50,9 @@ package com.twinoid.kube.quest.vo {
 		public function get guid():String { return _guid; }
 		
 		/**
-		 * Gets the dependent events.
+		 * Gets the dependency events.
 		 */
-		public function get dependents():Vector.<KuestEvent> { return _dependents; }
+		public function get dependencies():Vector.<KuestEvent> { return _dependencies; }
 		
 		/**
 		 * Gets the boxe's position
@@ -123,23 +124,23 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Adds a node on which this event will depend.<br>
 		 * <br>
-		 * This event will be unlocked only we the dependent event is done.<br>
+		 * This event will be unlocked only when the dependency event is done.<br>
 		 * Until then, this event won't exist for the end user.<br>
-		 * A dependent node is actually a <strong>PARENT</strong> node.
+		 * A dependency node is actually a <strong>PARENT</strong> node.
 		 * 
 		 * @return if the dependency has been made or not. The dependency cannot be built in case of looped or self dependency.
 		 */
-		public function addDependent(entry:KuestEvent):Boolean {
+		public function addDependency(entry:KuestEvent):Boolean {
 			if(deepDependencyCheck(entry)) {
-				//Check if the entry isn't already a direct dependent.
+				//Check if the entry isn't already a direct dependency.
 				var i:int, len:int;
-				len = _dependents.length;
+				len = _dependencies.length;
 				for(i = 0; i < len; ++i) {
-					//Already a direct dependent!
-					if(_dependents[i] == entry) return false;
+					//Already a direct dependency!
+					if(_dependencies[i] == entry) return false;
 				}
 				
-				_dependents.push( entry );
+				_dependencies.push( entry );
 				return true;
 			}else{
 				return false;
@@ -147,14 +148,14 @@ package com.twinoid.kube.quest.vo {
 		}
 		
 		/**
-		 * Removes one of the event's dependents.
+		 * Removes one of the event's dependencies.
 		 */
-		public function removeDependent(entry:KuestEvent):void {
+		public function removeDependency(entry:KuestEvent):void {
 			var i:int, len:int;
-			len = _dependents.length;
+			len = _dependencies.length;
 			for(i = 0; i < len; ++i) {
-				if(_dependents[i] == entry) {
-					_dependents.splice(i, 1);
+				if(_dependencies[i] == entry) {
+					_dependencies.splice(i, 1);
 					i --;
 					len --;
 				}
@@ -182,6 +183,20 @@ package com.twinoid.kube.quest.vo {
 		public function serialize():String {
 			return "";
 		}
+		
+		/**
+		 * Makes the component garbage collectable.
+		 */
+		public function dispose():void {
+			if(_actionPlace != null) _actionPlace.dispose();
+			if(_actionDate != null) _actionDate.dispose();
+			if(_actionType != null) _actionType.dispose();
+			_dependencies = null;
+			_boxPos = null;
+			_actionPlace = null;
+			_actionDate = null;
+			_actionType = null;
+		}
 
 
 		
@@ -195,7 +210,7 @@ package com.twinoid.kube.quest.vo {
 		private function initialize():void {
 			_guid = MD5.hash(new Date().getTime().toString()+"_"+Math.random());
 			_locked = true;
-			_dependents = new Vector.<KuestEvent>();
+			_dependencies = new Vector.<KuestEvent>();
 		}
 		
 		/**
@@ -208,16 +223,16 @@ package com.twinoid.kube.quest.vo {
 		 */
 		private function deepDependencyCheck(entry:KuestEvent):Boolean {
 			var i:int, len:int;
-			len = entry.dependents.length;
+			len = entry.dependencies.length;
 			//Go through all parents
 			for(i = 0; i < len; ++i) {
-				//If the dependent entry is the current one, stop everything
+				//If the dependency entry is the current one, stop everything
 				//we found what we were searching for.
-				if(entry.dependents[i] == this) return false;
+				if(entry.dependencies[i] == this) return false;
 				
 				try {
 					//The entry doesn't match, check if its parents match.
-					if(deepDependencyCheck(entry.dependents[i]) === false) {
+					if(deepDependencyCheck(entry.dependencies[i]) === false) {
 						return false;
 					}
 				}catch(error:Error) {

@@ -30,6 +30,7 @@ package com.twinoid.kube.quest.components.box {
 	import flash.geom.Rectangle;
 	
 	[Event(name="createLink", type="com.twinoid.kube.quest.events.BoxEvent")]
+	[Event(name="delete", type="com.twinoid.kube.quest.events.BoxEvent")]
 	
 	/**
 	 * 
@@ -222,7 +223,7 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when mouse goes over the component
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
-			if(event.target != this) return; //Fuckin bug ! Without that, we get a rollover fired when we click out or delete button, even if we're already over. Probably due to GraphicButton component...
+			if(event.target != this) return; //Fuckin bug ! Without that, we get a rollover fired when we click "out" or "delete" button, even if we're already over. Probably due to GraphicButton component...
 			cacheAsBitmap = false;
 			addChildAt(_deleteBt, 0);
 			TweenLite.killTweensOf(_deleteBt);
@@ -233,7 +234,7 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when mouse goes out the component.
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
-			if(event.target != this) return; //Fuckin bug ! Without that, we get a rollover fired when we click out or delete button, even if we're already over. Probably due to GraphicButton component...
+			if(event.target != this) return; //Fuckin bug ! Without that, we get a rollover fired when we click "out" or "delete" button, even if we're already over. Probably due to GraphicButton component...
 			cacheAsBitmap = true;//TODO check if that's a sufficient optimization. If not, remove everything from holder and replace it by a bitmap snapshot
 			TweenLite.killTweensOf(_deleteBt);
 			TweenLite.to(_deleteBt, .15, {y:0, removeChild:true});
@@ -245,6 +246,7 @@ package com.twinoid.kube.quest.components.box {
 		private function clickHandler(event:MouseEvent):void {
 			if(event.target == _deleteBt || event.target == _outBox) {
 				event.stopPropagation();
+				if(event.target == _deleteBt) dispatchEvent(new BoxEvent(BoxEvent.DELETE));
 				return;
 			}
 			if(Math.abs(x-_dragOffset.x) < 5 && Math.abs(y-_dragOffset.y) < 5) {

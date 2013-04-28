@@ -1,0 +1,126 @@
+html, body {
+	background-color:#4CA5CD;
+	overflow:hidden;
+	height:100%;
+	margin:0;
+	padding:0;
+}
+body {
+	font-family: Trebuchet MS,Arial,sans-serif;
+	font-size:14px;
+	color:#ffffff;
+	margin: 0px;
+}
+
+a {
+	color: #cc0000;
+	text-decoration:none;
+}
+
+.copyLink:before {
+	background-image:url(../img/icon_copy.gif);
+	background-repeat:no-repeat;
+	background-position:center;
+	padding-left:25px;
+	content:'';
+}
+
+.hover {
+	color: #cc0000 !important;
+	text-decoration:underline;
+}
+
+.active {
+	text-decoration:none;
+	-webkit-filter: brightness(2);
+	-moz-filter: brightness(2);
+}
+
+.submitted {
+	text-decoration:none;
+	-webkit-transition: .25s all ease-out; -o-transition: .25s all ease-out;
+	-moz-transition: .25s all ease-out; transition: .25s all ease-out;
+	-webkit-filter: brightness(1);
+	-moz-filter: brightness(1);
+}
+
+.submitted  h2:before {
+	background-image:url(../img/submit.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	padding-left:25px;
+	content:'';
+}
+
+.window {
+	background-image:url(../img/windowBackground.png);
+	background-repeat:no-repeat;
+	width:370px;
+	height:170px;
+	padding-left:35px;
+	padding-top:25px;
+	padding-right : 35px;
+	padding-bottom: 40px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:100px;
+}
+
+p {
+	margin-top:10px;
+}
+
+.window strong {
+	font-weight:bold;
+	font-size:16px;
+	padding-left:10px;
+	text-transform:uppercase;
+	
+	text-shadow: -2px 2px 0px #3083A5;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color='#3083A5', Direction=45, Strength=2);
+	zoom: 1;
+}
+
+.window h1 {
+	font-size:20px;
+	display:inline;
+}
+
+.window h2 {
+	font-size:20px;
+	display:inline;
+	color:#266884;
+}
+
+.table {
+	display:table;
+	width:100%;
+	border-collapse: separate;
+	border-spacing:0px 2px;
+}
+
+.row {
+	display:table-row;
+	width:100%;
+}
+
+.colLeft {
+	width:30%;
+	display:table-cell;
+	background-color:#266884;
+	padding-left:10px;
+}
+
+.colMiddle {
+	width:40%;
+	display:table-cell;
+	padding-left:10px;
+	background-color:#D8ECF3;
+}
+
+.colRight {
+	width:30%;
+	display:table-cell;
+	text-align:center;
+	background-color:#B7DBEA;
+}

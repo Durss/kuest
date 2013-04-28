@@ -57,6 +57,8 @@ package com.twinoid.kube.quest.vo {
 		 * @inheritDoc
 		 */
 		public function kill():void {
+			_image.dispose();
+			_image = null;
 			dispatchEvent(new Event(Event.CLEAR));
 		}
 
