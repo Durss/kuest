@@ -92,6 +92,20 @@ package com.twinoid.kube.quest.controler {
 		public function refreshCharsList(list:Vector.<CharItemData>):void {
 			_model.refreshCharsList(list);
 		}
+		
+		/**
+		 * Deletes a node from the kuest
+		 */
+		public function deleteNode(data:KuestEvent):void {
+			_model.deleteNode(data);
+		}
+		
+		/**
+		 * Logs the user in.
+		 */
+		public function login(uid:String, pubkey:String):void {
+			_model.login(uid, pubkey);
+		}
 
 
 		

@@ -54,6 +54,17 @@ package com.twinoid.kube.quest.vo {
 		 * PUBLIC *
 		 * ****** */
 
+		public function deserialize(input:String):void {
+		}
+
+		public function serialize():String {
+			return "";
+		}
+
+		public function dispose():void {
+			_item = null;
+		}
+
 
 		
 		

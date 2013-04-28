@@ -10,6 +10,7 @@ package com.twinoid.kube.quest.events {
 	public class BoxEvent extends Event {
 		
 		public static const CREATE_LINK:String = "createLink";
+		public static const DELETE:String = "delete";
 		
 		
 		

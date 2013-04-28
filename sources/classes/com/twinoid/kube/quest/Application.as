@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest {
+	import org.libspark.ui.SWFWheel;
+	import com.twinoid.kube.quest.views.BoxDebugView;
 	import com.twinoid.kube.quest.views.ItemSelectorView;
 	import com.twinoid.kube.quest.views.SideMenuView;
 	import gs.plugins.RemoveChildPlugin;
@@ -87,8 +89,7 @@ package com.twinoid.kube.quest {
 			addChild(new SideMenuView());
 			addChild(new ItemSelectorView());
 			addChild(new ToolTipView());
-			
-			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			addChild(new BoxDebugView()).addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);//Wait for the views to be added to stage, not this view
 		}
 		
 		/**
@@ -99,6 +100,8 @@ package com.twinoid.kube.quest {
 			NurunButtonKeyFocusManager.getInstance().initialize(stage, new KeyFocusGraphics(), types);
 			addChild(NurunButtonKeyFocusManager.getInstance());
 			stage.stageFocusRect = false;
+			
+			SWFWheel.initialize(stage);
 			
 			_model.start();
 		}

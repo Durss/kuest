@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.vo {
+	import com.nurun.core.lang.Disposable;
+	import com.nurun.core.lang.io.Serializable;
 	
 	/**
 	 * Stores an action's place coordinates.
@@ -6,7 +8,7 @@ package com.twinoid.kube.quest.vo {
 	 * @author Francois
 	 * @date 10 févr. 2013;
 	 */
-	public class ActionPlace {
+	public class ActionPlace implements Serializable, Disposable {
 		
 		private var _x:int;
 		private var _y:int;
@@ -55,6 +57,16 @@ package com.twinoid.kube.quest.vo {
 		 * ****** */
 		public function clone():ActionPlace {
 			return new ActionPlace(x, y, z);
+		}
+
+		public function deserialize(input:String):void {
+		}
+
+		public function serialize():String {
+			return "";
+		}
+
+		public function dispose():void {
 		}
 
 

@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.components.form.input {
+	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.graphics.InputSkin;
 	import com.nurun.components.form.Input;
 	import com.nurun.components.vo.Margin;
@@ -7,6 +9,7 @@ package com.twinoid.kube.quest.components.form.input {
 
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -52,6 +55,15 @@ package com.twinoid.kube.quest.components.form.input {
 				addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			}
 		}
+		
+		/**
+		 * Make a red flash
+		 */
+		public function errorFlash():void {
+			transform.colorTransform = new ColorTransform();
+			TweenLite.from(this, .5, {tint:0xff0000});
+		}
+
 
 		
 		

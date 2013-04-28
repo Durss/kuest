@@ -1,4 +1,11 @@
 package com.twinoid.kube.quest.model {
+	import flash.net.SharedObject;
+	import com.twinoid.kube.quest.events.ViewEvent;
+	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.nurun.core.commands.events.CommandEvent;
+	import com.twinoid.kube.quest.cmd.LoginCmd;
+	import com.nurun.core.lang.isEmpty;
+	import com.nurun.structure.environnement.configuration.Config;
 	import by.blooddy.crypto.SHA1;
 
 	import com.nurun.structure.mvc.model.IModel;
@@ -35,6 +42,12 @@ package com.twinoid.kube.quest.model {
 		private var _objects:Vector.<ObjectItemData>;
 		private var _characters:Vector.<CharItemData>;
 		private var _connectedToGame:Boolean;
+		private var _isConnected:Boolean;
+		private var _loginCmd:LoginCmd;
+		private var _uid:*;
+		private var _name:*;
+		private var _pubkey:*;
+		private var _so:SharedObject;
 		
 		
 		
@@ -94,7 +107,15 @@ package com.twinoid.kube.quest.model {
 		 * Stats the application
 		 */
 		public function start():void {
+			_isConnected = !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
+			
 			update();
+			
+			if(_isConnected) {
+				_loginCmd.populate(Config.getVariable("uid"), Config.getVariable("pubkey"));
+				_loginCmd.execute();
+				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
+			}
 		}
 		
 		public function setText(txt:String):void {
@@ -107,6 +128,13 @@ package com.twinoid.kube.quest.model {
 		public function addEntryPoint(px:int, py:int):void {
 			_kuestData.addEntryPoint(px, py);
 			update();
+		}
+		
+		/**
+		 * Deletes a node from the kuest
+		 */
+		public function deleteNode(data:KuestEvent):void {
+			_kuestData.deleteNode(data);
 		}
 		
 		/**
@@ -140,6 +168,15 @@ package com.twinoid.kube.quest.model {
 			_characters = list;
 			update();
 		}
+		
+		/**
+		 * Logs the user in.
+		 */
+		public function login(uid:String, pubkey:String):void {
+			_loginCmd.populate(uid, pubkey);
+			_loginCmd.execute();
+			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
+		}
 
 
 		
@@ -151,9 +188,23 @@ package com.twinoid.kube.quest.model {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_so = SharedObject.getLocal("kuest");
+			
 			_kuestData = new KuestData();
 			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
 			
+			_loginCmd = new LoginCmd();
+			_loginCmd.addEventListener(CommandEvent.COMPLETE, loginCompleteHandler);
+			_loginCmd.addEventListener(CommandEvent.ERROR, loginErrorHandler);
+			
+			if(_so.data["uid"] != null) {
+				Config.addVariable("uid", _so.data["uid"]);
+				Config.addVariable("pubkey", _so.data["pubkey"]);
+			}
+			
+			//================
+			//LOCAL CONNECTION
+			//================
 			_lcName = "_kuest_"+SHA1.hash(Math.random()+""+Math.random())+"_";
 			
 			//using anonymous objects provides a way not to break callbacks in case
@@ -180,6 +231,31 @@ package com.twinoid.kube.quest.model {
 		 */
 		private function update():void {
 			dispatchEvent(new ModelEvent(ModelEvent.UPDATE, this));
+		}
+		
+		
+		//__________________________________________________________ LOGIN HANDLERS
+		
+		/**
+		 * Called when login operation completes
+		 */
+		private function loginCompleteHandler(event:CommandEvent):void {
+			_uid = event.data["uid"];
+			_name = event.data["name"];
+			_pubkey = event.data["pubkey"];
+			
+			_so.data["uid"] = _uid;
+			_so.data["pubkey"] = _pubkey;
+			_so.flush();
+			
+			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_SUCCESS));
+		}
+
+		/**
+		 * Called if login operation fails
+		 */
+		private function loginErrorHandler(event:CommandEvent):void {
+			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_FAIL, event.data));
 		}
 
 		

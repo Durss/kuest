@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<label code="loader-login"><![CDATA[Login...]]></label>
+		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
+		<label code="loader-loginKO"><![CDATA[erreur...]]></label>
+		
+		<label code="file-loadTT"><![CDATA[Charger]]></label>
+		<label code="file-saveTT"><![CDATA[Enregistrer]]></label>
+		
+		<label code="login-title"><![CDATA[Vous devez être connecté pour enregistrer ou charger votre travail.<br /><a class="link" href="http://muxxu.com/a/kuest?act=ids" target="_blank">&gt; Connaître mes identifiants.</a>]]></label>
+		<label code="login-uid"><![CDATA[UID]]></label>
+		<label code="login-pubkey"><![CDATA[PUBKEY]]></label>
+		<label code="login-submit"><![CDATA[Log-in]]></label>
+		<label code="login-invalidIDS"><![CDATA[Identifiants invalides.]]></label>
+		
 		<label code="selector-char"><![CDATA[Choisir un personnage]]></label>
 		<label code="selector-object"><![CDATA[Choisir un objet]]></label>
 		<label code="selector-none"><![CDATA[<i>(aucun)</i>]]></label>
