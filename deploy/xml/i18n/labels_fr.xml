@@ -6,6 +6,7 @@
 		<label code="selector-none"><![CDATA[<i>(aucun)</i>]]></label>
 		
 		<label code="box-empty"><![CDATA[<p align="center">Cliquez pour éditer...</p>]]></label>
+		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible qu'à certains moments précis.]]></label>
 		
 		<label code="menu-file"><![CDATA[Menu principal]]></label>
 		

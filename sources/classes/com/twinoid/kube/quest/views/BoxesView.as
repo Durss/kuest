@@ -38,7 +38,7 @@ package com.twinoid.kube.quest.views {
 		private const DRAG_GAP:int = 100;
 		
 		private var _dataToBox:Dictionary;
-		private var _timeout:uint;
+		private var _createTimeout:uint;
 		private var _tempBox:Sprite;
 		private var _scrollOffset:Point;
 		private var _boxesHolder:Sprite;
@@ -187,8 +187,8 @@ package com.twinoid.kube.quest.views {
 					_overBoard = true;
 					if(Mouse.cursor != MouseCursor.HAND) Mouse.cursor = MouseCursor.HAND;
 					if(_stagePressed) {
-						if(Math.abs(_dragOffset.x - _boxesHolder.x) > 5 || Math.abs(_dragOffset.x - _boxesHolder.x) > 5) {
-							clearTimeout(_timeout);//Cancel item's creation
+						if(Math.abs(_dragOffset.x - _boxesHolder.x) > 2 || Math.abs(_dragOffset.x - _boxesHolder.x) > 2) {
+							clearTimeout(_createTimeout);//Cancel item's creation
 							_tempBox.stopDrag();
 							_draggingBoard = true;
 						}
@@ -203,7 +203,8 @@ package com.twinoid.kube.quest.views {
 				_overBoard = false;
 			}
 			
-			if(_mousePressed) {
+			//Moves the board when dragging something on the borders
+			if(_mousePressed && !_stagePressed) {
 				var addX:int, addY:int;
 				if(stage.mouseX < DRAG_GAP)						addX = (1-stage.mouseX / DRAG_GAP) * 50;
 				if(stage.mouseX > stage.stageWidth - DRAG_GAP)	addX = -(stage.mouseX - stage.stageWidth + DRAG_GAP) / DRAG_GAP * 50;
@@ -269,7 +270,6 @@ package com.twinoid.kube.quest.views {
 			_tempBox.scaleX = 1;
 			_tempBox.scaleY = 1;
 			TweenLite.from(_tempBox, .25, {scaleX:0, scaleY:0, ease:Back.easeOut});
-			_tempBox.startDrag();
 			_draggedItem = _tempBox;
 			_dragItemOffset.x = _draggedItem.mouseX;
 			_dragItemOffset.y = _draggedItem.mouseY;
@@ -321,8 +321,8 @@ package com.twinoid.kube.quest.views {
 			_stagePressed = true;
 			_canceled = false;
 			_draggingBoard = false;
-			clearTimeout(_timeout);
-			_timeout = setTimeout(addTempItem, 250);
+			clearTimeout(_createTimeout);
+			_createTimeout = setTimeout(addTempItem, 300);
 		}
 		
 		/**
@@ -383,7 +383,7 @@ package com.twinoid.kube.quest.views {
 			
 			
 			//Clean stuffs that need to be
-			clearTimeout(_timeout);
+			clearTimeout(_createTimeout);
 			if (_draggedItem != null) _draggedItem.stopDrag();
 			_draggedItem = null;
 		}
@@ -394,7 +394,7 @@ package com.twinoid.kube.quest.views {
 		private function createLinkHandler(event:BoxEvent):void {
 			_tempLink.startEntry = event.currentTarget as Box;
 			_tempLink.drawToMouse();
-			_boxesHolder.addChild(_tempLink);
+			_boxesHolder.addChildAt(_tempLink, 0);
 		}
 	}
 }
