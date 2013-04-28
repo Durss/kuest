@@ -245,6 +245,7 @@ package com.twinoid.kube.quest.components.box {
 			_isOver = false;
 			Mouse.show();
 			removeChild(_scisors);
+			_scisors.stopDrag();
 			update();
 		}
 		

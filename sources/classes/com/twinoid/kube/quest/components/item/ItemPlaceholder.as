@@ -157,7 +157,7 @@ package com.twinoid.kube.quest.components.item {
 				computePositions();
 			}
 			
-			_img = addChild(new ImageResizer()) as ImageResizer;
+			_img = addChild(new ImageResizer(null, true, true)) as ImageResizer;
 			_img.width = WIDTH;
 			_img.height = HEIGHT;
 		}
