@@ -66,6 +66,20 @@ package com.twinoid.kube.quest.components.date.calendar {
 			}
 			return ret;
 		}
+		
+		/**
+		 * Sets the selected dates
+		 */
+		public function set selectedDates(value:Vector.<Date>):void {
+			_dateToState = {};
+			var i:int, len:int;
+			len = value == null? 0 : value.length;
+			for(i = 0; i < len; ++i) {
+				_dateToState[value[i].toString()] = value[i];
+			}
+			
+			render();
+		}
 
 
 

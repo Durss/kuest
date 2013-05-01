@@ -1,6 +1,5 @@
 package com.twinoid.kube.quest.vo {
 	import com.nurun.core.lang.Disposable;
-	import com.nurun.core.lang.io.Serializable;
 	
 	/**
 	 * Stores an action's place coordinates.
@@ -8,12 +7,11 @@ package com.twinoid.kube.quest.vo {
 	 * @author Francois
 	 * @date 10 févr. 2013;
 	 */
-	public class ActionPlace implements Serializable, Disposable {
+	public class ActionPlace implements Disposable {
 		
 		private var _x:int;
 		private var _y:int;
 		private var _z:int;
-		private var _zoneMode:Boolean;
 
 		
 		
@@ -24,11 +22,8 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Creates an instance of <code>ActionPlace</code>.
 		 */
-		public function ActionPlace(x:int, y:int, z:int = -1) {
-			_z = z;
-			_y = y;
-			_x = x;
-			_zoneMode = z == -1;
+		public function ActionPlace() {
+			_z = int.MIN_VALUE;
 		}
 
 		
@@ -39,33 +34,44 @@ package com.twinoid.kube.quest.vo {
 
 		public function get x():int { return _x; }
 
+		public function set x(value:int):void { _x = value; }
+
 		public function get y():int { return _y; }
 
-		public function get z():int { return _z; }
-		
-		/**
-		 * Gets if the coordinates represent a zone (true) or a kube (false)
-		 */
-		public function get zoneMode():Boolean {
-			return _zoneMode;
-		}
+		public function set y(value:int):void { _y = value; }
+
+		public function get z():int { return _z == int.MIN_VALUE? 0 : _z; }
+
+		public function set z(value:int):void { _z = value; }
 
 
 
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Gets a string representation of the value object.
+		 */
+		public function toString():String {
+			return "[ActionPlace :: x="+x+", y="+y+", z="+z+", zoneMode="+zoneMode()+"]";
+		}
+		
+		/**
+		 * Gets if the coordinates represent a zone (true) or a kube (false)
+		 */
+		public function zoneMode():Boolean { return _z == int.MIN_VALUE; }
+		
 		public function clone():ActionPlace {
-			return new ActionPlace(x, y, z);
+			var a:ActionPlace = new ActionPlace();
+			a.x = x;
+			a.y = y;
+			a.z = z;
+			return a;
 		}
 
-		public function deserialize(input:String):void {
-		}
-
-		public function serialize():String {
-			return "";
-		}
-
+		/**
+		 * Makes the component garbage collectable.
+		 */
 		public function dispose():void {
 		}
 

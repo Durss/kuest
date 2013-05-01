@@ -61,13 +61,41 @@ package com.twinoid.kube.quest.components.form.edit {
 					data.actionDate = new ActionDate();
 					break;
 				case 1:
-					data.actionDate = new ActionDate(_calendar.selectedDates);
+					data.actionDate = new ActionDate();
+					data.actionDate.dates = _calendar.selectedDates;
 					break;
 				case 2:
-					data.actionDate = new ActionDate(null, _periodicDaySel.days, _periodicTimeInterval.startTime, _periodicTimeInterval.endTime);
+					data.actionDate = new ActionDate();
+					data.actionDate.days = _periodicDaySel.days;
+					data.actionDate.startTime = _periodicTimeInterval.startTime;
+					data.actionDate.endTime = _periodicTimeInterval.endTime;
 					break;
 				default:
 			}
+		}
+		
+		/**
+		 * Loads the configuration to the value object
+		 */
+		public function load(data:KuestEvent):void {
+			if(data.actionDate == null) {
+				selectedIndex = 0;
+				_calendar.selectedDates = null;
+				_periodicDaySel.days = null;
+				_periodicTimeInterval.startTime = 0;
+				_periodicTimeInterval.endTime = 0;
+				return;
+			}
+			
+			if(data.actionDate.dates == null && data.actionDate.days == null) selectedIndex = 0;
+			if(data.actionDate.dates != null && data.actionDate.days == null) selectedIndex = 1;
+			if(data.actionDate.dates == null && data.actionDate.days != null) selectedIndex = 2;
+			
+			_calendar.selectedDates = data.actionDate.dates;
+			
+			_periodicDaySel.days = data.actionDate.days;
+			_periodicTimeInterval.startTime = data.actionDate.startTime;
+			_periodicTimeInterval.endTime = data.actionDate.endTime;
 		}
 
 

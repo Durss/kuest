@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.vo {
-	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
 	
 	/**
@@ -30,17 +29,15 @@ package com.twinoid.kube.quest.vo {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 
-		public function get name():String {
-			return "";
-		}
+		public function get name():String { return ""; }
 
-		public function get image():BitmapData {
-			return null;
-		}
+		public function set name(value:String):void { }
 
-		public function get isDefined():Boolean {
-			return _isDefined;
-		}
+		public function get image():SerializableBitmapData { return null; }
+
+		public function set image(value:SerializableBitmapData):void { }
+
+		public function get isDefined():Boolean { return _isDefined; }
 
 
 

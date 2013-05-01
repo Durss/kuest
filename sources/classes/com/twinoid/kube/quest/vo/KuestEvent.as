@@ -1,11 +1,10 @@
 package com.twinoid.kube.quest.vo {
 	import com.nurun.core.lang.Disposable;
+
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.display.BitmapData;
 	import flash.geom.Point;
-	import by.blooddy.crypto.MD5;
-	import com.nurun.core.lang.io.Serializable;
 	
 	[Event(name="change", type="flash.events.Event")]
 	
@@ -16,12 +15,10 @@ package com.twinoid.kube.quest.vo {
 	 * @author Francois
 	 * @date 3 févr. 2013;
 	 */
-	public class KuestEvent extends EventDispatcher implements Serializable, Disposable {
+	public class KuestEvent extends EventDispatcher implements Disposable {
 		
-		private var _locked:Boolean;
 		private var _dependencies:Vector.<KuestEvent>;
-		private var _guid:String;
-		private var _boxPos:Point;
+		private var _boxPosition:Point;
 		private var _actionPlace:ActionPlace;
 		private var _actionDate:ActionDate;
 		private var _actionType:ActionType;
@@ -34,9 +31,9 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Creates an instance of <code>KuestEvent</code>.
 		 */
-		public function KuestEvent(boxX:int, boxY:int) {
+		public function KuestEvent() {
 			initialize();
-			_boxPos = new Point(boxX, boxY);
+			_boxPosition = new Point(0, 0);
 		}
 
 		
@@ -45,25 +42,20 @@ package com.twinoid.kube.quest.vo {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 		/**
-		 * Gets the unique identifier that represents this specific event.
+		 * Gets the box's position
 		 */
-		public function get guid():String { return _guid; }
+		public function get boxPosition():Point { return _boxPosition; }
 		
 		/**
-		 * Gets the dependency events.
+		 * Sets the box's position
 		 */
-		public function get dependencies():Vector.<KuestEvent> { return _dependencies; }
-		
-		/**
-		 * Gets the boxe's position
-		 */
-		public function get boxPosition():Point { return _boxPos; }
+		public function set boxPosition(boxPos:Point):void { _boxPosition = boxPos; }
 		
 		/**
 		 * Gets action's place.
 		 * Represents a zone's coordinates or a kube's coordinates.
 		 */
-		public function get actionPlace():ActionPlace { return _actionPlace.clone(); }
+		public function get actionPlace():ActionPlace { return _actionPlace; }
 		
 		/**
 		 * Sets action's place.
@@ -100,21 +92,6 @@ package com.twinoid.kube.quest.vo {
 			_actionType = value;
 			_actionType.addEventListener(Event.CLEAR, typeClearedHandler);
 		}
-		
-		/**
-		 * Gets the boxe's label
-		 */
-		public function get label():String { return _actionType.text.substr(0, 60).replace(/\r|\n/gi, " "); }
-		
-		/**
-		 * Gets the boxe's image
-		 */
-		public function get image():BitmapData { return (_actionType != null && _actionType.item != null)? _actionType.item.image : null; }
-		
-		/**
-		 * Gets if the value object is empty
-		 */
-		public function get isEmpty():Boolean { return _actionDate == null || _actionPlace == null || _actionType == null; }
 
 
 
@@ -171,18 +148,24 @@ package com.twinoid.kube.quest.vo {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * Gets if the value object is empty
 		 */
-		public function deserialize(input:String):void {
-			
-		}
-
+		public function isEmpty():Boolean { return _actionDate == null || _actionPlace == null || _actionType == null; }
+		
 		/**
-		 * @inheritDoc
+		 * Gets the boxe's image
 		 */
-		public function serialize():String {
-			return "";
-		}
+		public function getImage():BitmapData { return (_actionType != null && _actionType.item != null && _actionType.item.image != null)? _actionType.item.image.getConcreteBitmapData() : null; }
+		
+		/**
+		 * Gets the dependency events.
+		 */
+		public function getDependencies():Vector.<KuestEvent> { return _dependencies; }
+		
+		/**
+		 * Gets the boxe's label
+		 */
+		public function getLabel():String { return _actionType.text.substr(0, 60).replace(/\r|\n/gi, " "); }
 		
 		/**
 		 * Makes the component garbage collectable.
@@ -192,10 +175,17 @@ package com.twinoid.kube.quest.vo {
 			if(_actionDate != null) _actionDate.dispose();
 			if(_actionType != null) _actionType.dispose();
 			_dependencies = null;
-			_boxPos = null;
+			_boxPosition = null;
 			_actionPlace = null;
 			_actionDate = null;
 			_actionType = null;
+		}
+		
+		/**
+		 * Gets a string representation of the value object.
+		 */
+		override public function toString():String {
+			return "[KuestEvent :: boxPosition="+boxPosition+" actionPlace="+actionPlace+" actionDate="+actionDate+" actionType="+actionType+"]";
 		}
 
 
@@ -208,8 +198,6 @@ package com.twinoid.kube.quest.vo {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_guid = MD5.hash(new Date().getTime().toString()+"_"+Math.random());
-			_locked = true;
 			_dependencies = new Vector.<KuestEvent>();
 		}
 		
@@ -223,16 +211,16 @@ package com.twinoid.kube.quest.vo {
 		 */
 		private function deepDependencyCheck(entry:KuestEvent):Boolean {
 			var i:int, len:int;
-			len = entry.dependencies.length;
+			len = entry.getDependencies().length;
 			//Go through all parents
 			for(i = 0; i < len; ++i) {
 				//If the dependency entry is the current one, stop everything
 				//we found what we were searching for.
-				if(entry.dependencies[i] == this) return false;
+				if(entry.getDependencies()[i] == this) return false;
 				
 				try {
 					//The entry doesn't match, check if its parents match.
-					if(deepDependencyCheck(entry.dependencies[i]) === false) {
+					if(deepDependencyCheck(entry.getDependencies()[i]) === false) {
 						return false;
 					}
 				}catch(error:Error) {

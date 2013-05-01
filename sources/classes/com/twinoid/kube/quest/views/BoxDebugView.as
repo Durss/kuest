@@ -103,11 +103,11 @@ package com.twinoid.kube.quest.views {
 				graphics.moveTo(d.boxPosition.x * scale, d.boxPosition.y * scale);
 				graphics.drawRect(d.boxPosition.x * scale, d.boxPosition.y * scale, w, h);
 				var j:int, lenJ:int;
-				lenJ = d.dependencies.length;
+				lenJ = d.getDependencies().length;
 				for(j = 0; j < lenJ; ++j) {
 					graphics.lineStyle(2, 0x0000ff, 1, false, "normal", CapsStyle.NONE);
 					graphics.moveTo(d.boxPosition.x * scale, d.boxPosition.y * scale + h * .5);
-					graphics.lineTo(d.dependencies[j].boxPosition.x * scale + w, d.dependencies[j].boxPosition.y * scale + h * .5);
+					graphics.lineTo(d.getDependencies()[j].boxPosition.x * scale + w, d.getDependencies()[j].boxPosition.y * scale + h * .5);
 					graphics.lineStyle(0, 0, 0);
 				}
 			}

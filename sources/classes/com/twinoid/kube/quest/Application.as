@@ -1,8 +1,4 @@
 package com.twinoid.kube.quest {
-	import org.libspark.ui.SWFWheel;
-	import com.twinoid.kube.quest.views.BoxDebugView;
-	import com.twinoid.kube.quest.views.ItemSelectorView;
-	import com.twinoid.kube.quest.views.SideMenuView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -14,12 +10,18 @@ package com.twinoid.kube.quest {
 	import com.nurun.components.form.Input;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.spikything.utils.MouseWheelTrap;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.views.BackgroundView;
+	import com.twinoid.kube.quest.views.BoxDebugView;
 	import com.twinoid.kube.quest.views.BoxesView;
 	import com.twinoid.kube.quest.views.EditBoxView;
+	import com.twinoid.kube.quest.views.ItemSelectorView;
+	import com.twinoid.kube.quest.views.SideMenuView;
 	import com.twinoid.kube.quest.views.ToolTipView;
+
+	import org.libspark.ui.SWFWheel;
 
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -102,6 +104,7 @@ package com.twinoid.kube.quest {
 			stage.stageFocusRect = false;
 			
 			SWFWheel.initialize(stage);
+			MouseWheelTrap.setup(stage);
 			
 			_model.start();
 		}

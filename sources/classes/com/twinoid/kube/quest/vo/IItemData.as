@@ -1,6 +1,5 @@
 package com.twinoid.kube.quest.vo {
 	import flash.events.IEventDispatcher;
-	import flash.display.BitmapData;
 	
 	[Event(name="clear", type="flash.events.Event")]
 	
@@ -11,7 +10,11 @@ package com.twinoid.kube.quest.vo {
 		
 		function get name():String;
 		
-		function get image():BitmapData;
+		function set name(value:String):void;
+		
+		function get image():SerializableBitmapData;
+		
+		function set image(value:SerializableBitmapData):void;
 		
 		function kill():void;
 		

@@ -79,9 +79,45 @@ package com.twinoid.kube.quest.components.form.edit {
 			var isZone:Boolean = selectedIndex == 0;
 			
 			if(isZone) {
-				data.actionPlace = new ActionPlace(_zoneX.numValue, _zoneY.numValue);
+				data.actionPlace = new ActionPlace();
+				data.actionPlace.x = _zoneX.numValue;
+				data.actionPlace.y = _zoneY.numValue;
 			}else{
-				data.actionPlace = new ActionPlace(_kubeX.numValue, _kubeY.numValue, _kubeZ.numValue);
+				data.actionPlace = new ActionPlace();
+				data.actionPlace.x = _kubeX.numValue;
+				data.actionPlace.y = _kubeY.numValue;
+				data.actionPlace.z = _kubeZ.numValue;
+			}
+		}
+		
+		/**
+		 * Loads the configuration to the value object
+		 */
+		public function load(data:KuestEvent):void {
+			if (data.actionPlace == null) {
+				selectedIndex = 0;
+				_zoneX.text = "";
+				_zoneY.text = "";
+				_kubeX.text = "";
+				_kubeY.text = "";
+				_kubeZ.text = "";
+				return;
+			}
+			
+			if(data.actionPlace.zoneMode()) {
+				selectedIndex = 0;
+				_zoneX.text = data.actionPlace.x.toString();
+				_zoneY.text = data.actionPlace.y.toString();
+				_kubeX.text = "";
+				_kubeY.text = "";
+				_kubeZ.text = "";
+			}else{
+				selectedIndex = 1;
+				_kubeX.text = data.actionPlace.x.toString();
+				_kubeY.text = data.actionPlace.y.toString();
+				_kubeZ.text = data.actionPlace.z.toString();
+				_zoneX.text = "";
+				_zoneY.text = "";
 			}
 		}
 

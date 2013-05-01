@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.form.input {
+	import com.nurun.utils.string.StringUtils;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.InputSkin;
@@ -85,6 +86,14 @@ package com.twinoid.kube.quest.components.form.input {
 		 */
 		public function get numValue():Number {
 			return parseFloat(text);
+		}
+		
+		override public function set text(value:String):void {
+			if(StringUtils.trim(value).length == 0) {
+				super.text = defaultLabel;
+			}else{
+				super.text = value;
+			}
 		}
 
 

@@ -14,7 +14,7 @@
 	
 	<vars>
 		<var code="lang"><![CDATA[fr]]></var>
-		<var code="root"><![CDATA[http://fevermap.org/kuest]]></var>
+		<var code="root"><![CDATA[http://localhost/kuest]]></var>
 	</vars>
 	
 	<paths>

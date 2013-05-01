@@ -64,7 +64,7 @@ package com.twinoid.kube.quest.components.selector {
 				buttonMode = false;
 				return;
 			}
-			_image.image = _data.image;
+			_image.image = _data.image == null? null : _data.image.getConcreteBitmapData();
 			_label.text = data is EmptyItemData? Label.getLabel("selector-none") : _data.name;
 			_label.y = WIDTH;
 			_label.width = WIDTH;
