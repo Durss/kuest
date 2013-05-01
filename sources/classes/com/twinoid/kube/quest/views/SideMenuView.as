@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.views {
+	import com.twinoid.kube.quest.graphics.MenuCreditsIconGraphic;
+	import com.twinoid.kube.quest.components.menu.MenuCreditsContent;
 	import flash.display.Shape;
 	import gs.TweenLite;
 
@@ -100,8 +102,8 @@ package com.twinoid.kube.quest.views {
 			_back = addChild(new Shape()) as Shape;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
 			
-			var icons:Array = [new MenuFileIconGraphic(), new MenuObjectIconGraphic(), new MenuCharactersIconGraphic()];
-			var contents:Array = [new MenuFileContent(_width), new MenuObjectContent(_width), new MenuCharsContent(_width)];
+			var icons:Array = [new MenuFileIconGraphic(), new MenuObjectIconGraphic(), new MenuCharactersIconGraphic(), new MenuCreditsIconGraphic()];
+			var contents:Array = [new MenuFileContent(_width), new MenuObjectContent(_width), new MenuCharsContent(_width), new MenuCreditsContent(_width)];
 			
 			var i:int, len:int;
 			len = icons.length;

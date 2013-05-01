@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<labels>
+		<label code="loader-login"><![CDATA[Login...]]></label>
+		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
+		<label code="loader-loginKO"><![CDATA[error...]]></label>
+		
+		<label code="file-loadTT"><![CDATA[Load]]></label>
+		<label code="file-saveTT"><![CDATA[Save]]></label>
+		
+		<label code="login-title"><![CDATA[You need to be connected to save or load your work.<br /><a class="link" href="http://muxxu.com/a/kuest?act=ids" target="_blank">&gt; Get my IDs.</a>]]></label>
+		<label code="login-uid"><![CDATA[UID]]></label>
+		<label code="login-pubkey"><![CDATA[PUBKEY]]></label>
+		<label code="login-submit"><![CDATA[Log-in]]></label>
+		<label code="login-invalidIDS"><![CDATA[Invalid IDs.]]></label>
+		
+		<label code="selector-char"><![CDATA[Choose a character]]></label>
+		<label code="selector-object"><![CDATA[Choose an object]]></label>
+		<label code="selector-none"><![CDATA[<i>(none)</i>]]></label>
+		
+		<label code="box-empty"><![CDATA[<p align="center">Click to edit...</p>]]></label>
+		<label code="box-timeIcon"><![CDATA[This action is only avaiable at certain times.]]></label>
+		
+		<label code="menu-file"><![CDATA[Main menu]]></label>
+		
+		<label code="menu-credits"><![CDATA[Credits]]></label>
+		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="50" height="50" />Many thanks to <b>Sparrow-Chan</b> which kindly accepted i use her portraits from her <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link">30 days Challenge</a></i>.<br />Feel free to visit her <a href="http://sparrow-chan.deviantart.com/" class="link">Deviant Art</a> and her <a href="http://sparrow-chan.tumblr.com/" class="link">Tumblr</a>.]]></label>
+		
+		<label code="menu-objects"><![CDATA[Objects]]></label>
+		<label code="menu-objects-add-name"><![CDATA[Object's name...]]></label>
+		
+		<label code="menu-chars"><![CDATA[Characters]]></label>
+		<label code="menu-chars-add-name"><![CDATA[Character's name...]]></label>
+		
+		<label code="editWindow-title"><![CDATA[EDIT THIS EVENT]]></label>
+		<label code="editWindow-submit"><![CDATA[Submit]]></label>
+		<label code="editWindow-cancel"><![CDATA[Cancel]]></label>
+		
+		<label code="editWindow-place-title"><![CDATA[Event's place]]></label>
+		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
+		<label code="editWindow-place-kubeTT"><![CDATA[Kube]]></label>
+		<label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
+		<label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
+		<label code="editWindow-place-kubeHelp"><![CDATA[Touch a forum Kube in-game to define the exact coordinates automatically.]]></label>
+		<label code="editWindow-place-capture"><![CDATA[Capture]]></label>
+		<label code="editWindow-place-captureTT"><![CDATA[Launch the game and click<br />This button to automatically<br />fill the inputs with your current location.]]></label>
+		
+		<label code="editWindow-type-title"><![CDATA[Event's tye]]></label>
+		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
+		<label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
+		<label code="editWindow-type-objectTT"><![CDATA[Object's put/take]]></label>
+		<label code="editWindow-type-objectDefault"><![CDATA[Text to be displayed when the object is put/took...]]></label>
+		<label code="editWindow-type-take"><![CDATA[Take]]></label>
+		<label code="editWindow-type-put"><![CDATA[Put]]></label>
+		<label code="editWindow-type-placeHolderObjectTT"><![CDATA[Select an object.]]></label>
+		<label code="editWindow-type-placeHolderCharacterTT"><![CDATA[Select a character.]]></label>
+		
+		<label code="editWindow-time-title"><![CDATA[Event's temporality]]></label>
+		<label code="editWindow-time-noneTT"><![CDATA[Always]]></label>
+		<label code="editWindow-time-calendarTT"><![CDATA[Some days]]></label>
+		<label code="editWindow-time-periodicTT"><![CDATA[Some hours range]]></label>
+		<label code="editWindow-time-hourIntervalStart"><![CDATA[Start hour : ]]></label>
+		<label code="editWindow-time-hourIntervalEnd"><![CDATA[End hour : ]]></label>
+		<label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
+		<label code="editWindow-time-hourInterval-miutesLabel"><![CDATA[m]]></label>
+		
+		<label code="month1"><![CDATA[January]]></label>
+		<label code="month2"><![CDATA[February]]></label>
+		<label code="month3"><![CDATA[March]]></label>
+		<label code="month4"><![CDATA[April]]></label>
+		<label code="month5"><![CDATA[May]]></label>
+		<label code="month6"><![CDATA[June]]></label>
+		<label code="month7"><![CDATA[July]]></label>
+		<label code="month8"><![CDATA[August]]></label>
+		<label code="month9"><![CDATA[Septembre]]></label>
+		<label code="month10"><![CDATA[Octobre]]></label>
+		<label code="month11"><![CDATA[Novembre]]></label>
+		<label code="month12"><![CDATA[Decembre]]></label>
+		
+		<label code="day1"><![CDATA[Mon]]></label>
+		<label code="day2"><![CDATA[Tue]]></label>
+		<label code="day3"><![CDATA[Wen]]></label>
+		<label code="day4"><![CDATA[Thu]]></label>
+		<label code="day5"><![CDATA[Fri]]></label>
+		<label code="day6"><![CDATA[Sat]]></label>
+		<label code="day7"><![CDATA[Sun]]></label>
+	</labels>
+	
+</root>

@@ -339,7 +339,7 @@ package com.twinoid.kube.quest.views {
 			_startDragInGap = (stage.mouseX < DRAG_GAP || stage.mouseY < DRAG_GAP
 								|| stage.mouseX > stage.stageWidth - DRAG_GAP
 								|| stage.mouseY > stage.stageHeight - DRAG_GAP);
-			_mousePressed = true;
+			_mousePressed = contains(event.target as DisplayObject);
 		}
 		
 		/**

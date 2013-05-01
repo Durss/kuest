@@ -24,7 +24,7 @@ package com.twinoid.kube.quest.components.menu {
 	 */
 	public class MenuCharsContent extends AbstractMenuContent {
 		
-		[Embed(source="../../../../../../../assets/spritesheet_chars.png")]
+		[Embed(source="../../../../../../../assets/spritesheet_chars.jpg")]
 		private var _sheetBmp:Class;
 		
 		private var _items:Vector.<CharItem>;

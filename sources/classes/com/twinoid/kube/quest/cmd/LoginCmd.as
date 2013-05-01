@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.cmd {
+	import flash.events.SecurityErrorEvent;
 	import com.nurun.core.lang.boolean.parseBoolean;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.commands.Command;
@@ -24,6 +25,7 @@ package com.twinoid.kube.quest.cmd {
 		 * *********** */
 		public function LoginCmd() {
 			super(Config.getPath("loginWS"));
+			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);
 		}
 
 		
