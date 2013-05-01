@@ -62,6 +62,18 @@ package com.twinoid.kube.quest.components.date {
 			}
 			return ret;
 		}
+		
+		/**
+		 * Sets the selected days.
+		 */
+		public function set days(value:Array):void {
+			var i:int, len:int;
+			len = _items.length;
+			if(value == null) value = [];
+			for(i = 0; i < len; ++i) {
+				_items[ i ].selected = value[i] != undefined;
+			}
+		}
 
 
 

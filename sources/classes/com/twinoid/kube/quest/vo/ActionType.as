@@ -11,7 +11,7 @@ package com.twinoid.kube.quest.vo {
 	 */
 	public class ActionType extends EventDispatcher {
 		
-		public static const TYPE_DIALOGUE:String = "dialogue";
+		public static const TYPE_CHARACTER:String = "character";
 		public static const TYPE_OBJECT:String = "object";
 		
 		private var _type:String;
@@ -27,13 +27,7 @@ package com.twinoid.kube.quest.vo {
 		 * Creates an instance of <code>ActionType</code>.
 		 */
 
-		public function ActionType(type:String, item:IItemData, text:String) {
-			_text = text;
-			_item = item;
-			_type = type;
-			if(_item != null){
-				_item.addEventListener(Event.CLEAR, itemClearedHandler);
-			}
+		public function ActionType() {
 		}
 
 		
@@ -48,19 +42,28 @@ package com.twinoid.kube.quest.vo {
 
 		public function get type():String { return _type; }
 
+		public function set type(type:String):void { _type = type; }
+
+		public function set item(item:IItemData):void {
+			if(_item != null) _item.removeEventListener(Event.CLEAR, itemClearedHandler);
+			_item = item;
+			if(_item != null) _item.addEventListener(Event.CLEAR, itemClearedHandler);
+		}
+
+		public function set text(text:String):void { _text = text; }
+
 
 
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
-
-		public function deserialize(input:String):void {
+		/**
+		 * Gets a string representation of the value object.
+		 */
+		override public function toString():String {
+			return "[ActionType :: type="+type+", item="+item+", text=\""+text+"\"]";
 		}
-
-		public function serialize():String {
-			return "";
-		}
-
+		
 		public function dispose():void {
 			_item = null;
 		}

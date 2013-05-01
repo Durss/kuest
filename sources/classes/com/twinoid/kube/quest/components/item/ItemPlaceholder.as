@@ -99,6 +99,23 @@ package com.twinoid.kube.quest.components.item {
 		 * Gets the selected data.
 		 */
 		public function get data():IItemData { return _data; }
+		
+		/**
+		 * Sets the selected data.
+		 */
+		public function set data(value:IItemData):void {
+			selectCallback(value);
+		}
+		
+		/**
+		 * Gets the width of the component.
+		 */
+		override public function get width():Number { return _img.width; }
+		
+		/**
+		 * Gets the height of the component.
+		 */
+		override public function get height():Number { return _img.height; }
 
 
 
@@ -187,11 +204,15 @@ package com.twinoid.kube.quest.components.item {
 		 */
 		private function selectCallback(data:IItemData):void {
 			_data = data;
-			if(data is EmptyItemData) {
+			if(data is EmptyItemData || data == null) {
 				_img.clear();
 				addChild(_icon);
 			}else{
-				_img.setBitmapData(data.image);
+				if(data.image == null) {
+					_img.clear();
+				}else{
+					_img.setBitmapData(data.image.getConcreteBitmapData());
+				}
 				if(_icon != null && contains(_icon)) removeChild(_icon);
 			}
 		}

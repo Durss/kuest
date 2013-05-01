@@ -64,12 +64,46 @@ package com.twinoid.kube.quest.components.form.edit {
 		public function save(data:KuestEvent):void {
 			switch(selectedIndex){
 				case 0:
-					data.actionType = new ActionType(ActionType.TYPE_OBJECT, _charHolder.data, _charDialogue.text);
+					data.actionType = new ActionType();
+					data.actionType.type = ActionType.TYPE_CHARACTER;
+					data.actionType.item = _charHolder.data;
+					data.actionType.text = _charDialogue.text;
 					break;
 				case 1:
-					data.actionType = new ActionType(ActionType.TYPE_OBJECT, _objectHolder.data, _objectDialogue.text);
+					data.actionType = new ActionType();
+					data.actionType.type = ActionType.TYPE_OBJECT;
+					data.actionType.item = _objectHolder.data;
+					data.actionType.text = _objectDialogue.text;
 					break;
 				default:
+			}
+		}
+		
+		/**
+		 * Loads the configuration to the value object
+		 */
+		public function load(data:KuestEvent):void {
+			if(data.actionType == null) {
+				selectedIndex = 0;
+				_objectHolder.data = null;
+				_objectDialogue.text = "";
+				_charHolder.data = null;
+				_charDialogue.text = "";
+				return;
+			}
+			
+			if(data.actionType.type == ActionType.TYPE_CHARACTER) {
+				selectedIndex = 0;
+				_charHolder.data = data.actionType.item;
+				_charDialogue.text = data.actionType.text;
+				_objectHolder.data = null;
+				_objectDialogue.text = "";
+			}else{
+				selectedIndex = 1;
+				_charHolder.data = null;
+				_charDialogue.text = "";
+				_objectHolder.data = data.actionType.item;
+				_objectDialogue.text = data.actionType.text;
 			}
 		}
 

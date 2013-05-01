@@ -1,9 +1,8 @@
 package com.twinoid.kube.quest.vo {
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import mx.utils.StringUtil;
 
-	import flash.display.BitmapData;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	
 	
 	[Event(name="clear", type="flash.events.Event")]
@@ -16,7 +15,7 @@ package com.twinoid.kube.quest.vo {
 	public class CharItemData extends EventDispatcher implements IItemData {
 		
 		private var _name:String;
-		private var _image:BitmapData;
+		private var _image:SerializableBitmapData;
 		
 		
 		
@@ -39,14 +38,9 @@ package com.twinoid.kube.quest.vo {
 
 		public function set name(name:String):void { _name = name; }
 
-		public function get image():BitmapData { return _image; }
+		public function get image():SerializableBitmapData { return _image; }
 
-		public function set image(image:BitmapData):void { _image = image; }
-		
-		/**
-		 * Gets if the value object is full filled
-		 */
-		public function get isValid():Boolean { return StringUtil.trim(name).length > 0 && image != null; }
+		public function set image(image:SerializableBitmapData):void { _image = image; }
 
 
 
@@ -54,10 +48,22 @@ package com.twinoid.kube.quest.vo {
 		 * PUBLIC *
 		 * ****** */
 		/**
+		 * Gets a string representation of the value object.
+		 */
+		override public function toString():String {
+			return "[CharItemData :: name=\""+name+"\", image="+_image+"]";
+		}
+		
+		/**
+		 * Gets if the value object is full filled
+		 */
+		public function isValid():Boolean { return StringUtil.trim(name).length > 0 && image != null; }
+		
+		/**
 		 * @inheritDoc
 		 */
 		public function kill():void {
-			_image.dispose();
+			if(_image != null) _image.dispose();
 			_image = null;
 			dispatchEvent(new Event(Event.CLEAR));
 		}

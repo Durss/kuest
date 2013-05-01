@@ -68,11 +68,10 @@ package com.twinoid.kube.quest.components {
 			if(label != null) {
 				_label.text = label;
 				addChild(_label);
-				_label.x = -_label.width * .5;
-				_label.y = _height * .5;
+				_label.x = Math.round(-_label.width * .5);
+				_label.y = Math.round(_height * .5);
 				_label.alpha = 1;
 				_label.visible = true;
-				roundPos(_label);
 				TweenLite.from(_label, .25, {y:"+10", autoAlpha:0, delay:.25});
 			}
 			TweenLite.to(this, .25, {autoAlpha:1});

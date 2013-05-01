@@ -57,7 +57,7 @@ package com.twinoid.kube.quest.components.menu {
 			if (Capabilities.playerType.toLowerCase() == "standalone") {
 				//Correct relative image paths so that they also work in standalone
 				//mode and i don't get errors every time i launch the app
-				_content.text = Label.getLabel("menu-credits-content").replace("src=\"./", "src=\"../");
+				_content.text = Label.getLabel("menu-credits-content").replace(/src=\".\//gi, "src=\"../");
 			}else{
 				_content.text = Label.getLabel("menu-credits-content");
 			}

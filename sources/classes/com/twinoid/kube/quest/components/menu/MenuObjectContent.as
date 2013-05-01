@@ -23,7 +23,7 @@ package com.twinoid.kube.quest.components.menu {
 	 */
 	public class MenuObjectContent extends AbstractMenuContent {
 		
-		[Embed(source="../../../../../../../assets/spritesheet_objs.png")]
+		[Embed(source="../../../../../../../assets/spritesheet_objs.jpg")]
 		private var _sheetBmp:Class;
 		
 		private var _addItem:GraphicButtonKube;
@@ -94,7 +94,7 @@ package com.twinoid.kube.quest.components.menu {
 		 * Creates the default faces
 		 */
 		private function createDefaultObjects():void {
-			var names:Array = ["Cerpe", "Arrosoir", "Canne à pèche", "Coffre", "Binette", "Graines", "Clef", "Bijou", "Argent"];
+			var names:Array = ["Burrin", "Pierre antique", "Toile", "Graine", "Golem", "Crone d'abondance", "Lentille", "Pilon", "Bouclier", "Lance", "Treuil", "Cristal", "Minerais"];//TODO localise
 			var bmp:Bitmap = new _sheetBmp() as Bitmap;
 			var src:BitmapData = bmp.bitmapData;
 			var i:int, len:int, bmd:BitmapData, rect:Rectangle, pt:Point;
@@ -120,6 +120,7 @@ package com.twinoid.kube.quest.components.menu {
 			var item:ObjectItem = new ObjectItem();
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
 			item.addEventListener(FormComponentEvent.SUBMIT, submitItemHandler);
+			item.addEventListener(Event.CHANGE, submitItemHandler);
 			_holder.addChild(item);
 			_items.push( item );
 			return item;
@@ -169,7 +170,7 @@ package com.twinoid.kube.quest.components.menu {
 			res = new Vector.<ObjectItemData>();
 			len = _items.length;
 			for(i = 0; i < len; ++i) {
-				if(_items[i].data.isValid) {
+				if(_items[i].data.isValid()) {
 					res.push(_items[i].data);
 				}
 			}

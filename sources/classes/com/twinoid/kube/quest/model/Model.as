@@ -1,25 +1,33 @@
 package com.twinoid.kube.quest.model {
-	import flash.net.SharedObject;
-	import com.twinoid.kube.quest.events.ViewEvent;
-	import com.nurun.structure.mvc.views.ViewLocator;
-	import com.nurun.core.commands.events.CommandEvent;
-	import com.twinoid.kube.quest.cmd.LoginCmd;
-	import com.nurun.core.lang.isEmpty;
-	import com.nurun.structure.environnement.configuration.Config;
 	import by.blooddy.crypto.SHA1;
 
+	import com.nurun.core.commands.events.CommandEvent;
+	import com.nurun.core.lang.isEmpty;
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
+	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.twinoid.kube.quest.cmd.LoginCmd;
+	import com.twinoid.kube.quest.events.ViewEvent;
+	import com.twinoid.kube.quest.vo.ActionDate;
+	import com.twinoid.kube.quest.vo.ActionPlace;
+	import com.twinoid.kube.quest.vo.ActionType;
 	import com.twinoid.kube.quest.vo.CharItemData;
+	import com.twinoid.kube.quest.vo.IItemData;
 	import com.twinoid.kube.quest.vo.KuestData;
 	import com.twinoid.kube.quest.vo.KuestEvent;
 	import com.twinoid.kube.quest.vo.ObjectItemData;
+	import com.twinoid.kube.quest.vo.SerializableBitmapData;
 
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.geom.Point;
 	import flash.net.LocalConnection;
+	import flash.net.SharedObject;
+	import flash.net.registerClassAlias;
+	import flash.utils.ByteArray;
 	import flash.utils.clearTimeout;
+	import flash.utils.describeType;
 	import flash.utils.setTimeout;
 
 	
@@ -116,10 +124,82 @@ package com.twinoid.kube.quest.model {
 				_loginCmd.execute();
 				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
 			}
+			
+			testSerialize();
 		}
-		
-		public function setText(txt:String):void {
-			_sender.send("_lc_mx_kube_", "_setText", txt, "");
+
+		private function testSerialize():void {
+			//Check if the value objects are all serializable and registers aliases
+			//so that ByteArray.readObject() can instanciate the value objects.
+			var serializableClasses:Array = [Point, Date, KuestEvent, ActionDate, ActionPlace, ActionType, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
+			var i:int, len:int;
+			var j:int, lenJ:int;
+			len = serializableClasses.length;
+			for (i = 0; i < len; ++i) {
+				
+				var xml:XML = describeType(serializableClasses[i]);
+				var nodes:XMLList = XML(xml.child("factory")[0]).child("accessor");
+				var cName:String = String(xml.@name).replace(/.*::(.*)/gi, "$1");
+				registerClassAlias(cName, serializableClasses[i]);
+				
+				if(serializableClasses[i] != Point && serializableClasses[i] != Date) {
+					lenJ = nodes.length();
+					for(j = 0; j < lenJ; ++j) {
+						if(nodes[j].@access != "readwrite") {
+							trace("Class "+cName+"'s '"+nodes[j].@name+"' property is '"+nodes[j].@access+"'. Must be 'readwrite'.");
+						}
+					}
+				}
+			}
+			
+			var c:Vector.<KuestEvent> = new Vector.<KuestEvent>();
+			var e1:KuestEvent = new KuestEvent();
+			e1.boxPosition = new Point(69,96);
+			e1.actionDate = new ActionDate();
+			e1.actionDate.days = [0,1,4];
+			e1.actionDate.startTime = 12;
+			e1.actionDate.endTime = 82;
+			
+			e1.actionPlace = new ActionPlace();
+			e1.actionPlace.x = 42;
+			e1.actionPlace.y = 43;
+			e1.actionPlace.z = 44;
+			
+			e1.actionType = new ActionType();
+			e1.actionType.type = ActionType.TYPE_CHARACTER;
+			e1.actionType.item = _characters[0];
+			e1.actionType.text = "Zizi !!";
+			
+			//====================
+			
+			var e2:KuestEvent = new KuestEvent();
+			e2.actionDate = new ActionDate();
+			e2.actionDate.dates = new <Date>[new Date()];
+			e2.actionDate.startTime = 12;
+			e2.actionDate.endTime = 82;
+			
+			e2.actionPlace = new ActionPlace();
+			e2.actionPlace.x = 89;
+			e2.actionPlace.y = 12;
+			e2.actionPlace.z = 8;
+			
+			e2.actionType = new ActionType();
+			e2.actionType.type = ActionType.TYPE_OBJECT;
+			e2.actionType.item = _objects[0];
+			e2.actionType.text = "Cacaaa !!";
+			e2.addDependency(e1);
+			
+			c.push(e1);
+			c.push(e2);
+			
+			//Simulate serialization / deserialization just to be sure everything's ok.s
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeObject(c);
+			bytes.deflate();
+			
+			bytes.inflate();
+			bytes.position = 0;
+			c = bytes.readObject();
 		}
 		
 		/**
@@ -276,6 +356,10 @@ package com.twinoid.kube.quest.model {
 		 */
 		private function checkForConnection():void {
 			setText(null);
+		}
+		
+		private function setText(txt:String):void {
+			_sender.send("_lc_mx_kube_", "_setText", txt, "");
 		}
 
 		/**

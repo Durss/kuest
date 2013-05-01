@@ -65,6 +65,12 @@ package com.twinoid.kube.quest.vo {
 		 * @inheritDoc
 		 */
 		public function serialize():String {
+//			var obj:Object = {};
+//			var i:int, len:int;
+//			len = _nodes.length;
+//			for(i = 0; i < len; ++i) {
+//				
+//			}
 			return "";
 		}
 		
@@ -72,7 +78,9 @@ package com.twinoid.kube.quest.vo {
 		 * Adds an entry point
 		 */
 		public function addEntryPoint(px:int, py:int):void {
-			var e:KuestEvent = new KuestEvent(px, py);
+			var e:KuestEvent = new KuestEvent();
+			e.boxPosition.x = px;
+			e.boxPosition.y = py;
 			_nodes.push(e);
 			_lastItemAdded = e;
 		}

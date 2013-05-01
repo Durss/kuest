@@ -53,6 +53,22 @@ package com.twinoid.kube.quest.components.date {
 		public function get endTime():int {
 			return _endMinutes.numValue + _endHour.numValue * 60;
 		}
+		
+		/**
+		 * Sets the start time in seconds
+		 */
+		public function set startTime(value:int):void {
+			_startMinutes.text = value%60+"";
+			_startHour.text = Math.floor(value / 60)+"";
+		}
+		
+		/**
+		 * Sets the end time in seconds
+		 */
+		public function set endTime(value:int):void {
+			_endMinutes.text = value%60+"";
+			_endHour.text = Math.floor(value / 60)+"";
+		}
 
 
 

@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.views {
-	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.components.tooltip.ToolTip;
 	import com.twinoid.kube.quest.components.tooltip.content.TTBitmapContent;
 	import com.twinoid.kube.quest.components.tooltip.content.TTTextContent;
@@ -139,7 +138,8 @@ package com.twinoid.kube.quest.views {
 					_toolTip.y = mouseY + 12 + _margin;
 					break;
 			}
-			roundPos(_toolTip);
+			_toolTip.x = Math.round(_toolTip.x);
+			_toolTip.y = Math.round(_toolTip.y);
 		}
 		
 		/**

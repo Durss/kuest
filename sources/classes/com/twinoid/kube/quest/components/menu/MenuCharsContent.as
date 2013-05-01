@@ -83,8 +83,7 @@ package com.twinoid.kube.quest.components.menu {
 		 * Creates the default faces
 		 */
 		private function createDefaultFaces():void {
-//			var names:Array = ["Sanka", "Troas", "Jay", "Paolo", "Alfred", "Jack", "Jean", "Don Vito", "Albert", "Winifred", "Robin", "Mike", "Le pêcheur", "Matt", "Ivanhoé", "Elvis"];
-			var names:Array = ["Florence", "Carole", "Louis", "Richard", "Rahema", "Le pêcheur", "Vincent", "Florent", "Arthur", "Win", "Adana", "Marion"];
+			var names:Array = ["Florence", "Carole", "Louis", "Richard", "Rahema", "Le pêcheur", "Vincent", "Florent", "Arthur", "Win", "Adana", "Marion", "Marya"];//TODO localise
 			var bmp:Bitmap = new _sheetBmp() as Bitmap;
 			var src:BitmapData = bmp.bitmapData;
 			var i:int, len:int, bmd:BitmapData, rect:Rectangle, pt:Point;
@@ -110,6 +109,7 @@ package com.twinoid.kube.quest.components.menu {
 			var item:CharItem = new CharItem();
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
 			item.addEventListener(FormComponentEvent.SUBMIT, submitItemHandler);
+			item.addEventListener(Event.CHANGE, submitItemHandler);
 			_holder.addChild(item);
 			_items.push( item );
 			return item;
@@ -118,7 +118,7 @@ package com.twinoid.kube.quest.components.menu {
 		/**
 		 * Called when an item's value changes and is valid.
 		 */
-		private function submitItemHandler(event:FormComponentEvent):void {
+		private function submitItemHandler(event:Event):void {
 			refreshObjectListOnModel();
 		}
 		
@@ -129,6 +129,7 @@ package com.twinoid.kube.quest.components.menu {
 			var item:CharItem = event.currentTarget as CharItem;
 			item.dispose();
 			item.removeEventListener(Event.CLOSE, deleteItemHandler);
+			item.removeEventListener(Event.CHANGE, submitItemHandler);
 			_holder.removeChild(item);
 			var i:int, len:int;
 			len = _items.length;
@@ -170,7 +171,7 @@ package com.twinoid.kube.quest.components.menu {
 			res = new Vector.<CharItemData>();
 			len = _items.length;
 			for(i = 0; i < len; ++i) {
-				if(_items[i].data.isValid) {
+				if(_items[i].data.isValid()) {
 					res.push(_items[i].data);
 				}
 			}

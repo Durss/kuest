@@ -79,6 +79,22 @@ package com.twinoid.kube.quest.components.form.edit {
 		 * Gets the currently selected button index
 		 */
 		public function get selectedIndex():Number { return _itemToIndex[ _group.selectedItem ]; }
+		
+		/**
+		 * Sets the currently selected button index
+		 */
+		public function set selectedIndex(value:Number):void { 
+			var i:int, len:int;
+			len = _buttons.length;
+			for(i = 0; i < len; ++i) {
+				if(i == value) {
+					_buttons[i].select();
+					_group.selectedItem = _buttons[i];
+				}
+				else _buttons[i].unSelect();
+			}
+			changeSelectionHandler();
+		}
 
 
 
@@ -195,8 +211,7 @@ package com.twinoid.kube.quest.components.form.edit {
 		/**
 		 * Called when a new item is selected
 		 */
-		protected function changeSelectionHandler(event:Event):void {
-			_closed = false;
+		protected function changeSelectionHandler(event:Event = null):void {
 			var index:int = selectedIndex;
 //			_currentContent.cacheAsBitmap = true;
 			_currentContent = _contents[index];
@@ -207,8 +222,19 @@ package com.twinoid.kube.quest.components.form.edit {
 			TweenLite.killTweensOf(_contentsMask);
 			TweenLite.killTweensOf(_contentsHolder);
 			
-			TweenLite.to(_contentsMask, .25, {height:_contents[index].height, onUpdate:dispatchEvent, onUpdateParams:[e]});
-			TweenLite.to(_contentsHolder, .25, {x:endX, onComplete:removeInvisibleItems, onCompleteParams:[index]});
+			if(event != null) {
+				_closed = false;
+				TweenLite.to(_contentsMask, .25, {height:_contents[index].height, onUpdate:dispatchEvent, onUpdateParams:[e]});
+				TweenLite.to(_contentsHolder, .25, {x:endX, onComplete:removeInvisibleItems, onCompleteParams:[index]});
+			}else{
+				//No transition if not called from a user input.
+				if(!_closed) {
+					_contentsMask.height = _contents[index].height;
+					dispatchEvent(e);
+				}
+				_contentsHolder.x = endX;
+				removeInvisibleItems(index);
+			}
 		}
 		
 		/**

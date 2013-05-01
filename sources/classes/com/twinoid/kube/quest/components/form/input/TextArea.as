@@ -51,6 +51,10 @@ package com.twinoid.kube.quest.components.form.input {
 			if(_tf.text == _defaultLabel) return "";
 			return _tf.text;
 		}
+		
+		public function set text(value:String):void {
+			_tf.text = (StringUtils.trim(value).length == 0)? _defaultLabel : value;
+		}
 
 
 

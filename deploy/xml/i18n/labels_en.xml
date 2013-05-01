@@ -24,7 +24,11 @@
 		<label code="menu-file"><![CDATA[Main menu]]></label>
 		
 		<label code="menu-credits"><![CDATA[Credits]]></label>
-		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="50" height="50" />Many thanks to <b>Sparrow-Chan</b> which kindly accepted i use her portraits from her <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link">30 days Challenge</a></i>.<br />Feel free to visit her <a href="http://sparrow-chan.deviantart.com/" class="link">Deviant Art</a> and her <a href="http://sparrow-chan.tumblr.com/" class="link">Tumblr</a>.]]></label>
+		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Many thanks to <b>Sparrow-Chan</b> which kindly accepted i use her portraits from her <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />Feel free to visit her <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> and her <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.
+
+<img src="./img/mt.png" width="77" height="100" />Thanks to <b>Motion-Twin</b> for offering the server hosting this application.<br/>The default objects images are taken from their game <a href="http://www.skywar.net/" target="_blank" class="link">Skywar</a>, are their property and will be removed if asked.
+
+<img src="./img/durss.jpg" width="77" height="100" />This application has been developped by <b>Durss</b> for the game <a href="http://kube.muxxu.com/" target="_blank" class="link">Kube</a>.<br />To report a bug or make a suggestion <a href="http://twinoid.com/user/48" target="_blank" class="link">contact me</a> via the Twinoid's private messaging.]]></label>
 		
 		<label code="menu-objects"><![CDATA[Objects]]></label>
 		<label code="menu-objects-add-name"><![CDATA[Object's name...]]></label>
@@ -45,7 +49,7 @@
 		<label code="editWindow-place-capture"><![CDATA[Capture]]></label>
 		<label code="editWindow-place-captureTT"><![CDATA[Launch the game and click<br />This button to automatically<br />fill the inputs with your current location.]]></label>
 		
-		<label code="editWindow-type-title"><![CDATA[Event's tye]]></label>
+		<label code="editWindow-type-title"><![CDATA[Event's type]]></label>
 		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
 		<label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
 		<label code="editWindow-type-objectTT"><![CDATA[Object's put/take]]></label>

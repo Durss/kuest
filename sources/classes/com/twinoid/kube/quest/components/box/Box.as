@@ -74,6 +74,16 @@ package com.twinoid.kube.quest.components.box {
 		 * Gets the component's data
 		 */
 		public function get data():KuestEvent { return _data; }
+		
+		/**
+		 * Gets the width of the component.
+		 */
+		override public function get width():Number { return _outBox.x + _outBox.width; }
+		
+		/**
+		 * Gets the height of the component.
+		 */
+		override public function get height():Number { return _outBox.height; }
 
 
 
@@ -196,20 +206,20 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when data changes
 		 */
 		private function dataUpdateHandler(event:Event = null):void {
-			if(_data == null || _data.isEmpty) {
+			if(_data == null || _data.isEmpty()) {
 				_label.text = Label.getLabel("box-empty");
 			}else{
-				if(_data.image != null) {
-					_image.setBitmapData(_data.image);
+				if(_data.getImage() != null) {
+					_image.setBitmapData(_data.getImage());
 				}else{
 					_image.clear();
 				}
-				if(StringUtils.trim(_data.label).length == 0) {
+				if(StringUtils.trim(_data.getLabel()).length == 0) {
 					_label.text = Label.getLabel("box-empty");
 				}else{
-					_label.text = _data.label;
+					_label.text = _data.getLabel();
 				}
-				if(!_data.actionDate.alwaysEnabled) {
+				if(!_data.actionDate.getAlwaysEnabled()) {
 					addChild(_timeIcon);
 				}else {
 					if(contains(_timeIcon)) removeChild(_timeIcon);
@@ -274,7 +284,7 @@ package com.twinoid.kube.quest.components.box {
 			_outBox.x = _background.x + _background.width - 2;
 
 			var margin:int = 3;
-			var isImage:Boolean = _data != null && _data.image != null;
+			var isImage:Boolean = _data != null && _data.getImage() != null;
 			_image.height = _image.width = _background.height - 5 - margin * 2;
 			_image.x = _background.x + 5 + margin;
 			_image.y = margin;
@@ -282,7 +292,7 @@ package com.twinoid.kube.quest.components.box {
 			_label.y = margin;
 			_label.width = _background.width - _label.x + _background.x - margin;
 			_label.height = _background.height - margin * 2;
-			if(_data == null || _data.isEmpty || !isImage) {
+			if(_data == null || _data.isEmpty() || !isImage) {
 				_label.width = _background.width;
 				_label.y = Math.round((_background.height - _label.height) * .5);
 				_label.x = _background.x + 5 + margin;
@@ -295,10 +305,7 @@ package com.twinoid.kube.quest.components.box {
 			_deleteBt.x = _background.x + _background.width - _deleteBt.width;
 			_deleteBt.y = -_deleteBt.height;
 			
-			roundPos(_outBox);
-			roundPos(_background);
-			roundPos(_timeIcon);
-			roundPos(_deleteBt);
+			roundPos(_outBox, _background, _timeIcon, _deleteBt);
 		}
 		
 	}
