@@ -1,4 +1,5 @@
 ﻿<?php
+	session_start();
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	
@@ -12,7 +13,7 @@
 		die;
 	}
 	
-	$lang = "fr";
+	$lang = "";
 	if(isset($_GET['uid'], $_GET['pubkey'])) {
 		$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_GET['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_GET["pubkey"]);
 		$xml = simplexml_load_file($url);
@@ -20,11 +21,14 @@
 		if ($xml->getName() != "error") {
 			$pseudo	= (string) $xml->attributes()->name;
 			$lang = (string)$xml->attributes()->lang;
+			$_SESSION['lang'] = $lang;
 		}
+	}else {
+		if (isset($_SESSION['lang'])) $lang = $_SESSION['lang'];
 	}
 	
 	//Check if the application is localized in this lang or not. If not, use english.
-	if (!file_exists("xml/i18n/labels_".$lang.".xml")) $lang = "en";
+	if ($lang != "" && !file_exists("xml/i18n/labels_".$lang.".xml")) $lang = "en";
 ?>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -50,10 +54,18 @@
 		</div>
 		
 		<script type="text/javascript">
+			var lang = "<?php echo $lang ?>";
+			if(lang.length == 0) {//Get browser's language if we couldn't get the user's language from muxxu XML API because user isn't logged-in.
+				lang = (navigator.language) ? navigator.language : navigator.userLanguage;
+				lang = lang.split("-")[0];
+			}
+			//Compute this languages list via PHP depending on the folder's content.
+			if(lang != "fr" && lang != "en") lang = "en";
+			
 			var flashvars = {};
-			flashvars["version"] = "1";
+			flashvars["version"] = "5";
 			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
-			flashvars["lang"] = "<?php echo $lang ?>";
+			flashvars["lang"] = lang;
 <?php
 	if (isset($_GET["uid"], $_GET["pubkey"])) {
 		echo "\t\t\tflashvars['uid'] = '".htmlentities($_GET["uid"])."';\r\n";
@@ -69,7 +81,7 @@
 			params['allowFullScreen'] = 'true';
 			params['menu'] = 'false';
 			
-			swfobject.embedSWF("swf/application.swf?v=1", "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
+			swfobject.embedSWF("swf/application.swf?v="+flashvars["version"], "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
 			
 			swffit.fit("externalDynamicContent", 800, 600, 3000, 3000, true, true);
 		</script>

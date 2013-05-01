@@ -80,6 +80,17 @@ package com.twinoid.kube.quest.components.menu {
 		}
 		
 		/**
+		 * Resizes and replaces the elements.
+		 */
+		override protected function computePositions(event:Event = null):void {
+			var items:Array = VectorUtils.toArray(_items);
+			items.push(_addItem);
+			PosUtils.hDistribute(items, _width, 5, 20, true);
+			
+			super.computePositions(event);
+		}
+		
+		/**
 		 * Creates the default faces
 		 */
 		private function createDefaultObjects():void {
@@ -140,17 +151,6 @@ package com.twinoid.kube.quest.components.menu {
 			}
 			computePositions();
 			refreshObjectListOnModel();
-		}
-		
-		/**
-		 * Resizes and replaces the elements.
-		 */
-		override protected function computePositions(event:Event = null):void {
-			var items:Array = VectorUtils.toArray(_items);
-			items.push(_addItem);
-			PosUtils.hDistribute(items, _width, 5, 20, true);
-			
-			super.computePositions(event);
 		}
 		
 		/**
