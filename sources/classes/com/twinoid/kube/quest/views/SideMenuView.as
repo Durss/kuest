@@ -71,6 +71,10 @@ package com.twinoid.kube.quest.views {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the width of the component.
+		 */
+		override public function get width():Number { return _width; }
 
 
 

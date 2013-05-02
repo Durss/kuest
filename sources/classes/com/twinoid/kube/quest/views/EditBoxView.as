@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.views {
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import gs.TweenLite;
 	import gs.easing.Back;
 
@@ -99,7 +100,7 @@ package com.twinoid.kube.quest.views {
 					_times.load( _data );
 					
 					scaleX = scaleY = 1;
-					PosUtils.centerInStage(this);
+					computePositions();
 					visible = true;
 					stage.focus = this;
 					TweenLite.killTweensOf(this);
@@ -183,6 +184,10 @@ package com.twinoid.kube.quest.views {
 			_window.forcedContentHeight = py;
 			_window.updateSizes();
 			PosUtils.centerInStage(this);
+			var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
+			if(menu != null) {
+				x = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width) - width) * .5);
+			}
 		}
 		
 		/**

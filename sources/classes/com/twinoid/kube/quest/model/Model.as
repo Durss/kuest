@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.model {
+	import com.nurun.utils.commands.BrowseForFileCmd;
+	import flash.net.FileReference;
 	import by.blooddy.crypto.SHA1;
 
 	import com.nurun.core.commands.events.CommandEvent;
@@ -52,9 +54,9 @@ package com.twinoid.kube.quest.model {
 		private var _connectedToGame:Boolean;
 		private var _isConnected:Boolean;
 		private var _loginCmd:LoginCmd;
-		private var _uid:*;
-		private var _name:*;
-		private var _pubkey:*;
+		private var _uid:String;
+		private var _name:String;
+		private var _pubkey:String;
 		private var _so:SharedObject;
 		
 		
@@ -117,6 +119,8 @@ package com.twinoid.kube.quest.model {
 		public function start():void {
 			_isConnected = !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
 			
+			
+			testSerialize();
 			update();
 			
 			if(_isConnected) {
@@ -124,8 +128,6 @@ package com.twinoid.kube.quest.model {
 				_loginCmd.execute();
 				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
 			}
-			
-			testSerialize();
 		}
 
 		private function testSerialize():void {
@@ -167,7 +169,7 @@ package com.twinoid.kube.quest.model {
 			
 			e1.actionType = new ActionType();
 			e1.actionType.type = ActionType.TYPE_CHARACTER;
-			e1.actionType.item = _characters[0];
+			e1.actionType.setItem(_characters[0]);
 			e1.actionType.text = "Zizi !!";
 			
 			//====================
@@ -185,21 +187,25 @@ package com.twinoid.kube.quest.model {
 			
 			e2.actionType = new ActionType();
 			e2.actionType.type = ActionType.TYPE_OBJECT;
-			e2.actionType.item = _objects[0];
+			e2.actionType.setItem(_objects[0]);
 			e2.actionType.text = "Cacaaa !!";
 			e2.addDependency(e1);
 			
 			c.push(e1);
 			c.push(e2);
 			
-			//Simulate serialization / deserialization just to be sure everything's ok.s
+			//Simulate serialization / deserialization just to be sure everything's ok.
 			var bytes:ByteArray = new ByteArray();
+			bytes.writeObject(_characters);
+			bytes.writeObject(_objects);
 			bytes.writeObject(c);
 			bytes.deflate();
 			
 			bytes.inflate();
-			bytes.position = 0;
-			c = bytes.readObject();
+			_characters = bytes.readObject();
+			_objects = bytes.readObject();
+			_kuestData = new KuestData();
+			_kuestData.deserialize(bytes, _characters, _objects);
 		}
 		
 		/**
@@ -256,6 +262,54 @@ package com.twinoid.kube.quest.model {
 			_loginCmd.populate(uid, pubkey);
 			_loginCmd.execute();
 			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
+		}
+		
+		/**
+		 * Saves the current quest
+		 */
+		public function save():void {
+			//Grab only the used characters and objects.
+			//TODO probably remove this. With this optimization we loose the potentially configured items for later use. 
+			var i:int, len:int, item:IItemData;
+			var chars:Vector.<CharItemData> = new Vector.<CharItemData>();
+			var objs:Vector.<ObjectItemData> = new Vector.<ObjectItemData>();
+			var charsDone:Object = {};
+			var objsDone:Object = {};
+			len = _kuestData.nodes.length;
+			for(i = 0; i < len; ++i) {
+				item = _kuestData.nodes[i].actionType.getItem();
+				if(item == null) continue;
+				if(item is CharItemData) {
+					if(charsDone[item.guid] == undefined) {
+						charsDone[item.guid] = true;
+						chars.push(item);
+					}
+				}else
+				if(item is ObjectItemData) {
+					if(objsDone[item.guid] == undefined) {
+						objsDone[item.guid] = true;
+						objs.push(item);
+					}
+				}
+			}
+			
+			//TODO save to the server
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeObject(chars);
+			bytes.writeObject(objs);
+			bytes.writeObject(_kuestData.nodes);
+			bytes.deflate();
+			new FileReference().save(bytes, "kuest.kst");
+		}
+		
+		/**
+		 * Saves the current quest
+		 */
+		public function load():void {
+			//TODO load from the server
+			var cmd:BrowseForFileCmd = new BrowseForFileCmd("Kuest file", "*.kst");
+			cmd.addEventListener(CommandEvent.COMPLETE, loadKuestCompleteHandler);
+			cmd.execute();
 		}
 
 
@@ -402,6 +456,21 @@ package com.twinoid.kube.quest.model {
 				_connectTimeout = setTimeout(attemptToConnect, 500);
 				break;
 			}
+		}
+		
+		/**
+		 * Called when a map's loading completes
+		 */
+		private function loadKuestCompleteHandler(event:CommandEvent):void {
+			//Simulate serialization / deserialization just to be sure everything's ok.
+			var bytes:ByteArray = event.data as ByteArray;
+			bytes.inflate();
+			_kuestData = new KuestData();
+			_characters = bytes.readObject();
+			_objects = bytes.readObject();
+			_kuestData.deserialize(bytes, _characters, _objects);
+			update();
+			//TODO refresh objects/characters list on side menu.
 		}
 		
 	}
