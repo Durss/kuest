@@ -1,5 +1,7 @@
 package com.twinoid.kube.quest.vo {
-	import com.nurun.core.lang.io.Serializable;
+	import com.twinoid.kube.quest.utils.restoreDependencies;
+
+	import flash.utils.ByteArray;
 	
 	/**
 	 * Contains all the kuest's entry points.
@@ -11,7 +13,7 @@ package com.twinoid.kube.quest.vo {
 	 * @author Francois
 	 * @date 3 févr. 2013;
 	 */
-	public class KuestData implements Serializable {
+	public class KuestData {
 		
 		private var _nodes:Vector.<KuestEvent>;
 		private var _lastItemAdded:KuestEvent;
@@ -55,24 +57,6 @@ package com.twinoid.kube.quest.vo {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
-		/**
-		 * @inheritDoc
-		 */
-		public function deserialize(input:String):void {
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function serialize():String {
-//			var obj:Object = {};
-//			var i:int, len:int;
-//			len = _nodes.length;
-//			for(i = 0; i < len; ++i) {
-//				
-//			}
-			return "";
-		}
 		
 		/**
 		 * Adds an entry point
@@ -83,6 +67,14 @@ package com.twinoid.kube.quest.vo {
 			e.boxPosition.y = py;
 			_nodes.push(e);
 			_lastItemAdded = e;
+		}
+		
+		/**
+		 * Sets the nodes
+		 */
+		public function deserialize(data:ByteArray, chars:Vector.<CharItemData>, objs:Vector.<ObjectItemData>):void {
+			_nodes = data.readObject();
+			restoreDependencies(_nodes, chars, objs);
 		}
 		
 		/**

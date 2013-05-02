@@ -8,6 +8,10 @@ package com.twinoid.kube.quest.vo {
 	 */
 	public interface IItemData extends IEventDispatcher {
 		
+		function get guid():int;
+		
+		function set guid(value:int):void;
+		
 		function get name():String;
 		
 		function set name(value:String):void;

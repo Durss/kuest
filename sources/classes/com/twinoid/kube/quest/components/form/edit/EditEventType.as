@@ -66,13 +66,13 @@ package com.twinoid.kube.quest.components.form.edit {
 				case 0:
 					data.actionType = new ActionType();
 					data.actionType.type = ActionType.TYPE_CHARACTER;
-					data.actionType.item = _charHolder.data;
+					data.actionType.setItem(_charHolder.data);
 					data.actionType.text = _charDialogue.text;
 					break;
 				case 1:
 					data.actionType = new ActionType();
 					data.actionType.type = ActionType.TYPE_OBJECT;
-					data.actionType.item = _objectHolder.data;
+					data.actionType.setItem(_objectHolder.data);
 					data.actionType.text = _objectDialogue.text;
 					break;
 				default:
@@ -94,7 +94,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			
 			if(data.actionType.type == ActionType.TYPE_CHARACTER) {
 				selectedIndex = 0;
-				_charHolder.data = data.actionType.item;
+				_charHolder.data = data.actionType.getItem();
 				_charDialogue.text = data.actionType.text;
 				_objectHolder.data = null;
 				_objectDialogue.text = "";
@@ -102,7 +102,7 @@ package com.twinoid.kube.quest.components.form.edit {
 				selectedIndex = 1;
 				_charHolder.data = null;
 				_charDialogue.text = "";
-				_objectHolder.data = data.actionType.item;
+				_objectHolder.data = data.actionType.getItem();
 				_objectDialogue.text = data.actionType.text;
 			}
 		}

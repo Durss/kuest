@@ -17,11 +17,14 @@ package com.twinoid.kube.quest.vo {
 	 */
 	public class KuestEvent extends EventDispatcher implements Disposable {
 		
+		internal static var GUID:int;
+		
 		private var _dependencies:Vector.<KuestEvent>;
 		private var _boxPosition:Point;
 		private var _actionPlace:ActionPlace;
 		private var _actionDate:ActionDate;
 		private var _actionType:ActionType;
+		private var _guid:int;
 		
 		
 		
@@ -92,6 +95,30 @@ package com.twinoid.kube.quest.vo {
 			_actionType = value;
 			_actionType.addEventListener(Event.CLEAR, typeClearedHandler);
 		}
+		
+		/**
+		 * @private
+		 * here for serialization purpose only!
+		 */
+		public function get dependencies():Vector.<KuestEvent> { return _dependencies; }
+
+		/**
+		 * @private
+		 * here for serialization purpose only!
+		 */
+		public function set dependencies(dependencies:Vector.<KuestEvent>):void { _dependencies = dependencies; }
+
+		/**
+		 * @private
+		 * here for serialization purpose only!
+		 */
+		public function get guid():int { return _guid; }
+
+		/**
+		 * @private
+		 * here for serialization purpose only!
+		 */
+		public function set guid(guid:int):void { _guid = guid; }
 
 
 
@@ -155,7 +182,7 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Gets the boxe's image
 		 */
-		public function getImage():BitmapData { return (_actionType != null && _actionType.item != null && _actionType.item.image != null)? _actionType.item.image.getConcreteBitmapData() : null; }
+		public function getImage():BitmapData { return (_actionType != null && _actionType.getItem() != null && _actionType.getItem().image != null)? _actionType.getItem().image.getConcreteBitmapData() : null; }
 		
 		/**
 		 * Gets the dependency events.
@@ -185,7 +212,7 @@ package com.twinoid.kube.quest.vo {
 		 * Gets a string representation of the value object.
 		 */
 		override public function toString():String {
-			return "[KuestEvent :: boxPosition="+boxPosition+" actionPlace="+actionPlace+" actionDate="+actionDate+" actionType="+actionType+"]";
+			return "[KuestEvent :: guid="+guid+" boxPosition="+boxPosition+" actionPlace="+actionPlace+" actionDate="+actionDate+" actionType="+actionType+", dependencies=["+dependencies+"]]";
 		}
 
 
@@ -198,6 +225,7 @@ package com.twinoid.kube.quest.vo {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_guid = ++GUID;
 			_dependencies = new Vector.<KuestEvent>();
 		}
 		

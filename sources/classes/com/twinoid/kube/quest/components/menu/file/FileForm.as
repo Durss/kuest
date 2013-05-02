@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.menu.file {
+	import com.twinoid.kube.quest.controler.FrontControler;
 	import flash.utils.Dictionary;
 	import com.twinoid.kube.quest.vo.ToolTipAlign;
 	import com.nurun.structure.environnement.label.Label;
@@ -98,10 +99,10 @@ package com.twinoid.kube.quest.components.menu.file {
 		 */
 		private function clickHandler(event:MouseEvent):void {
 			if(event.target == _saveBt) {
-				
+				FrontControler.getInstance().save();
 			}else
 			if(event.target == _loadBt) {
-				
+				FrontControler.getInstance().load();
 			}
 		}
 		

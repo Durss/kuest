@@ -14,8 +14,11 @@ package com.twinoid.kube.quest.vo {
 	 */
 	public class ObjectItemData extends EventDispatcher implements IItemData {
 		
+		internal static var _GUID:int;
+		
 		private var _name:String;
 		private var _image:SerializableBitmapData;
+		private var _guid:int;
 		
 		
 		
@@ -26,6 +29,7 @@ package com.twinoid.kube.quest.vo {
 		 * Creates an instance of <code>ObjectItemData</code>.
 		 */
 		public function ObjectItemData() {
+			_guid = ++_GUID;
 		}
 
 		
@@ -41,6 +45,10 @@ package com.twinoid.kube.quest.vo {
 		public function get image():SerializableBitmapData { return _image; }
 
 		public function set image(image:SerializableBitmapData):void { _image = image; }
+
+		public function get guid():int { return _guid; }
+
+		public function set guid(value:int):void { _guid = value; }
 
 
 

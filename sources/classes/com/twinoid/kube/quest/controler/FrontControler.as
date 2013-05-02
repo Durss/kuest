@@ -106,6 +106,20 @@ package com.twinoid.kube.quest.controler {
 		public function login(uid:String, pubkey:String):void {
 			_model.login(uid, pubkey);
 		}
+		
+		/**
+		 * Saves the current quest
+		 */
+		public function save():void {
+			_model.save();
+		}
+		
+		/**
+		 * Loads a quest
+		 */
+		public function load():void {
+			_model.load();
+		}
 
 
 		

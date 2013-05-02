@@ -39,6 +39,10 @@ package com.twinoid.kube.quest.vo {
 
 		public function get isDefined():Boolean { return _isDefined; }
 
+		public function get guid():int { return 0; }
+
+		public function set guid(value:int):void { }
+
 
 
 		/* ****** *

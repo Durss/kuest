@@ -17,6 +17,7 @@ package com.twinoid.kube.quest.vo {
 		private var _type:String;
 		private var _item:IItemData;
 		private var _text:String;
+		private var _itemGuid:int;
 		
 		
 		
@@ -38,19 +39,15 @@ package com.twinoid.kube.quest.vo {
 
 		public function get text():String { return _text; }
 
-		public function get item():IItemData { return _item; }
+		public function set text(text:String):void { _text = text; }
 
 		public function get type():String { return _type; }
 
 		public function set type(type:String):void { _type = type; }
 
-		public function set item(item:IItemData):void {
-			if(_item != null) _item.removeEventListener(Event.CLEAR, itemClearedHandler);
-			_item = item;
-			if(_item != null) _item.addEventListener(Event.CLEAR, itemClearedHandler);
-		}
+		public function get itemGUID():int { return _itemGuid; }
 
-		public function set text(text:String):void { _text = text; }
+		public function set itemGUID(value:int):void { _itemGuid = value; }
 
 
 
@@ -61,11 +58,30 @@ package com.twinoid.kube.quest.vo {
 		 * Gets a string representation of the value object.
 		 */
 		override public function toString():String {
-			return "[ActionType :: type="+type+", item="+item+", text=\""+text+"\"]";
+			return "[ActionType :: type="+type+", item="+_item+", text=\""+text+"\"]";
 		}
 		
 		public function dispose():void {
 			_item = null;
+		}
+		
+		/**
+		 * Gets the item's reference related to this value object.
+		 * Not written as a getter/setter to prevent this value object from
+		 * being serialized.
+		 */
+		public function getItem():IItemData { return _item; }
+
+		/**
+		 * Sets the item's reference related to this value object.
+		 * Not written as a getter/setter to prevent this value object from
+		 * being serialized.
+		 */
+		public function setItem(item:IItemData):void {
+			if(_item != null) _item.removeEventListener(Event.CLEAR, itemClearedHandler);
+			_item = item;
+			if(_item != null) _item.addEventListener(Event.CLEAR, itemClearedHandler);
+			_itemGuid = item.guid;
 		}
 
 
@@ -79,6 +95,7 @@ package com.twinoid.kube.quest.vo {
 		 */
 		private function itemClearedHandler(event:Event):void {
 			_item = null;
+			_itemGuid = -1;
 			dispatchEvent(event);
 		}
 		
