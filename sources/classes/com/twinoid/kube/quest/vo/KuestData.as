@@ -1,6 +1,11 @@
 package com.twinoid.kube.quest.vo {
+	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.utils.restoreDependencies;
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
 	/**
@@ -15,8 +20,17 @@ package com.twinoid.kube.quest.vo {
 	 */
 	public class KuestData {
 		
+		[Embed(source="../../../../../../assets/spritesheet_chars.jpg")]
+		private var _charsBmp:Class;
+		
+		[Embed(source="../../../../../../assets/spritesheet_objs.jpg")]
+		private var _objsBmp:Class;
+		
 		private var _nodes:Vector.<KuestEvent>;
 		private var _lastItemAdded:KuestEvent;
+		private var _characters:Vector.<CharItemData>;
+		private var _objects:Vector.<ObjectItemData>;
+		private var _guid:int;
 		
 		
 		
@@ -29,6 +43,7 @@ package com.twinoid.kube.quest.vo {
 		 */
 		public function KuestData() {
 			initialize();
+			_guid = 1;
 		}
 
 		
@@ -51,6 +66,21 @@ package com.twinoid.kube.quest.vo {
 		 * Gets all the nodes.
 		 */
 		public function get nodes():Vector.<KuestEvent> { return _nodes; }
+		
+		/**
+		 * Gets the characters items.
+		 */
+		public function get characters():Vector.<CharItemData> { return _characters; }
+		
+		/**
+		 * Gets the objects items.
+		 */
+		public function get objects():Vector.<ObjectItemData> { return _objects; }
+		
+		/**
+		 * Gets the current kuest's GUID.
+		 */
+		public function get guid():int { return _guid; }
 
 
 
@@ -72,9 +102,19 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Sets the nodes
 		 */
-		public function deserialize(data:ByteArray, chars:Vector.<CharItemData>, objs:Vector.<ObjectItemData>):void {
+		public function deserialize(data:ByteArray):void {
+			if(_characters != null) {
+				var i:int, len:int;
+				len = _characters.length;
+				for(i = 0; i < len; ++i) _characters[i].kill();
+				len = _objects.length;
+				for(i = 0; i < len; ++i) _objects[i].kill();
+			}
+			_characters = data.readObject();
+			_objects = data.readObject();
 			_nodes = data.readObject();
-			restoreDependencies(_nodes, chars, objs);
+			restoreDependencies(_nodes, _characters, _objects);
+			_guid ++;
 		}
 		
 		/**
@@ -92,6 +132,52 @@ package com.twinoid.kube.quest.vo {
 			}
 			data.dispose();
 		}
+		
+		/**
+		 * Deletes a character
+		 */
+		public function deleteCharacter(item:CharItemData):void {
+			var i:int, len:int;
+			len = _characters.length;
+			for(i = 0; i < len; ++i) {
+				if(_characters[i] == item) {
+					_characters.splice(i, 1);
+					i--;
+					len--;
+				}
+			}
+			item.kill();
+		}
+		
+		/**
+		 * Deletes an object
+		 */
+		public function deleteObject(item:ObjectItemData):void {
+			var i:int, len:int;
+			len = _objects.length;
+			for(i = 0; i < len; ++i) {
+				if(_objects[i] == item) {
+					_objects.splice(i, 1);
+					i--;
+					len--;
+				}
+			}
+			item.kill();
+		}
+		
+		/**
+		 * Adds a character
+		 */
+		public function addCharacter():void {
+			_characters.push(new CharItemData());
+		}
+		
+		/**
+		 * Adds a character
+		 */
+		public function addObject():void {
+			_objects.push(new ObjectItemData());
+		}
 
 
 		
@@ -104,6 +190,45 @@ package com.twinoid.kube.quest.vo {
 		 */
 		private function initialize():void {
 			_nodes = new Vector.<KuestEvent>();
+			
+			var names:Array = Label.getLabel("menu-chars-names").split(",");
+			var bmp:Bitmap = new _charsBmp() as Bitmap;
+			var src:BitmapData = bmp.bitmapData;
+			var i:int, len:int, bmd:BitmapData, rect:Rectangle, pt:Point, obj:ObjectItemData, char:CharItemData;
+			len = names.length;
+			rect = new Rectangle(0, 0, 100, 100);
+			pt = new Point();
+			_characters = new Vector.<CharItemData>();
+			for(i = 0; i < len; ++i) {
+				rect.x = i * 100;
+				bmd = new BitmapData(100, 100, true, 0);
+				bmd.copyPixels(src, rect, pt);
+				bmd.lock();
+				char = new CharItemData();
+				char.image = new SerializableBitmapData();
+				char.image.fromBitmapData(bmd);
+				char.name = names[i];
+				_characters.push(char);
+			}
+			
+			names = Label.getLabel("menu-objects-names").split(",");
+			bmp = new _objsBmp() as Bitmap;
+			src = bmp.bitmapData;
+			len = names.length;
+			rect = new Rectangle(0, 0, 100, 100);
+			pt = new Point();
+			_objects = new Vector.<ObjectItemData>();
+			for(i = 0; i < len; ++i) {
+				rect.x = i * 100;
+				bmd = new BitmapData(100, 100, true, 0);
+				bmd.copyPixels(src, rect, pt);
+				bmd.lock();
+				obj = new ObjectItemData();
+				obj.image = new SerializableBitmapData();
+				obj.image.fromBitmapData(bmd);
+				obj.name = names[i];
+				_objects.push(obj);
+			}
 		}
 		
 	}

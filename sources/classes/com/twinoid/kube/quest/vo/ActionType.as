@@ -81,7 +81,7 @@ package com.twinoid.kube.quest.vo {
 			if(_item != null) _item.removeEventListener(Event.CLEAR, itemClearedHandler);
 			_item = item;
 			if(_item != null) _item.addEventListener(Event.CLEAR, itemClearedHandler);
-			_itemGuid = item.guid;
+			_itemGuid = item == null? -1 : item.guid;
 		}
 
 

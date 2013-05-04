@@ -51,8 +51,12 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * @inheritDoc
 		 */
-		public function kill():void {
-		}
+		public function kill():void { }
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function isKilled():Boolean { return false; }
 
 
 		

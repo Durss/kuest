@@ -1,24 +1,23 @@
 package com.twinoid.kube.quest.views {
-	import com.twinoid.kube.quest.graphics.MenuCreditsIconGraphic;
-	import com.twinoid.kube.quest.components.menu.MenuCreditsContent;
-	import flash.display.Shape;
 	import gs.TweenLite;
-
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.components.buttons.SideMenuButton;
+	import com.twinoid.kube.quest.components.menu.AbstractMenuContent;
 	import com.twinoid.kube.quest.components.menu.MenuCharsContent;
+	import com.twinoid.kube.quest.components.menu.MenuCreditsContent;
 	import com.twinoid.kube.quest.components.menu.MenuFileContent;
 	import com.twinoid.kube.quest.components.menu.MenuObjectContent;
 	import com.twinoid.kube.quest.graphics.MenuCharactersIconGraphic;
+	import com.twinoid.kube.quest.graphics.MenuCreditsIconGraphic;
 	import com.twinoid.kube.quest.graphics.MenuFileIconGraphic;
 	import com.twinoid.kube.quest.graphics.MenuObjectIconGraphic;
 	import com.twinoid.kube.quest.model.Model;
-
 	import flash.display.DisplayObject;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -86,7 +85,12 @@ package com.twinoid.kube.quest.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
-			model;
+			
+			var i:int, len:int;
+			len = _contents.length;
+			for(i = 0; i < len; ++i) {
+				AbstractMenuContent(_contents[i]).update(model);
+			}
 		}
 
 

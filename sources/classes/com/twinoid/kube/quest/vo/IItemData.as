@@ -20,6 +20,8 @@ package com.twinoid.kube.quest.vo {
 		
 		function set image(value:SerializableBitmapData):void;
 		
+		function isKilled():Boolean;
+		
 		function kill():void;
 		
 	}

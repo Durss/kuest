@@ -19,6 +19,7 @@ package com.twinoid.kube.quest.vo {
 		private var _name:String;
 		private var _image:SerializableBitmapData;
 		private var _guid:int;
+		private var _isKilled:Boolean;
 		
 		
 		
@@ -59,7 +60,7 @@ package com.twinoid.kube.quest.vo {
 		 * Gets a string representation of the value object.
 		 */
 		override public function toString():String {
-			return "[CharItemData :: name=\""+name+"\", image="+_image+"]";
+			return "[CharItemData :: guid='"+guid+"', name=\""+name+"\", image="+_image+"]";
 		}
 		
 		/**
@@ -70,9 +71,15 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * @inheritDoc
 		 */
+		public function isKilled():Boolean { return _isKilled; }
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function kill():void {
 			if(_image != null) _image.dispose();
 			_image = null;
+			_isKilled = true;
 			dispatchEvent(new Event(Event.CLEAR));
 		}
 

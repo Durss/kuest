@@ -1,13 +1,12 @@
 package com.twinoid.kube.quest.views {
-	import com.nurun.core.lang.Disposable;
-	import com.twinoid.kube.quest.vo.KuestData;
-	import com.nurun.utils.math.MathUtils;
 	import gs.TweenLite;
 	import gs.easing.Back;
 
+	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.nurun.utils.math.MathUtils;
 	import com.twinoid.kube.quest.components.box.Box;
 	import com.twinoid.kube.quest.components.box.BoxLink;
 	import com.twinoid.kube.quest.controler.FrontControler;
@@ -59,7 +58,7 @@ package com.twinoid.kube.quest.views {
 		private var _mousePressed:Boolean;
 		private var _startDragInGap:Boolean;
 		private var _dragItemOffset:Point;
-		private var _currentData:KuestData;
+		private var _currentDataGUID:int;
 		
 		
 		
@@ -96,10 +95,10 @@ package com.twinoid.kube.quest.views {
 				createItem(lastItem);
 			}
 			
-			if(model.kuestData != _currentData) {
-				_currentData = model.kuestData;
+			if(model.kuestData.guid != _currentDataGUID) {
+				_currentDataGUID = model.kuestData.guid;
 				clear();
-				buildFromCollection(_currentData.nodes);
+				buildFromCollection(model.kuestData.nodes);
 			}
 			
 			if(_background == null) {
@@ -223,9 +222,12 @@ package com.twinoid.kube.quest.views {
 			//Move the board
 			_prevMousePos.x = stage.mouseX;
 			_prevMousePos.y = stage.mouseY;
-			_boxesHolder.x += (_endX - _boxesHolder.x) * .35;
-			_boxesHolder.y += (_endY - _boxesHolder.y) * .35;
-			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
+			//Prevents from a whole screen's rendering when un-necessary
+			if(Math.abs(_boxesHolder.x-_endX) > .1 && Math.abs(_boxesHolder.y-_endY) > .1) {
+				_boxesHolder.x += (_endX - _boxesHolder.x) * .5;
+				_boxesHolder.y += (_endY - _boxesHolder.y) * .5;
+				_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
+			}
 			
 			//Draw the links
 			if(_tempLink.startEntry != null) {

@@ -60,8 +60,8 @@ package com.twinoid.kube.quest.views {
 		public function scrollTo(x:int, y:int):void {
 			if(_matrix.tx == x && _matrix.ty == y) return;
 			
-			_matrix.tx = x;
-			_matrix.ty = y;
+			_matrix.tx = x%CELL_SIZE;
+			_matrix.ty = y%CELL_SIZE;
 			computePositions();
 		}
 

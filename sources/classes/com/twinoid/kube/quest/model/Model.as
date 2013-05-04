@@ -49,8 +49,8 @@ package com.twinoid.kube.quest.model {
 		private var _connectTimeout:uint;
 		private var _kuestData:KuestData;
 		private var _currentBoxToEdit:KuestEvent;
-		private var _objects:Vector.<ObjectItemData>;
-		private var _characters:Vector.<CharItemData>;
+//		private var _objects:Vector.<ObjectItemData>;
+//		private var _characters:Vector.<CharItemData>;
 		private var _connectedToGame:Boolean;
 		private var _isConnected:Boolean;
 		private var _loginCmd:LoginCmd;
@@ -58,6 +58,8 @@ package com.twinoid.kube.quest.model {
 		private var _name:String;
 		private var _pubkey:String;
 		private var _so:SharedObject;
+		private var _charactersUpdate:Boolean;
+		private var _objectsUpdate:Boolean;
 		
 		
 		
@@ -90,12 +92,12 @@ package com.twinoid.kube.quest.model {
 		/**
 		 * Gets the objects list
 		 */
-		public function get objects():Vector.<ObjectItemData> { return _objects; }
+		public function get objects():Vector.<ObjectItemData> { return _kuestData.objects; }
 
 		/**
 		 * Gets the characters list
 		 */
-		public function get characters():Vector.<CharItemData> { return _characters; }
+		public function get characters():Vector.<CharItemData> { return _kuestData.characters; }
 		
 		/**
 		 * Gets the in game's position.
@@ -106,6 +108,16 @@ package com.twinoid.kube.quest.model {
 		 * Gets if the application is connected to the Kube game.
 		 */
 		public function get connectedToGame():Boolean { return _connectedToGame && _inGamePosition.x != int.MAX_VALUE && _inGamePosition.y != int.MAX_VALUE; }
+		
+		/**
+		 * Gets if there has been an update in the characters list.
+		 */
+		public function get charactersUpdate():Boolean { return _charactersUpdate; }
+		
+		/**
+		 * Gets if there has been an update in the objects list.
+		 */
+		public function get objectsUpdate():Boolean { return _objectsUpdate; }
 		
 
 
@@ -119,93 +131,18 @@ package com.twinoid.kube.quest.model {
 		public function start():void {
 			_isConnected = !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
 			
+			testSerializableClasses();
 			
-			testSerialize();
+			_charactersUpdate = _objectsUpdate = true;
 			update();
+			_charactersUpdate = _objectsUpdate = false;
+			
 			
 			if(_isConnected) {
 				_loginCmd.populate(Config.getVariable("uid"), Config.getVariable("pubkey"));
 				_loginCmd.execute();
 				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
 			}
-		}
-
-		private function testSerialize():void {
-			//Check if the value objects are all serializable and registers aliases
-			//so that ByteArray.readObject() can instanciate the value objects.
-			var serializableClasses:Array = [Point, Date, KuestEvent, ActionDate, ActionPlace, ActionType, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
-			var i:int, len:int;
-			var j:int, lenJ:int;
-			len = serializableClasses.length;
-			for (i = 0; i < len; ++i) {
-				
-				var xml:XML = describeType(serializableClasses[i]);
-				var nodes:XMLList = XML(xml.child("factory")[0]).child("accessor");
-				var cName:String = String(xml.@name).replace(/.*::(.*)/gi, "$1");
-				registerClassAlias(cName, serializableClasses[i]);
-				
-				if(serializableClasses[i] != Point && serializableClasses[i] != Date) {
-					lenJ = nodes.length();
-					for(j = 0; j < lenJ; ++j) {
-						if(nodes[j].@access != "readwrite") {
-							trace("Class "+cName+"'s '"+nodes[j].@name+"' property is '"+nodes[j].@access+"'. Must be 'readwrite'.");
-						}
-					}
-				}
-			}
-			
-			var c:Vector.<KuestEvent> = new Vector.<KuestEvent>();
-			var e1:KuestEvent = new KuestEvent();
-			e1.boxPosition = new Point(69,96);
-			e1.actionDate = new ActionDate();
-			e1.actionDate.days = [0,1,4];
-			e1.actionDate.startTime = 12;
-			e1.actionDate.endTime = 82;
-			
-			e1.actionPlace = new ActionPlace();
-			e1.actionPlace.x = 42;
-			e1.actionPlace.y = 43;
-			e1.actionPlace.z = 44;
-			
-			e1.actionType = new ActionType();
-			e1.actionType.type = ActionType.TYPE_CHARACTER;
-			e1.actionType.setItem(_characters[0]);
-			e1.actionType.text = "Zizi !!";
-			
-			//====================
-			
-			var e2:KuestEvent = new KuestEvent();
-			e2.actionDate = new ActionDate();
-			e2.actionDate.dates = new <Date>[new Date()];
-			e2.actionDate.startTime = 12;
-			e2.actionDate.endTime = 82;
-			
-			e2.actionPlace = new ActionPlace();
-			e2.actionPlace.x = 89;
-			e2.actionPlace.y = 12;
-			e2.actionPlace.z = 8;
-			
-			e2.actionType = new ActionType();
-			e2.actionType.type = ActionType.TYPE_OBJECT;
-			e2.actionType.setItem(_objects[0]);
-			e2.actionType.text = "Cacaaa !!";
-			e2.addDependency(e1);
-			
-			c.push(e1);
-			c.push(e2);
-			
-			//Simulate serialization / deserialization just to be sure everything's ok.
-			var bytes:ByteArray = new ByteArray();
-			bytes.writeObject(_characters);
-			bytes.writeObject(_objects);
-			bytes.writeObject(c);
-			bytes.deflate();
-			
-			bytes.inflate();
-			_characters = bytes.readObject();
-			_objects = bytes.readObject();
-			_kuestData = new KuestData();
-			_kuestData.deserialize(bytes, _characters, _objects);
 		}
 		
 		/**
@@ -240,19 +177,43 @@ package com.twinoid.kube.quest.model {
 		}
 		
 		/**
-		 * Refreshes the objects list
+		 * Deletes a character
 		 */
-		public function refreshObjectsList(list:Vector.<ObjectItemData>):void {
-			_objects = list;
+		public function deleteCharacter(item:CharItemData):void {
+			_kuestData.deleteCharacter(item);
+			_charactersUpdate = true;
 			update();
+			_charactersUpdate = false;
 		}
 		
 		/**
-		 * Refreshes the objects list
+		 * Deletes an object
 		 */
-		public function refreshCharsList(list:Vector.<CharItemData>):void {
-			_characters = list;
+		public function deleteObject(item:ObjectItemData):void {
+			_kuestData.deleteObject(item);
+			_objectsUpdate = true;
 			update();
+			_objectsUpdate = false;
+		}
+		
+		/**
+		 * Adds a character
+		 */
+		public function addCharacter():void {
+			_kuestData.addCharacter();
+			_charactersUpdate = true;
+			update();
+			_charactersUpdate = false;
+		}
+		
+		/**
+		 * Adds an object
+		 */
+		public function addObject():void {
+			_kuestData.addObject();
+			_objectsUpdate = true;
+			update();
+			_objectsUpdate = false;
 		}
 		
 		/**
@@ -366,6 +327,96 @@ package com.twinoid.kube.quest.model {
 		private function update():void {
 			dispatchEvent(new ModelEvent(ModelEvent.UPDATE, this));
 		}
+
+		
+		
+		
+		
+		//__________________________________________________________ SERIALIZE/DESERIALZE
+		
+		/**
+		 * Test for serializable classes validity
+		 */
+		private function testSerializableClasses():void {
+			//Check if the value objects are all serializable and registers aliases
+			//so that ByteArray.readObject() can instanciate the value objects.
+			var serializableClasses:Array = [Point, Date, KuestEvent, ActionDate, ActionPlace, ActionType, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
+			var i:int, len:int;
+			var j:int, lenJ:int;
+			len = serializableClasses.length;
+			for (i = 0; i < len; ++i) {
+				
+				var xml:XML = describeType(serializableClasses[i]);
+				var nodes:XMLList = XML(xml.child("factory")[0]).child("accessor");
+				var cName:String = String(xml.@name).replace(/.*::(.*)/gi, "$1");
+				registerClassAlias(cName, serializableClasses[i]);
+				
+				if(serializableClasses[i] != Point && serializableClasses[i] != Date) {
+					lenJ = nodes.length();
+					for(j = 0; j < lenJ; ++j) {
+						if(nodes[j].@access != "readwrite") {
+							trace("Class "+cName+"'s '"+nodes[j].@name+"' property is '"+nodes[j].@access+"'. Must be 'readwrite'.");
+						}
+					}
+				}
+			}
+			
+			/*
+			var c:Vector.<KuestEvent> = new Vector.<KuestEvent>();
+			var e1:KuestEvent = new KuestEvent();
+			e1.boxPosition = new Point(69,96);
+			e1.actionDate = new ActionDate();
+			e1.actionDate.days = [0,1,4];
+			e1.actionDate.startTime = 12;
+			e1.actionDate.endTime = 82;
+			
+			e1.actionPlace = new ActionPlace();
+			e1.actionPlace.x = 42;
+			e1.actionPlace.y = 43;
+			e1.actionPlace.z = 44;
+			
+			e1.actionType = new ActionType();
+			e1.actionType.type = ActionType.TYPE_CHARACTER;
+			e1.actionType.setItem(_kuestData.characters[0]);
+			e1.actionType.text = "Zizi !!";
+			
+			//====================
+			
+			var e2:KuestEvent = new KuestEvent();
+			e2.actionDate = new ActionDate();
+			e2.actionDate.dates = new <Date>[new Date()];
+			e2.actionDate.startTime = 12;
+			e2.actionDate.endTime = 82;
+			
+			e2.actionPlace = new ActionPlace();
+			e2.actionPlace.x = 89;
+			e2.actionPlace.y = 12;
+			e2.actionPlace.z = 8;
+			
+			e2.actionType = new ActionType();
+			e2.actionType.type = ActionType.TYPE_OBJECT;
+			e2.actionType.setItem(_kuestData.objects[0]);
+			e2.actionType.text = "Cacaaa !!";
+			e2.addDependency(e1);
+			
+			c.push(e1);
+			c.push(e2);
+			
+			//Simulate serialization / deserialization just to be sure everything's ok.
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeObject(_kuestData.characters);
+			bytes.writeObject(_kuestData.objects);
+			bytes.writeObject(c);
+			bytes.deflate();
+			
+			bytes.inflate();
+//			_kuestData = new KuestData();
+			_kuestData.deserialize(bytes);
+			//*/
+		}
+
+		
+		
 		
 		
 		//__________________________________________________________ LOGIN HANDLERS
@@ -462,15 +513,13 @@ package com.twinoid.kube.quest.model {
 		 * Called when a map's loading completes
 		 */
 		private function loadKuestCompleteHandler(event:CommandEvent):void {
-			//Simulate serialization / deserialization just to be sure everything's ok.
 			var bytes:ByteArray = event.data as ByteArray;
 			bytes.inflate();
-			_kuestData = new KuestData();
-			_characters = bytes.readObject();
-			_objects = bytes.readObject();
-			_kuestData.deserialize(bytes, _characters, _objects);
+//			_kuestData = new KuestData();
+			_kuestData.deserialize(bytes);
+			_charactersUpdate = _objectsUpdate = true;
 			update();
-			//TODO refresh objects/characters list on side menu.
+			_charactersUpdate = _objectsUpdate = false;
 		}
 		
 	}

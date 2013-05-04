@@ -11,7 +11,6 @@ package com.twinoid.kube.quest.components.menu {
 	import com.twinoid.kube.quest.vo.IItemData;
 	import com.twinoid.kube.quest.vo.SerializableBitmapData;
 
-	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
@@ -40,7 +39,7 @@ package com.twinoid.kube.quest.components.menu {
 		protected var _deleteBt:GraphicButtonKube;
 		protected var _data:IItemData;
 		protected var _errorFilter:Array;
-		private var _lastValidState:Boolean;
+		protected var _lastValidState:Boolean;
 		
 		
 		
@@ -69,30 +68,6 @@ package com.twinoid.kube.quest.components.menu {
 		 * @inheritDoc
 		 */
 		override public function get height():Number { return _nameInput.y + _nameInput.height; }
-		
-		/**
-		 * Sets the image.
-		 */
-		public function set image(value:BitmapData):void {
-			var bmd:SerializableBitmapData = new SerializableBitmapData();
-			bmd.width = value.width;
-			bmd.height = value.height;
-			bmd.draw(value);
-			_data.image	= bmd;
-			_image.image = value;
-			_lastValidState = isValid;
-			filters = isValid? [] : _errorFilter;
-		}
-		
-		/**
-		 * Sets the image.
-		 */
-		override public function set name(value:String):void {
-			_data.name = value;
-			_nameInput.text = value;
-			_lastValidState = isValid;
-			filters = isValid? [] : _errorFilter;
-		}
 		
 		/**
 		 * Gets if the item is valid. i.e : fully filled.
@@ -141,7 +116,13 @@ package com.twinoid.kube.quest.components.menu {
 						          .25,.25,.25,0,0,
 						          .25,.25,.25,1,0 ];
 			_errorFilter = [new ColorMatrixFilter(matrix)];
-			filters = _errorFilter;
+			
+			if (_data != null && _data.image != null && _data.name != null) {
+				_image.image = _data.image.getConcreteBitmapData();
+				_nameInput.text = _data.name;
+			}else{
+				filters = _errorFilter;
+			}
 			
 			_image.addEventListener(Event.CHANGE, changeHandler);
 			_deleteBt.addEventListener(MouseEvent.CLICK, clickHandler);
@@ -156,7 +137,6 @@ package com.twinoid.kube.quest.components.menu {
 		 * Called when delete button is clicked
 		 */
 		protected function clickHandler(event:MouseEvent):void {
-			_data.kill();
 			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
@@ -187,7 +167,7 @@ package com.twinoid.kube.quest.components.menu {
 				stage.focus = _nameInput;
 			}
 			
-			if(event is FocusEvent && isValid != _lastValidState) {
+			if(event is FocusEvent && isValid && !_lastValidState) {
 				dispatchEvent(new Event(Event.CHANGE));
 			}
 			

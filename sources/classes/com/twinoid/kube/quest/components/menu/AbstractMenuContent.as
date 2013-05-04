@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.menu {
+	import com.twinoid.kube.quest.model.Model;
 	import com.nurun.components.scroll.ScrollPane;
 	import com.nurun.components.scroll.scrollable.ScrollableDisplayObject;
 	import com.nurun.components.text.CssTextField;
@@ -45,6 +46,12 @@ package com.twinoid.kube.quest.components.menu {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Called on model's update
+		 */
+		public function update(model:Model):void {
+			
+		}
 
 
 		

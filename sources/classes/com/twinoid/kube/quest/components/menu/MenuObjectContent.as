@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.components.menu {
-	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
@@ -7,14 +6,12 @@ package com.twinoid.kube.quest.components.menu {
 	import com.twinoid.kube.quest.components.menu.obj.ObjectItem;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.graphics.AddBigIcon;
+	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.vo.ObjectItemData;
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 	
 	/**
 	 * 
@@ -23,11 +20,9 @@ package com.twinoid.kube.quest.components.menu {
 	 */
 	public class MenuObjectContent extends AbstractMenuContent {
 		
-		[Embed(source="../../../../../../../assets/spritesheet_objs.jpg")]
-		private var _sheetBmp:Class;
-		
 		private var _addItem:GraphicButtonKube;
 		private var _items:Vector.<ObjectItem>;
+		private var _dataToItem:Dictionary;
 		
 		
 		
@@ -54,6 +49,15 @@ package com.twinoid.kube.quest.components.menu {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Called on model's update
+		 */
+		override public function update(model:Model):void {
+			if(model.objectsUpdate) {
+//				clearItems();
+				refreshList(model.objects);
+			}
+		}
 
 
 		
@@ -67,13 +71,15 @@ package com.twinoid.kube.quest.components.menu {
 		override protected function initialize(event:Event):void {
 			super.initialize(event);
 			
-			_addItem = _holder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
-			_items = new Vector.<ObjectItem>();
+			_addItem	= _holder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
+			_items		= new Vector.<ObjectItem>();
+			_dataToItem	= new Dictionary();
 			
-			createDefaultObjects();
 			_label.text = Label.getLabel("menu-objects");
-			_addItem.width = _items[0].width;
-			_addItem.height = _items[0].height;
+			var ref:ObjectItem = new ObjectItem();
+			_addItem.width = ref.width;
+			_addItem.height = ref.height;
+			ref.dispose();
 			
 			_addItem.addEventListener(MouseEvent.CLICK, clickAddHandler);
 			computePositions();
@@ -93,89 +99,57 @@ package com.twinoid.kube.quest.components.menu {
 		/**
 		 * Creates the default faces
 		 */
-		private function createDefaultObjects():void {
-			var names:Array = ["Burrin", "Pierre antique", "Toile", "Graine", "Golem", "Crone d'abondance", "Lentille", "Pilon", "Bouclier", "Lance", "Treuil", "Cristal", "Minerais"];//TODO localise
-			var bmp:Bitmap = new _sheetBmp() as Bitmap;
-			var src:BitmapData = bmp.bitmapData;
-			var i:int, len:int, bmd:BitmapData, rect:Rectangle, pt:Point;
-			len = names.length;
-			rect = new Rectangle(0, 0, 100, 100);
-			pt = new Point();
+		private function refreshList(data:Vector.<ObjectItemData>):void {
+			//Destroy dead items
+			var i:int, len:int;
+			len = _items.length;
 			for(i = 0; i < len; ++i) {
-				rect.x = i * 100;
-				bmd = new BitmapData(100, 100, true, 0);
-				bmd.copyPixels(src, rect, pt);
-				bmd.lock();
-				var item:ObjectItem = addItem();
-				item.image = bmd;
-				item.name = names[i];
+				if(_items[i].data.isKilled()) {
+					_items[i].dispose();
+					_items[i].removeEventListener(Event.CLOSE, deleteItemHandler);
+					_holder.removeChild(_items[i]);
+					_items.splice(i, 1);
+					i --;
+					len --;
+				}
 			}
-			refreshObjectListOnModel();
+			
+			//Create missing items
+			len = data.length;
+			for(i = 0; i < len; ++i) {
+				if(_dataToItem[ data[i] ] == undefined) {
+					addItem(data[i]);
+				}
+			}
+			computePositions();
 		}
 		
 		/**
 		 * Adds an item to the list.
 		 */
-		private function addItem():ObjectItem {
-			var item:ObjectItem = new ObjectItem();
+		private function addItem(data:ObjectItemData = null):ObjectItem {
+			var item:ObjectItem = new ObjectItem(data);
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
-			item.addEventListener(FormComponentEvent.SUBMIT, submitItemHandler);
-			item.addEventListener(Event.CHANGE, submitItemHandler);
 			_holder.addChild(item);
 			_items.push( item );
+			_dataToItem[data] = item;
 			return item;
-		}
-		
-		/**
-		 * Called when an item's value changes and is valid.
-		 */
-		private function submitItemHandler(event:FormComponentEvent):void {
-			refreshObjectListOnModel();
 		}
 		
 		/**
 		 * Called when an item is delete
 		 */
 		private function deleteItemHandler(event:Event):void {
-			var item:ObjectItem = event.currentTarget as ObjectItem;
-			item.dispose();
-			item.removeEventListener(Event.CLOSE, deleteItemHandler);
-			_holder.removeChild(item);
-			var i:int, len:int;
-			len = _items.length;
-			for(i = 0; i < len; ++i) {
-				if(_items[i] == item) {
-					_items.splice(i, 1);
-					i--;
-					len --;
-				}
-			}
-			computePositions();
-			refreshObjectListOnModel();
+			var data:ObjectItemData = ObjectItem(event.currentTarget).data;
+			delete _dataToItem[data];
+			FrontControler.getInstance().deleteObject(data);
 		}
 		
 		/**
 		 * Adds an item to the list.
 		 */
 		private function clickAddHandler(event:MouseEvent):void {
-			addItem();
-			computePositions();
-		}
-		
-		/**
-		 * Sends the new items to the model.
-		 */
-		private function refreshObjectListOnModel():void {
-			var i:int, len:int, res:Vector.<ObjectItemData>;
-			res = new Vector.<ObjectItemData>();
-			len = _items.length;
-			for(i = 0; i < len; ++i) {
-				if(_items[i].data.isValid()) {
-					res.push(_items[i].data);
-				}
-			}
-			
-			FrontControler.getInstance().refreshObjectsList(res);
+			FrontControler.getInstance().addObject();
 		}
 		
 	}

@@ -1,32 +1,30 @@
 package com.twinoid.kube.quest.views {
-	import com.nurun.components.scroll.events.ScrollerEvent;
-	import com.twinoid.kube.quest.vo.EmptyItemData;
-	import flash.geom.Rectangle;
-	import com.nurun.utils.touch.SwipeManager;
-	import com.twinoid.kube.quest.utils.makeEscapeClosable;
-	import com.twinoid.kube.quest.utils.Closable;
-	import com.nurun.utils.pos.PosUtils;
 	import gs.TweenLite;
 
 	import com.nurun.components.scroll.ScrollPane;
+	import com.nurun.components.scroll.events.ScrollerEvent;
 	import com.nurun.components.tile.TileEngine2DSwipeWrapper;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.utils.touch.SwipeManager;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.components.form.ScrollbarKube;
 	import com.twinoid.kube.quest.components.selector.SelectorItem;
 	import com.twinoid.kube.quest.components.window.PromptWindow;
 	import com.twinoid.kube.quest.events.ItemSelectorEvent;
 	import com.twinoid.kube.quest.model.Model;
-	import com.twinoid.kube.quest.vo.CharItemData;
+	import com.twinoid.kube.quest.utils.Closable;
+	import com.twinoid.kube.quest.utils.makeEscapeClosable;
+	import com.twinoid.kube.quest.vo.EmptyItemData;
 	import com.twinoid.kube.quest.vo.IItemData;
-	import com.twinoid.kube.quest.vo.ObjectItemData;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 
 	/**
 	 * 
@@ -39,11 +37,10 @@ package com.twinoid.kube.quest.views {
 		private var _disableLayer:Sprite;
 		private var _callback:Function;
 		private var _scrollpane:ScrollPane;
-		private var _charsList:Vector.<CharItemData>;
-		private var _objectList:Vector.<ObjectItemData>;
 		private var _engine:TileEngine2DSwipeWrapper;
 		private var _closed:Boolean;
 		private var _swiper:SwipeManager;
+		private var _model:Model;
 		
 		
 		
@@ -79,9 +76,7 @@ package com.twinoid.kube.quest.views {
 		 * Called on model's update
 		 */
 		override public function update(event:IModelEvent):void {
-			var model:Model = event.model as Model;
-			_charsList = model.characters;
-			_objectList = model.objects;
+			_model = event.model as Model;
 		}
 		
 		/**
@@ -174,10 +169,10 @@ package com.twinoid.kube.quest.views {
 			//event if it's stupid...
 			switch(event.itemType){
 				case ItemSelectorEvent.ITEM_TYPE_CHAR:
-					populate( VectorUtils.toArray(_charsList) );
+					populate( VectorUtils.toArray(_model.characters) );
 					break;
 				case ItemSelectorEvent.ITEM_TYPE_OBJECT:
-					populate( VectorUtils.toArray(_objectList) );
+					populate( VectorUtils.toArray(_model.objects) );
 					break;
 				default:
 			}
@@ -191,7 +186,6 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function populate(list:Array):void {
 			_engine.clear();
-			
 			var i:int, len:int, data:IItemData, line:Array, empty:EmptyItemData;
 			var cols:int = 5;//_engine.hVisibleItems;
 			len = Math.max(Math.ceil(list.length/cols) * cols, 15);
