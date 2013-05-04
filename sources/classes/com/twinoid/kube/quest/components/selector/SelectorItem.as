@@ -65,7 +65,7 @@ package com.twinoid.kube.quest.components.selector {
 				return;
 			}
 			_image.image = _data.image == null? null : _data.image.getConcreteBitmapData();
-			_label.text = data is EmptyItemData? Label.getLabel("selector-none") : _data.name;
+			_label.text = data is EmptyItemData? Label.getLabel("selector-none") : _data.name == null? "" : _data.name;
 			_label.y = WIDTH;
 			_label.width = WIDTH;
 			var size:int = CssManager.getInstance().getTextFormatOf(_label.style).size as int;

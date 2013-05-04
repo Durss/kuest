@@ -58,7 +58,8 @@ package com.twinoid.kube.quest.views {
 		 * Scrolls the background
 		 */
 		public function scrollTo(x:int, y:int):void {
-			if(_matrix.tx == x && _matrix.ty == y) return;
+			//Prevents from a whole screen's rendering when un-necessary
+			if(_matrix.tx == x%CELL_SIZE && _matrix.ty == y%CELL_SIZE) return;
 			
 			_matrix.tx = x%CELL_SIZE;
 			_matrix.ty = y%CELL_SIZE;

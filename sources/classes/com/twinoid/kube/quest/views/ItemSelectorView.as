@@ -186,19 +186,28 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function populate(list:Array):void {
 			_engine.clear();
+			//Add first empty item.
+			list.unshift(new EmptyItemData(true));
 			var i:int, len:int, data:IItemData, line:Array, empty:EmptyItemData;
-			var cols:int = 5;//_engine.hVisibleItems;
-			len = Math.max(Math.ceil(list.length/cols) * cols, 15);
+			var cols:int = 5;
+			len = list.length;
 			empty = new EmptyItemData();
-			
-			for(i = 0; i <= len; ++i) {
-				if(i == 0 || line.length == cols) {
-					if(i > 0) _engine.addLine(line);
+			line = [];
+			for(i = 0; i < len; ++i) {
+				data = list[i] as IItemData;
+				//Ignore unfilled items
+				if(data is EmptyItemData || (!(data is EmptyItemData) && data.name != null)) line.push(data);
+				if(line.length == cols) {
+					_engine.addLine(line);
 					line = [];
-					if(i == 0) line.push(new EmptyItemData(true));
 				}
-				data = (i > list.length-1)? empty : list[i] as IItemData;
-				line.push(data);
+			}
+			
+			//add missing empty items to fill the last line
+			if(line.length > 0) {
+				len = cols - line.length;
+				for(i = 0; i < len; ++i) line.push(empty);
+				_engine.addLine(line);
 			}
 			computePositions();
 		}

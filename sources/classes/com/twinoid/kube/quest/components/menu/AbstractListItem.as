@@ -2,7 +2,6 @@ package com.twinoid.kube.quest.components.menu {
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.core.lang.Disposable;
-	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
@@ -39,7 +38,6 @@ package com.twinoid.kube.quest.components.menu {
 		protected var _deleteBt:GraphicButtonKube;
 		protected var _data:IItemData;
 		protected var _errorFilter:Array;
-		protected var _lastValidState:Boolean;
 		
 		
 		
@@ -106,9 +104,8 @@ package com.twinoid.kube.quest.components.menu {
 		 * Initialize the class.
 		 */
 		protected function initialize():void {
-			_lastValidState = false;
 			_image = addChild(new ItemPlaceholder(true)) as ItemPlaceholder;
-			_nameInput = addChild(new InputKube(Label.getLabel("menu-chars-add-name"))) as InputKube;
+			_nameInput = addChild(new InputKube()) as InputKube;
 			_deleteBt = addChild(new GraphicButtonKube(new CancelIcon(), false)) as GraphicButtonKube;
 			
 			var matrix:Array = [ .25,.25,.25,0,0,
@@ -153,25 +150,19 @@ package com.twinoid.kube.quest.components.menu {
 		 * Called when a value changes.
 		 */
 		protected function changeHandler(event:Event):void {
+			var n:String = _nameInput.value as String;
 			var bmd:SerializableBitmapData = new SerializableBitmapData();
 			bmd.fromBitmapData(_image.image);
 			_data.image	= bmd;
-			_data.name	= _nameInput.text;
+			_data.name	= StringUtils.trim(n).length == 0? null : n;
 			if(isValid) {
 				filters = [];
-				dispatchEvent(new FormComponentEvent(FormComponentEvent.SUBMIT));
 			}else{
 				filters = _errorFilter;
 			}
 			if(event.currentTarget == _image) {
 				stage.focus = _nameInput;
 			}
-			
-			if(event is FocusEvent && isValid && !_lastValidState) {
-				dispatchEvent(new Event(Event.CHANGE));
-			}
-			
-			_lastValidState = isValid;
 		}
 		
 	}

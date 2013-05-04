@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.menu {
+	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
@@ -9,6 +10,7 @@ package com.twinoid.kube.quest.components.menu {
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.vo.CharItemData;
 
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
@@ -24,6 +26,8 @@ package com.twinoid.kube.quest.components.menu {
 		private var _items:Vector.<CharItem>;
 		private var _addItem:GraphicButtonKube;
 		private var _dataToItem:Dictionary;
+		private var _label:CssTextField;
+		private var _itemsHolder:Sprite;
 		
 		
 		
@@ -70,11 +74,14 @@ package com.twinoid.kube.quest.components.menu {
 		override protected function initialize(event:Event):void {
 			super.initialize(event);
 			
-			_addItem	= _holder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
+			_label		= _holder.addChild(new CssTextField("menu-label")) as CssTextField;
+			_itemsHolder= _holder.addChild(new Sprite()) as Sprite;
+			_addItem	= _itemsHolder.addChild(new GraphicButtonKube(new AddBigIcon())) as GraphicButtonKube;
 			_items		= new Vector.<CharItem>();
 			_dataToItem	= new Dictionary();
 			
-			_label.text = Label.getLabel("menu-chars");
+			_title.text = Label.getLabel("menu-chars");
+			_label.text = Label.getLabel("menu-chars-details");
 			var ref:CharItem = new CharItem();
 			_addItem.width = ref.width;
 			_addItem.height = ref.height;
@@ -88,9 +95,12 @@ package com.twinoid.kube.quest.components.menu {
 		 * Resizes and replaces the elements.
 		 */
 		override protected function computePositions(event:Event = null):void {
+			_label.width = _width;
 			var items:Array = VectorUtils.toArray(_items);
 			items.push(_addItem);
-			PosUtils.hDistribute(items, _width, 5, 20, true);
+			PosUtils.hDistribute(items, _width, 5, 15);
+			
+			_itemsHolder.y = Math.round(_label.height);
 			
 			super.computePositions(event);
 		}
@@ -106,7 +116,7 @@ package com.twinoid.kube.quest.components.menu {
 				if (_items[i].data.isKilled()) {
 					_items[i].dispose();
 					_items[i].removeEventListener(Event.CLOSE, deleteItemHandler);
-					_holder.removeChild(_items[i]);
+					_itemsHolder.removeChild(_items[i]);
 					_items.splice(i, 1);
 					i --;
 					len --;
@@ -129,7 +139,7 @@ package com.twinoid.kube.quest.components.menu {
 		private function addItem(data:CharItemData = null):CharItem {
 			var item:CharItem = new CharItem(data);
 			item.addEventListener(Event.CLOSE, deleteItemHandler);
-			_holder.addChild(item);
+			_itemsHolder.addChild(item);
 			_items.push( item );
 			_dataToItem[data] = item;
 			return item;
