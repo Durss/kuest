@@ -75,7 +75,7 @@ package com.twinoid.kube.quest.components.menu {
 			_items		= new Vector.<ObjectItem>();
 			_dataToItem	= new Dictionary();
 			
-			_label.text = Label.getLabel("menu-objects");
+			_title.text = Label.getLabel("menu-objects");
 			var ref:ObjectItem = new ObjectItem();
 			_addItem.width = ref.width;
 			_addItem.height = ref.height;

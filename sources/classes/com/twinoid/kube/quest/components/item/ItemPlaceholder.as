@@ -90,6 +90,7 @@ package com.twinoid.kube.quest.components.item {
 				_img.visible = false;
 				return;
 			}
+			_img.clear();
 			_img.visible = true;
 			_img.setBitmapData(value);
 			if(_icon != null && contains(_icon)) removeChild(_icon); 

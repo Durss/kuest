@@ -110,8 +110,8 @@ package com.twinoid.kube.quest.views {
 			_back = addChild(new Shape()) as Shape;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
 			
-			var icons:Array = [new MenuFileIconGraphic(), new MenuObjectIconGraphic(), new MenuCharactersIconGraphic(), new MenuCreditsIconGraphic()];
-			var contents:Array = [new MenuFileContent(_width), new MenuObjectContent(_width), new MenuCharsContent(_width), new MenuCreditsContent(_width)];
+			var icons:Array = [new MenuFileIconGraphic(), new MenuCharactersIconGraphic(), new MenuObjectIconGraphic(), new MenuCreditsIconGraphic()];
+			var contents:Array = [new MenuFileContent(_width), new MenuCharsContent(_width), new MenuObjectContent(_width), new MenuCreditsContent(_width)];
 			
 			var i:int, len:int;
 			len = icons.length;

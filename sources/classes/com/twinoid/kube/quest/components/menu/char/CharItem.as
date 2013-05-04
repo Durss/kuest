@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.menu.char {
+	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.components.menu.AbstractListItem;
 	import com.twinoid.kube.quest.vo.CharItemData;
 	
@@ -22,6 +23,7 @@ package com.twinoid.kube.quest.components.menu.char {
 		public function CharItem(data:CharItemData = null) {
 			_data = data == null? new CharItemData() : data;
 			super();
+			_nameInput.defaultLabel = Label.getLabel("menu-chars-add-name");
 		}
 
 		

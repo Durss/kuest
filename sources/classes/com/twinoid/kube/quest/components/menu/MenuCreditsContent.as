@@ -50,7 +50,7 @@ package com.twinoid.kube.quest.components.menu {
 		override protected function initialize(event:Event):void {
 			super.initialize(event);
 			
-			_label.text = Label.getLabel("menu-credits");
+			_title.text = Label.getLabel("menu-credits");
 			_content = _holder.addChild(new CssTextField("menu-label")) as CssTextField;
 			
 			_content.selectable = true;

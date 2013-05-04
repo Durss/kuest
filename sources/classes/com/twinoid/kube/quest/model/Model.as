@@ -238,7 +238,7 @@ package com.twinoid.kube.quest.model {
 			var objsDone:Object = {};
 			len = _kuestData.nodes.length;
 			for(i = 0; i < len; ++i) {
-				item = _kuestData.nodes[i].actionType.getItem();
+				item = _kuestData.nodes[i].actionType == null? null : _kuestData.nodes[i].actionType.getItem();
 				if(item == null) continue;
 				if(item is CharItemData) {
 					if(charsDone[item.guid] == undefined) {

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.views {
+	import flash.utils.setTimeout;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import gs.TweenLite;
 	import gs.easing.Back;
@@ -104,14 +105,16 @@ package com.twinoid.kube.quest.views {
 					visible = true;
 					stage.focus = this;
 					TweenLite.killTweensOf(this);
-					TweenLite.from(this, .5, {x:stage.stageWidth * .5, y:stage.stageHeight * .5, scaleX:0, scaleY:0, ease:Back.easeOut, onComplete:flagOpened});
+					setTimeout(flagOpened, 0);//Flag as opened a frame later. See method for more infos
+					TweenLite.from(this, .5, {x:x + width * .5, y:y + height * .5, scaleX:0, scaleY:0, delay:0, ease:Back.easeInOut});
 				}
 				_place.connectedToGame = model.connectedToGame;
 				_place.inGamePosition = model.inGamePosition;
+				
 			}else if(!_closed){
 				_closed = true;
 				TweenLite.killTweensOf(this);
-				TweenLite.to(this, .5, {x:stage.stageWidth * .5, y:stage.stageHeight * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
+				TweenLite.to(this, .5, {x:x + width * .5, y:y + height * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
 			}
 		}
 
@@ -155,7 +158,9 @@ package com.twinoid.kube.quest.views {
 			_holder.addEventListener(Event.RESIZE, computePositions);
 			_submit.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_cancel.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			stage.addEventListener(MouseEvent.CLICK, clickStageHandler);
+			stage.addEventListener(MouseEvent.CLICK, clickStageHandler, true);
+			stage.addEventListener(MouseEvent.MOUSE_UP, clickStageHandler, true);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickStageHandler, true);
 		}
 		
 		/**
@@ -213,7 +218,9 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function clickStageHandler(event:MouseEvent):void {
 			if(!_closed && !contains(event.target as DisplayObject)) {
-				close();
+				if(event.type != MouseEvent.MOUSE_DOWN) close();
+				//Prevents from an item creation when clicking on the board.
+				event.stopPropagation();
 			}
 		}
 		

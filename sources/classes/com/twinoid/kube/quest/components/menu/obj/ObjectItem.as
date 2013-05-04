@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.menu.obj {
+	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.components.menu.AbstractListItem;
 	import com.twinoid.kube.quest.vo.ObjectItemData;
 	
@@ -22,6 +23,7 @@ package com.twinoid.kube.quest.components.menu.obj {
 		public function ObjectItem(data:ObjectItemData = null) {
 			_data = data == null? new ObjectItemData() : data;
 			super();
+			_nameInput.defaultLabel = Label.getLabel("menu-objects-add-name");
 		}
 
 		

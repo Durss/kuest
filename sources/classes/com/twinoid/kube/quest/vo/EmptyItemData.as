@@ -20,6 +20,8 @@ package com.twinoid.kube.quest.vo {
 		 */
 
 		public function EmptyItemData(isDefined:Boolean = false) {
+			//Provides a way to get a selectable empty item.
+			//The first item of the ItemSelectorView is done like that
 			_isDefined = isDefined;
 		}
 

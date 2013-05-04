@@ -63,7 +63,7 @@ package com.twinoid.kube.quest.components.menu {
 		override protected function initialize(event:Event):void {
 			super.initialize(event);
 			
-			_label.text = Label.getLabel("menu-file");
+			_title.text = Label.getLabel("menu-file");
 			_formHolder = _holder.addChild(new Sprite()) as Sprite;
 			_spinning = _holder.addChild(new LoaderSpinning()) as LoaderSpinning;
 			_loginForm = new LoginForm(_width * .75);

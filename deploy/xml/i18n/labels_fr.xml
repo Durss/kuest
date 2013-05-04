@@ -35,6 +35,7 @@
 		<label code="menu-objects-add-name"><![CDATA[Nom de l'objet...]]></label>
 		
 		<label code="menu-chars"><![CDATA[Personnages]]></label>
+		<label code="menu-chars-details"><![CDATA[Gérez ici les personnages utilisables par la suite dans les évènements.]]></label>
 		<label code="menu-chars-names"><![CDATA[Florence,Carole,Louis,Richard,Rahema,Le pêcheur,Vincent,Florent,Arthur,Win,Adana,Marion,Marya]]></label>
 		<label code="menu-chars-add-name"><![CDATA[Nom du personnage...]]></label>
 		
