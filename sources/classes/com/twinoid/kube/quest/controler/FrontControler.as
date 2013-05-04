@@ -80,17 +80,31 @@ package com.twinoid.kube.quest.controler {
 		}
 		
 		/**
-		 * Refreshes the objects list
+		 * Deletes a character
 		 */
-		public function refreshObjectsList(list:Vector.<ObjectItemData>):void {
-			_model.refreshObjectsList(list);
+		public function deleteCharacter(item:CharItemData):void {
+			_model.deleteCharacter(item);
 		}
 		
 		/**
-		 * Refreshes the objects list
+		 * Deletes an object
 		 */
-		public function refreshCharsList(list:Vector.<CharItemData>):void {
-			_model.refreshCharsList(list);
+		public function deleteObject(item:ObjectItemData):void {
+			_model.deleteObject(item);
+		}
+		
+		/**
+		 * Adds a character
+		 */
+		public function addCharacter():void {
+			_model.addCharacter();
+		}
+		
+		/**
+		 * Adds an object
+		 */
+		public function addObject():void {
+			_model.addObject();
 		}
 		
 		/**

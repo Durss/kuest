@@ -19,8 +19,8 @@ package com.twinoid.kube.quest.components.menu.char {
 		/**
 		 * Creates an instance of <code>CharItem</code>.
 		 */
-		public function CharItem() {
-			_data = new CharItemData();
+		public function CharItem(data:CharItemData = null) {
+			_data = data == null? new CharItemData() : data;
 			super();
 		}
 

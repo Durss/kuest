@@ -31,9 +31,11 @@
 <img src="./img/durss.jpg" width="77" height="100" />This application has been developped by <b>Durss</b> for the game <a href="http://kube.muxxu.com/" target="_blank" class="link">Kube</a>.<br />To report a bug or make a suggestion <a href="http://twinoid.com/user/48" target="_blank" class="link">contact me</a> via the Twinoid's private messaging.]]></label>
 		
 		<label code="menu-objects"><![CDATA[Objects]]></label>
+		<label code="menu-objects-names"><![CDATA[Burrin,Ancient stone,Cloth,Seed,Golem,Horn of Plenty,Lens,Pestle,Shield,Spear,Winch,Crystal,Minerals]]></label>
 		<label code="menu-objects-add-name"><![CDATA[Object's name...]]></label>
 		
 		<label code="menu-chars"><![CDATA[Characters]]></label>
+		<label code="menu-chars-names"><![CDATA[Florence,Carole,Louis,Richard,Rahema,Le pêcheur,Vincent,Florent,Arthur,Win,Adana,Marion,Marya]]></label>
 		<label code="menu-chars-add-name"><![CDATA[Character's name...]]></label>
 		
 		<label code="editWindow-title"><![CDATA[EDIT THIS EVENT]]></label>

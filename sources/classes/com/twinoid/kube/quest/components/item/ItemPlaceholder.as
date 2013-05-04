@@ -86,7 +86,7 @@ package com.twinoid.kube.quest.components.item {
 		 * Sets the image.
 		 */
 		public function set image(value:BitmapData):void {
-			if(value == null) {
+			if (value == null) {
 				_img.visible = false;
 				return;
 			}
@@ -156,7 +156,7 @@ package com.twinoid.kube.quest.components.item {
 			_frame.graphics.endFill();
 			
 			if(_browseMode) {
-				_browseCmd = new BrowseForFileCmd("Image", null, true);
+				_browseCmd = new BrowseForFileCmd("Image", "*.jpg;*.jpeg;*.png", true);
 				_browseCmd.addEventListener(CommandEvent.COMPLETE, loadImageCompleteHandler);
 				_icon = addChild(new BrowseIcon()) as BrowseIcon;
 				_icon.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];

@@ -19,8 +19,8 @@ package com.twinoid.kube.quest.components.menu.obj {
 		/**
 		 * Creates an instance of <code>ObjectItem</code>.
 		 */
-		public function ObjectItem() {
-			_data = new ObjectItemData();
+		public function ObjectItem(data:ObjectItemData = null) {
+			_data = data == null? new ObjectItemData() : data;
 			super();
 		}
 

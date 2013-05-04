@@ -92,6 +92,7 @@ package com.twinoid.kube.quest {
 			addChild(new ItemSelectorView());
 			addChild(new ToolTipView());
 			addChild(new BoxDebugView()).addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);//Wait for the views to be added to stage, not this view
+//			addChild(new Stats());
 		}
 		
 		/**

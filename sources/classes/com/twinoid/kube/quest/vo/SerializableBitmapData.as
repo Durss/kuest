@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.vo {
-	import flash.geom.Point;
 	import flash.display.BitmapData;
 	import flash.display.IBitmapDrawable;
 	import flash.utils.ByteArray;
@@ -65,7 +64,7 @@ package com.twinoid.kube.quest.vo {
 		 * Gets a string representation of the value object.
 		 */
 		public function toString():String {
-			return "[SerializableBitmapData :: width="+width+", height="+height+", bytesLength="+bytes.length+"]";
+			return "[SerializableBitmapData :: width="+width+", height="+height+", bytesLength="+(_bmd == null? 0 : bytes.length)+"]";
 		}
 		
 		/**
@@ -79,8 +78,9 @@ package com.twinoid.kube.quest.vo {
 		 * Draws a bitmapData into this bitmapData
 		 */
 		public function fromBitmapData(bmd:BitmapData):void {
-			_bmd.fillRect(_bmd.rect, 0);
-			_bmd.copyPixels(bmd, bmd.rect, new Point());
+			_bmd = bmd.clone();
+			_width = bmd.width;
+			_height = bmd.height;
 		}
 		
 		/**
