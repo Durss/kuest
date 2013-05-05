@@ -171,6 +171,8 @@ package com.twinoid.kube.quest.components.box {
 					if(contains(_timeIcon)) removeChild(_timeIcon);
 				}
 				
+				
+				//============ LINKS MANAGEMNT ============
 				var wasLink2:Boolean = contains(_outBox2);
 				var wasLink3:Boolean = contains(_outBox3);
 				
@@ -186,9 +188,11 @@ package com.twinoid.kube.quest.components.box {
 				//If choices have been deleted, some links might have to be cleared
 				//Clear the links for the second output.
 				var i:int, len:int, choicesUpdate:Boolean;
+				if(wasLink2 != contains(_outBox2)) choicesUpdate = true;
+				if(wasLink3 != contains(_outBox3)) choicesUpdate = true;
+				
 				len = _links.length;
 				if(wasLink2 && !contains(_outBox2)) {
-					choicesUpdate = true;
 					for(i = 0; i < len; ++i) {
 						if(_links[i].choiceIndex == 1) _links[i].deleteLink();
 					}
@@ -197,7 +201,6 @@ package com.twinoid.kube.quest.components.box {
 				//If choices have been deleted, some links might have to be cleared
 				//Clear the links for the third output.
 				if(wasLink3 && !contains(_outBox3)) {
-					choicesUpdate = true;
 					for(i = 0; i < len; ++i) {
 						if(_links[i].choiceIndex == 2) _links[i].deleteLink();
 					}

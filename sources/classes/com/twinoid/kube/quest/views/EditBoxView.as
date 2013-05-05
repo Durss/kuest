@@ -50,7 +50,6 @@ package com.twinoid.kube.quest.views {
 		private var _data:KuestEvent;
 		private var _choices:EditEventChoices;
 		private var _disable:Sprite;
-		private var _pressedInside:Boolean;
 		
 		
 		
@@ -172,8 +171,7 @@ package com.twinoid.kube.quest.views {
 			_holder.addEventListener(Event.RESIZE, computePositions);
 			_submit.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_cancel.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			stage.addEventListener(MouseEvent.MOUSE_UP, clickStageHandler, true);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickStageHandler, true);
+			_disable.addEventListener(MouseEvent.CLICK, clickDisableHandler);
 		}
 		
 		/**
@@ -192,7 +190,7 @@ package com.twinoid.kube.quest.views {
 				item = _holder.getChildAt(i);
 				if(item == _cancel) break;
 				item.y = py;
-				py += item.height + 20;
+				py += item.height + 10;
 			}
 			
 			_cancel.y = _submit.y;
@@ -200,7 +198,7 @@ package com.twinoid.kube.quest.views {
 			_cancel.x = _WIDTH * .5 + 10;
 			roundPos(_submit, _cancel);
 			
-			_window.forcedContentHeight = py;
+			_window.forcedContentHeight = py - 10;
 			_window.updateSizes();
 			PosUtils.centerInStage(_window);
 			var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
@@ -232,18 +230,10 @@ package com.twinoid.kube.quest.views {
 		}
 		
 		/**
-		 * Called when stage is clicked to close the window
+		 * Called when disable layer is clicked to close the window
 		 */
-		private function clickStageHandler(event:MouseEvent):void {
-			if(!_closed && !_window.contains(event.target as DisplayObject) && !_pressedInside) {
-				if(event.type != MouseEvent.MOUSE_DOWN) close();
-				//Prevents from an item creation when clicking on the board.
-				event.stopPropagation();
-			}
-			if(event.type == MouseEvent.MOUSE_DOWN && _window.contains(event.target as DisplayObject)) {
-				_pressedInside = true;
-			}
-			if(event.type == MouseEvent.MOUSE_UP) _pressedInside = false;
+		private function clickDisableHandler(event:MouseEvent):void {
+			if(!_closed) close();
 		}
 		
 		/**

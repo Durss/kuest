@@ -52,6 +52,11 @@ package com.twinoid.kube.quest.components.window {
 		}
 		
 		/**
+		 * Gets the width of the component.
+		 */
+		override public function get width():Number { return _background.width; }
+		
+		/**
 		 * Forces the window's width.
 		 */
 		override public function set width(value:Number):void {
@@ -62,7 +67,7 @@ package com.twinoid.kube.quest.components.window {
 		/**
 		 * Gets the height of the component.
 		 */
-		override public function get height():Number { return isNaN(_forcedContentHeight)? super.height : _forcedContentHeight; }
+		override public function get height():Number { return _background.height; }
 		
 		/**
 		 * Gets the forced virtual content height
