@@ -77,7 +77,7 @@ package com.twinoid.kube.quest.components.window {
 		/**
 		 * Forces a virtual content's height
 		 */
-		public function set forcedContentHeight(forcedContentHeight:Number):void { _forcedContentHeight = forcedContentHeight; }
+		public function set forcedContentHeight(value:Number):void { _forcedContentHeight = value; }
 
 
 
