@@ -321,6 +321,13 @@ package com.twinoid.kube.quest.views {
 					link.endEntry.addlink(link);
 				}
 			}
+			
+			if(nodes.length > 0 ) {
+				_endX = _boxesHolder.x = -nodes[0].boxPosition.x * _boxesHolder.scaleX + stage.stageWidth * .5;
+				_endY = _boxesHolder.y = -nodes[0].boxPosition.y * _boxesHolder.scaleY + stage.stageHeight * .5;
+				_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
+				_comments.scrollTo(_boxesHolder.x, _boxesHolder.y);
+			}
 		}
 		
 		/**

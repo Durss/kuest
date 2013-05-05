@@ -21,6 +21,7 @@ package com.twinoid.kube.quest.views {
 		private var _pattern:BitmapData;
 		private var _matrix:Matrix;
 		private var _default:Matrix;
+		private var _scale : Number;
 		
 		
 		
@@ -59,19 +60,20 @@ package com.twinoid.kube.quest.views {
 		 */
 		public function scrollTo(x:int, y:int):void {
 			//Prevents from a whole screen's rendering when un-necessary
-			if(_matrix.tx == x%CELL_SIZE && _matrix.ty == y%CELL_SIZE) return;
+			if(_matrix.tx == x%(CELL_SIZE*_scale) && _matrix.ty == y%(CELL_SIZE*_scale)) return;
 			
-			_matrix.tx = x%CELL_SIZE;
-			_matrix.ty = y%CELL_SIZE;
+			_matrix.tx = x%(CELL_SIZE*_scale);
+			_matrix.ty = y%(CELL_SIZE*_scale);
 			computePositions();
 		}
 
-		public function setScale(scaleX:Number):void {
+		public function setScale(value:Number):void {
+			_scale = value;
 			_matrix.a = _default.a;
 			_matrix.b = _default.b;
 			_matrix.c = _default.c;
 			_matrix.d = _default.d;
-			_matrix.scale(scaleX, scaleX);
+			_matrix.scale(value, value);
 		}
 
 

@@ -5,6 +5,8 @@
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
 		<label code="loader-loginKO"><![CDATA[erreur...]]></label>
 		
+		<label code="tutorial-title"><![CDATA[Tuto (F1)]]></label>
+		
 		<label code="prompt-window-submit"><![CDATA[Valider]]></label>
 		<label code="prompt-window-cancel"><![CDATA[Annuler]]></label>
 		<label code="prompt-window-ignore"><![CDATA[Ne plus me demander confirmation pour cette action.]]></label>

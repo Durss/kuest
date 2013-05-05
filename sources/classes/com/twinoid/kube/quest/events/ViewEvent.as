@@ -13,6 +13,7 @@ package com.twinoid.kube.quest.events {
 		public static const LOGIN_SUCCESS:String = "logginSuccess";
 		public static const LOGIN_FAIL:String = "logginFail";
 		public static const PROMPT:String = "prompt";
+		public static const TUTORIAL:String = "tutorial";
 		
 		private var _data:*;
 		

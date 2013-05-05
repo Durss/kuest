@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.components.box {
+	import flash.ui.Mouse;
+	import com.twinoid.kube.quest.graphics.RubberCursorGraphic;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import flash.filters.DropShadowFilter;
 	import flash.utils.Dictionary;
@@ -26,6 +28,7 @@ package com.twinoid.kube.quest.components.box {
 	 * @date 4 mai 2013;
 	 */
 	public class BoxesComments extends Sprite {
+		
 		private var _drawing:Boolean;
 		private var _start:Point;
 		private var _points:Vector.<Point>;
@@ -41,6 +44,8 @@ package com.twinoid.kube.quest.components.box {
 		private var _itemToIndex:Dictionary;
 		private var _shadow:Array;
 		private var _drawingData:Vector.<IGraphicsData>;
+		private var _chunksHolder:Sprite;
+		private var _rubberIcon:RubberCursorGraphic;
 		
 		
 		
@@ -186,7 +191,14 @@ package com.twinoid.kube.quest.components.box {
 			stroke.fill = new GraphicsSolidFill(0xffffff, 1);
 			_drawingData.push(stroke);
 			
-			_tmpDrawing = addChild(new Shape()) as Shape;
+			_tmpDrawing		= addChild(new Shape()) as Shape;
+			_chunksHolder	= addChild(new Sprite()) as Sprite;
+			_rubberIcon		= addChild(new RubberCursorGraphic()) as RubberCursorGraphic;
+			
+			_rubberIcon.visible = false;
+			_rubberIcon.mouseEnabled = false;
+			_rubberIcon.mouseChildren = false;
+			_rubberIcon.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -206,6 +218,7 @@ package com.twinoid.kube.quest.components.box {
 		 * CTRL or SHIFT for erasing.
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
+			//Draw bounding boxes
 			if(event.keyCode == Keyboard.F5) {
 				graphics.clear();
 				var i:int, len:int;
@@ -224,10 +237,16 @@ package com.twinoid.kube.quest.components.box {
 				}
 			}
 			
+			//Detect CTRL or SHIFT key
 			if(event.keyCode == Keyboard.CONTROL || event.keyCode == Keyboard.SHIFT) {
 				if(!_eraseMode && !_drawing) {
 					splitGraphics();
 					_eraseMode = true;
+					_rubberIcon.visible = true;
+					_rubberIcon.x = mouseX;
+					_rubberIcon.y = mouseY;
+					_rubberIcon.startDrag();
+					Mouse.hide();
 				}
 			}
 		}
@@ -238,11 +257,12 @@ package com.twinoid.kube.quest.components.box {
 		private function keyUpHandler(event:KeyboardEvent):void {
 			if(event.keyCode == Keyboard.CONTROL || event.keyCode == Keyboard.ALTERNATE || event.keyCode == Keyboard.SHIFT) {
 				_eraseMode = false;
-				removeChild(_tmpDrawing);
-				while(numChildren > 0) {
-					disposeItem(getChildAt(0) as Sprite);
+				while(_chunksHolder.numChildren > 0) {
+					disposeItem(_chunksHolder.getChildAt(0) as Sprite);
 				}
-				addChild(_tmpDrawing);
+				_rubberIcon.visible = false;
+				_rubberIcon.stopDrag();
+				Mouse.show();
 				clipDrawings();
 			}
 		}
@@ -259,7 +279,7 @@ package com.twinoid.kube.quest.components.box {
 			for(i = 0; i < len; ++i) {
 				if(viewPortVisible(_viewPorts[i])) {
 					_drawingData[1] = _paths[i];
-					item = addChild(new Sprite()) as Sprite;
+					item = _chunksHolder.addChild(new Sprite()) as Sprite;
 					item.graphics.beginFill(0xff0000, 0);
 					item.graphics.drawRect(_viewPorts[i].x, _viewPorts[i].y, _viewPorts[i].width, _viewPorts[i].height);
 					item.graphics.drawGraphicsData(_drawingData);
@@ -295,7 +315,7 @@ package com.twinoid.kube.quest.components.box {
 			item.removeEventListener(MouseEvent.CLICK, clickItemHandler);
 			item.removeEventListener(MouseEvent.ROLL_OVER, rollItemHandler);
 			item.removeEventListener(MouseEvent.ROLL_OUT, rollItemHandler);
-			removeChild(item);
+			_chunksHolder.removeChild(item);
 		}
 		
 		/**
