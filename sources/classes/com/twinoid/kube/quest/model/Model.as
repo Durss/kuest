@@ -87,6 +87,11 @@ package com.twinoid.kube.quest.model {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 		/**
+		 * Gets the shared object's reference
+		 */
+		public function get sharedObjects():SharedObject { return _so; }
+		
+		/**
 		 * Gets the data tree
 		 */
 		public function get kuestData():KuestData { return _kuestData; }
@@ -245,30 +250,38 @@ package com.twinoid.kube.quest.model {
 		/**
 		 * Saves the current quest
 		 */
-		public function save():void {
-			//Grab only the used characters and objects.
-			//TODO probably remove this. With this optimization we loose the potentially configured items for later use. 
-			var i:int, len:int, item:IItemData;
+		public function save(optimise:Boolean = false):void {
 			var chars:Vector.<CharItemData> = new Vector.<CharItemData>();
 			var objs:Vector.<ObjectItemData> = new Vector.<ObjectItemData>();
-			var charsDone:Object = {};
-			var objsDone:Object = {};
-			len = _kuestData.nodes.length;
-			for(i = 0; i < len; ++i) {
-				item = _kuestData.nodes[i].actionType == null? null : _kuestData.nodes[i].actionType.getItem();
-				if(item == null) continue;
-				if(item is CharItemData) {
-					if(charsDone[item.guid] == undefined) {
-						charsDone[item.guid] = true;
-						chars.push(item);
-					}
-				}else
-				if(item is ObjectItemData) {
-					if(objsDone[item.guid] == undefined) {
-						objsDone[item.guid] = true;
-						objs.push(item);
+			
+			//Optimise the final file by removing unnecessary characters and objects.
+			if(optimise) {
+				//Grab only the used characters and objects.
+				var i:int, len:int, item:IItemData;
+				var charsDone:Object = {};
+				var objsDone:Object = {};
+				len = _kuestData.nodes.length;
+				for(i = 0; i < len; ++i) {
+					item = _kuestData.nodes[i].actionType == null? null : _kuestData.nodes[i].actionType.getItem();
+					if(item == null) continue;
+					if(item is CharItemData) {
+						if(charsDone[item.guid] == undefined) {
+							charsDone[item.guid] = true;
+							chars.push(item);
+						}
+					}else
+					if(item is ObjectItemData) {
+						if(objsDone[item.guid] == undefined) {
+							objsDone[item.guid] = true;
+							objs.push(item);
+						}
 					}
 				}
+				
+			//Unoptimized save file.
+			}else{
+				objs = _kuestData.objects;
+				chars = _kuestData.characters;
 			}
 			
 			//TODO save to the server

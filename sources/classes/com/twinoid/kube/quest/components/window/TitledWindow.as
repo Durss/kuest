@@ -9,11 +9,12 @@ package com.twinoid.kube.quest.components.window {
 
 	
 	/**
+	 * Manages a window's rendering with a pre-skinned title and a custom content.
 	 * 
 	 * @author Francois
 	 * @date 11 déc. 2011;
 	 */
-	public class PromptWindow extends Sprite {
+	public class TitledWindow extends Sprite {
 		
 		private var _background:PromptWindowGraphic;
 		private var _title:String;
@@ -29,9 +30,9 @@ package com.twinoid.kube.quest.components.window {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>AbstractPromptWindow</code>.
+		 * Creates an instance of <code>TitledWindow</code>.
 		 */
-		public function PromptWindow(title:String, content:DisplayObject) {
+		public function TitledWindow(title:String, content:DisplayObject) {
 			_content = content;
 			_title = title;
 			initialize();
@@ -97,7 +98,7 @@ package com.twinoid.kube.quest.components.window {
 		 */
 		private function initialize():void {
 			_background = addChild(new PromptWindowGraphic()) as PromptWindowGraphic;
-			_titleTf = addChild(new CssTextField("promptWindowTitle")) as CssTextField;
+			_titleTf = addChild(new CssTextField("window-title")) as CssTextField;
 			
 			_titleTf.text = _title;
 			_titleTf.filters = [new DropShadowFilter(3, 135, 0x2D89B0, 1, 1, 1, 10, 2)];
@@ -122,7 +123,7 @@ package com.twinoid.kube.quest.components.window {
 			
 			_titleTf.width = w;
 			_background.width = _titleTf.width + 15;
-			_background.height = 36 + h;
+			_background.height = 52 + h;
 			_titleTf.x = Math.round((_background.width - _titleTf.width) * .5);
 			_titleTf.y = 3;
 			_content.y = 40;

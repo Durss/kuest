@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest {
+	import com.twinoid.kube.quest.views.PromptWindowView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -90,6 +91,7 @@ package com.twinoid.kube.quest {
 			addChild(new EditBoxView());
 			addChild(new SideMenuView());
 			addChild(new ItemSelectorView());
+			addChild(new PromptWindowView());
 			addChild(new ToolTipView());
 			addChild(new BoxDebugView()).addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);//Wait for the views to be added to stage, not this view
 //			addChild(new Stats());

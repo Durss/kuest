@@ -86,13 +86,13 @@ package com.twinoid.kube.quest.components.date {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_startLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_endLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_startHLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_startMLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_endHLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_endMLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_endLabel = addChild(new CssTextField("promptWindowContent")) as CssTextField;
+			_startLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_endLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_startHLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_startMLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_endHLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_endMLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_endLabel = addChild(new CssTextField("editWindow-label")) as CssTextField;
 			_startHour = addChild(new InputKube("0", true, 0, 23)) as InputKube;
 			_startMinutes = addChild(new InputKube("0", true, 0, 59)) as InputKube;
 			_endHour = addChild(new InputKube("0", true, 0, 23)) as InputKube;

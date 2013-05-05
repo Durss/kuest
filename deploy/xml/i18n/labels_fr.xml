@@ -5,6 +5,10 @@
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
 		<label code="loader-loginKO"><![CDATA[erreur...]]></label>
 		
+		<label code="prompt-window-submit"><![CDATA[Valider]]></label>
+		<label code="prompt-window-cancel"><![CDATA[Annuler]]></label>
+		<label code="prompt-window-ignore"><![CDATA[Ne plus me demander confirmation pour cette action.]]></label>
+		
 		<label code="file-loadTT"><![CDATA[Charger]]></label>
 		<label code="file-saveTT"><![CDATA[Enregistrer]]></label>
 		
@@ -19,6 +23,8 @@
 		<label code="selector-none"><![CDATA[<i>(aucun)</i>]]></label>
 		
 		<label code="box-empty"><![CDATA[<p align="center">Cliquez pour éditer...</p>]]></label>
+		<label code="box-delete-promptTitle"><![CDATA[Suppression]]></label>
+		<label code="box-delete-promptContent"><![CDATA[Êtes-vous certain de vouloir supprimer cet évènement?<br />Toutes les liaisons associées seront détruites.]]></label>
 		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible<br />qu'à certains moments précis.]]></label>
 		
 		<label code="menu-file"><![CDATA[Menu principal]]></label>
@@ -31,13 +37,18 @@
 <img src="./img/durss.jpg" width="77" height="100" />Cette application a été développée par <b>Durss</b> pour le jeu <a href="http://kube.muxxu.com/" target="_blank" class="link">Kube</a>.<br />Pour me signaler un bug ou une suggestion vous pouvez <a href="http://twinoid.com/user/48" target="_blank" class="link">me contacter</a> via la messagerie privée de Twinoid.]]></label>
 		
 		<label code="menu-objects"><![CDATA[Objets]]></label>
+		<label code="menu-objects-details"><![CDATA[Gérez ici les objets utilisables par la suite dans les évènements.]]></label>
 		<label code="menu-objects-names"><![CDATA[Burrin,Pierre antique,Toile,Graine,Golem,Corne d'abondance,Lentille,Pilon,Bouclier,Lance,Treuil,Cristal,Minerais]]></label>
 		<label code="menu-objects-add-name"><![CDATA[Nom de l'objet...]]></label>
+		<label code="menu-objects-delete-title"><![CDATA[Suppression]]></label>
+		<label code="menu-objects-delete-content"><![CDATA[La suppression de cet objet est irréversible.<br />Si des évènements y sont associés, ils se retrouveront vides.]]></label>
 		
 		<label code="menu-chars"><![CDATA[Personnages]]></label>
 		<label code="menu-chars-details"><![CDATA[Gérez ici les personnages utilisables par la suite dans les évènements.]]></label>
 		<label code="menu-chars-names"><![CDATA[Florence,Carole,Louis,Richard,Rahema,Le pêcheur,Vincent,Florent,Arthur,Win,Adana,Marion,Marya]]></label>
 		<label code="menu-chars-add-name"><![CDATA[Nom du personnage...]]></label>
+		<label code="menu-chars-delete-title"><![CDATA[Suppression]]></label>
+		<label code="menu-chars-delete-content"><![CDATA[La suppression de ce personnage est irréversible.<br />Si des évènements y sont associés, ils se retrouveront vides.]]></label>
 		
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
 		<label code="editWindow-submit"><![CDATA[Valider]]></label>

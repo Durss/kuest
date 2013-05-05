@@ -33,6 +33,8 @@ package com.twinoid.kube.quest.components.form.edit {
 		private var _objectHolder:ItemPlaceholder;
 		private var _charDialogue:TextArea;
 		private var _objectDialogue:TextArea;
+		private var _cbTake:RadioButtonKube;
+		private var _cbPut:RadioButtonKube;
 		
 		
 		
@@ -74,6 +76,7 @@ package com.twinoid.kube.quest.components.form.edit {
 					data.actionType.type = ActionType.TYPE_OBJECT;
 					data.actionType.setItem(_objectHolder.data);
 					data.actionType.text = _objectDialogue.text;
+					data.actionType.takeMode = _cbTake.selected;
 					break;
 				default:
 			}
@@ -98,12 +101,16 @@ package com.twinoid.kube.quest.components.form.edit {
 				_charDialogue.text = data.actionType.text;
 				_objectHolder.data = null;
 				_objectDialogue.text = "";
+				_cbTake.selected = true;
+				_cbPut.selected = false;
 			}else{
 				selectedIndex = 1;
 				_charHolder.data = null;
 				_charDialogue.text = "";
 				_objectHolder.data = data.actionType.getItem();
 				_objectDialogue.text = data.actionType.text;
+				_cbTake.selected = data.actionType.takeMode;
+				_cbPut.selected = !data.actionType.takeMode;
 			}
 		}
 
@@ -134,7 +141,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			
 			_charHolder = new ItemPlaceholder(false, true);
 			_dialogue.addChild(_charHolder);
-			_charDialogue = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-dialogueDefault"));
+			_charDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-dialogueDefault"));
 			_dialogue.addChild( _charDialogue );
 			
 			_charDialogue.width = _width - _charHolder.width - 5;
@@ -153,21 +160,21 @@ package com.twinoid.kube.quest.components.form.edit {
 			
 			_objectHolder = new ItemPlaceholder(false, true, ItemSelectorEvent.ITEM_TYPE_OBJECT);
 			_object.addChild(_objectHolder);
-			_objectDialogue = new TextArea("promptWindowContent", Label.getLabel("editWindow-type-objectDefault"));
+			_objectDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-objectDefault"));
 			_object.addChild( _objectDialogue );
-			var cbTake:RadioButtonKube = new RadioButtonKube(Label.getLabel("editWindow-type-take"), _objectGroup);
-			var cbPut:RadioButtonKube = new RadioButtonKube(Label.getLabel("editWindow-type-put"), _objectGroup);
-			_object.addChild(cbTake);
-			_object.addChild(cbPut);
+			_cbTake = new RadioButtonKube(Label.getLabel("editWindow-type-take"), _objectGroup);
+			_cbPut = new RadioButtonKube(Label.getLabel("editWindow-type-put"), _objectGroup);
+			_object.addChild(_cbTake);
+			_object.addChild(_cbPut);
 			
 			_objectDialogue.width = _width - _objectHolder.width - 5;
-			_objectDialogue.height = _objectHolder.height - Math.round(cbTake.height + 5);
+			_objectDialogue.height = _objectHolder.height - Math.round(_cbTake.height + 5);
 			_objectDialogue.x = _objectHolder.width + 5;
 			_objectDialogue.validate();
 			
-			cbTake.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 - cbTake.width - 5);
-			cbPut.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 + 5);
-			cbPut.y = cbTake.y = Math.round(_objectDialogue.height + 5);
+			_cbTake.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 - _cbTake.width - 5);
+			_cbPut.x = Math.round(_objectDialogue.x + _objectDialogue.width * .5 + 5);
+			_cbPut.y = _cbTake.y = Math.round(_objectDialogue.height + 5);
 			
 			_objectHolder.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 		}

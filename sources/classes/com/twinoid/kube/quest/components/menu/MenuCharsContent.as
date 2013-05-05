@@ -100,7 +100,7 @@ package com.twinoid.kube.quest.components.menu {
 			items.push(_addItem);
 			PosUtils.hDistribute(items, _width, 5, 15);
 			
-			_itemsHolder.y = Math.round(_label.height);
+			_itemsHolder.y = Math.round(_label.height) + 15;
 			
 			super.computePositions(event);
 		}

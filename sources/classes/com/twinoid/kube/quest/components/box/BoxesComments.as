@@ -20,6 +20,7 @@ package com.twinoid.kube.quest.components.box {
 	import flash.utils.getTimer;
 	
 	/**
+	 * Manages the drawing and display of comments over the board.
 	 * 
 	 * @author Francois
 	 * @date 4 mai 2013;

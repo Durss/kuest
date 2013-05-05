@@ -39,7 +39,7 @@ package com.twinoid.kube.quest.utils {
 				return;
 			}
 			
-			if(!target.isClosed && (DisplayObjectContainer(target).contains(f) || target == f)) {
+			if(!target.isClosed) {
 				event.stopPropagation();
 				event.stopImmediatePropagation();
 				target.close();

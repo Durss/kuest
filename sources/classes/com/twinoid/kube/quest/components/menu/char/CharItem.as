@@ -22,7 +22,7 @@ package com.twinoid.kube.quest.components.menu.char {
 		 */
 		public function CharItem(data:CharItemData = null) {
 			_data = data == null? new CharItemData() : data;
-			super();
+			super("menu-chars-delete-title", "menu-chars-delete-content", "deleteCharacter");
 			_nameInput.defaultLabel = Label.getLabel("menu-chars-add-name");
 		}
 

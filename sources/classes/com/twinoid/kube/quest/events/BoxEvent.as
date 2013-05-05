@@ -11,6 +11,7 @@ package com.twinoid.kube.quest.events {
 		
 		public static const CREATE_LINK:String = "createLink";
 		public static const DELETE:String = "delete";
+		private var _choiceIndex:int;
 		
 		
 		
@@ -20,7 +21,9 @@ package com.twinoid.kube.quest.events {
 		/**
 		 * Creates an instance of <code>BoxEvent</code>.
 		 */
-		public function BoxEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
+
+		public function BoxEvent(type:String, choiceIndex:int = 0, bubbles:Boolean = false, cancelable:Boolean = false) {
+			_choiceIndex = choiceIndex;
 			super(type, bubbles, cancelable);
 		}
 
@@ -29,6 +32,11 @@ package com.twinoid.kube.quest.events {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		
+		/**
+		 * Gets from which choice's index the link as been created.
+		 */
+		public function get choiceIndex():int { return _choiceIndex; }
 
 
 
@@ -39,7 +47,7 @@ package com.twinoid.kube.quest.events {
 		 * Makes a clone of the event object.
 		 */
 		override public function clone():Event {
-			return new BoxEvent(type, bubbles, cancelable);
+			return new BoxEvent(type, choiceIndex, bubbles, cancelable);
 		}
 
 

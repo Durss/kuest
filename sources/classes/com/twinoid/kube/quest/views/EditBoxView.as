@@ -16,7 +16,7 @@ package com.twinoid.kube.quest.views {
 	import com.twinoid.kube.quest.components.form.edit.EditEventPlace;
 	import com.twinoid.kube.quest.components.form.edit.EditEventTime;
 	import com.twinoid.kube.quest.components.form.edit.EditEventType;
-	import com.twinoid.kube.quest.components.window.PromptWindow;
+	import com.twinoid.kube.quest.components.window.TitledWindow;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.utils.Closable;
@@ -39,7 +39,7 @@ package com.twinoid.kube.quest.views {
 		
 		private const _WIDTH:int = 400;
 		 
-		private var _window:PromptWindow;
+		private var _window:TitledWindow;
 		private var _holder:Sprite;
 		private var _place:EditEventPlace;
 		private var _type:EditEventType;
@@ -50,6 +50,7 @@ package com.twinoid.kube.quest.views {
 		private var _data:KuestEvent;
 		private var _choices:EditEventChoices;
 		private var _disable:Sprite;
+		private var _pressedInside:Boolean;
 		
 		
 		
@@ -156,7 +157,7 @@ package com.twinoid.kube.quest.views {
 			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
 			_disable= addChild(new Sprite()) as Sprite;
-			_window = addChild(new PromptWindow(Label.getLabel("editWindow-title"), _holder)) as PromptWindow;
+			_window = addChild(new TitledWindow(Label.getLabel("editWindow-title"), _holder)) as TitledWindow;
 			
 			_closed = true;
 			_disable.alpha = 0;
@@ -234,11 +235,15 @@ package com.twinoid.kube.quest.views {
 		 * Called when stage is clicked to close the window
 		 */
 		private function clickStageHandler(event:MouseEvent):void {
-			if(!_closed && !_window.contains(event.target as DisplayObject)) {
+			if(!_closed && !_window.contains(event.target as DisplayObject) && !_pressedInside) {
 				if(event.type != MouseEvent.MOUSE_DOWN) close();
 				//Prevents from an item creation when clicking on the board.
 				event.stopPropagation();
 			}
+			if(event.type == MouseEvent.MOUSE_DOWN && _window.contains(event.target as DisplayObject)) {
+				_pressedInside = true;
+			}
+			if(event.type == MouseEvent.MOUSE_UP) _pressedInside = false;
 		}
 		
 		/**

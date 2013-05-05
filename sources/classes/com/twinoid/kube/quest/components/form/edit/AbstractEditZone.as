@@ -163,7 +163,7 @@ package com.twinoid.kube.quest.components.form.edit {
 			_group = new FormComponentGroup();
 			_itemToIndex = new Dictionary();
 			
-			_title = addChild(new CssTextField("promptWindowContentZoneTitle")) as CssTextField;
+			_title = addChild(new CssTextField("editWindow-zoneTitle")) as CssTextField;
 			_openCloseBt = addChild(new GraphicButton(createRect())) as GraphicButton;
 			_contentsHolder = addChild(new Sprite()) as Sprite;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
