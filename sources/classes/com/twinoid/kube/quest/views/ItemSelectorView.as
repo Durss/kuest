@@ -156,16 +156,6 @@ package com.twinoid.kube.quest.views {
 		}
 		
 		/**
-		 * Catches MOUSE_UP and DOWN event.
-		 * This prevents from the EditBoxView to close when selecting an item.
-		 */
-		private function catchEventHandler(event:MouseEvent):void {
-			if(isClosed) return;
-			event.stopPropagation();
-			event.stopImmediatePropagation();
-		}
-		
-		/**
 		 * Called when a view fires an ItemSelectorEvent
 		 */
 		private function openSelectorHandler(event:ItemSelectorEvent):void {
@@ -236,8 +226,6 @@ package com.twinoid.kube.quest.views {
 		private function addedToStageHandler(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
-			stage.addEventListener(MouseEvent.MOUSE_UP, catchEventHandler, true, 2);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, catchEventHandler, true, 2);
 			computePositions();
 		}
 		
@@ -252,12 +240,15 @@ package com.twinoid.kube.quest.views {
 			
 			_swiper.viewport.width = _engine.visibleWidth;
 			_swiper.viewport.height = _engine.visibleHeight;
-			_swiper.start(true, true);
+			_swiper.start(false, false);
 			_scrollpane.update();
 			
-			_window.forcedContentHeight = _scrollpane.height + 20;
 			_window.updateSizes();
 			PosUtils.centerInStage(_window);
+			var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
+			if(menu != null) {
+				_window.x = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width) - _window.width) * .5);
+			}
 		}
 	}
 }
