@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.views {
-	import com.twinoid.kube.quest.components.box.BoxesComments;
 	import gs.TweenLite;
 	import gs.easing.Back;
 
@@ -10,8 +9,10 @@ package com.twinoid.kube.quest.views {
 	import com.nurun.utils.math.MathUtils;
 	import com.twinoid.kube.quest.components.box.Box;
 	import com.twinoid.kube.quest.components.box.BoxLink;
+	import com.twinoid.kube.quest.components.box.BoxesComments;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.events.BoxEvent;
+	import com.twinoid.kube.quest.graphics.ScissorsGraphic;
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.vo.KuestEvent;
 
@@ -21,6 +22,7 @@ package com.twinoid.kube.quest.views {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
@@ -56,6 +58,7 @@ package com.twinoid.kube.quest.views {
 		private var _currentDataGUID:int;
 		private var _spacePressed:Boolean;
 		private var _comments:BoxesComments;
+		private var _scisors:ScissorsGraphic;
 		
 		
 		
@@ -127,9 +130,14 @@ package com.twinoid.kube.quest.views {
 			_dataToBox		= new Dictionary();
 			
 			_tempBox		= new Box();
+			_scisors		= new ScissorsGraphic();
 			_comments		= addChild(new BoxesComments()) as BoxesComments;
 			_boxesHolder	= addChild(new Sprite()) as Sprite;
 			_tempLink		= _boxesHolder.addChild(new BoxLink(null, null)) as BoxLink;
+			
+			_scisors.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
+			_scisors.mouseChildren = false;
+			_scisors.mouseEnabled = false;
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -146,6 +154,8 @@ package com.twinoid.kube.quest.views {
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
+			addEventListener(MouseEvent.MOUSE_OVER, overHandler);
+			addEventListener(MouseEvent.MOUSE_OUT, outHandler);
 		}
 		
 		/**
@@ -220,9 +230,15 @@ package com.twinoid.kube.quest.views {
 		 * Starts a link's creation.
 		 */
 		private function createLinkHandler(event:BoxEvent):void {
+			_tempLink.choiceIndex = event.choiceIndex;
 			_tempLink.startEntry = event.currentTarget as Box;
 			_tempLink.drawToMouse();
 			_boxesHolder.addChildAt(_tempLink, 0);
+			//Prevents from scrolling n borders if we actually start to frag the
+			//item on the drag_gap zone.
+			_startDragInGap = (stage.mouseX < DRAG_GAP || stage.mouseY < DRAG_GAP
+								|| stage.mouseX > stage.stageWidth - DRAG_GAP
+								|| stage.mouseY > stage.stageHeight - DRAG_GAP);
 		}
 		
 		/**
@@ -242,7 +258,7 @@ package com.twinoid.kube.quest.views {
 				if(item is Box) {
 					box = item as Box;
 					//Should actually be done in the model.
-					box.data.removeDependency(target.data);//remove eventual dependency
+					box.data.removeDependency(target.data);//remove eventual dependencies
 				}else
 				if(item is BoxLink) {
 					link = item as BoxLink;
@@ -299,7 +315,7 @@ package com.twinoid.kube.quest.views {
 			for(i = 0; i < len; ++i) {
 				lenJ = dependencies[i].data.dependencies.length;
 				for(j = 0; j < lenJ; ++j) {
-					var link:BoxLink = new BoxLink( dataToBox[ dependencies[i].data.dependencies[j].event ], dependencies[i] );
+					var link:BoxLink = new BoxLink( dataToBox[ dependencies[i].data.dependencies[j].event ], dependencies[i], dependencies[i].data.dependencies[j].choiceIndex );
 					_boxesHolder.addChildAt(link, 0);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
@@ -378,7 +394,7 @@ package com.twinoid.kube.quest.views {
 		 * Called when mouse is pressed.
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
-			if(!_spacePressed && event.target != this) {
+			if(!_spacePressed && event.target != this && event.target != _comments) {
 				if (_boxesHolder.contains(event.target as DisplayObject)) {
 					//Go up until we find a box (or the stage..)
 					var target:DisplayObject = event.target as DisplayObject;
@@ -435,7 +451,7 @@ package com.twinoid.kube.quest.views {
 			//If a link has just been created correctly, try to create the link
 			var success:Boolean = true;
 			if (_tempLink.endEntry != null) {
-				success = _tempLink.endEntry.data.addDependency(_tempLink.startEntry.data, 0);
+				success = _tempLink.endEntry.data.addDependency(_tempLink.startEntry.data, _tempLink.choiceIndex);
 				if(!success) {
 					_tempLink.showError();
 				} else {
@@ -458,6 +474,39 @@ package com.twinoid.kube.quest.views {
 				_draggedItem.stopDrag();
 			}
 			_draggedItem = null;
+			
+			//When a link is deleted it's not captured here. It does its things
+			//on its side. We show the mouse and hide the scisors here just in case.
+			if(contains(_scisors)) {
+				removeChild(_scisors);
+				_scisors.stopDrag();
+			}
+		}
+		
+		/**
+		 * Called when a component is rolled out.
+		 * Hide the scisors if necessary.
+		 */
+		private function outHandler(event:MouseEvent):void {
+			if(event.target is BoxLink) {
+				Mouse.show();
+				if(contains(_scisors)) removeChild(_scisors);
+				_scisors.stopDrag();
+			}
+		}
+
+		/**
+		 * Called when a component is rolled over.
+		 * Shows the scisors if necessary.
+		 */
+		private function overHandler(event:MouseEvent):void {
+			if(event.target is BoxLink && event.target != _tempLink) {
+				Mouse.hide();
+				_scisors.x = mouseX;
+				_scisors.y = mouseY;
+				_scisors.startDrag();
+				addChild(_scisors);
+			}
 		}
 	}
 }

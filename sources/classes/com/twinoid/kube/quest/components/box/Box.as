@@ -1,9 +1,7 @@
 package com.twinoid.kube.quest.components.box {
 	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.graphics.CancelIcon;
-	import com.twinoid.kube.quest.graphics.ClearBoxGraphic;
-	import com.twinoid.kube.quest.vo.ToolTipAlign;
-	import com.twinoid.kube.quest.events.ToolTipEvent;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
@@ -11,21 +9,30 @@ package com.twinoid.kube.quest.components.box {
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.components.vo.Margin;
 	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.utils.math.MathUtils;
+	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.pos.roundPos;
 	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.controler.FrontControler;
 	import com.twinoid.kube.quest.events.BoxEvent;
+	import com.twinoid.kube.quest.events.ToolTipEvent;
 	import com.twinoid.kube.quest.graphics.BoxEventGraphic;
 	import com.twinoid.kube.quest.graphics.BoxInGraphic;
 	import com.twinoid.kube.quest.graphics.BoxLinkIconGraphic;
 	import com.twinoid.kube.quest.graphics.BoxOutGraphic;
 	import com.twinoid.kube.quest.graphics.BoxTimerEventGraphic;
+	import com.twinoid.kube.quest.graphics.ClearBoxGraphic;
+	import com.twinoid.kube.quest.utils.hexToMatrix;
+	import com.twinoid.kube.quest.utils.prompt;
 	import com.twinoid.kube.quest.views.BackgroundView;
 	import com.twinoid.kube.quest.vo.KuestEvent;
+	import com.twinoid.kube.quest.vo.ToolTipAlign;
 
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
@@ -44,11 +51,13 @@ package com.twinoid.kube.quest.components.box {
 		private var _image:ImageResizer;
 		private var _background:BoxEventGraphic;
 		private var _dragOffset:Point;
-		private var _outBox:GraphicButton;
+		private var _outBox1:GraphicButton;
 		private var _inBox:GraphicButton;
 		private var _links:Vector.<BoxLink>;
 		private var _timeIcon:BoxTimerEventGraphic;
 		private var _deleteBt:GraphicButton;
+		private var _outBox2:GraphicButton;
+		private var _outBox3:GraphicButton;
 		
 		
 		
@@ -78,12 +87,12 @@ package com.twinoid.kube.quest.components.box {
 		/**
 		 * Gets the width of the component.
 		 */
-		override public function get width():Number { return _outBox.x + _outBox.width; }
+		override public function get width():Number { return _outBox1.x + _outBox1.width; }
 		
 		/**
 		 * Gets the height of the component.
 		 */
-		override public function get height():Number { return _outBox.height; }
+		override public function get height():Number { return _inBox.height; }
 
 
 
@@ -137,75 +146,12 @@ package com.twinoid.kube.quest.components.box {
 				}
 			}
 		}
-
-
-
-		
-		
-		/* ******* *
-		 * PRIVATE *
-		 * ******* */
-		/**
-		 * Initialize the class.
-		 */
-		private function initialize():void {
-			_links		= new Vector.<BoxLink>();
-			
-			_outBox		= addChild(new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
-			_background	= addChild(new BoxEventGraphic()) as BoxEventGraphic;
-			_inBox		= addChild(new GraphicButton(new BoxInGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
-			_image		= addChild(new ImageResizer()) as ImageResizer;
-			_label		= addChild(new CssTextField("box-label")) as CssTextField;
-			_deleteBt	= new GraphicButton(new ClearBoxGraphic(), new CancelIcon());
-			_timeIcon	= new BoxTimerEventGraphic();
-			
-			_dragOffset = new Point();
-			_label.mouseEnabled = false;
-			
-			applyDefaultFrameVisitorNoTween(_outBox, _outBox.background);
-			applyDefaultFrameVisitorNoTween(_deleteBt, _deleteBt.background, _deleteBt.icon);
-			
-			_deleteBt.width = 27;
-			_deleteBt.height = 22;
-			_inBox.width = _outBox.width = 30;
-			
-			_deleteBt.iconAlign = IconAlign.LEFT;
-			_outBox.iconAlign = _inBox.iconAlign = IconAlign.LEFT;
-			_inBox.contentMargin = new Margin(10, 0, 0, 0);
-			_outBox.contentMargin = new Margin(10, 0, 0, 0);
-			_deleteBt.contentMargin = new Margin(7, 0, 0, 0);
-			
-			if(_data != null && _data.boxPosition != null) {
-				x = _data.boxPosition.x;
-				y = _data.boxPosition.y;
-			}
-			
-			if(_data != null) {
-				_data.addEventListener(Event.CHANGE, dataUpdateHandler);
-			}
-			
-			addEventListener(MouseEvent.CLICK, clickHandler);
-			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
-			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
-			_deleteBt.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-//			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_outBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphic);
-			
-			dataUpdateHandler();
-		}
 		
 		/**
-		 * Called when time icon is rolled over.
+		 * Refreshes the boxe's rendering.
+		 * Called when data changes.
 		 */
-		private function overTimeIconGraphic(event:MouseEvent):void {
-			_timeIcon.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("box-timeIcon"), ToolTipAlign.TOP));
-		}
-		
-		/**
-		 * Called when data changes
-		 */
-		private function dataUpdateHandler(event:Event = null):void {
+		public function render(event:Event = null):void {
 			if(_data == null || _data.isEmpty()) {
 				_label.text = Label.getLabel("box-empty");
 			}else{
@@ -224,9 +170,190 @@ package com.twinoid.kube.quest.components.box {
 				}else {
 					if(contains(_timeIcon)) removeChild(_timeIcon);
 				}
+				
+				var wasLink2:Boolean = contains(_outBox2);
+				var wasLink3:Boolean = contains(_outBox3);
+				
+				//Define how much links output should be displayed
+				if(contains(_outBox2)) removeChild(_outBox2);
+				if(contains(_outBox3)) removeChild(_outBox3);
+				if(_data.actionChoices != null) {
+					var numChoices:int = Math.max(1, _data.actionChoices.choices.length);
+					if(numChoices > 1) addChildAt(_outBox2, 1);
+					if(numChoices > 2) addChildAt(_outBox3, 2);
+				}
+				
+				//If choices have been deleted, some links might have to be cleared
+				//Clear the links for the second output.
+				var i:int, len:int, choicesUpdate:Boolean;
+				len = _links.length;
+				if(wasLink2 && !contains(_outBox2)) {
+					choicesUpdate = true;
+					for(i = 0; i < len; ++i) {
+						if(_links[i].choiceIndex == 1) _links[i].deleteLink();
+					}
+				}
+				
+				//If choices have been deleted, some links might have to be cleared
+				//Clear the links for the third output.
+				if(wasLink3 && !contains(_outBox3)) {
+					choicesUpdate = true;
+					for(i = 0; i < len; ++i) {
+						if(_links[i].choiceIndex == 2) _links[i].deleteLink();
+					}
+				}
 			}
 			
+			//Render the box.
 			computePositions();
+			
+			//If there have ben an update in the choices, update the links rendering.
+			//As the links update depending on the box's state, we need to render
+			//the box before doing this. That's why "computePositions" is called before.
+			if(choicesUpdate) {
+				for(i = 0; i < len; ++i) _links[i].update();
+			}
+		}
+		
+		/**
+		 * Gets the Y offset position of an output button by its choice index.
+		 */
+		public function getChoiceIndexPosition(index:int):int {
+			var target:DisplayObject = this["_outBox" + MathUtils.restrict(index + 1, 1, 3)];
+			return target.y + target.height * .5;
+		}
+
+
+
+		
+		
+		/* ******* *
+		 * PRIVATE *
+		 * ******* */
+		/**
+		 * Initialize the class.
+		 */
+		private function initialize():void {
+			_links		= new Vector.<BoxLink>();
+			
+			_outBox1	= addChild(new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
+			_outBox2	= new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic());
+			_outBox3	= new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic());
+			_background	= addChild(new BoxEventGraphic()) as BoxEventGraphic;
+			_inBox		= addChild(new GraphicButton(new BoxInGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
+			_image		= addChild(new ImageResizer()) as ImageResizer;
+			_label		= addChild(new CssTextField("box-label")) as CssTextField;
+			_deleteBt	= new GraphicButton(new ClearBoxGraphic(), new CancelIcon());
+			_timeIcon	= new BoxTimerEventGraphic();
+			
+			_dragOffset = new Point();
+			_label.mouseEnabled = false;
+			
+			applyDefaultFrameVisitorNoTween(_outBox1, _outBox1.background);
+			applyDefaultFrameVisitorNoTween(_outBox2, _outBox2.background);
+			applyDefaultFrameVisitorNoTween(_outBox3, _outBox3.background);
+			applyDefaultFrameVisitorNoTween(_deleteBt, _deleteBt.background, _deleteBt.icon);
+			
+			_deleteBt.width = 27;
+			_deleteBt.height = 22;
+			_inBox.width = _outBox1.width = _outBox2.width = _outBox3.width = 30;
+			
+			_deleteBt.iconAlign = IconAlign.LEFT;
+			_outBox1.iconAlign = _outBox2.iconAlign = _outBox3.iconAlign = _inBox.iconAlign = IconAlign.LEFT;
+			_inBox.contentMargin = new Margin(10, 0, 0, 0);
+			_outBox1.contentMargin = new Margin(10, 0, 0, 0);
+			_outBox2.contentMargin = new Margin(10, 0, 0, 0);
+			_outBox3.contentMargin = new Margin(10, 0, 0, 0);
+			_deleteBt.contentMargin = new Margin(7, 0, 0, 0);
+			_outBox1.background.filters = [new ColorMatrixFilter(hexToMatrix( 0xE95B5B ))];
+			_outBox2.background.filters = [new ColorMatrixFilter(hexToMatrix( 0xff8800 ))];
+			_outBox3.background.filters = [new ColorMatrixFilter(hexToMatrix( 0xffff00 ))];
+			
+			if(_data != null && _data.boxPosition != null) {
+				x = _data.boxPosition.x;
+				y = _data.boxPosition.y;
+			}
+			
+			if(_data != null) {
+				_data.addEventListener(Event.CHANGE, render);
+			}
+			
+			addEventListener(MouseEvent.CLICK, clickHandler);
+			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
+			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_deleteBt.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+//			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_outBox1.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_outBox2.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_outBox3.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphic);
+			
+			render();
+		}
+		
+		/**
+		 * Resizes and replaces the elements.
+		 */
+		private function computePositions():void {
+			_background.width = BackgroundView.CELL_SIZE * 8 - _inBox.width - _outBox1.width + 4;
+			_background.height = _inBox.height = BackgroundView.CELL_SIZE * 3;
+			_background.x = _inBox.width - 2;
+			_outBox1.x = _outBox2.x = _outBox3.x = _background.x + _background.width - 2;
+			
+			var t:int = 1;
+			if(contains(_outBox2)) t++;
+			if(contains(_outBox3)) t++;
+			var h:int = _inBox.height;
+			if(contains(_outBox2)) h+=4;
+			if(contains(_outBox3)) h+=4;
+			h = Math.round(h/t);
+			_outBox1.height = _outBox2.height = _outBox3.height = h;
+			PosUtils.vPlaceNext(-4, _outBox1, _outBox2, _outBox3);
+			
+			//Dirty hack to offset the icon's position as the contentMargin
+			//seems to be fucked up...
+			_outBox1.validate();
+			_outBox2.validate();
+			_outBox3.validate();
+			_outBox1.icon.y -= 3;
+			_outBox2.icon.y -= 3;
+			_outBox3.icon.y -= 3;
+			
+			var margin:int = 3;
+			var isImage:Boolean = _data != null && _data.getImage() != null;
+			_image.height = _image.width = _background.height - 5 - margin * 2;
+			_image.x = _background.x + 5 + margin;
+			_image.y = margin;
+			_label.x = _image.x + _image.width + margin;
+			_label.y = margin;
+			_label.width = _background.width - _label.x + _background.x - margin;
+			_label.height = _background.height - margin * 2;
+			if(_data == null || _data.isEmpty() || !isImage) {
+				_label.width = _background.width;
+				_label.y = Math.round((_background.height - _label.height) * .5);
+				_label.x = _background.x + 5 + margin;
+				_label.width = _background.width - 5 - margin * 2;
+			}
+			
+			_timeIcon.x = _background.x + (_background.width - _timeIcon.width) * .5;
+			_timeIcon.y = -_timeIcon.height;
+			
+			_deleteBt.x = _background.x + _background.width - _deleteBt.width;
+			_deleteBt.y = -_deleteBt.height;
+			
+			roundPos(_outBox1, _background, _timeIcon, _deleteBt);
+		}
+		
+		
+		
+		
+		//__________________________________________________________ MOUSE EVENTS
+		
+		/**
+		 * Called when time icon is rolled over.
+		 */
+		private function overTimeIconGraphic(event:MouseEvent):void {
+			_timeIcon.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("box-timeIcon"), ToolTipAlign.TOP));
 		}
 		
 		/**
@@ -254,9 +381,15 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when the component is clicked to open the edition view
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			if(event.target == _deleteBt || event.target == _outBox) {
+			if(event.target == _deleteBt || event.target == _outBox1 || event.target == _outBox2 || event.target == _outBox3) {
 				event.stopPropagation();
-				if(event.target == _deleteBt) dispatchEvent(new BoxEvent(BoxEvent.DELETE));
+				if(event.target == _deleteBt) {
+					if(_data.isEmpty()) {
+						onDelete();
+					}else{
+						prompt("box-delete-promptTitle", "box-delete-promptContent", onDelete, "deleteEvent");
+					}
+				}
 				return;
 			}
 			if(Math.abs(x-_dragOffset.x) < 5 && Math.abs(y-_dragOffset.y) < 5) {
@@ -265,47 +398,21 @@ package com.twinoid.kube.quest.components.box {
 		}
 		
 		/**
+		 * Called by prompt window when submitting the deletion.
+		 */
+		private function onDelete():void {
+			dispatchEvent(new BoxEvent(BoxEvent.DELETE));
+		}
+		
+		/**
 		 * Called when mouse is pressed over the in/out box
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
 			event.stopPropagation();
-			if(event.currentTarget != _deleteBt) {
-				dispatchEvent(new BoxEvent(BoxEvent.CREATE_LINK));
+			if (event.currentTarget != _deleteBt) {
+				var index:int = event.currentTarget == _outBox1 ? 0 : event.currentTarget == _outBox2 ? 1 : 2;
+				dispatchEvent(new BoxEvent(BoxEvent.CREATE_LINK, index));
 			}
-		}
-		
-		/**
-		 * Resizes and replaces the elements.
-		 */
-		private function computePositions():void {
-			_background.width = BackgroundView.CELL_SIZE * 8 - _inBox.width - _outBox.width + 4;
-			_background.height = _inBox.height = _outBox.height = BackgroundView.CELL_SIZE * 3;
-			_background.x = _inBox.width - 2;
-			_outBox.x = _background.x + _background.width - 2;
-
-			var margin:int = 3;
-			var isImage:Boolean = _data != null && _data.getImage() != null;
-			_image.height = _image.width = _background.height - 5 - margin * 2;
-			_image.x = _background.x + 5 + margin;
-			_image.y = margin;
-			_label.x = _image.x + _image.width + margin;
-			_label.y = margin;
-			_label.width = _background.width - _label.x + _background.x - margin;
-			_label.height = _background.height - margin * 2;
-			if(_data == null || _data.isEmpty() || !isImage) {
-				_label.width = _background.width;
-				_label.y = Math.round((_background.height - _label.height) * .5);
-				_label.x = _background.x + 5 + margin;
-				_label.width = _background.width - 5 - margin * 2;
-			}
-			
-			_timeIcon.x = _background.x + (_background.width - _timeIcon.width) * .5;
-			_timeIcon.y = -_timeIcon.height;
-			
-			_deleteBt.x = _background.x + _background.width - _deleteBt.width;
-			_deleteBt.y = -_deleteBt.height;
-			
-			roundPos(_outBox, _background, _timeIcon, _deleteBt);
 		}
 		
 	}

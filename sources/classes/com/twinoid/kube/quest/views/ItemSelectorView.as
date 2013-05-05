@@ -13,7 +13,7 @@ package com.twinoid.kube.quest.views {
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.components.form.ScrollbarKube;
 	import com.twinoid.kube.quest.components.selector.SelectorItem;
-	import com.twinoid.kube.quest.components.window.PromptWindow;
+	import com.twinoid.kube.quest.components.window.TitledWindow;
 	import com.twinoid.kube.quest.events.ItemSelectorEvent;
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.utils.Closable;
@@ -33,7 +33,7 @@ package com.twinoid.kube.quest.views {
 	 */
 	public class ItemSelectorView extends AbstractView implements Closable {
 		
-		private var _window:PromptWindow;
+		private var _window:TitledWindow;
 		private var _disableLayer:Sprite;
 		private var _callback:Function;
 		private var _scrollpane:ScrollPane;
@@ -104,7 +104,7 @@ package com.twinoid.kube.quest.views {
 			_disableLayer = addChild(new Sprite()) as Sprite;
 			_engine = new TileEngine2DSwipeWrapper(SelectorItem, (SelectorItem.WIDTH+5) * 5, (SelectorItem.HEIGHT+5) * 3, SelectorItem.WIDTH, SelectorItem.HEIGHT);
 			_scrollpane = new ScrollPane(_engine, new ScrollbarKube());
-			_window = addChild(new PromptWindow("", _scrollpane)) as PromptWindow;
+			_window = addChild(new TitledWindow("", _scrollpane)) as TitledWindow;
 			_swiper = new SwipeManager(_engine, new Rectangle());
 			
 //			_scrollpane.autoHideScrollers = true;
@@ -218,6 +218,14 @@ package com.twinoid.kube.quest.views {
 				len = cols - line.length;
 				for(i = 0; i < len; ++i) line.push(empty);
 				_engine.addLine(line);
+			}
+			
+			//If lines are missing to fill the minimum rows., add empty.
+			if(_engine.numRows < 3) {
+				line = [];
+				for(i = 0; i < cols; ++i) line.push(empty);
+				len = 3 - _engine.numRows;
+				for(i = 0; i < len; ++i) _engine.addLine(line);
 			}
 			computePositions();
 		}

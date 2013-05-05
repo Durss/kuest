@@ -35,11 +35,13 @@ package com.twinoid.kube.quest.utils {
 			if(guidToVo[items[i].guid] == undefined) {
 				//New VO, register it
 				guidToVo[items[i].guid] = items[i];
-				if(items[i].actionType.type == ActionType.TYPE_CHARACTER) {
-					items[i].actionType.setItem( guidToChar[items[i].actionType.itemGUID] );
-				}else
-				if(items[i].actionType.type == ActionType.TYPE_OBJECT) {
-					items[i].actionType.setItem( guidToObj[items[i].actionType.itemGUID] );
+				if(items[i].actionType != null) {
+					if(items[i].actionType.type == ActionType.TYPE_CHARACTER) {
+						items[i].actionType.setItem( guidToChar[items[i].actionType.itemGUID] );
+					}else
+					if(items[i].actionType.type == ActionType.TYPE_OBJECT) {
+						items[i].actionType.setItem( guidToObj[items[i].actionType.itemGUID] );
+					}
 				}
 			}else{
 				//VO already registered, load it from cache

@@ -7,6 +7,7 @@ package com.twinoid.kube.quest.components.menu {
 	import com.twinoid.kube.quest.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.components.form.input.InputKube;
 	import com.twinoid.kube.quest.components.item.ItemPlaceholder;
+	import com.twinoid.kube.quest.utils.prompt;
 	import com.twinoid.kube.quest.vo.IItemData;
 	import com.twinoid.kube.quest.vo.SerializableBitmapData;
 
@@ -16,7 +17,7 @@ package com.twinoid.kube.quest.components.menu {
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	
-	//Fired when the char is full filled
+	//Fired when the item is full filled
 	[Event(name="onSubmitForm", type="com.nurun.components.form.events.FormComponentEvent")]
 	
 	//Fired when delete button is clicked
@@ -38,6 +39,9 @@ package com.twinoid.kube.quest.components.menu {
 		protected var _deleteBt:GraphicButtonKube;
 		protected var _data:IItemData;
 		protected var _errorFilter:Array;
+		private var _promptTitle:String;
+		private var _promptContent:String;
+		private var _promptActionID:String;
 		
 		
 		
@@ -48,7 +52,10 @@ package com.twinoid.kube.quest.components.menu {
 		/**
 		 * Creates an instance of <code>AbstractListItem</code>.
 		 */
-		public function AbstractListItem() {
+		public function AbstractListItem(promptTitle:String, promptContent:String, promptActionID:String) {
+			_promptContent = promptContent;
+			_promptTitle = promptTitle;
+			_promptActionID = promptActionID;
 			initialize();
 		}
 
@@ -134,8 +141,16 @@ package com.twinoid.kube.quest.components.menu {
 		 * Called when delete button is clicked
 		 */
 		protected function clickHandler(event:MouseEvent):void {
+			prompt(_promptTitle, _promptContent, onDelete, _promptActionID);
+		}
+		
+		/**
+		 * Deletes the item after confirmation.
+		 */
+		private function onDelete():void {
 			dispatchEvent(new Event(Event.CLOSE));
 		}
+
 		
 		/**
 		 * Resizes and replaces the elements.

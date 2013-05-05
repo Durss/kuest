@@ -1,23 +1,22 @@
 package com.twinoid.kube.quest.components.box {
-	import com.twinoid.kube.quest.graphics.ScissorsGraphic;
-	import com.nurun.core.lang.Disposable;
-	import flash.ui.Mouse;
-	import flash.events.MouseEvent;
-	import flash.display.CapsStyle;
-	import flash.events.Event;
 	import gs.TweenLite;
 
+	import com.nurun.core.lang.Disposable;
 	import com.twinoid.kube.quest.graphics.WarningGraphic;
 
+	import flash.display.CapsStyle;
 	import flash.display.DisplayObject;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.Mouse;
 	
 	/**
 	 * 
@@ -28,9 +27,9 @@ package com.twinoid.kube.quest.components.box {
 
 		private var _startEntry:Box;
 		private var _endEntry:Box;
+		private var _choiceIndex:int;
 		private var _tmpPt:Point;
 		private var _warning:WarningGraphic;
-		private var _scisors:ScissorsGraphic;
 		private var _isOver:Boolean;
 		
 		
@@ -42,9 +41,10 @@ package com.twinoid.kube.quest.components.box {
 		/**
 		 * Creates an instance of <code>BoxLink</code>.
 		 */
-		public function BoxLink(startEntry:Box, endEntry:Box) {
+		public function BoxLink(startEntry:Box, endEntry:Box, choiceIndex:int = 0) {
 			_endEntry = endEntry;
 			_startEntry = startEntry;
+			_choiceIndex = choiceIndex;
 			initialize();
 		}
 
@@ -53,9 +53,15 @@ package com.twinoid.kube.quest.components.box {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-
+		
+		/**
+		 * Gets the starting box of the link
+		 */
 		public function get startEntry():Box { return _startEntry; }
-
+		
+		/**
+		 * Sets the starting box of the link
+		 */
 		public function set startEntry(value:Box):void { 
 			_startEntry = value;
 			if(value != null && _warning != null && contains(_warning)) {
@@ -73,7 +79,20 @@ package com.twinoid.kube.quest.components.box {
 		 */
 		public function get endEntry():Box { return _endEntry; }
 
+		/**
+		 * Sets the end box target.
+		 */
 		public function set endEntry(value:Box):void { _endEntry = value; }
+		
+		/**
+		 * Gets the choice index from which this link starts.
+		 */
+		public function get choiceIndex():int { return _choiceIndex; }
+
+		/**
+		 * Sets the choice index from which this link starts.
+		 */
+		public function set choiceIndex(choiceIndex:int):void { _choiceIndex = choiceIndex; }
 
 
 
@@ -84,7 +103,6 @@ package com.twinoid.kube.quest.components.box {
 		 * Draws a link from the starting box to the mouse
 		 */
 		public function drawToMouse():void {
-//			var distMin:int = 25;
 			var endX:int = mouseX;
 			var endY:int = mouseY;
 			_tmpPt.x = stage.mouseX;
@@ -100,7 +118,7 @@ package com.twinoid.kube.quest.components.box {
 				while(top is BoxLink) top = objs[--i];
 				//Search for a Box instance different than the start entry point
 				while(!(top is Box) && !(top is Stage) && top != null || top == _startEntry) top = top.parent;
-				if(top is Box) {// && top.x > x + distMin * 2.5) {//Refuse boxes that are not far enough to get a good line rendering
+				if(top is Box) {
 					endX = top.x - x;
 					endY = top.y + top.height * .5 - y;
 					endEntry = top as Box;
@@ -130,7 +148,7 @@ package com.twinoid.kube.quest.components.box {
 		 * Clones the link and returns a new instance.
 		 */
 		public function clone():BoxLink {
-			return new BoxLink(startEntry, endEntry);
+			return new BoxLink(startEntry, endEntry, choiceIndex);
 		}
 		
 		/**
@@ -143,7 +161,7 @@ package com.twinoid.kube.quest.components.box {
 			}
 			
 			x = _startEntry.x + _startEntry.width;
-			y = _startEntry.y + _startEntry.height * .5;
+			y = _startEntry.y + _startEntry.getChoiceIndexPosition(_choiceIndex);
 			var endX:Number = _endEntry.x - x;
 			var endY:Number = _endEntry.y + _endEntry.height * .5 - y;
 			drawLink(endX, endY);
@@ -171,7 +189,7 @@ package com.twinoid.kube.quest.components.box {
 		 * Removes itself from its related data.
 		 */
 		public function deleteLink():void {
-			_endEntry.data.removeDependency(_startEntry.data);
+			_endEntry.data.removeDependency(_startEntry.data, _choiceIndex);
 			//self clear/dispose. BoxView has no hard reference to this
 			//component (for now at least..) so we can do that safely.
 			dispose();
@@ -189,7 +207,6 @@ package com.twinoid.kube.quest.components.box {
 			}
 			
 			graphics.clear();
-			if(_scisors != null) _scisors.filters = [];
 			if(_warning != null) _warning.filters = [];
 			
 			_tmpPt = null;
@@ -212,7 +229,6 @@ package com.twinoid.kube.quest.components.box {
 		 */
 		private function initialize():void {
 			_tmpPt = new Point();
-//			filters = [new BevelFilter(5,135,0xffffff,.3,0,.25,5,5,1,2)];//Potential perf killer.?
 			
 			if (_startEntry != null && _endEntry != null) {
 				update();
@@ -234,15 +250,6 @@ package com.twinoid.kube.quest.components.box {
 		 * Called when link is rolled over
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
-			if(_scisors == null) {
-				_scisors = new ScissorsGraphic();
-				_scisors.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
-			}
-			addChild(_scisors);
-			Mouse.hide();
-			_scisors.x = mouseX;
-			_scisors.y = mouseY;
-			_scisors.startDrag();
 			_isOver = true;
 			update();
 		}
@@ -252,9 +259,6 @@ package com.twinoid.kube.quest.components.box {
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
 			_isOver = false;
-			Mouse.show();
-			removeChild(_scisors);
-			_scisors.stopDrag();
 			update();
 		}
 		
@@ -263,7 +267,7 @@ package com.twinoid.kube.quest.components.box {
 		 */
 		private function drawLink(endX:int, endY:int):void {
 			x = _startEntry.x + _startEntry.width;
-			y = _startEntry.y + _startEntry.height * .5;
+			y = _startEntry.y + _startEntry.getChoiceIndexPosition(_choiceIndex);
 			alpha = startEntry != null && endEntry != null? 1 : .45;
 			
 			//Compute control points
@@ -271,14 +275,15 @@ package com.twinoid.kube.quest.components.box {
 			var ctrl1Y:int = 0;
 			var ctrl2X:int = endX * .65;
 			var ctrl2Y:int = endY;
-			//Restrict the curve not to get a fucked up rendering
-//			if(ctrl1X < distMin)			ctrl1X = distMin;
-//			if(Math.abs(ctrl2X) < distMin)	ctrl2X = distMin * MathUtils.sign(ctrl2X);
-//			if(ctrl2X < ctrl1X + distMin)	ctrl2X = ctrl1X + distMin;
-//			if(endX < ctrl2X + distMin)		endX = ctrl2X + distMin;
 			var halfX:int = endX * .5;
 			var halfY:int = endY * .5;
-			var colors:Array = !_isOver? [0xCD4B4B, 0x348CB1, 0x5AB035] : [0xdf8c8c, 0x7abcd8, 0xa0db88];
+			var colors:Array = !_isOver? [0xCA4F4F, 0x348CB1, 0x5AB035] : [0xdf8c8c, 0x7abcd8, 0xa0db88];
+			if(_choiceIndex == 1) {
+				colors[0] = !_isOver? 0xDD7600 : 0xFD9935;
+			}
+			if(_choiceIndex == 2) {
+				colors[0] = !_isOver? 0xDDDD00 : 0xEEEE33;
+			}
 			
 			var a:Number = 0;//Math.atan2(mouseY, mouseX);
 			var m:Matrix = new Matrix();
@@ -314,7 +319,7 @@ package com.twinoid.kube.quest.components.box {
 //			g.beginFill(0x00ff00);
 //			g.drawCircle( ctrl1X, ctrl1Y, 5);
 //			g.beginFill(0x0000ff);
-//			g.drawCircle( ctrl2X, ctrl2Y, 5);
+			// g.drawCircle( ctrl2X, ctrl2Y, 5);
 		}
 		
 	}

@@ -33,7 +33,7 @@ package com.twinoid.kube.quest.components.buttons {
 		public function ButtonKube(label:String, icon:DisplayObject = null) {
 			super(label, "button", new ButtonSkin(), icon);
 			if(icon is Validable) Validable(icon).validate();
-			contentMargin = new Margin(icon==null? 2 : 5, 1, 2, 1);
+			contentMargin = new Margin(icon==null? 2 : 5, 3, 5, 3);
 			textBoundsMode = false;
 			iconAlign = IconAlign.LEFT;
 			textAlign = icon == null? TextAlign.CENTER : TextAlign.LEFT;

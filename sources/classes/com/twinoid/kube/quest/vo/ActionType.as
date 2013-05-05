@@ -18,6 +18,7 @@ package com.twinoid.kube.quest.vo {
 		private var _item:IItemData;
 		private var _text:String;
 		private var _itemGuid:int;
+		private var _takeMode:Boolean;
 		
 		
 		
@@ -36,18 +37,49 @@ package com.twinoid.kube.quest.vo {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-
-		public function get text():String { return _text; }
-
-		public function set text(text:String):void { _text = text; }
-
-		public function get type():String { return _type; }
-
-		public function set type(type:String):void { _type = type; }
-
+		/**
+		 * Globaly unique identifier used to restore the dependencies on deserialization
+		 */
 		public function get itemGUID():int { return _itemGuid; }
 
+		/**
+		 * Globaly unique identifier used to restore the dependencies on deserialization
+		 */
 		public function set itemGUID(value:int):void { _itemGuid = value; }
+		
+		/**
+		 * Sets the action's message.
+		 */
+		public function get text():String { return _text; }
+
+		/**
+		 * Gets the action's message.
+		 */
+		public function set text(text:String):void { _text = text; }
+
+		/**
+		 * Gets the action's type (dialogue or object).
+		 */
+		public function get type():String { return _type; }
+
+		/**
+		 * Gets the action's type (dialogue or object).
+		 */
+		public function set type(type:String):void { _type = type; }
+		
+		/**
+		 * Gets if the user receives an object (true) or uses an object (false)
+		 * when he arrives at the specified coordinates
+		 */
+		public function get takeMode():Boolean { return _takeMode; }
+		
+		/**
+		 * Defines if an object is taken or put in case of object type.
+		 * If true, when the user arrives at the specified coordinates, he will
+		 * receive the object.
+		 * If false, he will use the object.
+		 */
+		public function set takeMode(value:Boolean):void { _takeMode = value; }
 
 
 

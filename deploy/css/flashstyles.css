@@ -36,10 +36,8 @@
 .radioButton { font-family:Verdana; font-size:12; color:#ffffff; }
 .radioButton_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }
 
-.promptWindowTitle { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }
-.promptWindowContent { font-family:Verdana; font-size:12; color:#ffffff; }
-.promptWindowContentError { font-family:Verdana; font-size:12; color:#cc0000; }
-.promptWindowContentZoneTitle { font-family:Verdana; font-size:14; color:#ffffff; }
+.window-title { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }
+.window-content { font-family:Verdana; font-size:12; color:#ffffff; }
 
 .calendarMonth { font-family:Verdana; font-weight:bold; font-size:12; color:#ffffff; text-align:center; flash-charcase:upper; }
 .calendarDay { font-family:Verdana; font-size:12; color:#ffffff; text-align:center; }
@@ -52,3 +50,5 @@
 .box-label { font-family:Verdana; font-size:10; color:#ffffff; }
 
 .selectorItem-label { font-family:Verdana; font-size:14; color:#ffffff; text-align:center; }
+.editWindow-label { font-family:Verdana; font-size:12; color:#ffffff; }
+.editWindow-zoneTitle { font-family:Verdana; font-size:14; color:#ffffff; }

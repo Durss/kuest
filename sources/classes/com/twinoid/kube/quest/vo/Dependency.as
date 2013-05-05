@@ -1,6 +1,9 @@
 package com.twinoid.kube.quest.vo {
 	
 	/**
+	 * Contains a dependency's data.
+	 * Defines the KuestEvent it relates to and which choice index of the event
+	 * unlocks the current event.
 	 * 
 	 * @author Francois
 	 * @date 4 mai 2013;
@@ -31,11 +34,11 @@ package com.twinoid.kube.quest.vo {
 
 		public function get event():KuestEvent { return _event; }
 
-		public function set event(event:KuestEvent):void { _event = event; }
+		public function set event(value:KuestEvent):void { _event = value; }
 
 		public function get choiceIndex():int { return _choiceIndex; }
 
-		public function set choiceIndex(choiceIndex:int):void { _choiceIndex = choiceIndex; }
+		public function set choiceIndex(value:int):void { _choiceIndex = value; }
 
 
 

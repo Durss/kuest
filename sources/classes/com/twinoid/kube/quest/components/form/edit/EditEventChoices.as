@@ -60,9 +60,9 @@ package com.twinoid.kube.quest.components.form.edit {
 					break;
 				case 1:
 					data.actionChoices = new ActionChoices();
-					if(StringUtils.trim(_choice1.text).length > 0) data.actionChoices.addChoice(_choice1.text);
-					if(StringUtils.trim(_choice2.text).length > 0) data.actionChoices.addChoice(_choice2.text);
-					if(StringUtils.trim(_choice3.text).length > 0) data.actionChoices.addChoice(_choice3.text);
+					if(StringUtils.trim(_choice1.value as String).length > 0) data.actionChoices.addChoice(_choice1.text);
+					if(StringUtils.trim(_choice2.value as String).length > 0) data.actionChoices.addChoice(_choice2.text);
+					if(StringUtils.trim(_choice3.value as String).length > 0) data.actionChoices.addChoice(_choice3.text);
 					break;
 				default:
 			}
@@ -115,7 +115,7 @@ package com.twinoid.kube.quest.components.form.edit {
 		 */
 		private function buildForm():void {
 			_form = new Sprite();
-			_label = _form.addChild(new CssTextField("promptWindowContent")) as CssTextField;
+			_label = _form.addChild(new CssTextField("editWindow-label")) as CssTextField;
 			_label.text = Label.getLabel("editWindow-choice-help");
 			_label.width = _width;
 			_choice1 = _form.addChild(new InputKube(Label.getLabel("editWindow-choice-defaultText").replace(/\{I\}/gi, "1"))) as InputKube;

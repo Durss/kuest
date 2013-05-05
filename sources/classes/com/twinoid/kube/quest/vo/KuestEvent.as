@@ -112,9 +112,12 @@ package com.twinoid.kube.quest.vo {
 			if(_actionType != null) {
 				_actionType.dispose();
 				_actionType.removeEventListener(Event.CLEAR, typeClearedHandler);
+				_actionType = null;
 			}
-			_actionType = value;
-			_actionType.addEventListener(Event.CLEAR, typeClearedHandler);
+			if(value != null) {
+				_actionType = value;
+				_actionType.addEventListener(Event.CLEAR, typeClearedHandler);
+			}
 		}
 		
 		/**
@@ -161,8 +164,8 @@ package com.twinoid.kube.quest.vo {
 				var i:int, len:int;
 				len = _dependencies.length;
 				for(i = 0; i < len; ++i) {
-					//Already a direct dependency!
-					if(_dependencies[i].event == entry) return false;
+					//Already a direct dependency with the same choice index, disalow creation.
+					if(_dependencies[i].event == entry && _dependencies[i].choiceIndex == choiceIndex) return false;
 				}
 				
 				_dependencies.push( new Dependency(entry, choiceIndex) );
@@ -175,11 +178,12 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Removes one of the event's dependencies.
 		 */
-		public function removeDependency(entry:KuestEvent):void {
+		public function removeDependency(entry:KuestEvent, choiceIndex:int = -1):void {
 			var i:int, len:int;
 			len = _dependencies.length;
 			for(i = 0; i < len; ++i) {
-				if(_dependencies[i].event == entry) {
+				if(_dependencies[i].event == entry
+				&& (_dependencies[i].choiceIndex == choiceIndex || choiceIndex == -1)) {
 					_dependencies.splice(i, 1);
 					i --;
 					len --;
@@ -213,7 +217,7 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Gets the boxe's label
 		 */
-		public function getLabel():String { return _actionType.text.substr(0, 60).replace(/\r|\n/gi, " "); }
+		public function getLabel():String { return _actionType == null? "" : _actionType.text.substr(0, 60).replace(/\r|\n/gi, " "); }
 		
 		/**
 		 * Makes the component garbage collectable.
