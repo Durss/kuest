@@ -46,7 +46,10 @@ package com.twinoid.kube.quest.utils {
 				items[i] = guidToVo[items[i].guid];
 			}
 			if(deepCheck) {
-				restoreDependencies(items[i].dependencies, chars, objs, false, guidToVo);
+				lenJ = items[i].dependencies.length;
+				for(j = 0; j < lenJ; ++j) {
+					restoreDependencies(new <KuestEvent>[items[i].dependencies[j].event], chars, objs, false, guidToVo);
+				}
 			}
 		}
 	}

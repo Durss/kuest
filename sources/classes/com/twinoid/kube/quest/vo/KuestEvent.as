@@ -19,11 +19,12 @@ package com.twinoid.kube.quest.vo {
 		
 		internal static var GUID:int;
 		
-		private var _dependencies:Vector.<KuestEvent>;
+		private var _dependencies:Vector.<Dependency>;
 		private var _boxPosition:Point;
 		private var _actionPlace:ActionPlace;
 		private var _actionDate:ActionDate;
 		private var _actionType:ActionType;
+		private var _actionChoices:ActionChoices;
 		private var _guid:int;
 		
 		
@@ -64,7 +65,10 @@ package com.twinoid.kube.quest.vo {
 		 * Sets action's place.
 		 * Represents a zone's coordinates or a kube's coordinates.
 		 */
-		public function set actionPlace(value:ActionPlace):void { _actionPlace = value; }
+		public function set actionPlace(value:ActionPlace):void {
+			if(_actionPlace != null) _actionPlace.dispose();
+			_actionPlace = value;
+		}
 		
 		/**
 		 * Gets the action's date.
@@ -76,7 +80,23 @@ package com.twinoid.kube.quest.vo {
 		 * Sets the action's date.
 		 * Can contain a time interval, some specific dates, etc..
 		 */
-		public function set actionDate(value:ActionDate):void { _actionDate = value; }
+		public function set actionDate(value:ActionDate):void {
+			if(_actionDate != null) _actionDate.dispose();
+			_actionDate = value;
+		}
+		
+		/**
+		 * Gets the action's choices.
+		 */
+		public function get actionChoices():ActionChoices { return _actionChoices; }
+
+		/**
+		 * Sets the action's choices.
+		 */
+		public function set actionChoices(value:ActionChoices):void {
+			if(_actionChoices != null) _actionChoices.dispose();
+			_actionChoices = value;
+		}
 		
 		/**
 		 * Gets the action's type.
@@ -90,6 +110,7 @@ package com.twinoid.kube.quest.vo {
 		 */
 		public function set actionType(value:ActionType):void {
 			if(_actionType != null) {
+				_actionType.dispose();
 				_actionType.removeEventListener(Event.CLEAR, typeClearedHandler);
 			}
 			_actionType = value;
@@ -100,13 +121,13 @@ package com.twinoid.kube.quest.vo {
 		 * @private
 		 * here for serialization purpose only!
 		 */
-		public function get dependencies():Vector.<KuestEvent> { return _dependencies; }
+		public function get dependencies():Vector.<Dependency> { return _dependencies; }
 
 		/**
 		 * @private
 		 * here for serialization purpose only!
 		 */
-		public function set dependencies(dependencies:Vector.<KuestEvent>):void { _dependencies = dependencies; }
+		public function set dependencies(dependencies:Vector.<Dependency>):void { _dependencies = dependencies; }
 
 		/**
 		 * @private
@@ -134,17 +155,17 @@ package com.twinoid.kube.quest.vo {
 		 * 
 		 * @return if the dependency has been made or not. The dependency cannot be built in case of looped or self dependency.
 		 */
-		public function addDependency(entry:KuestEvent):Boolean {
+		public function addDependency(entry:KuestEvent, choiceIndex:int):Boolean {
 			if(deepDependencyCheck(entry)) {
 				//Check if the entry isn't already a direct dependency.
 				var i:int, len:int;
 				len = _dependencies.length;
 				for(i = 0; i < len; ++i) {
 					//Already a direct dependency!
-					if(_dependencies[i] == entry) return false;
+					if(_dependencies[i].event == entry) return false;
 				}
 				
-				_dependencies.push( entry );
+				_dependencies.push( new Dependency(entry, choiceIndex) );
 				return true;
 			}else{
 				return false;
@@ -158,7 +179,7 @@ package com.twinoid.kube.quest.vo {
 			var i:int, len:int;
 			len = _dependencies.length;
 			for(i = 0; i < len; ++i) {
-				if(_dependencies[i] == entry) {
+				if(_dependencies[i].event == entry) {
 					_dependencies.splice(i, 1);
 					i --;
 					len --;
@@ -177,7 +198,7 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Gets if the value object is empty
 		 */
-		public function isEmpty():Boolean { return _actionDate == null || _actionPlace == null || _actionType == null; }
+		public function isEmpty():Boolean { return _actionDate == null || _actionPlace == null || _actionType == null || _actionChoices == null; }
 		
 		/**
 		 * Gets the boxe's image
@@ -187,7 +208,7 @@ package com.twinoid.kube.quest.vo {
 		/**
 		 * Gets the dependency events.
 		 */
-		public function getDependencies():Vector.<KuestEvent> { return _dependencies; }
+		public function getDependencies():Vector.<Dependency> { return _dependencies; }
 		
 		/**
 		 * Gets the boxe's label
@@ -201,11 +222,13 @@ package com.twinoid.kube.quest.vo {
 			if(_actionPlace != null) _actionPlace.dispose();
 			if(_actionDate != null) _actionDate.dispose();
 			if(_actionType != null) _actionType.dispose();
+			if(_actionChoices != null) _actionChoices.dispose();
 			_dependencies = null;
 			_boxPosition = null;
 			_actionPlace = null;
 			_actionDate = null;
 			_actionType = null;
+			_actionChoices = null;
 		}
 		
 		/**
@@ -226,7 +249,7 @@ package com.twinoid.kube.quest.vo {
 		 */
 		private function initialize():void {
 			_guid = ++GUID;
-			_dependencies = new Vector.<KuestEvent>();
+			_dependencies = new Vector.<Dependency>();
 		}
 		
 		/**
@@ -244,11 +267,11 @@ package com.twinoid.kube.quest.vo {
 			for(i = 0; i < len; ++i) {
 				//If the dependency entry is the current one, stop everything
 				//we found what we were searching for.
-				if(entry.getDependencies()[i] == this) return false;
+				if(entry.getDependencies()[i].event == this) return false;
 				
 				try {
-					//The entry doesn't match, check if its parents match.
-					if(deepDependencyCheck(entry.getDependencies()[i]) === false) {
+					//The entry doesn't match, check if its parents matches.
+					if(deepDependencyCheck(entry.getDependencies()[i].event) === false) {
 						return false;
 					}
 				}catch(error:Error) {

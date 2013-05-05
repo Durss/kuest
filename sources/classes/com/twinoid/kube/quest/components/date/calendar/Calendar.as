@@ -78,7 +78,7 @@ package com.twinoid.kube.quest.components.date.calendar {
 				_dateToState[value[i].toString()] = value[i];
 			}
 			
-			render();
+			if(stage != null) render();
 		}
 
 
