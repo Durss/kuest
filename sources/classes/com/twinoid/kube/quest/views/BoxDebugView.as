@@ -107,7 +107,7 @@ package com.twinoid.kube.quest.views {
 				for(j = 0; j < lenJ; ++j) {
 					graphics.lineStyle(2, 0x0000ff, 1, false, "normal", CapsStyle.NONE);
 					graphics.moveTo(d.boxPosition.x * scale, d.boxPosition.y * scale + h * .5);
-					graphics.lineTo(d.getDependencies()[j].boxPosition.x * scale + w, d.getDependencies()[j].boxPosition.y * scale + h * .5);
+					graphics.lineTo(d.getDependencies()[j].event.boxPosition.x * scale + w, d.getDependencies()[j].event.boxPosition.y * scale + h * .5);
 					graphics.lineStyle(0, 0, 0);
 				}
 			}

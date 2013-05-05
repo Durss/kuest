@@ -1,6 +1,6 @@
 package com.twinoid.kube.quest.model {
-	import com.nurun.utils.commands.BrowseForFileCmd;
-	import flash.net.FileReference;
+	import com.twinoid.kube.quest.vo.ActionChoices;
+	import com.twinoid.kube.quest.vo.Dependency;
 	import by.blooddy.crypto.SHA1;
 
 	import com.nurun.core.commands.events.CommandEvent;
@@ -9,6 +9,7 @@ package com.twinoid.kube.quest.model {
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.nurun.utils.commands.BrowseForFileCmd;
 	import com.twinoid.kube.quest.cmd.LoginCmd;
 	import com.twinoid.kube.quest.events.ViewEvent;
 	import com.twinoid.kube.quest.vo.ActionDate;
@@ -21,9 +22,12 @@ package com.twinoid.kube.quest.model {
 	import com.twinoid.kube.quest.vo.ObjectItemData;
 	import com.twinoid.kube.quest.vo.SerializableBitmapData;
 
+	import flash.display.GraphicsPath;
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.net.FileReference;
 	import flash.net.LocalConnection;
 	import flash.net.SharedObject;
 	import flash.net.registerClassAlias;
@@ -60,6 +64,8 @@ package com.twinoid.kube.quest.model {
 		private var _so:SharedObject;
 		private var _charactersUpdate:Boolean;
 		private var _objectsUpdate:Boolean;
+		private var _comments:Vector.<GraphicsPath>;
+		private var _commentsViewports:Vector.<Rectangle>;
 		
 		
 		
@@ -70,6 +76,7 @@ package com.twinoid.kube.quest.model {
 		/**
 		 * Creates an instance of <code>Model</code>.
 		 */
+
 		public function Model() {
 			initialize();
 		}
@@ -118,6 +125,16 @@ package com.twinoid.kube.quest.model {
 		 * Gets if there has been an update in the objects list.
 		 */
 		public function get objectsUpdate():Boolean { return _objectsUpdate; }
+		
+		/**
+		 * Gets the comments drawing data.
+		 */
+		public function get comments():Vector.<GraphicsPath> { return _comments; }
+		
+		/**
+		 * Gets the comments drawing viewports.
+		 */
+		public function get commentsViewports():Vector.<Rectangle> { return _commentsViewports; }
 		
 
 
@@ -259,6 +276,8 @@ package com.twinoid.kube.quest.model {
 			bytes.writeObject(chars);
 			bytes.writeObject(objs);
 			bytes.writeObject(_kuestData.nodes);
+			bytes.writeObject(_comments);
+			bytes.writeObject(_commentsViewports);
 			bytes.deflate();
 			new FileReference().save(bytes, "kuest.kst");
 		}
@@ -271,6 +290,14 @@ package com.twinoid.kube.quest.model {
 			var cmd:BrowseForFileCmd = new BrowseForFileCmd("Kuest file", "*.kst");
 			cmd.addEventListener(CommandEvent.COMPLETE, loadKuestCompleteHandler);
 			cmd.execute();
+		}
+		
+		/**
+		 * Saves the comments to the model
+		 */
+		public function saveComments(drawingPaths:Vector.<GraphicsPath>, viewports:Vector.<Rectangle>):void {
+			_commentsViewports = viewports;
+			_comments = drawingPaths;
 		}
 
 
@@ -340,7 +367,7 @@ package com.twinoid.kube.quest.model {
 		private function testSerializableClasses():void {
 			//Check if the value objects are all serializable and registers aliases
 			//so that ByteArray.readObject() can instanciate the value objects.
-			var serializableClasses:Array = [Point, Date, KuestEvent, ActionDate, ActionPlace, ActionType, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
+			var serializableClasses:Array = [Point, Date, GraphicsPath, Rectangle, String, Dependency, KuestEvent, ActionDate, ActionPlace, ActionType, ActionChoices, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
 			var i:int, len:int;
 			var j:int, lenJ:int;
 			len = serializableClasses.length;
@@ -351,7 +378,9 @@ package com.twinoid.kube.quest.model {
 				var cName:String = String(xml.@name).replace(/.*::(.*)/gi, "$1");
 				registerClassAlias(cName, serializableClasses[i]);
 				
-				if(serializableClasses[i] != Point && serializableClasses[i] != Date) {
+				if(serializableClasses[i] != Point
+				&& serializableClasses[i] != Date
+				&& serializableClasses[i] != String) {
 					lenJ = nodes.length();
 					for(j = 0; j < lenJ; ++j) {
 						if(nodes[j].@access != "readwrite") {
@@ -410,7 +439,6 @@ package com.twinoid.kube.quest.model {
 			bytes.deflate();
 			
 			bytes.inflate();
-//			_kuestData = new KuestData();
 			_kuestData.deserialize(bytes);
 			//*/
 		}
@@ -515,8 +543,10 @@ package com.twinoid.kube.quest.model {
 		private function loadKuestCompleteHandler(event:CommandEvent):void {
 			var bytes:ByteArray = event.data as ByteArray;
 			bytes.inflate();
-//			_kuestData = new KuestData();
 			_kuestData.deserialize(bytes);
+			if(bytes.position < bytes.length) _comments = bytes.readObject();
+			if(bytes.position < bytes.length) _commentsViewports = bytes.readObject();
+			
 			_charactersUpdate = _objectsUpdate = true;
 			update();
 			_charactersUpdate = _objectsUpdate = false;

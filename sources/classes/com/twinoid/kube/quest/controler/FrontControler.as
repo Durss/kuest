@@ -1,9 +1,11 @@
 package com.twinoid.kube.quest.controler {
+	import flash.geom.Rectangle;
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.vo.CharItemData;
 	import com.twinoid.kube.quest.vo.KuestEvent;
 	import com.twinoid.kube.quest.vo.ObjectItemData;
 
+	import flash.display.GraphicsPath;
 	import flash.errors.IllegalOperationError;
 
 
@@ -133,6 +135,13 @@ package com.twinoid.kube.quest.controler {
 		 */
 		public function load():void {
 			_model.load();
+		}
+		
+		/**
+		 * Saves the comments to the model
+		 */
+		public function saveComments(drawingPaths:Vector.<GraphicsPath>, viewports:Vector.<Rectangle>):void {
+			_model.saveComments(drawingPaths, viewports);
 		}
 
 

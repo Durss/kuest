@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.form.edit {
+	import flash.utils.setTimeout;
 	import flash.events.MouseEvent;
 	import com.nurun.components.button.GraphicButton;
 	import gs.TweenLite;
@@ -48,7 +49,6 @@ package com.twinoid.kube.quest.components.form.edit {
 		private var _openCloseBt:GraphicButton;
 		private var _closed:Boolean;
 		private var _currentContent:Sprite;
-		private var _renderingHolder:Sprite;
 
 		
 		
@@ -129,11 +129,12 @@ package com.twinoid.kube.quest.components.form.edit {
 			if(_contents.length == 1) {
 				_contentsHolder.addChild(content);
 			}else{
-				//This weird invisible size less container simply provides a
+				//This addchild followed by a removechild simply provides a
 				//way to force the rendering of the contents before they are
-				//displayed. This prevent from lags for complexe contents
-				//when they are displayed the first time. Like the calendar.
-				_renderingHolder.addChild(content);
+				//displayed. This prevent from lags for complex contents when
+				//they are displayed the first time. Like the calendar.
+				addChild(content);
+				setTimeout(removeChild, 0, content);//Wait one frame to be sure rendering is done.
 			}
 			
 			_buttons[0].x = _width - bt.width * _buttons.length;
@@ -162,7 +163,6 @@ package com.twinoid.kube.quest.components.form.edit {
 			_group = new FormComponentGroup();
 			_itemToIndex = new Dictionary();
 			
-			_renderingHolder = addChild(new Sprite()) as Sprite;
 			_title = addChild(new CssTextField("promptWindowContentZoneTitle")) as CssTextField;
 			_openCloseBt = addChild(new GraphicButton(createRect())) as GraphicButton;
 			_contentsHolder = addChild(new Sprite()) as Sprite;
@@ -175,8 +175,6 @@ package com.twinoid.kube.quest.components.form.edit {
 			_title.backgroundColor = 0x8BC9E2;
 			_openCloseBt.buttonMode = true;
 			
-			_renderingHolder.alpha = 0;
-			_renderingHolder.scaleX = _renderingHolder.scaleY = .01;//Don't put it to zero or some texts rendering are weird. Some text are word wrapped.
 			_contentsMask.height = 0;
 			_contentsHolder.mask = _contentsMask;
 			

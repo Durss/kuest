@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.views {
+	import com.twinoid.kube.quest.components.form.edit.EditEventChoices;
 	import flash.utils.setTimeout;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import gs.TweenLite;
@@ -47,6 +48,8 @@ package com.twinoid.kube.quest.views {
 		private var _submit:ButtonKube;
 		private var _cancel:ButtonKube;
 		private var _data:KuestEvent;
+		private var _choices:EditEventChoices;
+		private var _disable:Sprite;
 		
 		
 		
@@ -95,26 +98,32 @@ package com.twinoid.kube.quest.views {
 			if (model.currentBoxToEdit != null) {
 				if(_closed) {
 					_data = model.currentBoxToEdit;
+					_window.visible = true;
+					//Do not put this AFTER the populate or textfields will be
+					//totally fucked up. The getLineMetrics will return
+					//shitty values.
+					_window.scaleX = _window.scaleY = 1;
 					
 					_place.load( _data );
 					_type.load( _data );
 					_times.load( _data );
+					_choices.load( _data );
 					
-					scaleX = scaleY = 1;
 					computePositions();
-					visible = true;
-					stage.focus = this;
-					TweenLite.killTweensOf(this);
+					stage.focus = _window;
+					TweenLite.killTweensOf(_window);
 					setTimeout(flagOpened, 0);//Flag as opened a frame later. See method for more infos
-					TweenLite.from(this, .5, {x:x + width * .5, y:y + height * .5, scaleX:0, scaleY:0, delay:0, ease:Back.easeInOut});
+					TweenLite.from(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:0, scaleY:0, delay:0, ease:Back.easeInOut});
+					TweenLite.to(_disable, .25, {autoAlpha:1});
 				}
 				_place.connectedToGame = model.connectedToGame;
 				_place.inGamePosition = model.inGamePosition;
 				
 			}else if(!_closed){
 				_closed = true;
-				TweenLite.killTweensOf(this);
-				TweenLite.to(this, .5, {x:x + width * .5, y:y + height * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
+				TweenLite.killTweensOf(_window);
+				TweenLite.to(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
+				TweenLite.to(_disable, .25, {autoAlpha:0});
 			}
 		}
 
@@ -141,15 +150,19 @@ package com.twinoid.kube.quest.views {
 			_holder	= addChild(new Sprite()) as Sprite;
 			_place	= _holder.addChild(new EditEventPlace(_WIDTH)) as EditEventPlace;
 			_type	= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
+			_choices= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
 			_times	= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
 			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
 			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
+			_disable= addChild(new Sprite()) as Sprite;
 			_window = addChild(new PromptWindow(Label.getLabel("editWindow-title"), _holder)) as PromptWindow;
 			
 			_closed = true;
-			visible = false;
-			scaleX = scaleY = 0;
+			_disable.alpha = 0;
+			_disable.visible = false;
+			_window.visible = false;
+//			_window.scaleX = _window.scaleY = 0;
 			
 			makeEscapeClosable(this);
 			computePositions();
@@ -158,7 +171,6 @@ package com.twinoid.kube.quest.views {
 			_holder.addEventListener(Event.RESIZE, computePositions);
 			_submit.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_cancel.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			stage.addEventListener(MouseEvent.CLICK, clickStageHandler, true);
 			stage.addEventListener(MouseEvent.MOUSE_UP, clickStageHandler, true);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickStageHandler, true);
 		}
@@ -170,6 +182,7 @@ package com.twinoid.kube.quest.views {
 			//Prevent from firing a RESIZE event to the stage that would be
 			//captured on every views listening for it.
 			if(event != null && event.currentTarget == _holder) event.stopPropagation();
+			
 			
 			_window.width = _WIDTH;
 			var i:int, len:int, item:DisplayObject, py:int;
@@ -188,11 +201,15 @@ package com.twinoid.kube.quest.views {
 			
 			_window.forcedContentHeight = py;
 			_window.updateSizes();
-			PosUtils.centerInStage(this);
+			PosUtils.centerInStage(_window);
 			var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
 			if(menu != null) {
-				x = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width) - width) * .5);
+				_window.x = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width) - width) * .5);
 			}
+			_disable.graphics.clear();
+			_disable.graphics.beginFill(0, .3);
+			_disable.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			_disable.graphics.endFill();
 		}
 		
 		/**
@@ -217,7 +234,7 @@ package com.twinoid.kube.quest.views {
 		 * Called when stage is clicked to close the window
 		 */
 		private function clickStageHandler(event:MouseEvent):void {
-			if(!_closed && !contains(event.target as DisplayObject)) {
+			if(!_closed && !_window.contains(event.target as DisplayObject)) {
 				if(event.type != MouseEvent.MOUSE_DOWN) close();
 				//Prevents from an item creation when clicking on the board.
 				event.stopPropagation();
@@ -231,6 +248,7 @@ package com.twinoid.kube.quest.views {
 			_place.save( _data );
 			_type.save( _data );
 			_times.save( _data );
+			_choices.save( _data );
 			_data.submit();
 			close();
 		}

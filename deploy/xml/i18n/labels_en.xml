@@ -19,7 +19,7 @@
 		<label code="selector-none"><![CDATA[<i>(none)</i>]]></label>
 		
 		<label code="box-empty"><![CDATA[<p align="center">Click to edit...</p>]]></label>
-		<label code="box-timeIcon"><![CDATA[This action is only avaiable at certain times.]]></label>
+		<label code="box-timeIcon"><![CDATA[This action is only<br />avaiable at certain times.]]></label>
 		
 		<label code="menu-file"><![CDATA[Main menu]]></label>
 		

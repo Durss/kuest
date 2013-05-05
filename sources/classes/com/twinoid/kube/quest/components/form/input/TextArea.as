@@ -36,7 +36,7 @@ package com.twinoid.kube.quest.components.form.input {
 			_back = addChild(new InputSkin()) as InputSkin;
 			super(_tf, new ScrollbarKube(), new ScrollbarKube());
 			autoHideScrollers = true;
-			if(_defaultLabel.length > 0) {
+			if(_defaultLabel != null && _defaultLabel.length > 0) {
 				addEventListener(FocusEvent.FOCUS_IN, focusHandler);
 				addEventListener(FocusEvent.FOCUS_OUT, focusHandler);
 			}

@@ -19,7 +19,7 @@
 		<label code="selector-none"><![CDATA[<i>(aucun)</i>]]></label>
 		
 		<label code="box-empty"><![CDATA[<p align="center">Cliquez pour éditer...</p>]]></label>
-		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible qu'à certains moments précis.]]></label>
+		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible<br />qu'à certains moments précis.]]></label>
 		
 		<label code="menu-file"><![CDATA[Menu principal]]></label>
 		
@@ -61,6 +61,12 @@
 		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
 		<label code="editWindow-type-placeHolderObjectTT"><![CDATA[Sélectionner un objet.]]></label>
 		<label code="editWindow-type-placeHolderCharacterTT"><![CDATA[Sélectionner un personnage.]]></label>
+		
+		<label code="editWindow-choice-title"><![CDATA[Liste de choix]]></label>
+		<label code="editWindow-choice-noneTT"><![CDATA[Aucun]]></label>
+		<label code="editWindow-choice-yupTT"><![CDATA[Oui]]></label>
+		<label code="editWindow-choice-help"><![CDATA[Définissez ici une liste de choix posée au joueur en fin d'action.<br />Un évènement pourra ensuite dépendre du choix effectué.]]></label>
+		<label code="editWindow-choice-defaultText"><![CDATA[Choix {I}...]]></label>
 		
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
 		<label code="editWindow-time-noneTT"><![CDATA[Toujours]]></label>

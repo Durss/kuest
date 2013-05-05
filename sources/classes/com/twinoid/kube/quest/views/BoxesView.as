@@ -94,6 +94,7 @@ package com.twinoid.kube.quest.views {
 			
 			if(model.kuestData.guid != _currentDataGUID) {
 				_currentDataGUID = model.kuestData.guid;
+				_comments.load(model.comments, model.commentsViewports);
 				clear();
 				buildFromCollection(model.kuestData.nodes);
 			}
@@ -139,7 +140,7 @@ package com.twinoid.kube.quest.views {
 		private function addedToStageHandler(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler, true);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
@@ -163,14 +164,15 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function enterFrameHandler(event:Event):void {
 			//Manage board's drag if mouse isn't over anything else
+			var hasMoved:Boolean = Math.abs(_dragOffset.x - _boxesHolder.x) > 2 || Math.abs(_dragOffset.x - _boxesHolder.x) > 2;
 			if(_spacePressed) {
 				if(_stagePressed && _draggedItem == null) {
-					if(Math.abs(_dragOffset.x - _boxesHolder.x) > 2 || Math.abs(_dragOffset.x - _boxesHolder.x) > 2) {
-						_draggingBoard = true;
-					}
+					if(hasMoved) _draggingBoard = true;
 					_endX = _dragOffset.x + stage.mouseX - _mouseOffset.x;
 					_endY = _dragOffset.y + stage.mouseY - _mouseOffset.y;
 				}
+			}else if(_stagePressed && _draggedItem == null) {
+				_comments.startDraw();
 			}
 			
 			//Moves the board when dragging something on the borders
@@ -203,6 +205,7 @@ package com.twinoid.kube.quest.views {
 			_boxesHolder.x += (_endX - _boxesHolder.x) * .5;
 			_boxesHolder.y += (_endY - _boxesHolder.y) * .5;
 			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
+			_comments.scrollTo(_boxesHolder.x, _boxesHolder.y);
 			
 			_prevMousePos.x = stage.mouseX;
 			_prevMousePos.y = stage.mouseY;
@@ -280,21 +283,23 @@ package com.twinoid.kube.quest.views {
 			var i:int, len:int, box:Box;
 			var j:int, lenJ:int;
 			len = nodes.length;
+			//Create the items and registers all the items to find back the dependencies faster.
 			var dependencies:Vector.<Box> = new Vector.<Box>();
 			var dataToBox:Dictionary = new Dictionary();
 			for(i = 0; i < len; ++i) {
-				box = createItem(nodes[i]);
+				box = createItem(nodes[i], false);
 				dataToBox[box.data] = box;
 				if(nodes[i].dependencies.length > 0) {
 					dependencies.push(box);
 				}
 			}
 			
+			//Creates the links
 			len = dependencies.length;
 			for(i = 0; i < len; ++i) {
 				lenJ = dependencies[i].data.dependencies.length;
 				for(j = 0; j < lenJ; ++j) {
-					var link:BoxLink = new BoxLink( dataToBox[ dependencies[i].data.dependencies[j] ], dependencies[i] );
+					var link:BoxLink = new BoxLink( dataToBox[ dependencies[i].data.dependencies[j].event ], dependencies[i] );
 					_boxesHolder.addChildAt(link, 0);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
@@ -305,14 +310,16 @@ package com.twinoid.kube.quest.views {
 		/**
 		 * Creates a box item.
 		 */
-		private function createItem(data:KuestEvent):Box {
+		private function createItem(data:KuestEvent, tween:Boolean = true):Box {
 			var item:Box = new Box(data);
 			item.buttonMode = true;
 			item.addEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
 			item.addEventListener(BoxEvent.DELETE, deleteBoxHandler);
 			_boxesHolder.addChild( item );
 			
-			TweenLite.from(item, .25, {transformAroundCenter:{scaleX:0, scaleY:0}, ease:Back.easeOut});
+			if(tween) {
+				TweenLite.from(item, .25, {transformAroundCenter:{scaleX:0, scaleY:0}, ease:Back.easeOut});
+			}
 			
 			return item;
 		}
@@ -327,12 +334,12 @@ package com.twinoid.kube.quest.views {
 		 * Called when a key is pressed
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
-			if(event.keyCode == Keyboard.SPACE) {
+			if(!_stagePressed && !_spacePressed && event.keyCode == Keyboard.SPACE) {
 				var objs:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
 				var top:DisplayObject = objs[objs.length - 1];
 				if(top != null && contains(top)) {
-					_spacePressed = top == this;
-					Mouse.cursor = MouseCursor.HAND;
+					_spacePressed = top == this || _comments.contains(top);
+					if(_spacePressed) Mouse.cursor = MouseCursor.HAND;
 				}
 			}
 		}
@@ -343,7 +350,7 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
 			if(event.keyCode == Keyboard.SPACE) {
-				if(_spacePressed) Mouse.cursor = MouseCursor.AUTO;
+				if (_spacePressed) Mouse.cursor = MouseCursor.AUTO;
 				_spacePressed = false;
 			}
 		}
@@ -363,13 +370,15 @@ package com.twinoid.kube.quest.views {
 			_endY = Math.round(_boxesHolder.y);
 			_background.setScale(_boxesHolder.scaleX);
 			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
+			_comments.setScale(_boxesHolder.scaleX);
+			_comments.scrollTo(_boxesHolder.x, _boxesHolder.y);
 		}
 		
 		/**
 		 * Called when mouse is pressed.
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
-			if(event.target != this) {
+			if(!_spacePressed && event.target != this) {
 				if (_boxesHolder.contains(event.target as DisplayObject)) {
 					//Go up until we find a box (or the stage..)
 					var target:DisplayObject = event.target as DisplayObject;
@@ -381,6 +390,11 @@ package com.twinoid.kube.quest.views {
 						_dragItemOffset.x = _draggedItem.mouseX;
 						_dragItemOffset.y = _draggedItem.mouseY;
 						_boxesHolder.addChild(target);//Bring it to front
+						//Prevents from scrolling n borders if we actually start to frag the
+						//item on the drag_gap zone.
+						_startDragInGap = (stage.mouseX < DRAG_GAP || stage.mouseY < DRAG_GAP
+											|| stage.mouseX > stage.stageWidth - DRAG_GAP
+											|| stage.mouseY > stage.stageHeight - DRAG_GAP);
 					}
 				}
 				return;
@@ -392,6 +406,8 @@ package com.twinoid.kube.quest.views {
 			_mouseOffset.y = _prevMousePos.x = stage.mouseY;
 			_stagePressed = true;
 			_draggingBoard = false;
+			
+			if(!_spacePressed) _comments.startDraw();
 		}
 		
 		/**
@@ -399,6 +415,7 @@ package com.twinoid.kube.quest.views {
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
 			_stagePressed = false;
+			_comments.stopDraw();
 			
 			//If we were dragging the board, throw it.
 			if(_draggingBoard) {
@@ -406,7 +423,7 @@ package com.twinoid.kube.quest.views {
 				_endY += (stage.mouseY - _prevMousePos.y) * 5;
 				_draggingBoard = false;
 			
-			}else if(_draggedItem == null && Point.distance(_mouseOffset, _prevMousePos) < 2){
+			}else if(_draggedItem == null && Point.distance(_mouseOffset, _prevMousePos) < 2 && !event.ctrlKey){
 				//If we weren't dragging the board, create a new item
 				var size:int = BackgroundView.CELL_SIZE;
 				var px:Number = Math.round((_boxesHolder.mouseX - _tempBox.width * .5) / size) * size;
@@ -418,7 +435,7 @@ package com.twinoid.kube.quest.views {
 			//If a link has just been created correctly, try to create the link
 			var success:Boolean = true;
 			if (_tempLink.endEntry != null) {
-				success = _tempLink.endEntry.data.addDependency(_tempLink.startEntry.data);
+				success = _tempLink.endEntry.data.addDependency(_tempLink.startEntry.data, 0);
 				if(!success) {
 					_tempLink.showError();
 				} else {

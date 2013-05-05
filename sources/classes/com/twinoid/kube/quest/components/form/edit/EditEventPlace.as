@@ -23,6 +23,7 @@ package com.twinoid.kube.quest.components.form.edit {
 	 * @date 3 févr. 2013;
 	 */
 	public class EditEventPlace extends AbstractEditZone {
+		
 		private var _zone:Sprite;
 		private var _kube:Sprite;
 		private var _width:int;
