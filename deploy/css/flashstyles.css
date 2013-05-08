@@ -7,17 +7,25 @@
 .tooltipContentBig { font-family:Verdana; font-size:17; color:#ffffff; }
 .tooltipContentWarn { font-family:Verdana; font-weight:bold; font-size:10; color:#aa0000; }
 
-.menu-title { font-family:Verdana; font-weight:bold; font-size:16; color:#ffffff; text-align:center; }
+.menu-title { font-family:Verdana; font-weight:bold; font-size:16; color:#ffffff; text-align:center; flash-charcase:upper; }
 .menu-label { font-family:Verdana; font-size:14; color:#ffffff; }
 .loader-label { font-family:Verdana; font-size:8; color:#ffffff; text-align:center; flash-charcase:upper; }
 
 .input { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#265367; }
 .inputDefault { font-family:Verdana; font-size:12; font-weight:normal; font-style:italic; color:#265367; }
 
+.input-menu { font-family:Verdana; font-size:12; font-style:normal; color:#ffffff; }
+.textarea { font-family:Verdana; font-size:12; font-style:normal; color:#ffffff; }
+
 .button { font-family:Verdana; font-size:12; font-weight:bold; color:#265367; flash-alpha:1; }
 .button_over { font-family:Verdana; font-size:12; font-weight:bold; color:#36748D; }
 .button_down { font-family:Verdana; font-size:12; font-weight:bold; color:#234B5C; }
 .button_disabled { font-family:Verdana; font-size:12; font-weight:bold; color:#234B5C; flash-alpha:.4; }
+
+.buttonBig { font-family:Verdana; font-size:16; font-weight:bold; color:#ffffff; flash-alpha:1; }
+.buttonBig_over { font-family:Verdana; font-size:16; font-weight:bold; color:#ffffff; }
+.buttonBig_down { font-family:Verdana; font-size:16; font-weight:bold; color:#ffffff; }
+.buttonBig_disabled { font-family:Verdana; font-size:16; font-weight:bold; color:#ffffff; flash-alpha:.4; }
 
 .comboboxButtonItem { font-family:Verdana; font-size:20; font-weight:bold; color:#265367; flash-alpha:1; }
 .comboboxButtonItem_over { font-family:Verdana; font-size:20; font-weight:bold; color:#36748D; }
