@@ -17,6 +17,12 @@ a {
 	text-decoration:none;
 }
 
+img {
+	float:left;
+	margin-right:20px;
+	margin-left:10px;
+}
+
 .copyLink:before {
 	background-image:url(../img/icon_copy.gif);
 	background-repeat:no-repeat;
