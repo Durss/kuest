@@ -49,7 +49,7 @@
 		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible<br />qu'à certains moments précis.]]></label>
 		
 		<label code="menu-file"><![CDATA[Menu principal]]></label>
-		<label code="menu-file-new"><![CDATA[Nouvelle quête]]></label>
+		<label code="menu-file-new"><![CDATA[Remise à zéro]]></label>
 		<label code="menu-file-new-name"><![CDATA[Nom de votre quête :]]></label>
 		<label code="menu-file-new-description"><![CDATA[Description :]]></label>
 		<label code="menu-file-new-submit"><![CDATA[Créer]]></label>
@@ -59,12 +59,13 @@
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-load-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir charger cette quête ?]]></label>
 		<label code="menu-file-new-prompt-title"><![CDATA[Attention]]></label>
-		<label code="menu-file-new-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir créer une nouvelle quête ?]]></label>
+		<label code="menu-file-new-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir remettre à zéro la quête en cours ?]]></label>
 		<label code="menu-file-save"><![CDATA[Enregistrer]]></label>
 		<label code="menu-file-publish"><![CDATA[Publier]]></label>
 		<label code="menu-file-params"><![CDATA[Paramètres]]></label>
 		<label code="menu-file-saveNewTT"><![CDATA[Enregistrer en tant<br />que nouvelle quête.]]></label>
 		<label code="menu-file-publishTT"><![CDATA[Publie votre quête afin de la<br />rendre jouable par n'importe qui.]]></label>
+		<label code="menu-file-clearTT"><![CDATA[Efface toutes les données de la quête courrante.]]></label>
 		
 		<label code="menu-credits"><![CDATA[Credits]]></label>
 		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.

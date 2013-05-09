@@ -18,6 +18,8 @@
 	}
 	
 	$dir = "../../kuests/saves/";
+	if (isset($_GET["id"])) $_POST["id"] = $_GET["id"];
+	
 	if (isset($_POST["id"])) {
 		//Check for loading rights
 		$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
@@ -41,7 +43,11 @@
 		}
 		
 		//Output file's content
-		echo file_get_contents($dir.$res["dataFile"].".kst");
+		$url = $dir.$res["dataFile"].".kst";
+		//If don't send the content-length header, flash cannot get the bytesLoaded and bytesTotal during loading
+		header('Content-type: application/octet-stream');
+		header("Content-length: ".filesize($url));
+		echo file_get_contents($url);
 		
 	}else{
 		Out::printOut(false, '', 'POST data missing', 'INCOMPLETE_FORM');
