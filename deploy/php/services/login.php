@@ -84,7 +84,7 @@
 		$additionnals .= "\t<name>".$_SESSION["name"]."</name>\n";
 		$additionnals .= "\t<pubkey>".$_SESSION["pubkey"]."</pubkey>\n";
 		
-		$sql = "SELECT * FROM kuests WHERE uid=:uid";
+		$sql = "SELECT * FROM kuests WHERE uid=:uid ORDER BY id DESC";
 		$params = array(':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
