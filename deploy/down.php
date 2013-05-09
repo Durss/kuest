@@ -1,3 +1,20 @@
+<?php
+	session_start();
+	if(isset($_SESSION["lang"])) 
+		$lang = $_SESSION["lang"];
+	else
+		$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+	
+	$title = array();
+	$title["fr"] = "Erreur serveur";
+	$title["en"] = "Server error";
+	
+	$content = array();
+	$content["fr"] = "Muxxu est actuellement indisponible rendant cette application hors service.<br /><br />Essayez à nouveau un peu plus tard.<br /><br /><i>Désolé pour la gêne occasionnée.</i>";
+	$content["en"] = "Muxxu is unavailable for the moment, which makes this application unusable.<br /><br />Please try again later.<br /><br /><i>Sorry for the inconvenience.</i>";
+	if(!$content[ $lang ])
+		$lang = "en";
+?>
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
@@ -13,8 +30,9 @@
 	</head>
 	<body>
 		<div class="window">
-			<strong>Erreur :</strong>
-			<p><img src="img/down.png" alt="Error" />Muxxu est actuellement indisponible rendant cette application innutilisable pour l'instant.<br /><br />Essayez à nouveau un peu plus tard.<br /><br /><i>Muxxu is down, come back later.</i></p>
+			<div class="title"><?php echo $title[$lang]; ?></div>
+			<div class="content" style="min-height:140px;"><img src="img/down.png" alt="Error" height="137" /><?php echo $content[$lang]; ?></div>
+			<div class="bottom"></div>
 		</div>
 	</body>
 </html>

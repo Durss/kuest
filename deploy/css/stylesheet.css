@@ -14,13 +14,12 @@ body {
 
 a {
 	color: #cc0000;
+	font-weight:bold;
 	text-decoration:none;
 }
-
-img {
-	float:left;
-	margin-right:20px;
-	margin-left:10px;
+a:hover {
+	color: #cc0000;
+	text-decoration:underline;
 }
 
 .copyLink:before {
@@ -58,33 +57,85 @@ img {
 	content:'';
 }
 
+button {
+	font-size:16px;
+	font-weight:bold; 
+	color:#265367;
+	cursor:pointer;
+	border-style:solid;
+	border-width:1px;
+	
+	background-color:#47a9d1;
+	
+	border-top-color:#8eceea;
+	border-right-color:#8eceea;
+	border-bottom-color:#265367;
+	border-left-color:#265367;
+
+	padding:10px;
+	padding-right:20px;
+}
+button:hover {
+	color:#36748D;
+	background-color:#5BB3D7;
+}
+button:active {
+	color:#234B5C;
+	background-color:#3199C6;
+}
+
 .window {
-	background-image:url(../img/windowBackground.png);
-	background-repeat:no-repeat;
-	width:370px;
-	height:170px;
-	padding-left:35px;
-	padding-top:25px;
-	padding-right : 35px;
-	padding-bottom: 40px;
+	width:440px;
 	margin-left:auto;
 	margin-right:auto;
 	margin-top:100px;
 }
 
-p {
-	margin-top:10px;
-}
-
-.window strong {
+.window .title {
+	background-image:url(../img/window-top.png);
+	background-repeat:no-repeat;
+	width:375px;
+	height:29px;
+	padding-left:35px;
+	padding-right:30px;
+	padding-top:25px;
+	
 	font-weight:bold;
 	font-size:16px;
-	padding-left:10px;
 	text-transform:uppercase;
 	
 	text-shadow: -2px 2px 0px #3083A5;
 	filter:progid:DXImageTransform.Microsoft.Shadow(color='#3083A5', Direction=45, Strength=2);
 	zoom: 1;
+}
+
+.window .content {
+	margin:0px;	
+	background-image:url(../img/window-middle.png);
+	background-repeat:repeat-y;
+	width:375px;
+	padding-left:35px;
+	padding-right:30px;
+	padding-top:0px;
+	word-wrap:break-word;
+}
+
+.window .content strong {
+	font-size:17px;
+	text-decoration:underline;
+}
+
+.window .bottom {
+	background-image:url(../img/window-bottom.png);
+	background-repeat:no-repeat;
+	width:440px;
+	height:33px;
+}
+
+.window img {
+	float:left;
+	margin-right:20px;
+	margin-left:10px;
 }
 
 .window h1 {
@@ -99,6 +150,7 @@ p {
 }
 
 .table {
+	margin-top:10px;
 	display:table;
 	width:100%;
 	border-collapse: separate;
@@ -129,4 +181,35 @@ p {
 	display:table-cell;
 	text-align:center;
 	background-color:#B7DBEA;
+}
+
+.description {
+	overflow:auto;
+	width:90%;
+	max-height:200px;
+	padding:5px;
+	margin-left:10px;
+	margin-top:0px;
+	border-style:dashed;
+	border-width:1px;
+	background-color:#3094BE;
+	border-color:#ffffff;
+	border-top-width:0px;
+	
+	transition: all .25s ease-in-out;
+	-webkit-transition: all .25s ease-in-out; /* Safari */
+}
+.collapsed {
+	overflow:hidden;
+	max-height:0px;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+
+.questID {
+	font-size:26px;
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
+	background-color:#226A88;
 }

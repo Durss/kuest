@@ -18,7 +18,6 @@
 		$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_GET['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_GET["pubkey"]);
 		$xml = @simplexml_load_file($url);
 		if ($xml !== false) {
-			preg_match('/name="(.*?)"/i', $xml, $matches, PREG_OFFSET_CAPTURE); //*? = quantificateur non gourmand
 			if ($xml->getName() != "error") {
 				$pseudo	= (string) $xml->attributes()->name;
 				$lang = (string)$xml->attributes()->lang;
