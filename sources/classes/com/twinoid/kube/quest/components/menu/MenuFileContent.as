@@ -1,11 +1,13 @@
 package com.twinoid.kube.quest.components.menu {
 	import gs.TweenLite;
-	import com.twinoid.kube.quest.components.menu.file.FileForm;
+
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.twinoid.kube.quest.components.LoaderSpinning;
+	import com.twinoid.kube.quest.components.menu.file.FileForm;
 	import com.twinoid.kube.quest.components.menu.file.LoginForm;
 	import com.twinoid.kube.quest.events.ViewEvent;
+	import com.twinoid.kube.quest.model.Model;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -50,6 +52,13 @@ package com.twinoid.kube.quest.components.menu {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Called on model's update
+		 */
+		override public function update(model:Model):void {
+			_loginForm.populate(model.uid, model.pubkey);
+			_fileForm.update(model);
+		}
 
 
 		
@@ -70,6 +79,7 @@ package com.twinoid.kube.quest.components.menu {
 			_fileForm = new FileForm(_width * .9);
 			
 			_formHolder.addChild(_loginForm);
+			_fileForm.addEventListener(Event.RESIZE, computePositions);
 			
 			computePositions();
 		}

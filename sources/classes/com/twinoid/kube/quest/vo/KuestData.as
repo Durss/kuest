@@ -103,18 +103,11 @@ package com.twinoid.kube.quest.vo {
 		 * Sets the nodes
 		 */
 		public function deserialize(data:ByteArray):void {
-			if(_characters != null) {
-				var i:int, len:int;
-				len = _characters.length;
-				for(i = 0; i < len; ++i) _characters[i].kill();
-				len = _objects.length;
-				for(i = 0; i < len; ++i) _objects[i].kill();
-			}
+			reset();
 			_characters = data.readObject();
 			_objects = data.readObject();
 			_nodes = data.readObject();
 			restoreDependencies(_nodes, _characters, _objects);
-			_guid ++;
 		}
 		
 		/**
@@ -178,6 +171,24 @@ package com.twinoid.kube.quest.vo {
 		public function addObject():void {
 			_objects.push(new ObjectItemData());
 		}
+		
+		/**
+		 * Resets all the quest.
+		 * Removes everything !
+		 */
+		public function reset():void {
+			if(_characters != null) {
+				var i:int, len:int;
+				len = _characters.length;
+				for(i = 0; i < len; ++i) _characters[i].kill();
+				len = _objects.length;
+				for(i = 0; i < len; ++i) _objects[i].kill();
+			}
+			_nodes = new Vector.<KuestEvent>();
+			setDefaults();
+			_lastItemAdded = null;
+			_guid ++;
+		}
 
 
 		
@@ -190,7 +201,13 @@ package com.twinoid.kube.quest.vo {
 		 */
 		private function initialize():void {
 			_nodes = new Vector.<KuestEvent>();
-			
+			setDefaults();
+		}
+		
+		/**
+		 * Creates the default chars and objects
+		 */
+		private function setDefaults():void {
 			var names:Array = Label.getLabel("menu-chars-names").split(",");
 			var bmp:Bitmap = new _charsBmp() as Bitmap;
 			var src:BitmapData = bmp.bitmapData;

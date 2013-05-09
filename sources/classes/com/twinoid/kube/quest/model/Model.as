@@ -1,33 +1,39 @@
 package com.twinoid.kube.quest.model {
-	import com.twinoid.kube.quest.vo.ActionChoices;
-	import com.twinoid.kube.quest.vo.Dependency;
 	import by.blooddy.crypto.SHA1;
 
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
+	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
-	import com.nurun.utils.commands.BrowseForFileCmd;
+	import com.nurun.utils.crypto.XOR;
+	import com.twinoid.kube.quest.cmd.LoadCmd;
 	import com.twinoid.kube.quest.cmd.LoginCmd;
+	import com.twinoid.kube.quest.cmd.SaveCmd;
+	import com.twinoid.kube.quest.error.KuestException;
 	import com.twinoid.kube.quest.events.ViewEvent;
+	import com.twinoid.kube.quest.utils.prompt;
+	import com.twinoid.kube.quest.vo.ActionChoices;
 	import com.twinoid.kube.quest.vo.ActionDate;
 	import com.twinoid.kube.quest.vo.ActionPlace;
 	import com.twinoid.kube.quest.vo.ActionType;
 	import com.twinoid.kube.quest.vo.CharItemData;
+	import com.twinoid.kube.quest.vo.Dependency;
 	import com.twinoid.kube.quest.vo.IItemData;
 	import com.twinoid.kube.quest.vo.KuestData;
 	import com.twinoid.kube.quest.vo.KuestEvent;
+	import com.twinoid.kube.quest.vo.KuestInfo;
 	import com.twinoid.kube.quest.vo.ObjectItemData;
 	import com.twinoid.kube.quest.vo.SerializableBitmapData;
+	import com.twinoid.kube.quest.vo.Version;
 
 	import flash.display.GraphicsPath;
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.net.FileReference;
 	import flash.net.LocalConnection;
 	import flash.net.SharedObject;
 	import flash.net.registerClassAlias;
@@ -53,8 +59,6 @@ package com.twinoid.kube.quest.model {
 		private var _connectTimeout:uint;
 		private var _kuestData:KuestData;
 		private var _currentBoxToEdit:KuestEvent;
-//		private var _objects:Vector.<ObjectItemData>;
-//		private var _characters:Vector.<CharItemData>;
 		private var _connectedToGame:Boolean;
 		private var _isConnected:Boolean;
 		private var _loginCmd:LoginCmd;
@@ -66,6 +70,10 @@ package com.twinoid.kube.quest.model {
 		private var _objectsUpdate:Boolean;
 		private var _comments:Vector.<GraphicsPath>;
 		private var _commentsViewports:Vector.<Rectangle>;
+		private var _saveCmd:SaveCmd;
+		private var _currentKuestId:String;
+		private var _kuests:Vector.<KuestInfo>;
+		private var _loadCmd:LoadCmd;
 		
 		
 		
@@ -86,6 +94,16 @@ package com.twinoid.kube.quest.model {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the user's ID
+		 */
+		public function get uid():String { return _uid; }
+
+		/**
+		 * Gets the user's pubkey
+		 */
+		public function get pubkey():String { return _pubkey; }
+		
 		/**
 		 * Gets the shared object's reference
 		 */
@@ -140,6 +158,16 @@ package com.twinoid.kube.quest.model {
 		 * Gets the comments drawing viewports.
 		 */
 		public function get commentsViewports():Vector.<Rectangle> { return _commentsViewports; }
+		
+		/**
+		 * Gets the currently loaded kuest's ID
+		 */
+		public function get currentKuestId():String { return _currentKuestId; }
+		
+		/**
+		 * Gets the kuests list.
+		 */
+		public function get kuests():Vector.<KuestInfo> { return _kuests; }
 		
 
 
@@ -250,7 +278,7 @@ package com.twinoid.kube.quest.model {
 		/**
 		 * Saves the current quest
 		 */
-		public function save(optimise:Boolean = false):void {
+		public function save(title:String, description:String, callback:Function, optimise:Boolean = false):void {
 			var chars:Vector.<CharItemData> = new Vector.<CharItemData>();
 			var objs:Vector.<ObjectItemData> = new Vector.<ObjectItemData>();
 			
@@ -284,25 +312,35 @@ package com.twinoid.kube.quest.model {
 				chars = _kuestData.characters;
 			}
 			
-			//TODO save to the server
 			var bytes:ByteArray = new ByteArray();
+			bytes.writeInt(Version.CURRENT_FILE_VERSION);
 			bytes.writeObject(chars);
 			bytes.writeObject(objs);
 			bytes.writeObject(_kuestData.nodes);
-			bytes.writeObject(_comments);
-			bytes.writeObject(_commentsViewports);
+			bytes.writeObject(_comments);//Should be removed when file has to be optimized but it would actually be a quite useless weight gain
+			bytes.writeObject(_commentsViewports);//Should be removed when file has to be optimized but it would actually be a quite useless weight gain
 			bytes.deflate();
-			new FileReference().save(bytes, "kuest.kst");
+			XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Shitty XOR key to loose hackers
+			
+			_saveCmd.populate(title, description, bytes, callback, title == null && description == null? _currentKuestId : "", optimise);
+			_saveCmd.execute();
 		}
 		
 		/**
-		 * Saves the current quest
+		 * Loads a quest
 		 */
-		public function load():void {
-			//TODO load from the server
-			var cmd:BrowseForFileCmd = new BrowseForFileCmd("Kuest file", "*.kst");
-			cmd.addEventListener(CommandEvent.COMPLETE, loadKuestCompleteHandler);
-			cmd.execute();
+		public function load(kuest:KuestInfo, callback:Function):void {
+			if(kuest.id == _currentKuestId) {
+				callback(true);
+				return;
+			}
+			
+			_loadCmd.populate(kuest.id, callback);
+			if(_kuestData.nodes.length > 0) {
+				prompt("menu-file-load-prompt-title", "menu-file-load-prompt-content", _loadCmd.execute, "loadLooseData");
+			}else{
+				_loadCmd.execute();
+			}
 		}
 		
 		/**
@@ -311,6 +349,17 @@ package com.twinoid.kube.quest.model {
 		public function saveComments(drawingPaths:Vector.<GraphicsPath>, viewports:Vector.<Rectangle>):void {
 			_commentsViewports = viewports;
 			_comments = drawingPaths;
+		}
+		
+		/**
+		 * Clears the current quest
+		 */
+		public function clear():void {
+			if(_kuestData.nodes.length > 0) {
+				prompt("menu-file-new-prompt-title", "menu-file-new-prompt-content", reset, "newLooseData");
+			}else{
+				reset();
+			}
 		}
 
 
@@ -332,7 +381,17 @@ package com.twinoid.kube.quest.model {
 			_loginCmd.addEventListener(CommandEvent.COMPLETE, loginCompleteHandler);
 			_loginCmd.addEventListener(CommandEvent.ERROR, loginErrorHandler);
 			
+			_saveCmd = new SaveCmd();
+			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveCompleteHandler);
+			_saveCmd.addEventListener(CommandEvent.ERROR, saveErrorHandler);
+			
+			_loadCmd = new LoadCmd();
+			_loadCmd.addEventListener(CommandEvent.COMPLETE, loadKuestCompleteHandler);
+			_loadCmd.addEventListener(CommandEvent.ERROR, loadKuestErrorHandler);
+			
 			if(_so.data["uid"] != null) {
+				_uid = _so.data["uid"];
+				_pubkey = _so.data["pubkey"];
 				Config.addVariable("uid", _so.data["uid"]);
 				Config.addVariable("pubkey", _so.data["pubkey"]);
 			}
@@ -366,6 +425,19 @@ package com.twinoid.kube.quest.model {
 		 */
 		private function update():void {
 			dispatchEvent(new ModelEvent(ModelEvent.UPDATE, this));
+		}
+		
+		/**
+		 * Resets the quest
+		 */
+		private function reset():void {
+			_comments = null;
+			_currentKuestId = null;
+			_commentsViewports = null;
+			_kuestData.reset();
+			_charactersUpdate = _objectsUpdate = true;
+			update();
+			_charactersUpdate = _objectsUpdate = false;
 		}
 
 		
@@ -460,6 +532,33 @@ package com.twinoid.kube.quest.model {
 		
 		
 		
+		//__________________________________________________________ SAVE HANDLERS
+		
+		/**
+		 * Called when saving completes
+		 */
+		private function saveCompleteHandler(event:CommandEvent):void {
+			_currentKuestId = event.data["id"];
+			//If title and description are null, that's because we updated an existing kuest.
+			if(_saveCmd.title != null && _saveCmd.description != null) {
+				_kuests.push(new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestId));
+			}
+			_saveCmd.callback(true);
+			update();
+		}
+		
+		/**
+		 * Called if saving fails
+		 */
+		private function saveErrorHandler(event:CommandEvent):void {
+			_saveCmd.callback(false, event.data);
+			throw new KuestException(Label.getLabel("exception-"+event.data as String), event.data as String);
+		}
+
+		
+		
+		
+		
 		//__________________________________________________________ LOGIN HANDLERS
 		
 		/**
@@ -469,6 +568,7 @@ package com.twinoid.kube.quest.model {
 			_uid = event.data["uid"];
 			_name = event.data["name"];
 			_pubkey = event.data["pubkey"];
+			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
 			
 			_so.data["uid"] = _uid;
 			_so.data["pubkey"] = _pubkey;
@@ -481,7 +581,49 @@ package com.twinoid.kube.quest.model {
 		 * Called if login operation fails
 		 */
 		private function loginErrorHandler(event:CommandEvent):void {
-			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_FAIL, event.data));
+			var errorCode:String = event.data as String;
+			if(errorCode == "INVALID_IDS") {
+				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_FAIL, event.data));
+			}else{
+				throw new KuestException(Label.getLabel("exception-"+errorCode), errorCode);
+			}
+		}
+
+		
+		
+		
+		
+		//__________________________________________________________ LOADING HANDLERS
+		
+		/**
+		 * Called when a map's loading completes
+		 */
+		private function loadKuestCompleteHandler(event:CommandEvent):void {
+			var bytes:ByteArray = event.data as ByteArray;
+			bytes.position = 0;
+			XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Descrypt data
+			bytes.inflate();
+			bytes.position = 0;
+			var fileVersion:int = bytes.readInt();
+			
+			_kuestData.deserialize(bytes);
+			if(bytes.position < bytes.length) _comments = bytes.readObject();
+			if(bytes.position < bytes.length) _commentsViewports = bytes.readObject();
+			
+			_currentKuestId = _loadCmd.id;
+			_charactersUpdate = _objectsUpdate = true;
+			_loadCmd.callback(true);
+			update();
+			_charactersUpdate = _objectsUpdate = false;
+		}
+		
+		/**
+		 * Called if loading fails
+		 */
+		private function loadKuestErrorHandler(event:CommandEvent):void {
+			_loadCmd.callback(false, errorCode);
+			var errorCode:String = event.data as String;
+			throw new KuestException(Label.getLabel("exception-"+errorCode), errorCode);
 		}
 
 		
@@ -548,21 +690,6 @@ package com.twinoid.kube.quest.model {
 				_connectTimeout = setTimeout(attemptToConnect, 500);
 				break;
 			}
-		}
-		
-		/**
-		 * Called when a map's loading completes
-		 */
-		private function loadKuestCompleteHandler(event:CommandEvent):void {
-			var bytes:ByteArray = event.data as ByteArray;
-			bytes.inflate();
-			_kuestData.deserialize(bytes);
-			if(bytes.position < bytes.length) _comments = bytes.readObject();
-			if(bytes.position < bytes.length) _commentsViewports = bytes.readObject();
-			
-			_charactersUpdate = _objectsUpdate = true;
-			update();
-			_charactersUpdate = _objectsUpdate = false;
 		}
 		
 	}

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest {
+	import com.twinoid.kube.quest.views.ExceptionView;
 	import com.twinoid.kube.quest.views.TutorialView;
 	import com.twinoid.kube.quest.views.PromptWindowView;
 	import gs.plugins.RemoveChildPlugin;
@@ -95,8 +96,10 @@ package com.twinoid.kube.quest {
 			addChild(new TutorialView());
 			addChild(new PromptWindowView());
 			addChild(new ToolTipView());
-			addChild(new BoxDebugView()).addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);//Wait for the views to be added to stage, not this view
+			addChild(new BoxDebugView());
+			addChild(new ExceptionView());
 //			addChild(new Stats());
+			getChildAt(numChildren - 1).addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);//Wait for the views to be added to stage, not this view
 		}
 		
 		/**

@@ -32,7 +32,7 @@ package com.twinoid.kube.quest.components {
 			filters = [new DropShadowFilter(0,0,0,.4,5,5,2,2)];
 			alpha = 0;
 			visible = false;
-			_spin = addChild(new SpinGraphic()) as SpinGraphic;
+			_spin = new SpinGraphic();
 			_label = new CssTextField("loader-label");
 			_spin.scaleX = _spin.scaleY = 1.5;
 			_width = _spin.width;
@@ -65,6 +65,7 @@ package com.twinoid.kube.quest.components {
 		}
 
 		public function open(label:String = null):void {
+			addChild(_spin);
 			if(label != null) {
 				_label.text = label;
 				addChild(_label);
@@ -102,6 +103,7 @@ package com.twinoid.kube.quest.components {
 		}
 
 		private function killListener():void {
+			if(contains(_spin)) removeChild(_spin);
 			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 		

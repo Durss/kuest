@@ -18,12 +18,12 @@
 	//##########################################
 	//##########################################
 	//##########################################
-	$additionnals = "";
+	/*$additionnals = "";
 	$additionnals .= "<uid>89</uid>\n";
 	$additionnals .= "\t<name>Durss</name>\n";
 	$additionnals .= "\t<pubkey>xxxx</pubkey>\n";
 	Out::printOut(true, $additionnals);
-	die;
+	die;*/
 	//##########################################
 	//##########################################
 	//##########################################
@@ -87,13 +87,17 @@
 		$sql = "SELECT * FROM kuests WHERE uid=:uid";
 		$params = array(':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
+		if (!$req->execute($params)) {
+			Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
+			die;
+		}
 		$res = $req->fetchAll();
 		$additionnals .= "\t<kuests>\n";
 		for ($i = 0; $i < count($res); $i++) {
 			$additionnals .= "\t\t<k id='".$res[$i]['id']."'>\n";
-			$additionnals .= "\t\t\t<n><![CDATA[".$res[$i]['name']."]]></n>\n";
+			$additionnals .= "\t\t\t<t><![CDATA[".$res[$i]['name']."]]></t>\n";
 			$additionnals .= "\t\t\t<d><![CDATA[".$res[$i]['description']."]]></d>\n";
-			$additionnals .= "\t\t<\k>\n";
+			$additionnals .= "\t\t</k>\n";
 		}
 		$additionnals .= "\t</kuests>\n";
 			
