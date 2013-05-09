@@ -39,18 +39,18 @@
 	if (isset($_POST["pubkey"], $_POST["uid"])) {
 		if($_SESSION["uid"] != $_POST["uid"] || $_SESSION["pubkey"] != $_POST["pubkey"]) {
 			$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_POST['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_POST["pubkey"]);
-			$xml = @file_get_contents($url);
-			preg_match('/name="(.*?)"/', $xml, $matches); //*? = quantificateur non gourmand
+			$xml = @simplexml_load_file($url);
 			
 			if ($xml === false) {
 				Out::printOut(false, '', 'Invalid UID and/or PUBKEY', 'API_ERROR');
 				die;
 			}
 			
-			if (strpos($xml, "<error>") === false && count($matches) > 1) {
+			if ($xml->getName() != "error") {
 				$_SESSION["uid"]	= $_POST["uid"];
-				$_SESSION["name"]	= $matches[1];
 				$_SESSION["pubkey"]	= $_POST["pubkey"];
+				$_SESSION["name"]	= (string) $xml->attributes()->name;
+				$_SESSION["lang"]	= (string)$xml->attributes()->lang;
 			}else {
 				Out::printOut(false, '', 'Invalid UID and/or PUBKEY', 'INVALID_IDS');
 				die;
@@ -83,6 +83,7 @@
 		$additionnals .= "<uid>".$_SESSION["uid"]."</uid>\n";
 		$additionnals .= "\t<name>".$_SESSION["name"]."</name>\n";
 		$additionnals .= "\t<pubkey>".$_SESSION["pubkey"]."</pubkey>\n";
+		$additionnals .= "\t<lang>".$_SESSION["lang"]."</lang>\n";
 		
 		$sql = "SELECT * FROM kuests WHERE uid=:uid ORDER BY id DESC";
 		$params = array(':uid' => $_SESSION["uid"]);
