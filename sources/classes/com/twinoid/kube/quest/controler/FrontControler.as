@@ -1,12 +1,13 @@
 package com.twinoid.kube.quest.controler {
-	import flash.geom.Rectangle;
 	import com.twinoid.kube.quest.model.Model;
 	import com.twinoid.kube.quest.vo.CharItemData;
 	import com.twinoid.kube.quest.vo.KuestEvent;
+	import com.twinoid.kube.quest.vo.KuestInfo;
 	import com.twinoid.kube.quest.vo.ObjectItemData;
 
 	import flash.display.GraphicsPath;
 	import flash.errors.IllegalOperationError;
+	import flash.geom.Rectangle;
 
 
 	
@@ -126,15 +127,15 @@ package com.twinoid.kube.quest.controler {
 		/**
 		 * Saves the current quest
 		 */
-		public function save():void {
-			_model.save();
+		public function save(title:String, description:String, callback:Function, optimise:Boolean = false):void {
+			_model.save(title, description, callback, optimise);
 		}
 		
 		/**
 		 * Loads a quest
 		 */
-		public function load():void {
-			_model.load();
+		public function load(kuest:KuestInfo, callback:Function):void {
+			_model.load(kuest, callback);
 		}
 		
 		/**
@@ -142,6 +143,13 @@ package com.twinoid.kube.quest.controler {
 		 */
 		public function saveComments(drawingPaths:Vector.<GraphicsPath>, viewports:Vector.<Rectangle>):void {
 			_model.saveComments(drawingPaths, viewports);
+		}
+		
+		/**
+		 * Clears the current quest
+		 */
+		public function clear():void {
+			_model.clear();
 		}
 
 

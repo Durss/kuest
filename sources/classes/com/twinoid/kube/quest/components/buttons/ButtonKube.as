@@ -30,13 +30,18 @@ package com.twinoid.kube.quest.components.buttons {
 		/**
 		 * Creates an instance of <code>KBButton</code>.
 		 */
-		public function ButtonKube(label:String, icon:DisplayObject = null) {
-			super(label, "button", new ButtonSkin(), icon);
+		public function ButtonKube(label:String, icon:DisplayObject = null, big:Boolean = false) {
+			if(label == null) label = "";
+			super(label, big? "buttonBig" : "button", new ButtonSkin(), icon);
 			if(icon is Validable) Validable(icon).validate();
-			contentMargin = new Margin(icon==null? 2 : 5, 3, 5, 3);
+			if(big) {
+				contentMargin = new Margin(10, 10, 10, 10);
+			}else{
+				contentMargin = new Margin(icon==null? 2 : 5, 3, 5, 3);
+			}
 			textBoundsMode = false;
 			iconAlign = IconAlign.LEFT;
-			textAlign = icon == null? TextAlign.CENTER : TextAlign.LEFT;
+			textAlign = icon == null || big? TextAlign.CENTER : TextAlign.LEFT;
 			iconSpacing = label.length == 0? 0 : 5;
 			applyDefaultFrameVisitorNoTween(this, background);
 			_visitedIcons = new Dictionary();

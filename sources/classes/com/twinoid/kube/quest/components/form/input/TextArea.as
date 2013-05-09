@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.components.form.input {
+	import com.nurun.components.text.CssTextField;
 	import com.muxxu.kub3dit.graphics.InputSkin;
 	import com.nurun.components.scroll.ScrollPane;
 	import com.nurun.components.scroll.scrollable.ScrollableTextField;
@@ -27,7 +28,7 @@ package com.twinoid.kube.quest.components.form.input {
 		 * Creates an instance of <code>TextArea</code>.
 		 */
 
-		public function TextArea(css:String = "input", defaultLabel:String = "") {
+		public function TextArea(css:String = "textarea", defaultLabel:String = "") {
 			_defaultLabel = defaultLabel;
 			_tf = new ScrollableTextField("", css);
 			_tf.type = TextFieldType.INPUT;
@@ -50,6 +51,10 @@ package com.twinoid.kube.quest.components.form.input {
 		public function get text():String {
 			if(_tf.text == _defaultLabel) return "";
 			return _tf.text;
+		}
+		
+		public function get textfield():CssTextField {
+			return _tf;
 		}
 		
 		public function set text(value:String):void {

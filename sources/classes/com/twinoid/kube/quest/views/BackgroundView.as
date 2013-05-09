@@ -21,7 +21,7 @@ package com.twinoid.kube.quest.views {
 		private var _pattern:BitmapData;
 		private var _matrix:Matrix;
 		private var _default:Matrix;
-		private var _scale : Number;
+		private var _scale:Number;
 		
 		
 		
@@ -93,6 +93,7 @@ package com.twinoid.kube.quest.views {
 			_pattern = new BitmapData(CELL_SIZE, CELL_SIZE, false, 0xffBBDDEC);
 			_pattern.draw(src);
 			
+			_scale = 1;
 			_matrix = new Matrix();
 //			_matrix.rotate(Math.PI*.25);
 			_default = _matrix.clone();

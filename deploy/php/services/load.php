@@ -12,17 +12,21 @@
 	}
 	
 	//Not logged
-	if(!isset($_POST["uid"])) {
+	if(!isset($_SESSION["uid"])) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
 	
-	$dir = "../../kuest/";
+	$dir = "../../kuests/saves/";
 	if (isset($_POST["id"])) {
-		//Insert into DB
-		$sql = "SELECT uid FROM kuests WHERE id=:id";
+		//Check for loading rights
+		$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
 		$params = array(':id' => $_POST["id"]);
 		$req = DBConnection::getLink()->prepare($sql);
+		if (!$req->execute($params)) {
+			Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
+			die;
+		}
 		$tot = $req->rowCount();
 		if ($tot == 0) {
 			Out::printOut(false, '', 'Kuest not found.', 'LOADING_KUEST_NOT_FOUND');
@@ -37,10 +41,10 @@
 		}
 		
 		//Output file's content
-		echo file_get_contents($dir.$_POST["id"].".kst");
+		echo file_get_contents($dir.$res["dataFile"].".kst");
 		
 	}else{
-		Out::printOut(false, '', 'Missing parameters.', 'MISSING_PARAMETERS');
+		Out::printOut(false, '', 'POST data missing', 'INCOMPLETE_FORM');
 	}
 	
 ?>

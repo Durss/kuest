@@ -29,7 +29,7 @@ package com.twinoid.kube.quest.utils {
 		function keyUpHandler(event:KeyboardEvent):void {
 			if(event.keyCode != Keyboard.ESCAPE) return;
 			
-			var f:InteractiveObject = DisplayObjectContainer(target).stage.focus;
+			var f:InteractiveObject = DisplayObjectContainer(target).stage == null? null : DisplayObjectContainer(target).stage.focus;
 			if(f == null) {
 				if(!target.isClosed && DisplayObject(target).hitTestPoint(DisplayObject(target).stage.mouseX, DisplayObject(target).stage.mouseY, true)) {
 					event.stopPropagation();

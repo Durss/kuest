@@ -56,15 +56,22 @@ package com.twinoid.kube.quest.components.menu.file {
 		 * Sets the error's ID.
 		 */
 		public function setErrorID(id:String):void {
-			if(id == "INVALID_IDS") {
-				_error.text = Label.getLabel("login-invalidIDS");
-				TweenLite.killTweensOf(_error);
-				
-				_error.alpha = 0;
-				TweenLite.to(_error, .25, {alpha:1});
-				TweenLite.to(_error, .25, {alpha:0, delay:2});
-				computePositions();
-			}
+			id;//avoid unused warnings from FDT
+			_error.text = Label.getLabel("login-invalidIDS");
+			TweenLite.killTweensOf(_error);
+			
+			_error.alpha = 0;
+			TweenLite.to(_error, .25, {alpha:1});
+			TweenLite.to(_error, .25, {alpha:0, delay:5});
+			computePositions();
+		}
+		
+		/**
+		 * Populates the inputs
+		 */
+		public function populate(uid:String, pubkey:String):void {
+			if(uid != null) _uid.text = uid;
+			if(pubkey != null) _pubkey.text = pubkey;
 		}
 
 

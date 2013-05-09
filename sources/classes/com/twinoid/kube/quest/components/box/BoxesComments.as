@@ -46,6 +46,7 @@ package com.twinoid.kube.quest.components.box {
 		private var _drawingData:Vector.<IGraphicsData>;
 		private var _chunksHolder:Sprite;
 		private var _rubberIcon:RubberCursorGraphic;
+		private var _drawingDataHit:Vector.<IGraphicsData>;
 		
 		
 		
@@ -153,6 +154,7 @@ package com.twinoid.kube.quest.components.box {
 		public function setScale(value:Number):void {
 			scaleX = scaleY = value;
 			GraphicsStroke(_drawingData[0]).thickness = 3 / value;
+			GraphicsStroke(_drawingDataHit[0]).thickness = 50 / value;
 			clipDrawings();
 		}
 		
@@ -164,6 +166,9 @@ package com.twinoid.kube.quest.components.box {
 			if(comments != null) {
 				_paths = comments;
 				_viewPorts = viewports;
+			}else{
+				_paths = new Vector.<GraphicsPath>();
+				_viewPorts = new Vector.<Rectangle>();
 			}
 			clipDrawings();
 		}
@@ -190,6 +195,11 @@ package com.twinoid.kube.quest.components.box {
 			var stroke:GraphicsStroke = new GraphicsStroke(3);
 			stroke.fill = new GraphicsSolidFill(0xffffff, 1);
 			_drawingData.push(stroke);
+			
+			_drawingDataHit = new Vector.<IGraphicsData>();
+			stroke = new GraphicsStroke(50);
+			stroke.fill = new GraphicsSolidFill(0xffffff, 0);
+			_drawingDataHit.push(stroke);
 			
 			_tmpDrawing		= addChild(new Shape()) as Shape;
 			_chunksHolder	= addChild(new Sprite()) as Sprite;
@@ -257,13 +267,20 @@ package com.twinoid.kube.quest.components.box {
 		private function keyUpHandler(event:KeyboardEvent):void {
 			if(event.keyCode == Keyboard.CONTROL || event.keyCode == Keyboard.ALTERNATE || event.keyCode == Keyboard.SHIFT) {
 				_eraseMode = false;
-				while(_chunksHolder.numChildren > 0) {
-					disposeItem(_chunksHolder.getChildAt(0) as Sprite);
-				}
+				clearSplittedGraphics();
 				_rubberIcon.visible = false;
 				_rubberIcon.stopDrag();
 				Mouse.show();
 				clipDrawings();
+			}
+		}
+		
+		/**
+		 * Clears the splitted graphics.
+		 */
+		private function clearSplittedGraphics():void {
+			while(_chunksHolder.numChildren > 0) {
+				disposeItem(_chunksHolder.getChildAt(0) as Sprite);
 			}
 		}
 		
@@ -279,9 +296,12 @@ package com.twinoid.kube.quest.components.box {
 			for(i = 0; i < len; ++i) {
 				if(viewPortVisible(_viewPorts[i])) {
 					_drawingData[1] = _paths[i];
+					_drawingDataHit[1] = _paths[i];
 					item = _chunksHolder.addChild(new Sprite()) as Sprite;
-					item.graphics.beginFill(0xff0000, 0);
-					item.graphics.drawRect(_viewPorts[i].x, _viewPorts[i].y, _viewPorts[i].width, _viewPorts[i].height);
+//					item.graphics.beginFill(0xff0000, 0);
+//					item.graphics.drawRect(_viewPorts[i].x, _viewPorts[i].y, _viewPorts[i].width, _viewPorts[i].height);
+//					item.graphics.endFill();
+					item.graphics.drawGraphicsData(_drawingDataHit);
 					item.graphics.drawGraphicsData(_drawingData);
 					item.buttonMode = true;
 					item.addEventListener(MouseEvent.CLICK, clickItemHandler);
@@ -303,6 +323,8 @@ package com.twinoid.kube.quest.components.box {
 			_viewPorts.splice(index, 1);
 			FrontControler.getInstance().saveComments(_paths, _viewPorts);
 			_lastDrawingTime = int.MIN_VALUE;
+			clearSplittedGraphics();
+			splitGraphics();
 		}
 		
 		/**

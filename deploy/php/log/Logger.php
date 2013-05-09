@@ -4,7 +4,6 @@
 	
 		private static $_instance = null;
 		private $_handler;
-		private $_content;
 		private $_filePath;
 	
 		private function __construct() {
@@ -13,11 +12,6 @@
 				$this->_handler = fopen($this->_filePath, "w");
 			}else{
 				$this->_handler = fopen($this->_filePath, "r+");
-			}
-			if (filesize($this->_filePath) == 0) {
-				$this->_content = "";
-			}else{
-				$this->_content = fread($this->_handler, filesize($this->_filePath));
 			}
 		}
 		
@@ -30,7 +24,7 @@
 		}
 		
 		public function log($str) {
-			file_put_contents($this->_filePath,  $this->_content."\r\n(".date('d-m-y H:i:s', time()).") ".$str);
+			file_put_contents($this->_filePath,  "\r\n(".date('d-m-y H:i:s', time()).") ".$str, FILE_APPEND);
 		}
 		
 		public function closeFile() {

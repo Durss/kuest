@@ -446,7 +446,7 @@ package com.twinoid.kube.quest.views {
 				_endY += (stage.mouseY - _prevMousePos.y) * 5;
 				_draggingBoard = false;
 			
-			}else if(_draggedItem == null && Point.distance(_mouseOffset, _prevMousePos) < 2 && !event.ctrlKey){
+			}else if(_draggedItem == null && Point.distance(_mouseOffset, _prevMousePos) < 2 && !event.ctrlKey && !_spacePressed){
 				//If we weren't dragging the board, create a new item
 				var size:int = BackgroundView.CELL_SIZE;
 				var px:Number = Math.round((_boxesHolder.mouseX - _tempBox.width * .5) / size) * size;

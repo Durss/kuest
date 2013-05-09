@@ -95,10 +95,10 @@ package com.twinoid.kube.quest.components.menu {
 		 * Resizes and replaces the elements.
 		 */
 		override protected function computePositions(event:Event = null):void {
-			_label.width = _width;
+			_label.width = _width - 15;
 			var items:Array = VectorUtils.toArray(_items);
 			items.push(_addItem);
-			PosUtils.hDistribute(items, _width, 5, 15);
+			PosUtils.hDistribute(items, _width - 15, 5, 15);
 			
 			_itemsHolder.y = Math.round(_label.height) + 15;
 			
