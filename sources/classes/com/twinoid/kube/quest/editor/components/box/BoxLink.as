@@ -250,6 +250,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when link is rolled over
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
+			if(event.ctrlKey) return;
 			_isOver = true;
 			update();
 		}
@@ -258,6 +259,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when link is rolled out
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
+			if(event.ctrlKey) return;
 			_isOver = false;
 			update();
 		}

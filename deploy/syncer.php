@@ -1,4 +1,7 @@
 <?php
+	header("Cache-Control: no-cache, must-revalidate");
+	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+	
 	require_once("php/db/DBConnection.php");
 	require_once("php/out/Out.php");
 	require_once("php/log/Logger.php");
@@ -51,7 +54,7 @@
 	}else{
 		$tot = $req->rowCount();
 		$res = $req->fetch();
-		$dir = "kuests/published/";
+		$dir = "./kuests/published/";
 		if ($tot == 0 || !file_exists($dir.$res['dataFile'].".kst")) {
 			$title = $notFoundTitle[ $lang ];
 			$description = $notFoundContent[ $lang ];
