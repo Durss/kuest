@@ -21,7 +21,7 @@ a:hover {
 }
 
 .copyLink:before {
-	background-image:url(../img/icon_copy.gif);
+	background-image:url(/kuest/img/icon_copy.gif);
 	background-repeat:no-repeat;
 	background-position:center;
 	padding-left:25px;
@@ -48,7 +48,7 @@ a:hover {
 }
 
 .submitted  h2:before {
-	background-image:url(../img/submit.png);
+	background-image:url(/kuest/img/submit.png);
 	background-repeat:no-repeat;
 	background-position:center;
 	padding-left:25px;
@@ -90,7 +90,7 @@ button:active {
 }
 
 .window .title {
-	background-image:url(../img/window-top.png);
+	background-image:url(/kuest/img/window-top.png);
 	background-repeat:no-repeat;
 	width:375px;
 	height:28px;
@@ -109,7 +109,7 @@ button:active {
 
 .window .content {
 	margin:0px;	
-	background-image:url(../img/window-middle.png);
+	background-image:url(/kuest/img/window-middle.png);
 	background-repeat:repeat-y;
 	width:375px;
 	padding-left:35px;
@@ -124,7 +124,7 @@ button:active {
 }
 
 .window .bottom {
-	background-image:url(../img/window-bottom.png);
+	background-image:url(/kuest/img/window-bottom.png);
 	background-repeat:no-repeat;
 	width:440px;
 	height:33px;
@@ -188,14 +188,14 @@ button:active {
 	margin:0px;
 }
 .collapser:before {
-	background-image:url(../img/arrow.png);
+	background-image:url(/kuest/img/arrow.png);
 	background-repeat:no-repeat;
 	background-position:center;
 	padding-left:20px;
 	content:'';
 }
 .collapserOpen:before {
-	background-image:url(../img/arrowDown.png);
+	background-image:url(/kuest/img/arrowDown.png);
 	background-repeat:no-repeat;
 	background-position:center;
 	padding-left:20px;
