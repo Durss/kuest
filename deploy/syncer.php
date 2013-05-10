@@ -17,28 +17,20 @@
 		$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	
 	$description = array();
-	$description["fr"] = "<strong>Description de la quête :</strong><br />";
-	$description["en"] = "<strong>Quest description :</strong><br />";
+	$description["fr"] = "<strong class='collapser collapserOpen'>Description de la quête :</strong>";
+	$description["en"] = "<strong class='collapser collapserOpen'>Quest description :</strong>";
 	
 	$load = array();
-	$load["fr"] = "Charger cette quête";
-	$load["en"] = "Load this quest";
+	$load["fr"] = "Lancer cette quête";
+	$load["en"] = "Launch this quest";
 	
 	$infoTitle = array();
-	$infoTitle["fr"] = "Informations :";
-	$infoTitle["en"] = "Informations :";
+	$infoTitle["fr"] = "Aide :";
+	$infoTitle["en"] = "Help :";
 	
 	$infoContent = array();
-	$infoContent["fr"] = "Pour charger une quête dans le jeu kube vous devez installer le script GreaseMonkey <a href='http://perdu.com'>Kuest</a>.<br />Une fois installé, il vous suffit de cliquer sur le bouton \"<b>".$load['fr']."</b>\" pour commencer à l'utiliser.";
+	$infoContent["fr"] = "Pour charger une quête dans le jeu kube vous devez installer le script GreaseMonkey <a href='js/kuest.user.js'>Kuest</a>.<br />Pour cela, commencez par télécharger <a href='js/kuest.user.js'>ce fichier</a>. Si vous êtes dans Firefox, glissez/déposez-le sur le navigateur. Si vous utilisez Google Chrome, rendez-vous à l'adresse <b>chrome://extensions</b> et faites de même.<br /><br />Une fois installé, il vous suffit de cliquer sur le bouton \"<b>".$load['fr']."</b>\" ci-dessous pour commencer la quête.<br /><br /><b>Attention</b>, vous devez avoir choisi une zone de départ pour que l'action fonctionne !";
 	$infoContent["en"] = "TODO";
-	
-	$problemTitle = array();
-	$problemTitle["fr"] = "En cas de problème :";
-	$problemTitle["en"] = "In case of troubles :";
-	
-	$problemContent = array();
-	$problemContent["fr"] = "Si le bouton ne fonctionne pas vous pouvez copier/coller l'ID suivant :<br /><div class='questID'>".htmlspecialchars($_GET['id'])."</div>";
-	$problemContent["en"] = "TODO";
 	
 	$notFoundTitle = array();
 	$notFoundTitle["fr"] = "Quête introuvable";
@@ -51,7 +43,7 @@
 	if(!$notFoundTitle[ $lang ]) $lang = "en";
 	
 	//Loading kuest details
-	$sql = "SELECT * FROM kuests WHERE id=:id";
+	$sql = "SELECT * FROM kuests WHERE guid=:id";
 	$params = array(':id' => $_GET["id"]);
 	$req = DBConnection::getLink()->prepare($sql);
 	if (!$req->execute($params)) {
@@ -65,9 +57,8 @@
 			$res = $req->fetch();
 			$title = utf8_encode($res["name"]);
 			$description = $description[ $lang ]."<div class='description'>".utf8_encode($res["description"])."</div>";
-			$description .= "<br /><strong>".$infoTitle[$lang]."</strong><div class='description collapsed'>".$infoContent[ $lang ]."</div>";
-			$description .= "<br /><strong>".$problemTitle[$lang]."</strong><div class='description collapsed'>".$problemContent[ $lang ]."</div>";
-			$description .= "<br /><center><button class='button'><img src='img/submit.png'/>".$load[$lang]."</button></center>";
+			$description .= "<br /><strong class='collapser'>".$infoTitle[$lang]."</strong><div class='description collapsed'>".$infoContent[ $lang ]."</div>";
+			$description .= "<br /><center><button class='button' onClick='window.open(\"http://kube.muxxu.com/?kuest=".htmlspecialchars($_GET['id'])."\");'><img src='img/submit.png'/>".$load[$lang]."</button></center>";
 		}
 	}
 ?>
@@ -103,7 +94,7 @@
 				  el.className=el.className.replace(new RegExp('(\\s|^)'+name+'(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
 			   }
 			}
-			var elements = document.getElementsByTagName("strong");
+			var elements = document.getElementsByClassName("collapser");
 			for(var i = 0; i < elements.length; i++) {
 				elements[i].style.cursor = "pointer";
 				elements[i].onclick = function() {
@@ -114,8 +105,10 @@
 						secureLoop ++;
 					}
 					if(hasClass(target, "collapsed")) {
+						addClass(this, "collapserOpen");
 						removeClass(target, "collapsed");
 					}else{
+						removeClass(this, "collapserOpen");
 						addClass(target, "collapsed");
 					}
 				}
