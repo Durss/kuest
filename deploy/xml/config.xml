@@ -13,6 +13,7 @@
 	</labels>
 	
 	<vars>
+		<var code="version"><![CDATA[1]]></var>
 		<var code="lang"><![CDATA[fr]]></var>
 		<var code="root"><![CDATA[http://fevermap.org/kuest]]></var>
 	</vars>
@@ -24,5 +25,14 @@
 	</paths>
 	
 	<dependencies />
+	
+	<!-- prevents from security issues on fonts execution when testing localy -->
+	<conditionnals>
+		<local value="1">
+			<fonts override="true">
+				<font><![CDATA[swf/fonts/fonts.swf?v={v_version}]]></font>
+			</fonts>
+		</local>
+	</conditionnals>
 	
 </root>

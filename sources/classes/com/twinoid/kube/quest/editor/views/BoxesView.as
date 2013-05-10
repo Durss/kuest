@@ -495,6 +495,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Hide the scisors if necessary.
 		 */
 		private function outHandler(event:MouseEvent):void {
+			if(event.ctrlKey || _spacePressed) return;
+			
 			if(event.target is BoxLink) {
 				Mouse.show();
 				if(contains(_scisors)) removeChild(_scisors);
@@ -507,6 +509,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Shows the scisors if necessary.
 		 */
 		private function overHandler(event:MouseEvent):void {
+			if(event.ctrlKey || _spacePressed) return;
+			
 			if(event.target is BoxLink && event.target != _tempLink) {
 				Mouse.hide();
 				_scisors.x = mouseX;

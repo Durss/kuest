@@ -1,4 +1,9 @@
 package com.twinoid.kube.quest.editor {
+	import gs.plugins.RemoveChildPlugin;
+	import gs.plugins.TransformAroundCenterPlugin;
+	import gs.plugins.TweenPlugin;
+	import gs.plugins.VisiblePlugin;
+
 	import com.muxxu.kub3dit.graphics.KeyFocusGraphics;
 	import com.nurun.components.button.AbstractNurunButton;
 	import com.nurun.components.button.focus.NurunButtonKeyFocusManager;
@@ -18,16 +23,11 @@ package com.twinoid.kube.quest.editor {
 	import com.twinoid.kube.quest.editor.views.SideMenuView;
 	import com.twinoid.kube.quest.editor.views.ToolTipView;
 	import com.twinoid.kube.quest.editor.views.TutorialView;
-	import flash.display.MovieClip;
-	import flash.events.Event;
-	import gs.plugins.RemoveChildPlugin;
-	import gs.plugins.TransformAroundCenterPlugin;
-	import gs.plugins.TweenPlugin;
-	import gs.plugins.VisiblePlugin;
+
 	import org.libspark.ui.SWFWheel;
 
-
-
+	import flash.display.MovieClip;
+	import flash.events.Event;
 
 
 

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor {
+	import flash.system.Capabilities;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.EnvironnementManager;
 	import com.nurun.utils.pos.PosUtils;
@@ -73,6 +74,9 @@ package com.twinoid.kube.quest.editor {
 			_env			= new EnvironnementManager();
 			_env.initialise(getFV("configXml", "xml/config.xml"));
 			_env.addVariables(loaderInfo.parameters);
+			if(Capabilities.playerType.toLowerCase() == "standalone") {
+				_env.addVariables({local:"1"});
+			}
 			_env.addEventListener(IOErrorEvent.IO_ERROR, initErrorHandler);
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
