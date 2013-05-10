@@ -91,8 +91,8 @@
 			}
 			
 			//Insert into DB
-			$sql = "INSERT into kuests (uid, name, description, dataFile) VALUES (:uid, :name, :description, :dataFile)";
-			$params = array(':uid' => $_SESSION['uid'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index);
+			$sql = "INSERT into kuests (guid, uid, name, description, dataFile) VALUES (:guid, :uid, :name, :description, :dataFile)";
+			$params = array('guid' => uniqid(), ':uid' => $_SESSION['uid'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');

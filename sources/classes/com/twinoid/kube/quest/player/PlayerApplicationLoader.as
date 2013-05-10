@@ -1,4 +1,4 @@
-package com.twinoid.kube.quest.editor {
+package com.twinoid.kube.quest.player {
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.EnvironnementManager;
 	import com.nurun.utils.pos.PosUtils;
@@ -17,9 +17,9 @@ package com.twinoid.kube.quest.editor {
 	/**
 	 * 
 	 * @author Francois
-	 * @date 3 févr. 2013;
+	 * @date 10 mai 2013;
 	 */
-	public class ApplicationLoader extends MovieClip {
+	public class PlayerApplicationLoader extends MovieClip {
 	
 		private var _backColor:Number;
 		private var _barColor:Number;
@@ -34,9 +34,9 @@ package com.twinoid.kube.quest.editor {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>ApplicationLoader</code>.
+		 * Creates an instance of <code>PlayerApplicationLoader</code>.
 		 */
-		public function ApplicationLoader() {
+		public function PlayerApplicationLoader() {
 			initialize();
 		}
 
@@ -67,7 +67,7 @@ package com.twinoid.kube.quest.editor {
 			stage.scaleMode	= StageScaleMode.NO_SCALE;
 			stage.showDefaultContextMenu = false;
 			
-			_backColor		= parseInt(getFV("bgColor", "BBDDEC"), 16);
+			_backColor		= parseInt(getFV("bgColor", "4CA5CD"), 16);
 			_barColor		= parseInt(getFV("loaderColor", "47A9D1"), 16);
 			
 			_env			= new EnvironnementManager();
@@ -134,7 +134,7 @@ package com.twinoid.kube.quest.editor {
 		 */
 		private function launch():void {
 			// on frame 2
-			var mainClass:Class = Class(getDefinitionByName("com.twinoid.kube.quest.editor.Application"));
+			var mainClass:Class = Class(getDefinitionByName("com.twinoid.kube.quest.player.PlayerApplication"));
 			if(mainClass && !_error) {
 				var app:Object = new mainClass();
 				addChild(app as DisplayObject);

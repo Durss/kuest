@@ -8,9 +8,9 @@
 <booleanAttribute key="DISABLE_COMPILE_PROCESS" value="false"/>
 <booleanAttribute key="KILL_PREVIOUS_VIEWER" value="true"/>
 <stringAttribute key="LAUNCHER_DEPENDENCIES" value="[Self]"/>
-<stringAttribute key="MAIN_CLASS" value="sources/classes/com/twinoid/kube/quest/editor/Application.as"/>
+<stringAttribute key="MAIN_CLASS" value="sources/classes/com/twinoid/kube/quest/player/PlayerApplication.as"/>
 <stringAttribute key="MOBILE_PRESET" value=""/>
-<stringAttribute key="OUTPUT" value="deploy/swf/application.swf"/>
+<stringAttribute key="OUTPUT" value="deploy/swf/player.swf"/>
 <booleanAttribute key="PASS_CP" value="true"/>
 <booleanAttribute key="PASS_EXTERNS" value="false"/>
 <booleanAttribute key="PASS_MAIN_CLASS" value="true"/>
@@ -24,7 +24,7 @@
 <stringAttribute key="PUBLISHER_ID" value=""/>
 <booleanAttribute key="START_DEBUGGER" value="true"/>
 <booleanAttribute key="START_SWF_ENABLED" value="true"/>
-<stringAttribute key="START_SWF_LOCATION" value="deploy/swf/application.swf"/>
+<stringAttribute key="START_SWF_LOCATION" value="deploy/swf/player.swf"/>
 <stringAttribute key="START_SWF_WITH" value="Adobe Flash Player"/>
 <booleanAttribute key="USE_PROJECT_COMPILER_ARGUMENTS" value="true"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">

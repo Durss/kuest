@@ -1,7 +1,5 @@
 html, body {
 	background-color:#4CA5CD;
-	overflow:hidden;
-	height:100%;
 	margin:0;
 	padding:0;
 }
@@ -95,10 +93,10 @@ button:active {
 	background-image:url(../img/window-top.png);
 	background-repeat:no-repeat;
 	width:375px;
-	height:29px;
+	height:28px;
 	padding-left:35px;
 	padding-right:30px;
-	padding-top:25px;
+	padding-top:26px;
 	
 	font-weight:bold;
 	font-size:16px;
@@ -181,6 +179,27 @@ button:active {
 	display:table-cell;
 	text-align:center;
 	background-color:#B7DBEA;
+}
+
+.collapser, .collapserOpen {
+	width:100%;
+	display:block;
+	padding:0px;
+	margin:0px;
+}
+.collapser:before {
+	background-image:url(../img/arrow.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	padding-left:20px;
+	content:'';
+}
+.collapserOpen:before {
+	background-image:url(../img/arrowDown.png);
+	background-repeat:no-repeat;
+	background-position:center;
+	padding-left:20px;
+	content:'';
 }
 
 .description {

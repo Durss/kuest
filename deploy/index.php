@@ -49,6 +49,14 @@
 		<script type="text/javascript" src="js/SWFAddress.js"></script>
 		<script type="text/javascript" src="js/swfwheel.js"></script>
 		<script type="text/javascript" src="js/swffit.js"></script>
+		<STYLE type="text/css">
+		  <!--
+		  body, html {
+			overflow:hidden;
+			height:100%;
+		  }
+		  -->
+		  </STYLE>
 	</head>
 	<body>
 		<div id="content">
