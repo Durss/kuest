@@ -14,8 +14,8 @@
 	$title["en"] = "My logins :";
 	
 	$content = array();
-	$content["fr"] = "Ces valeurs sont à renseigner dans les champs du même nom au sein de l'application si vous l'utilisez en dehors de Muxxu à l'adresse suivante <a href='http://fevermap.org/kuest'>http://fevermap.org/kuest</a> :";
-	$content["en"] = "These values must be copied inside the application if you use it outside of Muxxu at the following address <a href='http://fevermap.org/kuest'>http://fevermap.org/kuest</a> :";
+	$content["fr"] = "Ces valeurs sont à renseigner dans les champs du même nom au sein de l'application si vous l'utilisez en dehors de Muxxu à l'adresse suivante <a href='http://fevermap.org/kuest' target='_blank'>http://fevermap.org/kuest</a> :";
+	$content["en"] = "These values must be copied inside the application if you use it outside of Muxxu at the following address <a href='http://fevermap.org/kuest' target='_blank'>http://fevermap.org/kuest</a> :";
 	
 	$copy = array();
 	$copy["fr"] = "Copier";

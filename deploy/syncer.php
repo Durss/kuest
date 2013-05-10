@@ -29,7 +29,7 @@
 	$infoTitle["en"] = "Help :";
 	
 	$infoContent = array();
-	$infoContent["fr"] = "Pour charger une quête dans le jeu kube vous devez installer le script GreaseMonkey <a href='js/kuest.user.js'>Kuest</a>.<br />Pour cela, commencez par télécharger <a href='js/kuest.user.js'>ce fichier</a>. Si vous êtes dans Firefox, glissez/déposez-le sur le navigateur. Si vous utilisez Google Chrome, rendez-vous à l'adresse <b>chrome://extensions</b> et faites de même.<br /><br />Une fois installé, il vous suffit de cliquer sur le bouton \"<b>".$load['fr']."</b>\" ci-dessous pour commencer la quête.<br /><br /><b>Attention</b>, vous devez avoir choisi une zone de départ pour que l'action fonctionne !";
+	$infoContent["fr"] = "Pour charger une quête dans le jeu kube vous devez installer le script GreaseMonkey <a href='/kuest/js/kuest.user.js'>Kuest</a>.<br />Pour cela, commencez par télécharger <a href='/kuest/js/kuest.user.js'>ce fichier</a>. Si vous êtes dans Firefox, glissez/déposez-le sur le navigateur. Si vous utilisez Google Chrome, rendez-vous à l'adresse <b>chrome://extensions</b> et faites de même.<br /><br />Une fois installé, il vous suffit de cliquer sur le bouton \"<b>".$load['fr']."</b>\" ci-dessous pour commencer la quête.<br /><br /><b>Attention</b>, vous devez avoir choisi une zone de départ pour que l'action fonctionne !";
 	$infoContent["en"] = "TODO";
 	
 	$notFoundTitle = array();
@@ -37,28 +37,29 @@
 	$notFoundTitle["en"] = "Quest not found";
 	
 	$notFoundContent = array();
-	$notFoundContent["fr"] = "<img src='img/error.png' alt='error'/> La quête que vous avez demandé n'existe pas.<br /><br />Assurez-vous que le lien qui vous a amené ici est valide.";
-	$notFoundContent["en"] = "<img src='img/error.png' alt='error'/> Quest not found";
+	$notFoundContent["fr"] = "<img src='/kuest/img/error.png' alt='error'/> La quête que vous avez demandé n'existe pas.<br /><br />Assurez-vous que le lien qui vous a amené ici est valide.";
+	$notFoundContent["en"] = "<img src='/kuest/img/error.png' alt='error'/> Quest not found";
 	
 	if(!$notFoundTitle[ $lang ]) $lang = "en";
 	
 	//Loading kuest details
-	$sql = "SELECT * FROM kuests WHERE guid=:id";
-	$params = array(':id' => $_GET["id"]);
+	$sql = "SELECT * FROM kuests WHERE guid=:guid";
+	$params = array(':guid' => $_GET["id"]);
 	$req = DBConnection::getLink()->prepare($sql);
 	if (!$req->execute($params)) {
 		$error = "SQL Error";
 	}else{
 		$tot = $req->rowCount();
-		if ($tot == 0) {
+		$res = $req->fetch();
+		$dir = "kuests/published/";
+		if ($tot == 0 || !file_exists($dir.$res['dataFile'].".kst")) {
 			$title = $notFoundTitle[ $lang ];
 			$description = $notFoundContent[ $lang ];
 		}else{
-			$res = $req->fetch();
 			$title = utf8_encode($res["name"]);
 			$description = $description[ $lang ]."<div class='description'>".utf8_encode($res["description"])."</div>";
 			$description .= "<br /><strong class='collapser'>".$infoTitle[$lang]."</strong><div class='description collapsed'>".$infoContent[ $lang ]."</div>";
-			$description .= "<br /><center><button class='button' onClick='window.open(\"http://kube.muxxu.com/?kuest=".htmlspecialchars($_GET['id'])."\");'><img src='img/submit.png'/>".$load[$lang]."</button></center>";
+			$description .= "<br /><center><button class='button' onClick='window.open(\"http://kube.muxxu.com/?kuest=".htmlspecialchars($_GET['id'])."\");'><img src='/kuest/img/submit.png'/>".$load[$lang]."</button></center>";
 		}
 	}
 ?>
@@ -72,8 +73,7 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		
-		<link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
-		<script type="text/javascript" src="js/ZeroClipboard.js"></script>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/stylesheet.css"/>
 	</head>
 	<body>
 		<div class="window">
