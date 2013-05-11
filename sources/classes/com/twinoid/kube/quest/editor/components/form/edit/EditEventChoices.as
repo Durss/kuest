@@ -18,7 +18,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	 */
 	public class EditEventChoices extends AbstractEditZone {
 		
-		private var _width:int;
 		private var _form:Sprite;
 		private var _label:CssTextField;
 		private var _choice1:InputKube;
@@ -35,7 +34,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventChoices</code>.
 		 */
 		public function EditEventChoices(width:int) {
-			_width = width;
 			super(Label.getLabel("editWindow-choice-title"), width);
 		}
 
@@ -128,9 +126,25 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			_choice1.width = 
 			_choice2.width = 
-			_choice3.width = _width;
+			_choice3.width = _width - 10;
+			
+			_choice1.x = 
+			_choice2.x = 
+			_choice3.x = 11;
 			
 			PosUtils.vPlaceNext(5, _label, _choice1, _choice2, _choice3);
+			
+			_form.graphics.beginFill(0xCA4F4F, 1);
+			_form.graphics.drawRect(0, _choice1.y, 10, _choice1.height);
+			_form.graphics.endFill();
+			
+			_form.graphics.beginFill(0xDD7600, 1);
+			_form.graphics.drawRect(0, _choice2.y, 10, _choice2.height);
+			_form.graphics.endFill();
+			
+			_form.graphics.beginFill(0xDDDD00, 1);
+			_form.graphics.drawRect(0, _choice3.y, 10, _choice3.height);
+			_form.graphics.endFill();
 		}
 		
 	}

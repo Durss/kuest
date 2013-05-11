@@ -116,8 +116,10 @@ package com.twinoid.kube.quest.editor.views {
 					TweenLite.from(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:0, scaleY:0, delay:0, ease:Back.easeInOut});
 					TweenLite.to(_disable, .25, {autoAlpha:1});
 				}
-				_place.connectedToGame = model.connectedToGame;
-				_place.inGamePosition = model.inGamePosition;
+				_place.connectedToGame		= model.connectedToGame;
+				_place.inGamePosition		= model.inGamePosition;
+				_place.connectedToPlayer	= model.connectedToPlayer;
+				_place.forumPosition		= model.forumPosition;
 				
 			}else if(!_closed){
 				_closed = true;

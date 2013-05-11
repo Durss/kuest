@@ -20,7 +20,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	 */
 	public class EditEventTime extends AbstractEditZone {
 		
-		private var _width:int;
 		private var _calendarHolder:Sprite;
 		private var _periodicHolder:Sprite;
 		private var _calendar:Calendar;
@@ -37,7 +36,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventTime</code>.
 		 */
 		public function EditEventTime(width:int) {
-			_width = width;
 			super(Label.getLabel("editWindow-time-title"), width);
 		}
 

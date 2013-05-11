@@ -45,18 +45,18 @@ package com.spikything.utils {
 			}
 			_mouseWheelTrapped = true;
 			if (ExternalInterface.available) {
-				ExternalInterface.call("eval", "var browserScrolling;function allowBrowserScroll(value){browserScrolling=value;}function handle(delta){if(!browserScrolling){return false;}return true;}function wheel(event){var delta=0;if(!event){event=window.event;}if(event.wheelDelta){delta=event.wheelDelta/120;if(window.opera){delta=-delta;}}else if(event.detail){delta=-event.detail/3;}if(delta){handle(delta);}if(!browserScrolling){if(event.preventDefault){event.preventDefault();}event.returnValue=false;var flashs=document.getElementsByTagName('object');for(var i=0;i<flashs.length;++i){flashs[i].onMouseWheel(delta);}}}if(window.addEventListener){window.addEventListener('DOMMouseScroll',wheel,false);}window.onmousewheel=document.onmousewheel=wheel;allowBrowserScroll(true);");
+				ExternalInterface.call("eval", "var browserScrolling;function allowBrowserScroll(value){browserScrolling=value;}function handle(delta){if(!browserScrolling){return false;}return true;}function wheel(event){var delta=0;if(!event){event=window.event;}if(event.wheelDelta){delta=event.wheelDelta/120;if(window.opera){delta=-delta;}}else if(event.detail){delta=-event.detail/3;}if(delta){handle(delta);}if(!browserScrolling){if(event.preventDefault){event.preventDefault();}event.returnValue=false;var flashs=document.getElementsByTagName('object');for(var i=0;i<flashs.length;++i){flashs[i].onMouseWheel(delta);}}}if(window.addEventListener){window.addEventListener('DOMMouseScroll',wheel,false);} if(window) {window.onmousewheel=wheel;}else{document.onmousewheel=wheel;};allowBrowserScroll(true);");
 			}
 		}
 		
 		private static function onMouseWheel(delta:int):void {
 			var objects:Array = _stage.getObjectsUnderPoint(new Point(_stage.mouseX, _stage.mouseY));
-			var i:int, len:int, object:DisplayObject;
-			len = objects.length;
-			for(i = 0; i < len; ++i) {
-				object = objects[i];
+//			var i:int, len:int, object:DisplayObject;
+//			len = objects.length;
+			// for(i = 0; i < len; ++i) {
+				var object:DisplayObject = objects[objects.length - 1];
 				object.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_WHEEL, true, false, object.mouseX, object.mouseY, null, false, false, false, false, delta));
-			}
+//			}
 			
 		}
 	}

@@ -1,9 +1,5 @@
 package com.twinoid.kube.quest.editor.model {
-	import flash.utils.clearInterval;
-	import flash.utils.setInterval;
-	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
-	import by.blooddy.crypto.SHA1;
-
+	import com.twinoid.kube.quest.editor.vo.Point3D;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -12,10 +8,12 @@ package com.twinoid.kube.quest.editor.model {
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.crypto.XOR;
+	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoadCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoginCmd;
 	import com.twinoid.kube.quest.editor.cmd.SaveCmd;
 	import com.twinoid.kube.quest.editor.error.KuestException;
+	import com.twinoid.kube.quest.editor.events.LCManagerEvent;
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.utils.prompt;
 	import com.twinoid.kube.quest.editor.vo.ActionChoices;
@@ -35,16 +33,14 @@ package com.twinoid.kube.quest.editor.model {
 	import flash.display.GraphicsPath;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
-	import flash.events.StatusEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.net.LocalConnection;
 	import flash.net.SharedObject;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
-	import flash.utils.clearTimeout;
+	import flash.utils.clearInterval;
 	import flash.utils.describeType;
-	import flash.utils.setTimeout;
+	import flash.utils.setInterval;
 
 
 
@@ -56,12 +52,7 @@ package com.twinoid.kube.quest.editor.model {
 	 */
 	public class Model extends EventDispatcher implements IModel {
 		
-		private var _lcName:String;
-		private var _receiver:LocalConnection;
-		private var _sender:LocalConnection;
 		private var _inGamePosition:Point;
-		private var _checkTimeout:uint;
-		private var _connectTimeout:uint;
 		private var _kuestData:KuestData;
 		private var _currentBoxToEdit:KuestEvent;
 		private var _connectedToGame:Boolean;
@@ -81,6 +72,9 @@ package com.twinoid.kube.quest.editor.model {
 		private var _loadCmd:LoadCmd;
 		private var _ksaCmd:KeepSessionAliveCmd;
 		private var _ksaInterval:uint;
+		private var _lcManager:LCManager;
+		private var _connectedToPlayer:Boolean;
+		private var _forumPosition:Point3D;
 		
 		
 		
@@ -145,6 +139,16 @@ package com.twinoid.kube.quest.editor.model {
 		 * Gets if the application is connected to the Kube game.
 		 */
 		public function get connectedToGame():Boolean { return _connectedToGame && _inGamePosition.x != int.MAX_VALUE && _inGamePosition.y != int.MAX_VALUE; }
+		
+		/**
+		 * Gets if the application is connected to the kuest player
+		 */
+		public function get connectedToPlayer():Boolean { return _connectedToPlayer; }
+		
+		/**
+		 * Gets the last touched forum position.
+		 */
+		public function get forumPosition():Point3D { return _forumPosition; }
 		
 		/**
 		 * Gets if there has been an update in the characters list.
@@ -420,25 +424,11 @@ package com.twinoid.kube.quest.editor.model {
 			//================
 			//LOCAL CONNECTION
 			//================
-			_lcName = "_kuest_"+SHA1.hash(Math.random()+""+Math.random())+"_";
-			
-			//using anonymous objects provides a way not to break callbacks in case
-			//of code obfuscation.
-			var client:Object = {};
-			client["_updatePos"] = onUpdatePosition;
-			client["_action"] = onAction;
-			
-			_receiver = new LocalConnection();
-			_sender = new LocalConnection();
-			_sender.addEventListener(StatusEvent.STATUS, statusHandler);
-			_receiver.client = client;
-			_receiver.allowDomain("*");
-			try {
-				_receiver.connect(_lcName);
-			}catch(error:Error) {
-				trace("ERROR :: A connection with the same name is already active");
-			}
-			attemptToConnect();
+			_lcManager = new LCManager();
+			_lcManager.addEventListener(LCManagerEvent.ZONE_CHANGE, zoneChangeHandler);
+			_lcManager.addEventListener(LCManagerEvent.FORUM_TOUCHED, forumTouchedHandler);
+			_lcManager.addEventListener(LCManagerEvent.GAME_CONNECTION_STATE_CHANGE, gameConnectionChangeHandler);
+			_lcManager.addEventListener(LCManagerEvent.PLAYER_CONNECTION_STATE_CHANGE, playerConnectionChangeHandler);
 		}
 		
 		/**
@@ -454,6 +444,7 @@ package com.twinoid.kube.quest.editor.model {
 		private function reset():void {
 			_comments = null;
 			_currentKuestId = null;
+			_currentBoxToEdit = null;
 			_commentsViewports = null;
 			_kuestData.reset();
 			_charactersUpdate = _objectsUpdate = true;
@@ -643,6 +634,7 @@ package com.twinoid.kube.quest.editor.model {
 			bytes.inflate();
 			bytes.position = 0;
 			var fileVersion:int = bytes.readInt();
+			fileVersion;
 			
 			_kuestData.deserialize(bytes);
 			if(bytes.position < bytes.length) _comments = bytes.readObject();
@@ -671,63 +663,35 @@ package com.twinoid.kube.quest.editor.model {
 		//__________________________________________________________ LocalConnection HANDLERS
 		
 		/**
-		 * Attempts to connect to the game
+		 * Called when user enters a new zone.
 		 */
-		private function attemptToConnect():void {
-			_sender.send("_lc_mx_kube_", "_requestUpdates", _lcName);
-		}
-		
-		/**
-		 * Attempts to connect to the game
-		 */
-		private function checkForConnection():void {
-			setText(null);
-		}
-		
-		private function setText(txt:String):void {
-			_sender.send("_lc_mx_kube_", "_setText", txt, "");
+		private function zoneChangeHandler(event:LCManagerEvent):void {
+			_inGamePosition = _lcManager.inGamePosition;
+			update();
 		}
 
 		/**
-		 * Called when player enters a new zone
+		 * Called when game's connection state changes.
 		 */
-		private function onUpdatePosition(px:int, py:int):void {
-			if(px == 0xffffff && py == 0xffffff) return; //first undefined coord fired by the game. Ignore it.
-			_inGamePosition.x = px;
-			_inGamePosition.y = py;
+		private function gameConnectionChangeHandler(event:LCManagerEvent):void {
+			_connectedToGame = _lcManager.connectedToGame;
 			update();
 		}
-		 
+		
 		/**
-		 * Called when tuto's popin button is clicked.
+		 * Called when user touches a forum kube
 		 */
-		private function onAction():void {
-			trace("On ACTION");
+		private function forumTouchedHandler(event:LCManagerEvent):void {
+			_forumPosition = _lcManager.forumPosition;
+			update();
 		}
- 
+
 		/**
-		 * Called if a data sending succeeds or fails.
+		 * Called when connection state to kuest player changes.
 		 */
-		private function statusHandler(event:StatusEvent):void {
-			clearTimeout(_checkTimeout);
-			clearTimeout(_connectTimeout);
-			switch (event.level) {
-				case "status":
-				//sending success!
-				if(!_connectedToGame) {
-					_connectedToGame = true;
-					update();
-				}
-				_checkTimeout = setTimeout(checkForConnection, 1000);
-				break;
-			case "error":
-				if(_connectedToGame) {
-					_connectedToGame = false;
-					update();
-				}
-				_connectTimeout = setTimeout(attemptToConnect, 500);
-				break;
-			}
+		private function playerConnectionChangeHandler(event:LCManagerEvent):void {
+			_connectedToPlayer = _lcManager.connectedToPlayer;
+			update();
 		}
 		
 	}

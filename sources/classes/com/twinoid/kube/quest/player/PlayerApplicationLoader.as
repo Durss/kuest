@@ -10,8 +10,10 @@ package com.twinoid.kube.quest.player {
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.external.ExternalInterface;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
 	import flash.utils.getDefinitionByName;
 
 	/**
@@ -72,6 +74,11 @@ package com.twinoid.kube.quest.player {
 			
 			_env			= new EnvironnementManager();
 			_env.initialise(getFV("configXml", "xml/config.xml"));
+			//Workaround for fonts execution security issue.
+			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://localhost") > -1) {
+//				_env.addVariables({local:"1"});
+				_env.addVariables({root:"http://localhost/kuest"});
+			}
 			_env.addVariables(loaderInfo.parameters);
 			_env.addEventListener(IOErrorEvent.IO_ERROR, initErrorHandler);
 			

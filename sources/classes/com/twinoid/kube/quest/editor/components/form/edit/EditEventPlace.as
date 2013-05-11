@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
+	import flash.events.Event;
+	import com.twinoid.kube.quest.editor.vo.Point3D;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
@@ -13,6 +15,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	
+	[Event(name="resize", type="flash.events.Event")]
 
 	
 	/**
@@ -26,7 +30,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		
 		private var _zone:Sprite;
 		private var _kube:Sprite;
-		private var _width:int;
 		private var _kubeX:InputKube;
 		private var _kubeY:InputKube;
 		private var _kubeZ:InputKube;
@@ -35,6 +38,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private var _captureBt:ButtonKube;
 		private var _lastGamePosition:Point;
 		private var _captureZone:Sprite;
+		private var _lastForumPosition:Point3D;
+		private var _helpKubeCoords:CssTextField;
+		private var _kubeInputsLabel:CssTextField;
 		
 		
 		
@@ -46,7 +52,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventPlace</code>.
 		 */
 		public function EditEventPlace(width:int) {
-			_width = width;
 			super(Label.getLabel("editWindow-place-title"), width);
 		}
 
@@ -67,6 +72,32 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Sets the last in game's position
 		 */
 		public function set inGamePosition(value:Point):void { _lastGamePosition = value; }
+
+		/**
+		 * Sets if the application is connected to the kuest player via LC or not.
+		 */
+		public function set connectedToPlayer(value:Boolean):void {
+			_kubeX.visible = _kubeY.visible = _kubeZ.visible = value;
+			_kubeInputsLabel.visible = value;
+			_helpKubeCoords.text = Label.getLabel(value? "editWindow-place-kubeHelp" : "editWindow-place-kubeConnectHelp");
+			_kubeInputsLabel.y = _kubeX.y = _kubeY.y = _kubeZ.y = value? Math.round(_helpKubeCoords.height) + 5 : 0;
+			if(!_closed && selectedIndex == 1) {
+				_contentsMask.height = _kube.height;
+			}
+			dispatchEvent(new Event(Event.RESIZE, true));
+		}
+		
+		/**
+		 * Sets the last touched forum's position
+		 */
+		public function set forumPosition(value:Point3D):void {
+			_lastForumPosition = value;
+			if(value != null) {
+				_kubeX.text = value.x.toString();
+				_kubeY.text = value.y.toString();
+				_kubeZ.text = value.z.toString();
+			}
+		}
 
 
 
@@ -187,23 +218,23 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 */
 		private function buildKube():void {
 			_kube = new Sprite();
-			var help:CssTextField = _kube.addChild(new CssTextField("editWindow-label")) as CssTextField;
-			var label:CssTextField = _kube.addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_helpKubeCoords = _kube.addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_kubeInputsLabel = _kube.addChild(new CssTextField("editWindow-label")) as CssTextField;
 			_kubeX = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
 			_kubeY = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
 			_kubeZ = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
-			_kube.addChild(label);
+			_kube.addChild(_kubeInputsLabel);
 			_kube.addChild(_kubeX);
 			_kube.addChild(_kubeY);
 			_kube.addChild(_kubeZ);
 			
-			help.text = Label.getLabel("editWindow-place-kubeHelp");
-			label.text = Label.getLabel("editWindow-place-kube");
+			_helpKubeCoords.text = Label.getLabel("editWindow-place-kubeHelp");
+			_kubeInputsLabel.text = Label.getLabel("editWindow-place-kube");
 			
-			help.width = _width;
-			label.y = _kubeX.y = _kubeY.y = _kubeZ.y = Math.round(help.height) + 5;
-			_kubeX.width = _kubeY.width = _kubeZ.width = Math.floor((_width - label.width - 30) / 3);
-			PosUtils.hPlaceNext(10, label, _kubeX, _kubeY, _kubeZ);
+			_helpKubeCoords.width = _width;
+			_kubeInputsLabel.y = _kubeX.y = _kubeY.y = _kubeZ.y = Math.round(_helpKubeCoords.height) + 5;
+			_kubeX.width = _kubeY.width = _kubeZ.width = Math.floor((_width - _kubeInputsLabel.width - 30) / 3);
+			PosUtils.hPlaceNext(10, _kubeInputsLabel, _kubeX, _kubeY, _kubeZ);
 		}
 		
 	}
