@@ -1,7 +1,9 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.utils.Simplify;
 	import com.twinoid.kube.quest.graphics.RubberCursorGraphic;
+
 	import flash.display.GraphicsPath;
 	import flash.display.GraphicsPathCommand;
 	import flash.display.GraphicsSolidFill;
@@ -19,7 +21,9 @@ package com.twinoid.kube.quest.editor.components.box {
 	import flash.ui.Mouse;
 	import flash.utils.Dictionary;
 	import flash.utils.getTimer;
-
+		
+	[Event(name="ENTER_EDIT_MODE", type="com.twinoid.kube.quest.editor.events.BoxesCommentsEvent")]
+	[Event(name="LEAVE_EDIT_MODE", type="com.twinoid.kube.quest.editor.events.BoxesCommentsEvent")]
 	
 	/**
 	 * Manages the drawing and display of comments over the board.
@@ -47,7 +51,6 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _chunksHolder:Sprite;
 		private var _rubberIcon:RubberCursorGraphic;
 		private var _drawingDataHit:Vector.<IGraphicsData>;
-		
 		
 		
 		
@@ -257,6 +260,7 @@ package com.twinoid.kube.quest.editor.components.box {
 					_rubberIcon.y = mouseY;
 					_rubberIcon.startDrag();
 					Mouse.hide();
+					dispatchEvent(new BoxesCommentsEvent(BoxesCommentsEvent.ENTER_EDIT_MODE));
 				}
 			}
 		}
@@ -272,6 +276,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				_rubberIcon.stopDrag();
 				Mouse.show();
 				clipDrawings();
+				dispatchEvent(new BoxesCommentsEvent(BoxesCommentsEvent.LEAVE_EDIT_MODE));
 			}
 		}
 		
@@ -298,9 +303,6 @@ package com.twinoid.kube.quest.editor.components.box {
 					_drawingData[1] = _paths[i];
 					_drawingDataHit[1] = _paths[i];
 					item = _chunksHolder.addChild(new Sprite()) as Sprite;
-//					item.graphics.beginFill(0xff0000, 0);
-//					item.graphics.drawRect(_viewPorts[i].x, _viewPorts[i].y, _viewPorts[i].width, _viewPorts[i].height);
-//					item.graphics.endFill();
 					item.graphics.drawGraphicsData(_drawingDataHit);
 					item.graphics.drawGraphicsData(_drawingData);
 					item.buttonMode = true;

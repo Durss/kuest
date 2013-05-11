@@ -12,6 +12,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _content:String;
 		private var _callback:Function;
 		private var _id:String;
+		private var _callbackCancel:Function;
 		
 		
 		
@@ -21,7 +22,8 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Creates an instance of <code>PromptData</code>.
 		 */
-		public function PromptData(title:String, label:String, callback:Function, id:String) {
+		public function PromptData(title:String, label:String, callback:Function, id:String, callbackCancel:Function = null) {
+			_callbackCancel = callbackCancel;
 			_id = id;
 			_callback = callback;
 			_content = label;
@@ -44,9 +46,14 @@ package com.twinoid.kube.quest.editor.vo {
 		public function get content():String { return _content; }
 		
 		/**
-		 * Metho called when submit button is clicked
+		 * Method called when submit button is clicked
 		 */
 		public function get callback():Function { return _callback; }
+
+		/**
+		 * Method called when cancel button is clicked
+		 */
+		public function get callbackCancel():Function { return _callbackCancel; }
 		
 		/**
 		 * Prompt action ID.

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -140,6 +141,8 @@ package com.twinoid.kube.quest.editor.views {
 			_scisors.mouseEnabled = false;
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			_comments.addEventListener(BoxesCommentsEvent.ENTER_EDIT_MODE, editCommentsStateChangeHandler);
+			_comments.addEventListener(BoxesCommentsEvent.LEAVE_EDIT_MODE, editCommentsStateChangeHandler);
 		}
 		
 		/**
@@ -517,6 +520,17 @@ package com.twinoid.kube.quest.editor.views {
 				_scisors.y = mouseY;
 				_scisors.startDrag();
 				addChild(_scisors);
+			}
+		}
+		
+		/**
+		 * Called when user starts/ends to edit comments.
+		 */
+		private function editCommentsStateChangeHandler(event:BoxesCommentsEvent):void {
+			if(event.type == BoxesCommentsEvent.ENTER_EDIT_MODE) {
+				addChild(_comments);
+			}else{
+				addChildAt(_comments, getChildIndex(_boxesHolder));
 			}
 		}
 	}

@@ -1,8 +1,10 @@
 package com.twinoid.kube.quest.editor.model {
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
+	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
 	import by.blooddy.crypto.SHA1;
-	import com.nurun.core.commands.ProgressiveCommand;
+
 	import com.nurun.core.commands.events.CommandEvent;
-	import com.nurun.core.commands.events.ProgressiveCommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
@@ -29,6 +31,7 @@ package com.twinoid.kube.quest.editor.model {
 	import com.twinoid.kube.quest.editor.vo.ObjectItemData;
 	import com.twinoid.kube.quest.editor.vo.SerializableBitmapData;
 	import com.twinoid.kube.quest.editor.vo.Version;
+
 	import flash.display.GraphicsPath;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
@@ -45,7 +48,6 @@ package com.twinoid.kube.quest.editor.model {
 
 
 
-	
 	/**
 	 * Application's model.
 	 * 
@@ -77,6 +79,8 @@ package com.twinoid.kube.quest.editor.model {
 		private var _currentKuestId:String;
 		private var _kuests:Vector.<KuestInfo>;
 		private var _loadCmd:LoadCmd;
+		private var _ksaCmd:KeepSessionAliveCmd;
+		private var _ksaInterval:uint;
 		
 		
 		
@@ -325,6 +329,14 @@ package com.twinoid.kube.quest.editor.model {
 			bytes.deflate();
 			XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Shitty XOR key to loose hackers
 			
+			var maxSize:Number = Config.getNumVariable("maxFileSize");
+			var currentSize:String = (bytes.length / 1024 / 1024).toPrecision(2);
+			if(bytes.length > maxSize * 1024 * 1024) {
+				callback(false);
+				throw new KuestException(Label.getLabel("exception-MAX_SAVE_SIZE").replace(/\{MAX\}/gi, maxSize).replace(/\{SIZE\}/gi, currentSize), "MAX_SAVE_SIZE");
+				return;
+			}
+			
 			_saveCmd.populate(title, description, bytes, callback, title == null && description == null? _currentKuestId : "", optimise);
 			_saveCmd.execute();
 		}
@@ -334,14 +346,14 @@ package com.twinoid.kube.quest.editor.model {
 		 * 
 		 * @return false if loading is ignored because map is already loaded
 		 */
-		public function load(kuest:KuestInfo, callback:Function):Boolean {
+		public function load(kuest:KuestInfo, callback:Function, cancelCallback:Function):Boolean {
 			if(kuest.id == _currentKuestId) {
 				return false;
 			}
 			
 			_loadCmd.populate(kuest.id, callback);
 			if(_kuestData.nodes.length > 0) {
-				prompt("menu-file-load-prompt-title", "menu-file-load-prompt-content", _loadCmd.execute, "loadLooseData");
+				prompt("menu-file-load-prompt-title", "menu-file-load-prompt-content", _loadCmd.execute, "loadLooseData", cancelCallback);
 			}else{
 				_loadCmd.execute();
 			}
@@ -382,6 +394,8 @@ package com.twinoid.kube.quest.editor.model {
 			_kuestData = new KuestData();
 			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
 			
+			_ksaCmd = new KeepSessionAliveCmd();//Don't care about succes/fail
+			
 			_loginCmd = new LoginCmd();
 			_loginCmd.addEventListener(CommandEvent.COMPLETE, loginCompleteHandler);
 			_loginCmd.addEventListener(CommandEvent.ERROR, loginErrorHandler);
@@ -389,7 +403,7 @@ package com.twinoid.kube.quest.editor.model {
 			_saveCmd = new SaveCmd();
 			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveCompleteHandler);
 			_saveCmd.addEventListener(CommandEvent.ERROR, saveErrorHandler);
-			_saveCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);
+//			_saveCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);
 			
 			_loadCmd = new LoadCmd();
 			_loadCmd.addEventListener(CommandEvent.COMPLETE, loadKuestCompleteHandler);
@@ -550,7 +564,7 @@ package com.twinoid.kube.quest.editor.model {
 			if(_saveCmd.title != null && _saveCmd.description != null) {
 				_kuests.unshift(new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestId));
 			}
-			_saveCmd.callback(true);
+			_saveCmd.callback(true, "", _saveCmd.publish? event.data["guid"] : 0);
 			update();
 		}
 		
@@ -593,6 +607,10 @@ package com.twinoid.kube.quest.editor.model {
 			_so.data["pubkey"] = _pubkey;
 			_so.flush();
 			
+			//Keep the session alive
+			clearInterval(_ksaInterval);
+			_ksaInterval = setInterval(_ksaCmd.execute, 10*60 * 1000);//Every 10 minutes
+			
 			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_SUCCESS));
 		}
 
@@ -601,6 +619,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function loginErrorHandler(event:CommandEvent):void {
 			var errorCode:String = event.data as String;
+			clearInterval(_ksaInterval);
 			if(errorCode == "INVALID_IDS") {
 				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_FAIL, event.data));
 			}else{

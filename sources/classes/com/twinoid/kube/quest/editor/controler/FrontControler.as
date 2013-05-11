@@ -136,8 +136,8 @@ package com.twinoid.kube.quest.editor.controler {
 		 * 
 		 * @return false if loading is ignored because map is already loaded
 		 */
-		public function load(kuest:KuestInfo, callback:Function):Boolean {
-			return _model.load(kuest, callback);
+		public function load(kuest:KuestInfo, callback:Function, cancelCallback:Function):Boolean {
+			return _model.load(kuest, callback, cancelCallback);
 		}
 		
 		/**

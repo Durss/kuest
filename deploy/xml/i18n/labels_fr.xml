@@ -14,7 +14,9 @@
 		<label code="exception-EDITION_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour éditer cette quête.]]></label>
 		<label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
-		<label code="exception-IOERROR"><![CDATA[Impossible de contacter le serveur.]]></label>
+		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
+		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données.]]></label>
+		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
@@ -62,6 +64,7 @@
 		<label code="menu-file-new-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir remettre à zéro la quête en cours ?]]></label>
 		<label code="menu-file-save"><![CDATA[Enregistrer]]></label>
 		<label code="menu-file-publish"><![CDATA[Publier]]></label>
+		<label code="menu-file-publish-label"><![CDATA[Retrouvez votre quête à cette adresse :<br /><a href="{ROOT}/k/{ID}" target="_blank" class="link">{ROOT}/k/{ID}</a>]]></label>
 		<label code="menu-file-params"><![CDATA[Paramètres]]></label>
 		<label code="menu-file-saveNewTT"><![CDATA[Enregistrer en tant<br />que nouvelle quête.]]></label>
 		<label code="menu-file-publishTT"><![CDATA[Publie votre quête afin de la<br />rendre jouable par n'importe qui.]]></label>

@@ -44,6 +44,7 @@
 		
 		//Output file's content
 		$url = $dir.$res["dataFile"].".kst";
+		DBConnection::close();
 		//If don't send the content-length header, flash cannot get the bytesLoaded and bytesTotal during loading
 		header('Content-type: application/octet-stream');
 		header("Content-length: ".filesize($url));

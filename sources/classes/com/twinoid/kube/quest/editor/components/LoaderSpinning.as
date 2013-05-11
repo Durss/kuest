@@ -93,10 +93,11 @@ package com.twinoid.kube.quest.editor.components {
 				_label.text = label;
 				_label.x = -_label.width * .5;
 			}
+			var delay:Number = label != null? .75 : 0;
 			if(contains(_label)) {
-				TweenLite.to(_label, .25, {y:"+10", removeChild:true, autoAlpha:0, delay:.75});
+				TweenLite.to(_label, .25, {y:"+10", removeChild:true, autoAlpha:0, delay:delay});
 			}
-			TweenLite.to(this, .25, {autoAlpha:0, onComplete:killListener, delay:1});
+			TweenLite.to(this, .25, {autoAlpha:0, onComplete:killListener, delay:delay+.15});
 		}
 
 

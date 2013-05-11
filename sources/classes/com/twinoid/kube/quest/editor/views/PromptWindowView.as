@@ -82,6 +82,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * @inheritDoc
 		 */
 		public function close():void {
+			if(_data != null && _data.callbackCancel != null) _data.callbackCancel();
 			_data = null;
 			_closed = true;
 			TweenLite.to(this, .25, {autoAlpha:0});

@@ -35,11 +35,15 @@
 		$dir = "../../kuests/saves/";
 	}
 	$additionnals = "";
-	if (isset($_GET["title"], $_GET["description"], $GLOBALS['HTTP_RAW_POST_DATA'])) {
+	if (isset($_GET["title"], $_GET["description"], $_GET["size"], $GLOBALS['HTTP_RAW_POST_DATA'])) {
+		if (strlen($GLOBALS['HTTP_RAW_POST_DATA']) != $_GET["size"]) {
+			Out::printOut(false, '', 'Server didn\'t received all the data. Received ' .strlen($GLOBALS['HTTP_RAW_POST_DATA'])."bytes instead of ".$_GET["size"]." bytes.", 'MISSING_DATA_PART');
+			die;
+		}
 		//Update a kuest !
 		if (isset($_GET["id"])) {
 			//Check for edition rights
-			$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
+			$sql = "SELECT uid, guid, dataFile FROM kuests WHERE id=:id";
 			$params = array(':id' => $_GET["id"]);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
@@ -66,6 +70,9 @@
 				fclose($fp);
 			}
 			$id = $_GET["id"];
+			if (isset($_GET["publish"])) {
+				$guid = $res['guid'];
+			}
 			
 		}else {
 		
@@ -102,6 +109,7 @@
 		}
 	
 		$additionnals .= "<id>".$id."</id>\n";
+		if(isset($guid)) $additionnals .= "\t<guid>".$res['guid']."</guid>\n";
 		Out::printOut(true, $additionnals);
 	
 	}else {
