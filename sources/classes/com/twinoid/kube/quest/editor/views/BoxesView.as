@@ -1,5 +1,7 @@
 package com.twinoid.kube.quest.editor.views {
-	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
+	import gs.TweenLite;
+	import gs.easing.Back;
+
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -10,9 +12,11 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.components.box.BoxesComments;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.events.BoxEvent;
+	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
 	import com.twinoid.kube.quest.editor.model.Model;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.ScissorsGraphic;
+
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -25,8 +29,6 @@ package com.twinoid.kube.quest.editor.views {
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	import flash.utils.Dictionary;
-	import gs.TweenLite;
-	import gs.easing.Back;
 
 
 

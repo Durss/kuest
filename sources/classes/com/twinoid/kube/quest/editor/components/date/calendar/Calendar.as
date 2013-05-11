@@ -2,6 +2,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 	import com.nurun.components.button.BaseButton;
 	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
+	import com.nurun.components.form.ToggleButton;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.date.DateUtils;
 	import com.nurun.utils.draw.createRect;
@@ -37,6 +38,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		private var _currentDate:Date;
 		private var _dateToState:Object;
 		private var _pressed:Boolean;
+		private var _pressedItem:ToggleButton;
 		
 		
 		
@@ -124,6 +126,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			for(i = 0; i < COLS*ROWS; ++i) {
 				item = addChild(new CalendarItem((i+1).toString())) as CalendarItem;
 				item.addEventListener(Event.CHANGE, toggleItemHandler);
+				item.addEventListener(MouseEvent.ROLL_OVER, overItemHandler);
 				_daysItems.push(item);
 			}
 			
@@ -132,6 +135,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			_nextMonthBt.iconAlign = _prevMonthBt.iconAlign = IconAlign.CENTER;
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
+			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			_monthLabel.addEventListener(MouseEvent.CLICK, clickMonthHandler);
 			
@@ -182,6 +186,30 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		 * Called when mouse is released to put the pressed flag to false.
 		 */
 		private function mouseUpHandler(event:MouseEvent):void { _pressed = false; }
+		
+		/**
+		 * Called when a component is pressed.
+		 * Start the drag selection.
+		 */
+		private function mouseDownHandler(event:MouseEvent):void {
+			if(event.target is ToggleButton) {
+				_pressed = true;
+				_pressedItem = event.target as ToggleButton;
+			}
+		}
+		
+		/**
+		 * Called when an item is rolled over to select it if we're in drag select mode.
+		 */
+		private function overItemHandler(event:MouseEvent):void {
+			if(_pressed) {
+				if(_pressedItem !=  null) {
+					_pressedItem.selected = !_pressedItem.selected;
+					_pressedItem = null;
+				}
+				ToggleButton(event.currentTarget).selected = !ToggleButton(event.currentTarget).selected;
+			}
+		}
 		
 		/**
 		 * Called when an item is toggled.

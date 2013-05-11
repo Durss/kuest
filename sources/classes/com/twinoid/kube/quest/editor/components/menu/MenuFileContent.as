@@ -6,7 +6,6 @@ package com.twinoid.kube.quest.editor.components.menu {
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.menu.file.FileForm;
 	import com.twinoid.kube.quest.editor.components.menu.file.LoginForm;
-	import com.twinoid.kube.quest.editor.components.menu.file.FilePublishForm;
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.model.Model;
 

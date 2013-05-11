@@ -1,12 +1,11 @@
 package com.twinoid.kube.quest.player {
-	import com.nurun.components.text.CssTextField;
-	import com.nurun.utils.text.CssManager;
-	import flash.external.ExternalInterface;
-	import flash.events.Event;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
+	import com.twinoid.kube.quest.player.model.DataManager;
+
 	import flash.display.MovieClip;
+	import flash.events.Event;
 
 	/**
 	 * Bootstrap class of the application.
@@ -60,6 +59,8 @@ package com.twinoid.kube.quest.player {
 		 */
 		private function initialize(event:Event):void {
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
+			
+			DataManager.getInstance().initialize();
 			
 			_spinning = addChild(new LoaderSpinning()) as LoaderSpinning;
 			_spinning.open(Label.getLabel("loader-loading"));

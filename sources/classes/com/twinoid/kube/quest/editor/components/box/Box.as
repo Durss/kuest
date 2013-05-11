@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.button.GraphicButton;
@@ -25,14 +27,15 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.twinoid.kube.quest.graphics.BoxOutGraphic;
 	import com.twinoid.kube.quest.graphics.BoxTimerEventGraphic;
 	import com.twinoid.kube.quest.graphics.ClearBoxGraphic;
+
 	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import gs.TweenLite;
 
 
 	
@@ -289,6 +292,9 @@ package com.twinoid.kube.quest.editor.components.box {
 			_outBox1.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_outBox2.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_outBox3.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_outBox1.addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
+			_outBox2.addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
+			_outBox3.addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
 			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphic);
 			
 			render();
@@ -368,6 +374,20 @@ package com.twinoid.kube.quest.editor.components.box {
 			addChildAt(_deleteBt, 0);
 			TweenLite.killTweensOf(_deleteBt);
 			TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
+		}
+		
+		/**
+		 * Called when an out box is rolled over.
+		 * Display the related choice.
+		 */
+		private function overOutHBoxandler(event:MouseEvent):void {
+			if(_data.actionChoices != null && _data.actionChoices.choices.length > 0) {
+				var label:String;
+				if(event.currentTarget == _outBox1) label = _data.actionChoices.choices[0];
+				if(event.currentTarget == _outBox2) label = _data.actionChoices.choices[1];
+				if(event.currentTarget == _outBox3) label = _data.actionChoices.choices[2];
+				InteractiveObject(event.currentTarget).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.RIGHT));
+			}
 		}
 		
 		/**

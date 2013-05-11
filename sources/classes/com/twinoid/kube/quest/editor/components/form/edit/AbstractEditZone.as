@@ -39,16 +39,16 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		protected var _contents:Vector.<Sprite>;
 		protected var _group:FormComponentGroup;
 		
-		private var _title:CssTextField;
-		private var _titleStr:String;
-		private var _contentsHolder:Sprite;
-		private var _buttonsHolder:Sprite;
-		private var _contentsMask:Shape;
-		private var _width:int;
-		private var _itemToIndex:Dictionary;
-		private var _openCloseBt:GraphicButton;
-		private var _closed:Boolean;
-		private var _currentContent:Sprite;
+		protected var _title:CssTextField;
+		protected var _titleStr:String;
+		protected var _contentsHolder:Sprite;
+		protected var _buttonsHolder:Sprite;
+		protected var _contentsMask:Shape;
+		protected var _width:int;
+		protected var _itemToIndex:Dictionary;
+		protected var _openCloseBt:GraphicButton;
+		protected var _closed:Boolean;
+		protected var _currentContent:Sprite;
 
 		
 		
@@ -199,7 +199,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		/**
 		 * Toggles the open state of the tab.
 		 */
-		private function openCloseHandler(event:MouseEvent):void {
+		protected function openCloseHandler(event:MouseEvent):void {
 			_closed = !_closed;
 			var e:Event = new Event(Event.RESIZE, true);
 			TweenLite.killTweensOf(_contentsMask);
@@ -240,7 +240,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * incoherent focus on TAB navigation.
 		 * Without that the invisible forms would be navigable through the TAB key.
 		 */
-		private function removeInvisibleItems(indexToKeep:int):void {
+		protected function removeInvisibleItems(indexToKeep:int):void {
 			for(var i:int = 0; i < _contents.length; ++i) {
 				if(i != indexToKeep && _contentsHolder.contains(_contents[i])) _contentsHolder.removeChild(_contents[i]);
 			}

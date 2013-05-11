@@ -259,10 +259,9 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Checks deeply for a looped dependency.
 		 * Goes through all the dependencies tree to check if the current
-		 * node is found. If so, the dependency cannot be built because it
-		 * wouldn't make sens.
+		 * node is found.
 		 * 
-		 * @return	if the dependency is authorized (true) or not (false).
+		 * @return	if a looped dependency has been found (true) or not (false).
 		 */
 		private function deepDependencyCheck(entry:KuestEvent):Boolean {
 			var i:int, len:int;
@@ -285,7 +284,7 @@ package com.twinoid.kube.quest.editor.vo {
 				}
 			}
 			
-			//No problem found or no parent, tell that everything's OK.
+			//No loop found or no parent.
 			return true;
 		}
 		

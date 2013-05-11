@@ -25,7 +25,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	 */
 	public class EditEventType extends AbstractEditZone {
 		
-		private var _width:int;
 		private var _dialogue:Sprite;
 		private var _object:Sprite;
 		private var _objectGroup:FormComponentGroup;
@@ -45,7 +44,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventType</code>.
 		 */
 		public function EditEventType(width:int) {
-			_width = width;
 			super(Label.getLabel("editWindow-type-title"), width);
 		}
 
