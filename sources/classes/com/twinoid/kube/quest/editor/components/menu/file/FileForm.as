@@ -49,6 +49,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _loadForm:FileLoadForm;
 		private var _model:Model;
 		private var _publishBt:ButtonKube;
+		private var _publishForm:FilePublishForm;
 		
 		
 		
@@ -83,6 +84,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_saveNewBt.visible = model.currentKuestId != null;
 			_publishBt.enabled = _saveNewBt.visible;
 			_loadForm.populate(model.kuests);
+			if(model.currentKuestId == null) _publishForm.close();
 			computePositions();
 		}
 
@@ -104,6 +106,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_paramsBt	= addChild(new ButtonKube(Label.getLabel("menu-file-params"), new ParamsIcon(), true)) as ButtonKube;
 			_loadForm	= addChild(new FileLoadForm(_width)) as FileLoadForm;
 			_saveForm	= addChild(new FileSaveForm(_width)) as FileSaveForm;
+			_publishForm= addChild(new FilePublishForm(_width)) as FilePublishForm;
 			_spin		= addChild(new LoaderSpinning()) as LoaderSpinning;
 			
 			_paramsBt.enabled = false;
@@ -119,6 +122,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			_saveForm.addEventListener(Event.RESIZE, computePositions);
 			_loadForm.addEventListener(Event.RESIZE, computePositions);
+			_publishForm.addEventListener(Event.RESIZE, computePositions);
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			ViewLocator.getInstance().addEventListener(ViewEvent.LOGIN_SUCCESS, loginHandler);
 			
@@ -142,7 +146,9 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			PosUtils.vPlaceNext(0, _loadBt, _loadForm);
 			PosUtils.vPlaceNext(10, _loadForm, _saveBt);
 			PosUtils.vPlaceNext(0, _saveBt, _saveForm);
-			PosUtils.vPlaceNext(10, _saveForm, _publishBt, _paramsBt);
+			PosUtils.vPlaceNext(10, _saveForm, _publishBt);
+			PosUtils.vPlaceNext(0, _publishBt, _publishForm);
+			PosUtils.vPlaceNext(10, _publishForm, _paramsBt);
 			
 			//If we already saved the kuest or if we loaded one, display the
 			//"save new" button to allow to save it as a new map.
@@ -155,8 +161,9 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			
 			if(_saveForm.height == 0 && _saveForm.isClosed && contains(_saveForm)) removeChild(_saveForm);
 			if(_loadForm.height == 0 && _loadForm.isClosed && contains(_loadForm)) removeChild(_loadForm);
+			if(_publishForm.height == 0 && _publishForm.isClosed && contains(_publishForm)) removeChild(_publishForm);
 			
-			roundPos(_clearBt, _saveForm, _loadBt, _saveBt, _saveNewBt, _paramsBt);
+			roundPos(_clearBt, _saveForm, _loadBt, _saveBt, _saveNewBt, _publishBt, _publishForm, _paramsBt);
 			
 			dispatchEvent(new Event(Event.RESIZE));
 		}
@@ -212,10 +219,10 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Called when saving completes/fails
 		 */
 		private function onSave(succes:Boolean, errorID:String = "", progress:Number = NaN):void {
-			if(!isNaN(progress)) {
-				_spin.label = Label.getLabel("loader-saving")+" "+Math.round(progress*100)+"%";
-				return;
-			}
+//			if(!isNaN(progress)) {
+//				_spin.label = Label.getLabel("loader-saving");
+//				return;
+//			}
 			errorID;//
 			_saveBt.enabled = true;
 			_saveNewBt.enabled = true;
@@ -229,10 +236,15 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Called when saving completes/fails
 		 */
-		private function onPublish(succes:Boolean, errorID:String = ""):void {
+		private function onPublish(succes:Boolean, errorID:String = "", publishID:String = ""):void {
 			errorID;//
 			_publishBt.enabled = true;
 			if(succes) {
+				if (publishID.length > 0) {
+					addChildAt(_publishForm, 0);
+					_publishForm.populate(publishID);
+					_publishForm.open();
+				}
 				_spin.close(Label.getLabel("loader-publishingOK"));
 			}else{
 				_spin.close(Label.getLabel("loader-publishingKO"));

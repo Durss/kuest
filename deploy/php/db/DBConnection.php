@@ -18,7 +18,7 @@
 		}
 		
 		public static function close() {
-			mysql_close(self::$connection);
+			self::$connection = null;
 		}
 		
 		public static function getLink() {

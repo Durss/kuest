@@ -232,3 +232,48 @@ button:active {
 	margin-right:auto;
 	background-color:#226A88;
 }
+
+
+/* SCROLLBAR SKIN FOR WEBKIT BROWSERS */
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-button:start {
+	height: 15px;
+	background: url(/kuest/img/scroll-up.png);
+}
+
+::-webkit-scrollbar-button:end {
+	height: 15px;
+	background: url(/kuest/img/scroll-down.png);
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+	border-style:solid;
+	border-width:1px;
+	
+	background-color:#27799C;
+	
+	border-top-color:#265367;
+	border-right-color:#265367;
+	border-bottom-color:#8eceea;
+	border-left-color:#8eceea;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+	border-style:solid;
+	border-width:1px;
+	
+	background-color:#47a9d1;
+	
+	border-top-color:#8eceea;
+	border-right-color:#8eceea;
+	border-bottom-color:#265367;
+	border-left-color:#265367;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(38,83,103,0.8); 
+}

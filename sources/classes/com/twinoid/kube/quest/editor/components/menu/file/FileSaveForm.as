@@ -196,10 +196,11 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Called when saving completes/fails
 		 */
 		private function onSaveResult(success:Boolean, errorID:String = "", progress:Number = NaN):void {
-			if(!isNaN(progress)) {
-				_spinning.label = Label.getLabel("loader-saving")+" "+Math.round(progress*100)+"%";
-				return;
-			}
+			progress;//Cannot get progression fo upload :(
+//			if(!isNaN(progress)) {
+//				_spinning.label = Label.getLabel("loader-saving")+" "+Math.round(progress*100)+"%";
+//				return;
+//			}
 			_submit.enabled = true;
 			if(success) {
 				_spinning.close(Label.getLabel("loader-savingOK"));

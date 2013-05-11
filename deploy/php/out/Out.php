@@ -14,6 +14,11 @@
 				Logger::getInstance()->log($errorID." :: ".$error."\r\n\t\tGET : ".print_r($_GET, true)."\r\n\t\tPOST : ".print_r($_POST, true));
 			}
 			
+			//Close DB connection
+			try {
+				DBConnection::close();
+			}catch (Exception $error) { }
+			
 			echo $str;
 		}
 		

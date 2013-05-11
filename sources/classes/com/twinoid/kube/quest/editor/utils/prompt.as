@@ -14,8 +14,8 @@ package com.twinoid.kube.quest.editor.utils {
 	 * 
 	 * @author Francois
 	 */
-	public function prompt(titleID:String, contentID:String, callback:Function, id:String):void {
-		var data:PromptData = new PromptData(Label.getLabel(titleID), Label.getLabel(contentID), callback, id);
+	public function prompt(titleID:String, contentID:String, callback:Function, id:String, cancelCallback:Function = null):void {
+		var data:PromptData = new PromptData(Label.getLabel(titleID), Label.getLabel(contentID), callback, id, cancelCallback);
 		ViewLocator.getInstance().dispatchEvent(new ViewEvent(ViewEvent.PROMPT, data));
 	}
 }

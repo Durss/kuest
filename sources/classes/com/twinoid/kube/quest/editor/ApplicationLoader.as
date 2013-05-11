@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor {
-	import flash.system.Capabilities;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.EnvironnementManager;
 	import com.nurun.utils.pos.PosUtils;
@@ -13,6 +12,7 @@ package com.twinoid.kube.quest.editor {
 	import flash.events.IOErrorEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
 	import flash.utils.getDefinitionByName;
 
 	/**
@@ -72,11 +72,13 @@ package com.twinoid.kube.quest.editor {
 			_barColor		= parseInt(getFV("loaderColor", "47A9D1"), 16);
 			
 			_env			= new EnvironnementManager();
+			//Workaround for fonts execution security issue.
+			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://localhost") > -1) {
+				_env.addVariables({local:"1"});
+				_env.addVariables({root:"http://localhost/kuest"});
+			}
 			_env.initialise(getFV("configXml", "xml/config.xml"));
 			_env.addVariables(loaderInfo.parameters);
-			if(Capabilities.playerType.toLowerCase() == "standalone") {
-				_env.addVariables({local:"1"});
-			}
 			_env.addEventListener(IOErrorEvent.IO_ERROR, initErrorHandler);
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);

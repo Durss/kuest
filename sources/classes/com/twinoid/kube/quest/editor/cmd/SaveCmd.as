@@ -27,6 +27,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		private var _callback:Function;
 		private var _title:String;
 		private var _description:String;
+		private var _publish:Boolean;
 		
 		
 		
@@ -67,6 +68,11 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * Gets the kuest description
 		 */
 		public function get description():String { return _description; }
+		
+		/**
+		 * Gets if we just published the quest
+		 */
+		public function get publish():Boolean { return _publish; }
 
 		/**
 		 * @inheritDoc
@@ -99,13 +105,16 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * @param publish		defines if the quest should be published
 		 */
 		public function populate(title:String, description:String, data:ByteArray, callback:Function, id:String = "", publish:Boolean = false):void {
+			_publish = publish;
 			_description = description;
 			_title = title;
 			_callback = callback;
 			_request.data = data;
+			data.position = 0;
 			var url:String = Config.getPath("saveWS") + "?title=" + escape(title) + "&description=" + escape(description);
 			if(StringUtils.trim(id).length > 0) url = url+"&id="+id;
 			if(publish) url = url+"&publish";
+			url = url+"&size="+data.length;
 			_request.url = url;
 		}
 
@@ -142,6 +151,7 @@ package com.twinoid.kube.quest.editor.cmd {
 			if(parseBoolean(xml.child("result")[0].@success)) {
 				var ret:Object = {};
 				ret["id"] = xml.child("id")[0];
+				ret["guid"] = xml.child("guid")[0];
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, ret));
 			}else{
 				dispatchEvent(new CommandEvent(CommandEvent.ERROR, xml.child("error")[0].@id));

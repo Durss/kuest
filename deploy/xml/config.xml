@@ -13,6 +13,7 @@
 	</labels>
 	
 	<vars>
+		<var code="maxFileSize"><![CDATA[10]]></var>
 		<var code="version"><![CDATA[1]]></var>
 		<var code="lang"><![CDATA[fr]]></var>
 		<var code="root"><![CDATA[http://fevermap.org/kuest]]></var>
@@ -22,6 +23,7 @@
 		<path code="loginWS"><![CDATA[{v_root}/php/services/login.php]]></path>
 		<path code="saveWS"><![CDATA[{v_root}/php/services/save.php]]></path>
 		<path code="loadWS"><![CDATA[{v_root}/php/services/load.php]]></path>
+		<path code="ksaWS"><![CDATA[{v_root}/php/services/keepAlive.php]]></path>
 	</paths>
 	
 	<dependencies />

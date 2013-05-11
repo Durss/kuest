@@ -90,7 +90,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		override protected function loadCompleteHandler(event:Event = null):void {
 			var ba:ByteArray = loader.data as ByteArray;
 			var str:String = ba.readUTFBytes(ba.length);
-			if(str.substr(0, 6) != "<root>") {
+			if(str.search("<root>") == -1) {
 				ba.position = 0;
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, ba));
 				return;

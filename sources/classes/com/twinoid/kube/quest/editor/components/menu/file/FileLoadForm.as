@@ -165,12 +165,18 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private function clickHandler(event:MouseEvent):void {
 			var target:Object = event.target;
 			if(_itemToData[target] != null) {
-				if(FrontControler.getInstance().load(_itemToData[target] as KuestInfo, onLoad)) {
+				if(FrontControler.getInstance().load(_itemToData[target] as KuestInfo, onLoad, onLoadCancel)) {
 					mouseEnabled = mouseChildren = false;
 					_spinning.open(Label.getLabel("loader-loading"));
 				}
 			}
 		}
+
+		private function onLoadCancel():void {
+			_spinning.close();
+			mouseEnabled = mouseChildren = true;
+		}
+
 		
 		/**
 		 * Called when a kuest loading completes or fail.

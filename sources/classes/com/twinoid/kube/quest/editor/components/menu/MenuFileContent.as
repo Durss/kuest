@@ -1,18 +1,23 @@
 package com.twinoid.kube.quest.editor.components.menu {
+	import gs.TweenLite;
+
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.menu.file.FileForm;
 	import com.twinoid.kube.quest.editor.components.menu.file.LoginForm;
+	import com.twinoid.kube.quest.editor.components.menu.file.FilePublishForm;
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.model.Model;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import gs.TweenLite;
 
 
 	
 	/**
+	 * Displays main menu.
+	 * Allows the user to log in or to save/load/etc.. his quests
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;
@@ -72,11 +77,11 @@ package com.twinoid.kube.quest.editor.components.menu {
 		override protected function initialize(event:Event):void {
 			super.initialize(event);
 			
-			_title.text = Label.getLabel("menu-file");
-			_formHolder = _holder.addChild(new Sprite()) as Sprite;
-			_spinning = _holder.addChild(new LoaderSpinning()) as LoaderSpinning;
-			_loginForm = new LoginForm(_width * .75);
-			_fileForm = new FileForm(_width * .9);
+			_title.text		= Label.getLabel("menu-file");
+			_formHolder		= _holder.addChild(new Sprite()) as Sprite;
+			_spinning		= _holder.addChild(new LoaderSpinning()) as LoaderSpinning;
+			_loginForm		= new LoginForm(_width * .75);
+			_fileForm		= new FileForm(_width * .9);
 			
 			_formHolder.addChild(_loginForm);
 			_fileForm.addEventListener(Event.RESIZE, computePositions);
