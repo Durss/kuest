@@ -35,7 +35,7 @@ var kuestID = queryString['kuest'];
 var gameDiv = unsafeWindow.document.getElementsByClassName("game")[0];
 var url = "http://localhost/kuest/swf/player.swf";
 var kuestApp = unsafeWindow.document.createElement('div');
-url += "?id="+kuestID;
+if(kuestID) url += "?kuestID="+kuestID;
 url += "&version=1";
 url += "&configXml=http://localhost/kuest/xml/config.xml";
 

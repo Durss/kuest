@@ -74,7 +74,7 @@
 			if(lang != "fr" && lang != "en") lang = "en";
 			
 			var flashvars = {};
-			flashvars["version"] = "29";
+			flashvars["version"] = "31";
 			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
 			flashvars["lang"] = lang;
 <?php

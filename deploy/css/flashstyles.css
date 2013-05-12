@@ -60,3 +60,8 @@
 .selectorItem-label { font-family:Verdana; font-size:14; color:#ffffff; text-align:center; }
 .editWindow-label { font-family:Verdana; font-size:12; color:#ffffff; }
 .editWindow-zoneTitle { font-family:Verdana; font-size:14; color:#ffffff; }
+
+
+/* KUEST PLAYER */
+
+.kuest-title { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }

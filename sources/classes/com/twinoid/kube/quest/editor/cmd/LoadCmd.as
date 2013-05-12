@@ -22,6 +22,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		
 		private var _id:String;
 		private var _callback:Function;
+		private var _release:Boolean;
 		
 		
 		
@@ -30,7 +31,8 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * CONSTRUCTOR *
 		 * *********** */
 
-		public function LoadCmd() {
+		public function LoadCmd(release:Boolean = false) {
+			_release = release;
 			super(Config.getPath("loadWS"), URLLoaderDataFormat.BINARY);
 			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);
 			_loader.addEventListener(ProgressEvent.PROGRESS, dispatchEvent);
@@ -74,10 +76,11 @@ package com.twinoid.kube.quest.editor.cmd {
 		/**
 		 * Populates the command
 		 */
-		public function populate(id:String, callback:Function):void {
+		public function populate(id:String, callback:Function = null):void {
 			_callback = callback;
 			_id = id;
 			_urlVariables['id'] = id;
+			if(_release) _urlVariables['release'] = "";
 		}
 
 

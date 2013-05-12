@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player {
+	import flash.external.ExternalInterface;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.EnvironnementManager;
 	import com.nurun.utils.pos.PosUtils;
@@ -10,7 +11,6 @@ package com.twinoid.kube.quest.player {
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.external.ExternalInterface;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
@@ -76,7 +76,7 @@ package com.twinoid.kube.quest.player {
 			_env.initialise(getFV("configXml", "xml/config.xml"));
 			//Workaround for fonts execution security issue.
 			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://localhost") > -1) {
-//				_env.addVariables({local:"1"});
+				if(!ExternalInterface.available) _env.addVariables({local:"1"});
 				_env.addVariables({root:"http://localhost/kuest"});
 			}
 			_env.addVariables(loaderInfo.parameters);
