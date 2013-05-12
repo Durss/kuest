@@ -17,6 +17,8 @@
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
 		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données.]]></label>
 		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
+		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
+		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
@@ -150,6 +152,8 @@
 		<label code="day5"><![CDATA[Ven]]></label>
 		<label code="day6"><![CDATA[Sam]]></label>
 		<label code="day7"><![CDATA[Dim]]></label>
+		
+		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
 	</labels>
 	
 </root>

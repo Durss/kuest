@@ -12,10 +12,12 @@ package com.twinoid.kube.quest.editor.components.window {
 		
 		public static const CELL_WIDTH:int	= 4;
 		protected var SHADOW_ALPHA:Number	= .2;
+		protected var HIGHLIGHT_ALPHA:Number= .35;
 		protected var BORDER_COLORS:Array;
 		protected var CELL_SIZES:Array;
 		protected var _width:int;
 		protected var _height:int;
+		protected var _drawBackground:Boolean;
 
 		
 		
@@ -25,7 +27,8 @@ package com.twinoid.kube.quest.editor.components.window {
 		/**
 		 * Creates an instance of <code>BackWindow</code>.
 		 */
-		public function BackWindow() {
+		public function BackWindow(drawBackground:Boolean = true) {
+			_drawBackground = drawBackground;
 			BORDER_COLORS = [randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor()];
 			CELL_SIZES = [randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize()];
 		}
@@ -170,13 +173,21 @@ package com.twinoid.kube.quest.editor.components.window {
 				offset = 0;
 			}while(px > CELL_WIDTH);
 			
-			graphics.beginFill(0x4CA5CD,1);
-			graphics.drawRect(CELL_WIDTH, CELL_WIDTH, _width-(CELL_WIDTH*2), _height-(CELL_WIDTH*2));
+			if(_drawBackground) {
+				graphics.beginFill(0x4CA5CD,1);
+			}else{
+				graphics.endFill();
+			}
+			graphics.drawRect(CELL_WIDTH, CELL_WIDTH, _width-(CELL_WIDTH*2)-1, _height-(CELL_WIDTH*2)-1);
 			
 			graphics.lineStyle(0,0,0);
+			graphics.beginFill(0xffffff, HIGHLIGHT_ALPHA);
+			graphics.drawRect(0, 0, _width, 1);
+			graphics.drawRect(_width - 1, 0, 1, _height);
+			
 			graphics.beginFill(0, SHADOW_ALPHA);
 			graphics.drawRect(0, 0, 1, _height - 1);
-			graphics.drawRect(_width - CELL_WIDTH + 1, CELL_WIDTH - 1, 1, _height - CELL_WIDTH * 2 + 2);
+			graphics.drawRect(_width - CELL_WIDTH, CELL_WIDTH - 1, 1, _height - CELL_WIDTH * 2 + 1);
 			graphics.drawRect(0, _height - 1, _width, 1);
 			graphics.drawRect(CELL_WIDTH, CELL_WIDTH - 1, _width - CELL_WIDTH * 2 + 1, 1);
 			

@@ -17,13 +17,23 @@
 		die;
 	}
 	
-	$dir = "../../kuests/saves/";
+	$releaseMode = isset($_POST["release"]);
+	if($releaseMode) {
+		$dir = "../../kuests/published/";
+	}else {
+		$dir = "../../kuests/saves/";
+	}
 	if (isset($_GET["id"])) $_POST["id"] = $_GET["id"];
 	
 	if (isset($_POST["id"])) {
 		//Check for loading rights
-		$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
-		$params = array(':id' => $_POST["id"]);
+		if ($releaseMode) {
+			$sql = "SELECT uid, dataFile FROM kuests WHERE guid=:guid";
+			$params = array(':guid' => $_POST["id"]);
+		}else{
+			$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
+			$params = array(':id' => $_POST["id"]);
+		}
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
@@ -37,13 +47,21 @@
 		
 		//Check if we have rights to load this kuest.
 		$res = $req->fetch();
-		if ($_SESSION["uid"] != $res['uid']) {
+		if (!$releaseMode && $_SESSION["uid"] != $res['uid']) {
 			Out::printOut(false, '', 'Loading denied.', 'LOADING_NO_RIGHTS');
 			die;
 		}
 		
 		//Output file's content
 		$url = $dir.$res["dataFile"].".kst";
+		if (!file_exists($url)) {
+			if ($releaseMode) {
+				Out::printOut(false, '', 'Loading denied.', 'QUEST_FILE_NOT_PUBLISHED');
+			}else{
+				Out::printOut(false, '', 'Loading denied.', 'QUEST_FILE_NOT_FOUND');
+			}
+			die;
+		}
 		DBConnection::close();
 		//If don't send the content-length header, flash cannot get the bytesLoaded and bytesTotal during loading
 		header('Content-type: application/octet-stream');
