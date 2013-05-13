@@ -91,7 +91,7 @@ package com.twinoid.kube.quest.player {
 			SWFWheel.initialize(stage);
 			MouseWheelTrap.setup(stage);
 			
-			DataManager.getInstance().initialize();
+			DataManager.getInstance().initialize(onLoadProgress);
 			
 			_splitter	= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 			_background	= addChild(new BackWindow(false)) as BackWindow;
@@ -135,12 +135,17 @@ package com.twinoid.kube.quest.player {
 			_spinning.x			= stage.stageWidth * .5;
 			roundPos(_spinning);
 		}
+
+		private function onLoadProgress(percent:Number):void {
+			_spinning.label = Label.getLabel("loader-loading") + " " + Math.round(percent * 100) + "%";
+		}
+
 		
 		/**
 		 * Called when quest loading completes
 		 */
 		private function loadQuestCompleteHandler(event:DataManagerEvent):void {
-			_title.text = "Pouette pouette y a rien d'autre qui fonctionne :D";
+			_title.text = DataManager.getInstance().title;
 			_spinning.close(Label.getLabel("loader-loginOK"));
 //			_title.text = DataManager.getInstance().kuest.
 		}

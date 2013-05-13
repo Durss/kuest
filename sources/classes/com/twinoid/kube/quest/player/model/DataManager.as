@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.model {
+	import com.nurun.core.commands.SequentialCommand;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
@@ -8,10 +9,12 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.editor.utils.initSerializableClasses;
 	import com.twinoid.kube.quest.editor.vo.KuestData;
 	import com.twinoid.kube.quest.editor.vo.Point3D;
+	import com.twinoid.kube.quest.player.cmd.LoadKuestDetailsCmd;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 
 	import flash.errors.IllegalOperationError;
 	import flash.events.EventDispatcher;
+	import flash.events.ProgressEvent;
 	import flash.events.StatusEvent;
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
@@ -36,6 +39,10 @@ package com.twinoid.kube.quest.player.model {
 		private var _lcClientNames:Array;
 		private var _loadKuestCmd:LoadCmd;
 		private var _kuest:KuestData;
+		private var _loadDetailsCmd:LoadKuestDetailsCmd;
+		private var _progressCallback:Function;
+		private var _title:String;
+		private var _description:String;
 		
 		
 		
@@ -68,6 +75,16 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets the quest data
 		 */
 		public function get kuest():KuestData { return _kuest; }
+		
+		/**
+		 * Gets the quest's title
+		 */
+		public function get title():String { return _title; }
+
+		/**
+		 * Gets the quest's description
+		 */
+		public function get description():String { return _description; }
 
 
 
@@ -77,7 +94,8 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Initialize the class.
 		 */
-		public function initialize():void {
+		public function initialize(progressCallback:Function):void {
+			_progressCallback = progressCallback;
 			initSerializableClasses();
 			
 			_lcClientNames = [];
@@ -87,13 +105,24 @@ package com.twinoid.kube.quest.player.model {
 			
 			_lcSend = new LocalConnection();
 			_lcSend.addEventListener(StatusEvent.STATUS, statusSendHandler);
+
+			_loadDetailsCmd = new LoadKuestDetailsCmd();
+			_loadDetailsCmd.addEventListener(CommandEvent.COMPLETE, loadDetailsCompleteHandler);
+			_loadDetailsCmd.addEventListener(CommandEvent.ERROR, loadDetailsErrorsHandler);
 			
 			_loadKuestCmd = new LoadCmd(true);
 			_loadKuestCmd.addEventListener(CommandEvent.COMPLETE, loadQuestCompleteHandler);
 			_loadKuestCmd.addEventListener(CommandEvent.ERROR, loadQuestErrorHandler);
+			_loadKuestCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
+			
+//			Config.addVariable("kuestID", "518c243419f84");
 			if(Config.getVariable("kuestID") != null) {
-				_loadKuestCmd.populate(Config.getVariable("kuestID"));
-				_loadKuestCmd.execute();
+				_loadKuestCmd.populate( Config.getVariable("kuestID") );
+				_loadDetailsCmd.populate( Config.getVariable("kuestID") );
+				var spool:SequentialCommand = new SequentialCommand();
+				spool.addCommand(_loadDetailsCmd);
+				spool.addCommand(_loadKuestCmd);
+				spool.execute();
 			}
 			
 			var client:Object = {};
@@ -185,6 +214,31 @@ package com.twinoid.kube.quest.player.model {
 		 * Called if quest loading fails.
 		 */
 		private function loadQuestErrorHandler(event:CommandEvent):void {
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_ERROR));
+			var label:String = Label.getLabel("exception-"+event.data);
+			if(/^\[missing.*/gi.test(label)) label = event.data as String;
+			throw new KuestException(label, "loading");
+		}
+		
+		/**
+		 * Called details when loading progresses.
+		 */
+		private function loadProgressHandler(event:ProgressEvent):void {
+			_progressCallback( event.bytesLoaded/event.bytesTotal );
+		}
+		
+		/**
+		 * Called when quest details are loaded.
+		 */
+		private function loadDetailsCompleteHandler(event:CommandEvent):void {
+			_title = event.data["title"];
+			_description = event.data["description"];
+		}
+		
+		/**
+		 * Called if quest details loading failed.
+		 */
+		private function loadDetailsErrorsHandler(event:CommandEvent):void {
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_ERROR));
 			var label:String = Label.getLabel("exception-"+event.data);
 			if(/^\[missing.*/gi.test(label)) label = event.data as String;

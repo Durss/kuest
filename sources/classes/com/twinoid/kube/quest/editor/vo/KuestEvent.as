@@ -25,6 +25,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _actionDate:ActionDate;
 		private var _actionType:ActionType;
 		private var _actionChoices:ActionChoices;
+		private var _endsQuest:Boolean;
 		private var _guid:int;
 		
 		
@@ -119,6 +120,16 @@ package com.twinoid.kube.quest.editor.vo {
 				_actionType.addEventListener(Event.CLEAR, typeClearedHandler);
 			}
 		}
+		
+		/**
+		 * Gets if this event validates the quest.
+		 */
+		public function get endsQuest():Boolean { return _endsQuest; }
+
+		/**
+		 * Sets if this event validates the quest.
+		 */
+		public function set endsQuest(endsQuest:Boolean):void { _endsQuest = endsQuest; }
 		
 		/**
 		 * @private

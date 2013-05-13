@@ -96,6 +96,7 @@
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
 		<label code="editWindow-submit"><![CDATA[Valider]]></label>
 		<label code="editWindow-cancel"><![CDATA[Annuler]]></label>
+		<label code="editWindow-endEvent"><![CDATA[Cet événement valide la complétion de la quête.]]></label>
 		
 		<label code="editWindow-place-title"><![CDATA[Lieu de l'évènement]]></label>
 		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
