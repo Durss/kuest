@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.nurun.structure.environnement.label.Label;
@@ -50,6 +51,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _data:KuestEvent;
 		private var _choices:EditEventChoices;
 		private var _disable:Sprite;
+		private var _endEvent:CheckBoxKube;
 		
 		
 		
@@ -108,6 +110,7 @@ package com.twinoid.kube.quest.editor.views {
 					_type.load( _data );
 					_times.load( _data );
 					_choices.load( _data );
+					_endEvent.selected = _data.endsQuest;
 					
 					computePositions();
 					stage.focus = _window;
@@ -154,6 +157,7 @@ package com.twinoid.kube.quest.editor.views {
 			_type	= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
 			_choices= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
 			_times	= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
+			_endEvent= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-endEvent"))) as CheckBoxKube;
 			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
 			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
@@ -246,6 +250,7 @@ package com.twinoid.kube.quest.editor.views {
 			_type.save( _data );
 			_times.save( _data );
 			_choices.save( _data );
+			_data.endsQuest = _endEvent.selected;
 			_data.submit();
 			close();
 		}
