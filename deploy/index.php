@@ -13,6 +13,28 @@
 		die;
 	}
 	
+	//Converts act var into multiple GET vars if necessary.
+	//If the following act var is past :
+	//act=value_var1=value1_var2=value2
+	//then $_GET["act"] value will only be "value" and two
+	//GET vars named "var1" and "var2" will be created with
+	//the corresponding value.
+	$rawAct = "";
+	if (isset($_GET["act"])) {
+		$rawAct = $_GET["act"];
+		$params = explode("_", $_GET["act"]);
+		$_GET["act"] = $params[0];
+		for ($i = 1; $i < count($params); $i++) {
+			if(strpos($params[$i], "=") > -1) {
+				list($var, $value) = explode("=", $params[$i]);
+			}else {
+				$var = $params[$i];
+				$value = 0;
+			}
+			$_GET[$var] = $value;
+		}
+	}
+	
 	$lang = "";
 	if(isset($_GET['uid'], $_GET['pubkey'])) {
 		$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_GET['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_GET["pubkey"]);
@@ -22,12 +44,20 @@
 				$pseudo	= (string) $xml->attributes()->name;
 				$lang = (string)$xml->attributes()->lang;
 				$_SESSION['lang'] = $lang;
+				$_SESSION['uid'] = $_GET['uid'];
+				$_SESSION['name'] = $pseudo;
 			}
 		}else {
 			header("location: /kuest/down");
 		}
 	}else {
 		if (isset($_SESSION['lang'])) $lang = $_SESSION['lang'];
+	}
+	
+	if (isset($_GET["act"]) && $_GET["act"] == "k") {
+	echo $_SESSION['uid'];
+		header("location:syncer.php?id=".$_GET['kid']);
+		die;
 	}
 	
 	//Check if the application is localized in this lang or not. If not, use english.

@@ -6,6 +6,11 @@
 	require_once("php/out/Out.php");
 	require_once("php/log/Logger.php");
 	
+	session_start();
+	if (!isset($_SESSION['uid'])) {
+		header("location: http://muxxu.com/a/kuest/?act=k_kid=".$_GET["id"]);
+	}
+	
 	//Connect to database
 	try {
 		DBConnection::connect();
