@@ -31,7 +31,10 @@
 	<body>
 		<div class="window">
 			<div class="title"><?php echo $title[$lang]; ?></div>
-			<div class="content" style="min-height:140px;"><img src="img/down.png" alt="Error" height="137" /><?php echo $content[$lang]; ?></div>
+			<div class="content" style="min-height:140px;">
+				<div class="inner">
+					<img src="img/down.png" alt="Error" height="137" /><?php echo $content[$lang]; ?></div>
+				</div>
 			<div class="bottom"></div>
 		</div>
 	</body>

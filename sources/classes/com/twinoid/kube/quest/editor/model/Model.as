@@ -472,7 +472,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function saveErrorHandler(event:CommandEvent):void {
 			_saveCmd.callback(false, event.data);
-			throw new KuestException(Label.getLabel("exception-"+event.data as String), event.data as String);
+			throw new KuestException(Label.getLabel("exception-"+event.data), String(event.data));
 		}
 		
 		/**
@@ -508,7 +508,7 @@ package com.twinoid.kube.quest.editor.model {
 			
 			//Keep the session alive
 			clearInterval(_ksaInterval);
-			_ksaInterval = setInterval(_ksaCmd.execute, 10*60 * 1000);//Every 10 minutes
+			_ksaInterval = setInterval(_ksaCmd.execute, 10 * 60*1000);//Every 10 minutes
 			
 			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_SUCCESS));
 		}
@@ -517,11 +517,10 @@ package com.twinoid.kube.quest.editor.model {
 		 * Called if login operation fails
 		 */
 		private function loginErrorHandler(event:CommandEvent):void {
-			var errorCode:String = event.data as String;
+			var errorCode:String = String(event.data);
 			clearInterval(_ksaInterval);
-			if(errorCode == "INVALID_IDS") {
-				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_FAIL, event.data));
-			}else{
+			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_FAIL, errorCode));
+			if (errorCode != "INVALID_IDS") {
 				throw new KuestException(Label.getLabel("exception-"+errorCode), errorCode);
 			}
 		}
@@ -560,7 +559,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function loadKuestErrorHandler(event:CommandEvent):void {
 			_loadCmd.callback(false, errorCode);
-			var errorCode:String = event.data as String;
+			var errorCode:String = String(event.data);
 			throw new KuestException(Label.getLabel("exception-"+errorCode), errorCode);
 		}
 
