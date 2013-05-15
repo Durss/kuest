@@ -47,7 +47,9 @@
 			$params = array(':id' => $_GET["id"]);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
-				Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
+				$error = $req->errorInfo();
+				$error = $error[2];
+				Out::printOut(false, '', $error, 'SQL_ERROR');
 				die;
 			}
 			$tot = $req->rowCount();
@@ -72,6 +74,17 @@
 			$id = $_GET["id"];
 			if (isset($_GET["publish"])) {
 				$guid = $res['guid'];
+				
+				//Flag as published
+				$sql = "UPDATE kuests SET published=:published WHERE guid=:guid";
+				$params = array('guid' => $guid, ':published' => true);
+				$req = DBConnection::getLink()->prepare($sql);
+				if (!$req->execute($params)) {
+					$error = $req->errorInfo();
+					$error = $error[2];
+					Out::printOut(false, '', $error, 'SQL_ERROR');
+					die;
+				}
 			}
 			
 		}else {
@@ -98,11 +111,13 @@
 			}
 			
 			//Insert into DB
-			$sql = "INSERT into kuests (guid, uid, name, description, dataFile) VALUES (:guid, :uid, :name, :description, :dataFile)";
-			$params = array('guid' => uniqid(), ':uid' => $_SESSION['uid'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index);
+			$sql = "INSERT into kuests (guid, uid, lang, name, description, dataFile) VALUES (:guid, :uid, :lang, :name, :description, :dataFile)";
+			$params = array('guid' => uniqid(), ':uid' => $_SESSION['uid'], ':lang' => $_SESSION['lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
-				Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
+				$error = $req->errorInfo();
+				$error = $error[2];
+				Out::printOut(false, '', $error, 'SQL_ERROR');
 				die;
 			}
 			$id = DBConnection::getLink()->lastInsertId();

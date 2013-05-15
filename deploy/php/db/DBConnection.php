@@ -10,11 +10,6 @@
 			}
 			
 			session_start();
-			if (!isset($_SESSION["uid"])) {
-				$_SESSION["uid"] = "";
-				$_SESSION["name"] = "";
-				$_SESSION["pubkey"] = "";
-			}
 		}
 		
 		public static function close() {

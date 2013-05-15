@@ -22,7 +22,9 @@
 	$params = array(':guid' => $_POST["kid"]);
 	$req = DBConnection::getLink()->prepare($sql);
 	if (!$req->execute($params)) {
-		Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
+		$error = $req->errorInfo();
+		$error = $error[2];
+		Out::printOut(false, '', $error, 'SQL_ERROR');
 		die;
 	}
 	$res = $req->fetch();

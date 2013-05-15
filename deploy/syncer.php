@@ -6,17 +6,16 @@
 	require_once("php/out/Out.php");
 	require_once("php/log/Logger.php");
 	
-	session_start();
-	if (!isset($_SESSION['uid'])) {
-		header("location: http://muxxu.com/a/kuest/?act=k_kid=".$_GET["id"]);
-	}
-	
 	//Connect to database
 	try {
 		DBConnection::connect();
 	}catch (Exception $error) {
 		$error = "Unable to connect DataBase...";
 		die;
+	}
+	
+	if (!isset($_SESSION['uid'])) {
+		header("location: http://muxxu.com/a/kuest/?act=k_kid=".$_GET["id"]);
 	}
 	
 	if(isset($_SESSION["lang"])) 
@@ -86,7 +85,11 @@
 	<body>
 		<div class="window">
 			<div class="title"><?php echo $title; ?></div>
-			<div class="content"><?php echo $description; ?></div>
+			<div class="content">
+				<div class="inner">
+					<?php echo $description; ?>
+				</div>
+			</div>
 			<div class="bottom"></div>
 		</div>
 		

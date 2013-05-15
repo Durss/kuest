@@ -8,10 +8,6 @@
 		header("location: http://fevermap.org/kuest");
 		die;
 	}
-	if (isset($_GET["act"]) && $_GET["act"] == "ids") {
-		header("location:ids.php?uid=".$_GET['uid']."&pubkey=".$_GET['pubkey']);
-		die;
-	}
 	
 	//Converts act var into multiple GET vars if necessary.
 	//If the following act var is past :
@@ -35,6 +31,21 @@
 		}
 	}
 	
+	if (isset($_GET["act"]) && $_GET["act"] == "ids") {
+		header("location:ids.php?uid=".$_GET['uid']."&pubkey=".$_GET['pubkey']);
+		die;
+	}
+	
+	if (isset($_GET["act"]) && $_GET["act"] == "k") {
+		header("location:syncer.php?id=".$_GET['kid']);
+		die;
+	}
+	
+	if (isset($_GET["act"]) && $_GET["act"] != "editor") {
+		header("location:browse.php");
+		die;
+	}
+	
 	$lang = "";
 	if(isset($_GET['uid'], $_GET['pubkey'])) {
 		$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_GET['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_GET["pubkey"]);
@@ -52,12 +63,6 @@
 		}
 	}else {
 		if (isset($_SESSION['lang'])) $lang = $_SESSION['lang'];
-	}
-	
-	if (isset($_GET["act"]) && $_GET["act"] == "k") {
-	echo $_SESSION['uid'];
-		header("location:syncer.php?id=".$_GET['kid']);
-		die;
 	}
 	
 	//Check if the application is localized in this lang or not. If not, use english.
@@ -104,7 +109,7 @@
 			if(lang != "fr" && lang != "en") lang = "en";
 			
 			var flashvars = {};
-			flashvars["version"] = "31";
+			flashvars["version"] = "34";
 			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
 			flashvars["lang"] = lang;
 <?php

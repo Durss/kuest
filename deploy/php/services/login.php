@@ -37,12 +37,12 @@
 	}
 	$additionnals = "";
 	if (isset($_POST["pubkey"], $_POST["uid"])) {
-		if($_SESSION["uid"] != $_POST["uid"] || $_SESSION["pubkey"] != $_POST["pubkey"]) {
+		if(!isset($_SESSION['uid']) || ($_SESSION["uid"] != $_POST["uid"]) || !isset($_SESSION['pubkey']) || $_SESSION["pubkey"] != $_POST["pubkey"]) {
 			$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_POST['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_POST["pubkey"]);
 			$xml = @simplexml_load_file($url);
 			
 			if ($xml === false) {
-				Out::printOut(false, '', 'Invalid UID and/or PUBKEY', 'API_ERROR');
+				Out::printOut(false, '', 'Muxxu API unavailable', 'API_ERROR');
 				die;
 			}
 			
@@ -89,7 +89,9 @@
 		$params = array(':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
-			Out::printOut(false, '', $req->errorInfo(), 'SQL_ERROR');
+			$error = $req->errorInfo();
+			$error = $error[2];
+			Out::printOut(false, '', $error, 'SQL_ERROR');
 			die;
 		}
 		$res = $req->fetchAll();

@@ -44,20 +44,22 @@
 	<body>
 		<div class="window">
 			<div class="title"><?php echo $title[$lang]; ?></div>
-			<div class="content"><?php echo $content[$lang]; ?>
-				<div class="table">
-					<div class="row">
-						<div class="colLeft"><h1>UID</h1></div>
-						<div class="colMiddle"><h2 id="uid"><?php echo htmlentities($_GET["uid"]); ?></h2></div>
-						<div class="colRight" id="copy1"><h2 class="copyLink"><a href="#"><?php echo $copy[$lang]; ?></a></h2></div>
+			<div class="content">
+				<div class="inner"><?php echo $content[$lang]; ?>
+					<div class="table">
+						<div class="row">
+							<div class="colLeft"><h1>UID</h1></div>
+							<div class="colMiddle"><h2 id="uid"><?php echo htmlentities($_GET["uid"]); ?></h2></div>
+							<div class="colRight" id="copy1"><h2 class="copyLink"><a href="#"><?php echo $copy[$lang]; ?></a></h2></div>
+						</div>
+						<div class="row">
+							<div class="colLeft"><h1>PUBKEY</h1></div>
+							<div class="colMiddle"><h2 id="pubkey"><?php echo htmlentities($_GET["pubkey"]); ?></h2></div>
+							<div class="colRight" id="copy2"><h2 class="copyLink"><a href="#"><?php echo $copy[$lang]; ?></a></h2></div>
+						</div>
 					</div>
-					<div class="row">
-						<div class="colLeft"><h1>PUBKEY</h1></div>
-						<div class="colMiddle"><h2 id="pubkey"><?php echo htmlentities($_GET["pubkey"]); ?></h2></div>
-						<div class="colRight" id="copy2"><h2 class="copyLink"><a href="#"><?php echo $copy[$lang]; ?></a></h2></div>
-					</div>
+					<br /><center><a href="http://fevermap.org/kuest/?uid=<?php echo htmlentities($_GET["uid"]); ?>&pubkey=<?php echo htmlentities($_GET["pubkey"]); ?>" target="_blank">&gt; <?php echo $click[$lang]; ?> &lt;</a></center>
 				</div>
-				<br /><center><a href="http://fevermap.org/kuest/?uid=<?php echo htmlentities($_GET["uid"]); ?>&pubkey=<?php echo htmlentities($_GET["pubkey"]); ?>" target="_blank">&gt; <?php echo $click[$lang]; ?> &lt;</a></center>
 			</div>
 			<div class="bottom"></div>
 		</div>
