@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.muxxu.kub3dit.graphics.CancelIcon;
+	import com.nurun.utils.pos.roundPos;
+	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -32,6 +35,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _isClosed:Boolean;
 		private var _window:TitledWindow;
 		private var _so:SharedObject;
+		private var _closeBt:ButtonKube;
 		
 		
 		
@@ -104,8 +108,9 @@ package com.twinoid.kube.quest.editor.views {
 		private function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_tutorial = new TutorialGraphic();
-			_window = addChild(new TitledWindow(Label.getLabel("tutorial-title"), _tutorial)) as TitledWindow;
+			_tutorial	= new TutorialGraphic();
+			_window		= addChild(new TitledWindow(Label.getLabel("tutorial-title"), _tutorial)) as TitledWindow;
+			_closeBt	= addChild(new ButtonKube(Label.getLabel("tutorial-close"), new CancelIcon())) as ButtonKube;
 			
 			alpha = 0;
 			visible = false;
@@ -157,6 +162,10 @@ package com.twinoid.kube.quest.editor.views {
 			_window.updateSizes();
 			
 			PosUtils.centerInStage(_window);
+			
+			_closeBt.x = _window.x +_window.width - _closeBt.width;
+			_closeBt.y = _window.y - _closeBt.height;
+			roundPos(_window, _closeBt);
 		}
 		
 		/**
@@ -170,6 +179,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when something is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
+			if(event.target == _closeBt) onTutorialComplete();
 			close();
 		}
 		

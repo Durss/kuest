@@ -2,6 +2,7 @@
 <root>
 	<labels>
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
+		<label code="tutorial-close"><![CDATA[J'ai vu !]]></label>
 		
 		<label code="exception-title"><![CDATA[Erreur]]></label>
 		<label code="exception-INCOMPLETE_FORM"><![CDATA[Données manquantes dans la requête.]]></label>
@@ -68,6 +69,8 @@
 		<label code="menu-file-save"><![CDATA[Enregistrer]]></label>
 		<label code="menu-file-publish"><![CDATA[Publier]]></label>
 		<label code="menu-file-publish-label"><![CDATA[Retrouvez votre quête à cette adresse :<br /><a href="{ROOT}/k/{ID}" target="_blank" class="link">{ROOT}/k/{ID}</a>]]></label>
+		<label code="menu-file-publish-promptTitle"><![CDATA[Confirmation de publication]]></label>
+		<label code="menu-file-publish-promptContent"><![CDATA[<b>Êtes-vous sûr de vouloir publier votre quête?</b><br /><b>Attention</b>, toute modification de la structure de la quête après publication <span class="window-content-big">risque de corrompre</span> la sauvegarde des utilisateurs et de les obliger reccommencer votre quête depuis le début.<br />Il est ainsi vivement conseillé de publier votre quête dans son état final.]]></label>
 		<label code="menu-file-params"><![CDATA[Paramètres]]></label>
 		<label code="menu-file-saveNewTT"><![CDATA[Enregistrer en tant<br />que nouvelle quête.]]></label>
 		<label code="menu-file-publishTT"><![CDATA[Publie votre quête afin de la<br />rendre jouable par n'importe qui.]]></label>

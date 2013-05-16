@@ -110,6 +110,8 @@ package com.twinoid.kube.quest.editor.views {
 			_disable= addChild(new Sprite()) as Sprite;
 			_window	= addChild(new TitledWindow("", _holder)) as TitledWindow;
 			
+			_label.selectable = true;
+			
 			makeEscapeClosable(this);
 			
 			ViewLocator.getInstance().addEventListener(ViewEvent.PROMPT, promptHandler);
