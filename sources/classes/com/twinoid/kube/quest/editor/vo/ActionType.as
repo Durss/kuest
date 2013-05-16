@@ -2,6 +2,7 @@ package com.twinoid.kube.quest.editor.vo {
 	import flash.events.EventDispatcher;
 	import flash.events.Event;
 	
+	[Event(name="change", type="flash.events.Event")]
 	[Event(name="clear", type="flash.events.Event")]
 	
 	/**
@@ -110,9 +111,15 @@ package com.twinoid.kube.quest.editor.vo {
 		 * being serialized.
 		 */
 		public function setItem(item:IItemData):void {
-			if(_item != null) _item.removeEventListener(Event.CLEAR, itemClearedHandler);
+			if(_item != null) {
+				_item.removeEventListener(Event.CLEAR, itemClearedHandler);
+				_item.removeEventListener(Event.CHANGE, dispatchEvent);
+			}
 			_item = item;
-			if(_item != null) _item.addEventListener(Event.CLEAR, itemClearedHandler);
+			if(_item != null) {
+				_item.addEventListener(Event.CLEAR, itemClearedHandler);
+				_item.addEventListener(Event.CHANGE, dispatchEvent);
+			}
 			_itemGuid = item == null? -1 : item.guid;
 		}
 

@@ -113,11 +113,13 @@ package com.twinoid.kube.quest.editor.vo {
 			if(_actionType != null) {
 				_actionType.dispose();
 				_actionType.removeEventListener(Event.CLEAR, typeClearedHandler);
+				_actionType.removeEventListener(Event.CHANGE, dispatchEvent);
 				_actionType = null;
 			}
 			if(value != null) {
 				_actionType = value;
 				_actionType.addEventListener(Event.CLEAR, typeClearedHandler);
+				_actionType.addEventListener(Event.CHANGE, dispatchEvent);
 			}
 		}
 		

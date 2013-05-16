@@ -90,7 +90,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			_currentViewPort.top = _currentViewPort.bottom = _start.y;
 			
 			//If previous drawing has been done less than X seconds ago, merge it.
-			_mergeWithPrevious = getTimer() - _lastDrawingTime < 5000;
+			_mergeWithPrevious = getTimer() - _lastDrawingTime < 500;
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
@@ -108,7 +108,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			//Ignore too small drawings
 			if (_points.length < 3) return;
 
-			var data:GraphicsPath = smoothLines(Simplify.simplifyDouglasPeucker(_points, 50));
+			var data:GraphicsPath = smoothLines(Simplify.simplifyDouglasPeucker(_points, 30));
 			//Merge data with previous drawing
 			if (_mergeWithPrevious && _viewPorts.length > 0) {
 				var vp:Rectangle = _viewPorts[ _viewPorts.length - 1 ];
@@ -277,6 +277,13 @@ package com.twinoid.kube.quest.editor.components.box {
 				Mouse.show();
 				clipDrawings();
 				dispatchEvent(new BoxesCommentsEvent(BoxesCommentsEvent.LEAVE_EDIT_MODE));
+			}
+			if(event.keyCode == Keyboard.Z && event.ctrlKey && _paths.length > 0) {
+				_lastDrawingTime = int.MIN_VALUE;
+				_paths.pop();
+				_viewPorts.pop();
+				clearSplittedGraphics();
+				splitGraphics();
 			}
 		}
 		
