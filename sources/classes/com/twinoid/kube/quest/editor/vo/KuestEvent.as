@@ -153,7 +153,10 @@ package com.twinoid.kube.quest.editor.vo {
 		 * @private
 		 * here for serialization purpose only!
 		 */
-		public function set guid(guid:int):void { _guid = guid; }
+		public function set guid(value:int):void {
+			_guid = value;
+			if(value > GUID) GUID = value + 1;
+		}
 
 
 

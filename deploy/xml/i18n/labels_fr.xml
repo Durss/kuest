@@ -19,6 +19,7 @@
 		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
 		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
 		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
+		<label code="exception-IOERROR"><![CDATA[Impossible de contacter le serveur...<br />Vérifiez que vous êtes bien connecté à internet.]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>

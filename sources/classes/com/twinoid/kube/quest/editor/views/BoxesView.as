@@ -304,11 +304,12 @@ package com.twinoid.kube.quest.editor.views {
 			var i:int, len:int, box:Box;
 			var j:int, lenJ:int;
 			len = nodes.length;
-			//Create the items and registers all the items to find back the dependencies faster.
+			//Create the items and registers all the items to find back their dependencies faster.
 			var dependencies:Vector.<Box> = new Vector.<Box>();
 			var dataToBox:Dictionary = new Dictionary();
 			for(i = 0; i < len; ++i) {
 				box = createItem(nodes[i], false);
+				trace("Register : "+box.data.guid);
 				dataToBox[box.data] = box;
 				if(nodes[i].dependencies.length > 0) {
 					dependencies.push(box);
@@ -320,6 +321,7 @@ package com.twinoid.kube.quest.editor.views {
 			for(i = 0; i < len; ++i) {
 				lenJ = dependencies[i].data.dependencies.length;
 				for(j = 0; j < lenJ; ++j) {
+					trace("Link : "+dependencies[i].data.dependencies[j].event.guid, dataToBox[ dependencies[i].data.dependencies[j].event ])
 					var link:BoxLink = new BoxLink( dataToBox[ dependencies[i].data.dependencies[j].event ], dependencies[i], dependencies[i].data.dependencies[j].choiceIndex );
 					_boxesHolder.addChildAt(link, 0);
 					link.startEntry.addlink(link);

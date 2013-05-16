@@ -33,9 +33,9 @@ var queryString = function () {
 
 var kuestID = queryString['kuest'];
 var gameDiv = unsafeWindow.document.getElementsByClassName("game")[0];
-var url = "http://fevermap.org/kuest/swf/player.swf";
+var url = "http://fevermap.org/kuest/swf/player.swf?";
 var kuestApp = unsafeWindow.document.createElement('div');
-if(kuestID) url += "?kuestID="+kuestID;
+if(kuestID) url += "kuestID="+kuestID;
 url += "&version=1";
 url += "&configXml=http://fevermap.org/kuest/xml/config.xml";
 

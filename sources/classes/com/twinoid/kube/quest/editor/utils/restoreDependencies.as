@@ -18,10 +18,10 @@ package com.twinoid.kube.quest.editor.utils {
 	 * 
 	 * @author Francois
 	 */
-	public function restoreDependencies(items:Vector.<KuestEvent>, chars:Vector.<CharItemData>, objs:Vector.<ObjectItemData>, deepCheck:Boolean = true, guids:Array = null):void {
+	public function restoreDependencies(items:Vector.<KuestEvent>, chars:Vector.<CharItemData>, objs:Vector.<ObjectItemData>):void {
 		var i:int, len:int;
 		var j:int, lenJ:int;
-		var guidToVo:Array = guids == null? [] : guids;
+		var guidToVo:Array = [];
 		var guidToChar:Array = [];
 		var guidToObj:Array = [];
 		
@@ -47,11 +47,13 @@ package com.twinoid.kube.quest.editor.utils {
 				//VO already registered, load it from cache
 				items[i] = guidToVo[items[i].guid];
 			}
-			if(deepCheck) {
-				lenJ = items[i].dependencies.length;
-				for(j = 0; j < lenJ; ++j) {
-					restoreDependencies(new <KuestEvent>[items[i].dependencies[j].event], chars, objs, false, guidToVo);
-				}
+		}
+		
+		//Restore links dependencies
+		for(i = 0; i < len; ++i) {
+			lenJ = items[i].dependencies.length;
+			for(j = 0; j < lenJ; ++j) {
+				items[i].dependencies[j].event = guidToVo[ items[i].dependencies[j].event.guid ];
 			}
 		}
 	}
