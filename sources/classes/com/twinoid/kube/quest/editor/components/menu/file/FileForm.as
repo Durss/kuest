@@ -221,17 +221,13 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Called when saving completes/fails
 		 */
 		private function onSave(succes:Boolean, errorID:String = "", progress:Number = NaN):void {
-			progress;//can't worrk for upload :(
-//			if(!isNaN(progress)) {
-//				_spin.label = Label.getLabel("loader-saving");
-//				return;
-//			}
+			progress;//can't work for upload :(
 			errorID;//
 			_saveBt.enabled = true;
 			_saveNewBt.enabled = true;
 			if(succes) {
 				_spin.close(Label.getLabel("loader-savingOK"));
-			}else{
+			}else {
 				_spin.close(Label.getLabel("loader-savingKO"));
 			}
 		}
@@ -239,8 +235,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Called when saving completes/fails
 		 */
-		private function onPublish(succes:Boolean, errorID:String = "", publishID:String = ""):void {
-			errorID;//
+		private function onPublish(succes:Boolean = false, errorID:String = "", publishID:String = ""):void {
 			_publishBt.enabled = true;
 			if(succes) {
 				if (publishID.length > 0) {
@@ -249,8 +244,10 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 					_publishForm.open();
 				}
 				_spin.close(Label.getLabel("loader-publishingOK"));
-			}else{
+			}else if(errorID.length > 0){//if no error ID, it's a canceled prompt window.
 				_spin.close(Label.getLabel("loader-publishingKO"));
+			}else{
+				_spin.close();
 			}
 		}
 		

@@ -184,8 +184,6 @@ package com.twinoid.kube.quest.editor.model {
 		 * Stats the application
 		 */
 		public function start():void {
-			_isConnected = !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
-			
 			initSerializableClasses();
 			
 			_charactersUpdate = _objectsUpdate = true;
@@ -336,7 +334,11 @@ package com.twinoid.kube.quest.editor.model {
 			}
 			
 			_saveCmd.populate(title, description, bytes, callback, title == null && description == null? _currentKuestId : "", optimise);
-			_saveCmd.execute();
+			if(optimise) {
+				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback);
+			}else{
+				_saveCmd.execute();
+			}
 		}
 		
 		/**
@@ -387,10 +389,10 @@ package com.twinoid.kube.quest.editor.model {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_so = SharedObject.getLocal("kuest", "/");
-			
-			_kuestData = new KuestData();
-			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
+			_so				= SharedObject.getLocal("kuest", "/");
+			_kuestData		= new KuestData();
+			_inGamePosition	= new Point(int.MAX_VALUE, int.MAX_VALUE);
+			_isConnected	= !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
 			
 			_ksaCmd = new KeepSessionAliveCmd();//Don't care about succes/fail
 			
@@ -413,9 +415,12 @@ package com.twinoid.kube.quest.editor.model {
 				_lang = _so.data["lang"];
 				_pubkey = _so.data["pubkey"];
 				
-				Config.addVariable("uid", _so.data["uid"]);
-				Config.addVariable("lang", _so.data["lang"]);
-				Config.addVariable("pubkey", _so.data["pubkey"]);
+				if(!_isConnected) {
+					Config.addVariable("uid", _so.data["uid"]);
+					Config.addVariable("lang", _so.data["lang"]);
+					Config.addVariable("pubkey", _so.data["pubkey"]);
+					_isConnected = true;
+				}
 			}
 			
 			//================
