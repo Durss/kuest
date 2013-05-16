@@ -79,6 +79,7 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		public function close():void {
 			_isClosed = true;
+			_tutorial.gotoAndStop(1);
 			TweenLite.to(this, .25, {autoAlpha:0});
 		}
 		

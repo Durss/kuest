@@ -55,7 +55,7 @@ function addItem(i, node, holder) {
 	entry['uname']	= node.getElementsByTagName("u")[0].childNodes[0].nodeValue
 	entry['title']	= node.getElementsByTagName("title")[0].childNodes[0].nodeValue
 	var div = document.createElement('div');
-	div.onclick = (function () { var id = entry['guid']; return function () { window.open("/kuest/k/"+id); } })();
+	div.onclick = (function () { var id = entry['guid']; return function (e) { window.parent.location = (e.layerX > 30)? "http://kube.muxxu.com/?kuest="+id : "/kuest/k/"+id; } })();
 	div.className = i%2 == 0? "item" : "item mod";
 	div.innerHTML = template.replace(/\{GUID\}/gi, entry['guid']).replace(/\{PSEUDO\}/gi, entry['uname']).replace(/\{TITLE\}/gi, entry['title']).replace(/\{UID\}/gi, entry['uid']);
 	holder.appendChild(div);

@@ -50,6 +50,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _model:Model;
 		private var _publishBt:ButtonKube;
 		private var _publishForm:FilePublishForm;
+		private var _prevKuestId:String;
 		
 		
 		
@@ -84,7 +85,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_saveNewBt.visible = model.currentKuestId != null;
 			_publishBt.enabled = _saveNewBt.visible;
 			_loadForm.populate(model.kuests);
-			if(model.currentKuestId == null) _publishForm.close();
+			if(model.currentKuestId != _prevKuestId) _publishForm.close();
+			_prevKuestId = model.currentKuestId;
 			computePositions();
 		}
 

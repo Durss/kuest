@@ -54,6 +54,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _uid:String;
 		private var _name:String;
 		private var _pubkey:String;
+		private var _lang:String;
 		private var _so:SharedObject;
 		private var _charactersUpdate:Boolean;
 		private var _objectsUpdate:Boolean;
@@ -386,7 +387,7 @@ package com.twinoid.kube.quest.editor.model {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_so = SharedObject.getLocal("kuest");
+			_so = SharedObject.getLocal("kuest", "/");
 			
 			_kuestData = new KuestData();
 			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
@@ -407,10 +408,13 @@ package com.twinoid.kube.quest.editor.model {
 			_loadCmd.addEventListener(CommandEvent.ERROR, loadKuestErrorHandler);
 			_loadCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);
 			
-			if(_so.data["uid"] != null) {
+			if(_so.data["lang"] != null) {
 				_uid = _so.data["uid"];
+				_lang = _so.data["lang"];
 				_pubkey = _so.data["pubkey"];
+				
 				Config.addVariable("uid", _so.data["uid"]);
+				Config.addVariable("lang", _so.data["lang"]);
 				Config.addVariable("pubkey", _so.data["pubkey"]);
 			}
 			
@@ -503,6 +507,7 @@ package com.twinoid.kube.quest.editor.model {
 			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
 			
 			_so.data["uid"] = _uid;
+			_so.data["lang"] = event.data["lang"];
 			_so.data["pubkey"] = _pubkey;
 			_so.flush();
 			

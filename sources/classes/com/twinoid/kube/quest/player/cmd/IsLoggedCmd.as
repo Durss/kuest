@@ -1,4 +1,4 @@
-package com.twinoid.kube.quest.editor.cmd {
+package com.twinoid.kube.quest.player.cmd {
 	import com.nurun.core.commands.Command;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.boolean.parseBoolean;
@@ -11,13 +11,13 @@ package com.twinoid.kube.quest.editor.cmd {
 
 	
 	/**
-	 * The  LoginCmd is a concrete implementation of the ICommand interface.
-	 * Its responsability is to log the user in.
+	 * The IsLoggedCmd is a concrete implementation of the ICommand interface.
+	 * Its responsability is to test if the user is logged in.
 	 *
 	 * @author Francois
 	 * @date 28 avr. 2013;
 	 */
-	public class LoginCmd extends LoadFileCmd implements Command {
+	public class IsLoggedCmd extends LoadFileCmd implements Command {
 		
 		
 		
@@ -25,8 +25,8 @@ package com.twinoid.kube.quest.editor.cmd {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function LoginCmd() {
-			super(Config.getPath("loginWS"));
+		public function IsLoggedCmd() {
+			super(Config.getPath("isLoggedWS"));
 			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);
 		}
 
@@ -41,13 +41,6 @@ package com.twinoid.kube.quest.editor.cmd {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
-		/**
-		 * Populates the command
-		 */
-		public function populate(uid:String, pubkey:String):void {
-			_urlVariables['uid'] = uid;
-			_urlVariables['pubkey'] = pubkey;
-		}
 
 
 		
@@ -65,6 +58,7 @@ package com.twinoid.kube.quest.editor.cmd {
 			
 			if(parseBoolean(xml.child("result")[0].@success)) {
 				var ret:Object = {};
+				ret["logged"]	= parseBoolean(xml.child("logged")[0]);
 				ret["uid"]		= xml.child("uid")[0];
 				ret["name"]		= xml.child("name")[0];
 				ret["pubkey"]	= xml.child("pubkey")[0];
