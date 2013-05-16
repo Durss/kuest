@@ -49,7 +49,10 @@ package com.twinoid.kube.quest.editor.vo {
 
 		public function get guid():int { return _guid; }
 
-		public function set guid(value:int):void { _guid = value; }
+		public function set guid(value:int):void {
+			_guid = value;
+			if(value > _GUID) _GUID = value + 1;
+		}
 
 
 

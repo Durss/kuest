@@ -174,6 +174,7 @@ package com.twinoid.kube.quest.editor.components.box {
 					if(contains(_timeIcon)) removeChild(_timeIcon);
 				}
 				
+				_background.filters = _data.endsQuest? [new ColorMatrixFilter([-1.2100542783737183,1.388539433479309,1.2215150594711304,0,-25.40000343322754,0.7383951544761658,0.7626101970672607,-0.1010054349899292,0,-25.400001525878906,-0.2772481143474579,2.9502274990081787,-1.2729790210723877,0,-25.400007247924805,0,0,0,1,0])] : [];
 				
 				//============ LINKS MANAGEMNT ============
 				var wasLink2:Boolean = contains(_outBox2);
