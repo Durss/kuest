@@ -6,8 +6,10 @@ package com.twinoid.kube.quest.editor.vo {
 	
 	
 	[Event(name="clear", type="flash.events.Event")]
+	[Event(name="change", type="flash.events.Event")]
 	
 	/**
+	 * Contains the data about a character (image/name/guid)
 	 * 
 	 * @author Francois
 	 * @date 21 avr. 2013;
@@ -41,11 +43,18 @@ package com.twinoid.kube.quest.editor.vo {
 
 		public function get name():String { return _name; }
 
-		public function set name(name:String):void { _name = name; }
+		public function set name(value:String):void { _name = value; }
 
 		public function get image():SerializableBitmapData { return _image; }
 
-		public function set image(image:SerializableBitmapData):void { _image = image; }
+		public function set image(value:SerializableBitmapData):void {
+			if(_image != null) {
+				_image.removeEventListener(Event.CHANGE, dispatchEvent);
+			}
+			value.addEventListener(Event.CHANGE, dispatchEvent);
+			_image = value;
+			dispatchEvent(new Event(Event.CHANGE));
+		}
 
 		public function get guid():int { return _guid; }
 

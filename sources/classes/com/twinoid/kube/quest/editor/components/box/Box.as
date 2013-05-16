@@ -110,8 +110,8 @@ package com.twinoid.kube.quest.editor.components.box {
 			//Disabled the default startDrag behavior to prevent from lags between
 			//the box and its link. Also mouse was sometimes "loosing" the box.
 //			super.startDrag(lockCenter, bounds);
-			_dragOffset.x =  x;
-			_dragOffset.y =  y;
+			_dragOffset.x =  stage.mouseX;
+			_dragOffset.y =  stage.mouseY;
 			var i:int, len:int = _links.length;
 			for(i = 0; i < len; ++i) _links[i].startAutoUpdate();
 		}
@@ -160,6 +160,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			}else{
 				if(_data.getImage() != null) {
 					_image.setBitmapData(_data.getImage());
+					_image.validate();
 				}else{
 					_image.clear();
 				}
@@ -416,7 +417,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				}
 				return;
 			}
-			if(Math.abs(x-_dragOffset.x) < 5 && Math.abs(y-_dragOffset.y) < 5) {
+			if(Math.abs(stage.mouseX-_dragOffset.x) < 2 && Math.abs(stage.mouseY-_dragOffset.y) < 2) {
 				FrontControler.getInstance().edit(_data);
 			}
 		}

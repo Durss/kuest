@@ -178,6 +178,7 @@ package com.twinoid.kube.quest.editor.components.item {
 			_img = addChild(new ImageResizer(null, true, true)) as ImageResizer;
 			_img.width = WIDTH;
 			_img.height = HEIGHT;
+			_img.defaultTweenEnabled = false;
 		}
 		
 		/**
@@ -197,6 +198,7 @@ package com.twinoid.kube.quest.editor.components.item {
 		private function loadImageCompleteHandler(event:CommandEvent):void {
 			if(contains(_icon)) removeChild(_icon);
 			_img.setBitmapData(event.data as BitmapData);
+			_img.validate();
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 		

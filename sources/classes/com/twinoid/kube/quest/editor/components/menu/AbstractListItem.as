@@ -97,6 +97,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			
 			_image.removeEventListener(Event.CHANGE, changeHandler);
 			_deleteBt.removeEventListener(MouseEvent.CLICK, clickHandler);
+			_nameInput.removeEventListener(Event.CHANGE, changeHandler);
 			_nameInput.removeEventListener(FocusEvent.FOCUS_OUT, changeHandler);
 			_nameInput.removeEventListener(FormComponentEvent.SUBMIT, changeHandler);
 		}
@@ -124,6 +125,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			if (_data != null && _data.image != null && _data.name != null) {
 				_image.image = _data.image.getConcreteBitmapData();
 				_nameInput.text = _data.name;
+				_data.addEventListener(Event.CHANGE, changeImageHandler);
 			}else{
 				filters = _errorFilter;
 			}
@@ -166,10 +168,15 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		protected function changeHandler(event:Event):void {
 			var n:String = _nameInput.value as String;
-			var bmd:SerializableBitmapData = new SerializableBitmapData();
-			bmd.fromBitmapData(_image.image);
-			_data.image	= bmd;
-			_data.name	= StringUtils.trim(n).length == 0? null : n;
+			if(event.currentTarget == _nameInput && _data.name == n) return;
+			
+			if(event.currentTarget != _nameInput) {
+				var bmd:SerializableBitmapData = new SerializableBitmapData();
+				bmd.fromBitmapData(_image.image);
+				_data.image	= bmd;
+			}else{
+				_data.name	= StringUtils.trim(n).length == 0? null : n;
+			}
 			if(isValid) {
 				filters = [];
 			}else{
@@ -178,6 +185,10 @@ package com.twinoid.kube.quest.editor.components.menu {
 			if(event.currentTarget == _image) {
 				stage.focus = _nameInput;
 			}
+		}
+
+		private function changeImageHandler(event:Event):void {
+			_image.image = _data.image.getConcreteBitmapData();
 		}
 		
 	}

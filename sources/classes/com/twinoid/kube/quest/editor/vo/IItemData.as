@@ -1,6 +1,7 @@
 package com.twinoid.kube.quest.editor.vo {
 	import flash.events.IEventDispatcher;
 	
+	[Event(name="change", type="flash.events.Event")]
 	[Event(name="clear", type="flash.events.Event")]
 	
 	/**
