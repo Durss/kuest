@@ -108,7 +108,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			//Ignore too small drawings
 			if (_points.length < 3) return;
 
-			var data:GraphicsPath = smoothLines(Simplify.simplifyDouglasPeucker(_points, 30));
+			var data:GraphicsPath = smoothLines(Simplify.simplifyDouglasPeucker(_points, 1));
 			//Merge data with previous drawing
 			if (_mergeWithPrevious && _viewPorts.length > 0) {
 				var vp:Rectangle = _viewPorts[ _viewPorts.length - 1 ];

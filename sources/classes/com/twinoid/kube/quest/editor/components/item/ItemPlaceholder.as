@@ -199,6 +199,11 @@ package com.twinoid.kube.quest.editor.components.item {
 			if(contains(_icon)) removeChild(_icon);
 			_img.setBitmapData(event.data as BitmapData);
 			_img.validate();
+			var bmd:BitmapData = new BitmapData(WIDTH, HEIGHT, false, 0xff7EC3DF);
+			bmd.draw(_img);
+			bmd.lock();
+			_img.setBitmapData(bmd);
+			_img.validate();
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
