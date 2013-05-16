@@ -4,11 +4,13 @@ package com.twinoid.kube.quest.player.model {
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.crypto.XOR;
+	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoadCmd;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.utils.initSerializableClasses;
 	import com.twinoid.kube.quest.editor.vo.KuestData;
 	import com.twinoid.kube.quest.editor.vo.Point3D;
+	import com.twinoid.kube.quest.player.cmd.IsLoggedCmd;
 	import com.twinoid.kube.quest.player.cmd.LoadKuestDetailsCmd;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 
@@ -21,6 +23,8 @@ package com.twinoid.kube.quest.player.model {
 	import flash.net.LocalConnection;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	
 	/**
@@ -43,6 +47,14 @@ package com.twinoid.kube.quest.player.model {
 		private var _progressCallback:Function;
 		private var _title:String;
 		private var _description:String;
+		private var _loginCmd:IsLoggedCmd;
+		private var _uid:String;
+		private var _pubkey:String;
+		private var _logged:Boolean;
+		private var _ksaCmd:KeepSessionAliveCmd;
+		private var _ksaInterval:uint;
+		private var _pseudo:String;
+		private var _lang:String;
 		
 		
 		
@@ -85,6 +97,21 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets the quest's description
 		 */
 		public function get description():String { return _description; }
+		
+		/**
+		 * Gets if the user's logged or not
+		 */
+		public function get logged():Boolean { return _logged; }
+		
+		/**
+		 * Gets the user's name
+		 */
+		public function get pseudo():String { return _pseudo; }
+		
+		/**
+		 * Gets the user's language
+		 */
+		public function get lang():String { return _lang; }
 
 
 
@@ -99,31 +126,9 @@ package com.twinoid.kube.quest.player.model {
 			initSerializableClasses();
 			
 			_lcClientNames = [];
-			_timer = new Timer(100);
-			_timer.addEventListener(TimerEvent.TIMER, ticTimerHandler);
-			_timer.start();
-			
+				
 			_lcSend = new LocalConnection();
 			_lcSend.addEventListener(StatusEvent.STATUS, statusSendHandler);
-
-			_loadDetailsCmd = new LoadKuestDetailsCmd();
-			_loadDetailsCmd.addEventListener(CommandEvent.COMPLETE, loadDetailsCompleteHandler);
-			_loadDetailsCmd.addEventListener(CommandEvent.ERROR, loadDetailsErrorsHandler);
-			
-			_loadKuestCmd = new LoadCmd(true);
-			_loadKuestCmd.addEventListener(CommandEvent.COMPLETE, loadQuestCompleteHandler);
-			_loadKuestCmd.addEventListener(CommandEvent.ERROR, loadQuestErrorHandler);
-			_loadKuestCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
-			
-//			Config.addVariable("kuestID", "518c243419f84");
-			if(Config.getVariable("kuestID") != null) {
-				_loadKuestCmd.populate( Config.getVariable("kuestID") );
-				_loadDetailsCmd.populate( Config.getVariable("kuestID") );
-				var spool:SequentialCommand = new SequentialCommand();
-				spool.addCommand(_loadDetailsCmd);
-				spool.addCommand(_loadKuestCmd);
-				spool.execute();
-			}
 			
 			var client:Object = {};
 			client["_requestUpdates"]		= requestForumUpdates;
@@ -134,6 +139,19 @@ package com.twinoid.kube.quest.player.model {
 			_lcReceive.client = client;
 			_lcReceive.allowDomain("*");
 			_lcReceive.connect(connectionName);
+				
+			_timer = new Timer(100);
+			_timer.addEventListener(TimerEvent.TIMER, ticTimerHandler);
+			_timer.start();
+			
+			if(Config.getVariable("kuestID") != null) {
+				_loginCmd = new IsLoggedCmd();
+				_loginCmd.addEventListener(CommandEvent.COMPLETE, loginCompleteHandler);
+				_loginCmd.addEventListener(CommandEvent.ERROR, loginErrorHandler);
+				_loginCmd.execute();
+			}else {
+				dispatchEvent(new DataManagerEvent(DataManagerEvent.NO_KUEST_SELECTED));
+			}
 		}
 
 
@@ -189,9 +207,59 @@ package com.twinoid.kube.quest.player.model {
 				_lcSend.send(lcName, "_touchForum", _lastTouchPosition.x, _lastTouchPosition.y, _lastTouchPosition.z);
 			}
 		}
+		
+		/**
+		 * Called by distant LC to check if the SWF is still alive
+		 */
+		private function connectCheck():void { }
+		
+		/**
+		 * Called when login operation completes
+		 */
+		private function loginCompleteHandler(event:CommandEvent):void {
+			//currentUID contains the currently playing user ID.
+			//It's grabbed from the HTML page.
+			_logged = event.data["logged"] && event.data["uid"] == Config.getVariable("currentUID");
+			if(_logged) {
+				_uid	= event.data["uid"];
+				_pseudo	= event.data["name"];
+				_pubkey	= event.data["pubkey"];
+				_lang	= event.data["lang"];
+				
+				Config.addVariable("lang", _lang);
+				
+				_ksaCmd = new KeepSessionAliveCmd();//Don't care about succes/fail
+				//Keep the session alive
+				clearInterval(_ksaInterval);
+				_ksaInterval = setInterval(_ksaCmd.execute, 10 * 60*1000);//Every 10 minutes
+	
+				_loadDetailsCmd = new LoadKuestDetailsCmd();
+				_loadDetailsCmd.addEventListener(CommandEvent.COMPLETE, loadDetailsCompleteHandler);
+				_loadDetailsCmd.addEventListener(CommandEvent.ERROR, loadDetailsErrorsHandler);
+				
+				_loadKuestCmd = new LoadCmd(true);
+				_loadKuestCmd.addEventListener(CommandEvent.COMPLETE, loadQuestCompleteHandler);
+				_loadKuestCmd.addEventListener(CommandEvent.ERROR, loadQuestErrorHandler);
+				_loadKuestCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
+				
+	//			Config.addVariable("kuestID", "518c243419f84");
+				_loadKuestCmd.populate( Config.getVariable("kuestID") );
+				_loadDetailsCmd.populate( Config.getVariable("kuestID") );
+				var spool:SequentialCommand = new SequentialCommand();
+				spool.addCommand(_loadDetailsCmd);
+				spool.addCommand(_loadKuestCmd);
+				spool.execute();
+			}
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.ON_LOGIN_STATE));
+		}
 
-		private function connectCheck():void {
-			
+		/**
+		 * Called if login operation fails
+		 */
+		private function loginErrorHandler(event:CommandEvent):void {
+			var errorCode:String = String(event.data);
+			clearInterval(_ksaInterval);
+			throw new KuestException(Label.getLabel("exception-"+errorCode), errorCode);
 		}
 		
 		/**

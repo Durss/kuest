@@ -21,6 +21,7 @@
 	
 	<paths>
 		<path code="loginWS"><![CDATA[{v_root}/php/services/login.php]]></path>
+		<path code="isLoggedWS"><![CDATA[{v_root}/php/services/isLogged.php]]></path>
 		<path code="saveWS"><![CDATA[{v_root}/php/services/save.php]]></path>
 		<path code="loadWS"><![CDATA[{v_root}/php/services/load.php]]></path>
 		<path code="getDetailsWS"><![CDATA[{v_root}/php/services/loadDetails.php]]></path>

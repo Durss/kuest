@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	session_start();
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -42,13 +42,16 @@
 	}
 	
 	if (isset($_GET["act"]) && $_GET["act"] != "editor") {
-		header("location:browse.php");
+		header("location:browse.php?uid=".$_GET['uid']."&pubkey=".$_GET['pubkey']);
 		die;
 	}
 	
 	$lang = "";
 	if(isset($_GET['uid'], $_GET['pubkey'])) {
-		$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_GET['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_GET["pubkey"]);
+		$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
+		$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
+		$url = "http://muxxu.com/app/xml?app=".$app."&xml=user&id=".$_GET['uid']."&key=".md5($key . $_GET["pubkey"]);
+		$xml = @simplexml_load_file($url);
 		$xml = @simplexml_load_file($url);
 		if ($xml !== false) {
 			if ($xml->getName() != "error") {
@@ -57,6 +60,7 @@
 				$_SESSION['lang'] = $lang;
 				$_SESSION['uid'] = $_GET['uid'];
 				$_SESSION['name'] = $pseudo;
+				$_SESSION["pubkey"]	= $_GET["pubkey"];
 			}
 		}else {
 			header("location: /kuest/down");
@@ -67,7 +71,7 @@
 	
 	//Check if the application is localized in this lang or not. If not, use english.
 	if ($lang != "" && !file_exists("xml/i18n/labels_".$lang.".xml")) $lang = "en";
-?>	
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
@@ -109,7 +113,7 @@
 			if(lang != "fr" && lang != "en") lang = "en";
 			
 			var flashvars = {};
-			flashvars["version"] = "39";
+			flashvars["version"] = "40";
 			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
 			flashvars["lang"] = lang;
 <?php

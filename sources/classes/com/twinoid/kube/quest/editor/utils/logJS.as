@@ -3,11 +3,11 @@ package com.twinoid.kube.quest.editor.utils {
 	/**
 	 * @author Francois
 	 */
-	public function logJS(text:String):void {
+	public function logJS(...args):void {
 		if(ExternalInterface.available) {
-			ExternalInterface.call("console.log", text);
+			ExternalInterface.call("console.log", args.join(", "));
 		}else{
-			trace(text);
+			trace(args.join(", "));
 		}
 	}
 }

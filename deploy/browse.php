@@ -40,16 +40,20 @@
 	}
 	
 	$lang = "";
-	if(isset($_GET['uid'], $_GET['pubkey'])) {
-		$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_GET['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_GET["pubkey"]);
+	if (isset($_GET['uid'], $_GET['pubkey']) && strlen($_GET['uid']) > 0 && strlen($_GET['pubkey']) > 0) {
+		$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
+		$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
+		$url = "http://muxxu.com/app/xml?app=".$app."&xml=user&id=".$_GET['uid']."&key=".md5($key . $_GET["pubkey"]);
 		$xml = @simplexml_load_file($url);
+		
 		if ($xml !== false) {
 			if ($xml->getName() != "error") {
 				$pseudo	= (string) $xml->attributes()->name;
 				$lang = (string)$xml->attributes()->lang;
-				$_SESSION['lang'] = $lang;
-				$_SESSION['uid'] = $_GET['uid'];
-				$_SESSION['name'] = $pseudo;
+				$_SESSION['lang']	= $lang;
+				$_SESSION['uid']	= $_GET['uid'];
+				$_SESSION['name']	= $pseudo;
+				$_SESSION["pubkey"]	= $_GET["pubkey"];
 			}
 		}else {
 			header("location: /kuest/down");

@@ -38,7 +38,9 @@
 	$additionnals = "";
 	if (isset($_POST["pubkey"], $_POST["uid"])) {
 		if(!isset($_SESSION['uid']) || ($_SESSION["uid"] != $_POST["uid"]) || !isset($_SESSION['pubkey']) || $_SESSION["pubkey"] != $_POST["pubkey"]) {
-			$url = "http://muxxu.com/app/xml?app=kuest&xml=user&id=".$_POST['uid']."&key=".md5("34e2f927f72b024cd9d1cf0099b097ab" . $_POST["pubkey"]);
+			$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
+			$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
+			$url = "http://muxxu.com/app/xml?app=".$app."&xml=user&id=".$_POST['uid']."&key=".md5($key . $_POST["pubkey"]);
 			$xml = @simplexml_load_file($url);
 			
 			if ($xml === false) {

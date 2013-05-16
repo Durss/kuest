@@ -11,6 +11,8 @@ package com.twinoid.kube.quest.player.events {
 		
 		public static const LOAD_COMPLETE:String = "loadComplete";
 		public static const LOAD_ERROR:String = "loadError";
+		public static const ON_LOGIN_STATE:String = "longinState";
+		public static const NO_KUEST_SELECTED:String = "noKuest";
 		
 		
 		

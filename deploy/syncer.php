@@ -50,7 +50,7 @@
 	if(!$notFoundTitle[ $lang ]) $lang = "en";
 	
 	//Loading kuest details
-	$sql = "SELECT * FROM kuests WHERE guid=:guid";
+	$sql = "SELECT * FROM kuests WHERE guid=:guid AND published=1";
 	$params = array(':guid' => $_GET["id"]);
 	$req = DBConnection::getLink()->prepare($sql);
 	if (!$req->execute($params)) {
@@ -59,7 +59,7 @@
 		$tot = $req->rowCount();
 		$res = $req->fetch();
 		$dir = "./kuests/published/";
-		if ($tot == 0 || !file_exists($dir.$res['dataFile'].".kst")) {
+		if ($tot == 0) {
 			$title = $notFoundTitle[ $lang ];
 			$description = $notFoundContent[ $lang ];
 		}else{

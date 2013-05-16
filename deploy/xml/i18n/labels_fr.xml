@@ -155,6 +155,8 @@
 		<label code="day6"><![CDATA[Sam]]></label>
 		<label code="day7"><![CDATA[Dim]]></label>
 		
+		<label code="player-loginTitle"><![CDATA[Rendez-vous sur l'application Kuest pour vous y connecter en ainsi être en mesure de l'utiliser.<br />Rafraîchissez ensuite simplement cette page.]]></label>
+		<label code="player-login"><![CDATA[Aller sur l'application.]]></label>
 		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
 	</labels>
 	
