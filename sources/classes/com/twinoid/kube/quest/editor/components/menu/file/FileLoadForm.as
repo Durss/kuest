@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.components.menu.file {
+	import com.muxxu.kub3dit.graphics.CancelIcon;
+	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.nurun.components.button.TextAlign;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.lang.Disposable;
@@ -23,6 +25,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 
 	
 	/**
+	 * Displays the load panel.
 	 * 
 	 * @author Francois
 	 * @date 8 mai 2013;
@@ -81,15 +84,20 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				_holder.removeChildAt(0);
 			}
 			
-			var i:int, len:int, py:int, item:ButtonKube;
+			var i:int, len:int, py:int, item:ButtonKube, deleteBt:GraphicButtonKube;
 			len = data == null? 0 : data.length;
 			_itemToData = new Dictionary();
 			for(i = 0; i < len; ++i) {
-				item = _holder.addChild(new ButtonKube(data[i].title)) as ButtonKube;
-				item.textAlign = TextAlign.LEFT;
-				item.width = _width - 10;
-				item.y = py;
-				_itemToData[item] = data[i];
+				deleteBt		= _holder.addChild(new GraphicButtonKube(new CancelIcon())) as GraphicButtonKube;
+				item			= _holder.addChild(new ButtonKube(data[i].title)) as ButtonKube;
+				item.textAlign	= TextAlign.LEFT;
+				item.width		= _width - deleteBt.width - 12;
+				item.y			= py;
+				item.x			= deleteBt.width + 0;
+				deleteBt.y		= py;
+				deleteBt.height	= item.height;
+				_itemToData[item]		= data[i];
+				_itemToData[deleteBt]	= data[i];
 				py += item.height + 3;
 			}
 			
@@ -155,7 +163,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
 			if(_itemToData[event.target] != null) {
-				InteractiveObject(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, KuestInfo(_itemToData[event.target]).description, ToolTipAlign.RIGHT));
+				var label:String = (event.target is GraphicButtonKube)? Label.getLabel("menu-file-delete-buttonTT") : KuestInfo(_itemToData[event.target]).description;
+				InteractiveObject(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.RIGHT));
 			}
 		}
 
@@ -165,9 +174,13 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private function clickHandler(event:MouseEvent):void {
 			var target:Object = event.target;
 			if(_itemToData[target] != null) {
-				if(FrontControler.getInstance().load(_itemToData[target] as KuestInfo, onLoad, onLoadCancel)) {
-					mouseEnabled = mouseChildren = false;
-					_spinning.open(Label.getLabel("loader-loading"));
+				if(event.target is GraphicButtonKube) {
+					FrontControler.getInstance().deleteSave(_itemToData[target] as KuestInfo);
+				}else{
+					if(FrontControler.getInstance().load(_itemToData[target] as KuestInfo, onLoad, onLoadCancel)) {
+						mouseEnabled = mouseChildren = false;
+						_spinning.open(Label.getLabel("loader-loading"));
+					}
 				}
 			}
 		}

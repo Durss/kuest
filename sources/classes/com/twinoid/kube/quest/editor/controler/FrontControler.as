@@ -153,6 +153,13 @@ package com.twinoid.kube.quest.editor.controler {
 		public function clear():void {
 			_model.clear();
 		}
+		
+		/**
+		 * Deletes a quest.
+		 */
+		public function deleteSave(data:KuestInfo):void {
+			_model.deleteSave(data);
+		}
 
 
 		

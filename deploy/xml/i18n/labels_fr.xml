@@ -21,6 +21,8 @@
 		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
 		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
 		<label code="exception-IOERROR"><![CDATA[Impossible de contacter le serveur...<br />Vérifiez que vous êtes bien connecté à internet.]]></label>
+		<label code="exception-DELETE_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
+		<label code="exception-DELETE_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour supprimer cette quête.]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
@@ -64,6 +66,9 @@
 		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrer une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-load-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir charger cette quête ?]]></label>
+		<label code="menu-file-delete-buttonTT"><![CDATA[Supprimer cette quête]]></label>
+		<label code="menu-file-delete-prompt-title"><![CDATA[Suppression]]></label>
+		<label code="menu-file-delete-prompt-content"><![CDATA[Êtes-vous sûr de vouloir supprimer cette quête?<br /><b>Attention</b>, cette opération est irréversible !]]></label>
 		<label code="menu-file-new-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-new-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir remettre à zéro la quête en cours ?]]></label>
 		<label code="menu-file-save"><![CDATA[Enregistrer]]></label>

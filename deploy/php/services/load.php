@@ -43,14 +43,14 @@
 		}
 		$tot = $req->rowCount();
 		if ($tot == 0) {
-			Out::printOut(false, '', 'Kuest not found.', 'LOADING_KUEST_NOT_FOUND');
+			Out::printOut(false, '', 'Guest not found.', 'LOADING_KUEST_NOT_FOUND');
 			die;
 		}
 		
 		//Check if we have rights to load this kuest.
 		$res = $req->fetch();
 		if (!$releaseMode && $_SESSION["uid"] != $res['uid']) {
-			Out::printOut(false, '', 'Loading denied.', 'LOADING_NO_RIGHTS');
+			Out::printOut(false, '', 'Quest loading denied.', 'LOADING_NO_RIGHTS');
 			die;
 		}
 		
@@ -58,9 +58,9 @@
 		$url = $dir.$res["dataFile"].".kst";
 		if (!file_exists($url)) {
 			if ($releaseMode) {
-				Out::printOut(false, '', 'Loading denied.', 'QUEST_FILE_NOT_PUBLISHED');
+				Out::printOut(false, '', 'Quest not published.', 'QUEST_FILE_NOT_PUBLISHED');
 			}else{
-				Out::printOut(false, '', 'Loading denied.', 'QUEST_FILE_NOT_FOUND');
+				Out::printOut(false, '', 'Quest file not found.', 'QUEST_FILE_NOT_FOUND');
 			}
 			die;
 		}
