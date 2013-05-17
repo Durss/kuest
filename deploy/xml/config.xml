@@ -24,6 +24,7 @@
 		<path code="isLoggedWS"><![CDATA[{v_root}/php/services/isLogged.php]]></path>
 		<path code="saveWS"><![CDATA[{v_root}/php/services/save.php]]></path>
 		<path code="loadWS"><![CDATA[{v_root}/php/services/load.php]]></path>
+		<path code="deleteWS"><![CDATA[{v_root}/php/services/delete.php]]></path>
 		<path code="getDetailsWS"><![CDATA[{v_root}/php/services/loadDetails.php]]></path>
 		<path code="ksaWS"><![CDATA[{v_root}/php/services/keepAlive.php]]></path>
 	</paths>

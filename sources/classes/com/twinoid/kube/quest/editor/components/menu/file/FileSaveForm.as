@@ -25,7 +25,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 	[Event(name="resize", type="flash.events.Event")]
 	
 	/**
-	 * Displays the "new" form
+	 * Displays the save form
 	 * 
 	 * @author Francois
 	 * @date 8 mai 2013;
@@ -129,7 +129,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_nameLabel			= addChild(new CssTextField("menu-label")) as CssTextField;
 			_nameInput			= addChild(new InputKube()) as InputKube;
 			_descriptionLabel	= addChild(new CssTextField("menu-label")) as CssTextField;
-			_descriptionInput	= addChild(new TextArea()) as TextArea;
+			_descriptionInput	= addChild(new TextArea("textarea", "", false)) as TextArea;
 			_submit				= addChild(new ButtonKube(Label.getLabel("menu-file-new-submit"), new SubmitIcon())) as ButtonKube;
 			_spinning			= addChild(new LoaderSpinning()) as LoaderSpinning;
 			

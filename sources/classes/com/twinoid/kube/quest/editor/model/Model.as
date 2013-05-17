@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.model {
+	import com.twinoid.kube.quest.editor.cmd.DeleteQuestCmd;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -69,6 +70,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _lcManager:LCManager;
 		private var _connectedToPlayer:Boolean;
 		private var _forumPosition:Point3D;
+		private var _cmdDelete:DeleteQuestCmd;
 		
 		
 		
@@ -378,6 +380,15 @@ package com.twinoid.kube.quest.editor.model {
 				reset();
 			}
 		}
+		
+		/**
+		 * Deletes a quest.
+		 */
+		public function deleteSave(data:KuestInfo):void {
+			_cmdDelete = new DeleteQuestCmd();
+			_cmdDelete.populate(data.id);
+			prompt("menu-file-delete-prompt-title", "menu-file-delete-prompt-content", onDelete, "deleteKuest");
+		}
 
 
 		
@@ -436,7 +447,7 @@ package com.twinoid.kube.quest.editor.model {
 		/**
 		 * Fires an update to the views
 		 */
-		private function update():void {
+		private function update(...args):void {
 			dispatchEvent(new ModelEvent(ModelEvent.UPDATE, this));
 		}
 		
@@ -452,6 +463,23 @@ package com.twinoid.kube.quest.editor.model {
 			_charactersUpdate = _objectsUpdate = true;
 			update();
 			_charactersUpdate = _objectsUpdate = false;
+		}
+		
+		/**
+		 * Called when a quest deletion is confirmed.
+		 */
+		private function onDelete():void {
+			_cmdDelete.execute();
+			var i:int, len:int;
+			len = _kuests.length;
+			for(i = 0; i < len; ++i) {
+				if(_kuests[i].id == _cmdDelete.id) {
+					_kuests.splice(i, 1);
+					i --;
+					len --;
+				}
+			}
+			update();
 		}
 
 		

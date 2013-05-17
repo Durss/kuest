@@ -28,14 +28,14 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Creates an instance of <code>TextArea</code>.
 		 */
 
-		public function TextArea(css:String = "textarea", defaultLabel:String = "") {
+		public function TextArea(css:String = "textarea", defaultLabel:String = "", hscroll:Boolean = true) {
 			_defaultLabel = defaultLabel;
 			_tf = new ScrollableTextField("", css);
 			_tf.type = TextFieldType.INPUT;
-			_tf.autoWrap = false;
+			_tf.autoWrap = !hscroll;
 			_tf.text = _defaultLabel;
 			_back = addChild(new InputSkin()) as InputSkin;
-			super(_tf, new ScrollbarKube(), new ScrollbarKube());
+			super(_tf, new ScrollbarKube(), hscroll? new ScrollbarKube() : null);
 			autoHideScrollers = true;
 			if(_defaultLabel != null && _defaultLabel.length > 0) {
 				addEventListener(FocusEvent.FOCUS_IN, focusHandler);
