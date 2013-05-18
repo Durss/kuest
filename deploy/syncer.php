@@ -36,7 +36,7 @@
 	$infoTitle["en"] = "Help :";
 	
 	$infoContent = array();
-	$infoContent["fr"] = "Pour charger une quête dans le jeu kube vous devez installer le script GreaseMonkey <a href='/kuest/js/kuest.user.js'>Kuest</a>.<br />Pour cela, commencez par télécharger <a href='/kuest/js/kuest.user.js'>ce fichier</a>. Si vous êtes dans Firefox, glissez/déposez-le sur le navigateur. Si vous utilisez Google Chrome, rendez-vous à l'adresse <b>chrome://extensions</b> et faites de même.<br /><br />Une fois installé, il vous suffit de cliquer sur le bouton \"<b>".$load['fr']."</b>\" ci-dessous pour commencer la quête.<br /><br /><b>Attention</b>, vous devez avoir choisi une zone de départ pour que l'action fonctionne !";
+	$infoContent["fr"] = "Voici les étapes à suivre pour pouvoir charger une quête dans le jeu.<br /><ul><li>Si vous utilisez Firefox, <a href='https://addons.mozilla.org/firefox/addon/greasemonkey/'>installez GreaseMonkey</a> et cliquez sur <a href='/kuest/js/kuest.user.js'>ce lien</a>.</li><li>Si vous utilisez Google Chrome, faites de même mais en installant d'abord <a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo'>TamperMonkey</a>.<br />Ou bien rendez-vous à l'adresse <b>chrome://extensions</b> et glissez déposez le fichier <a href='/kuest/js/kuest.user.js'>Kuest.user.js</a> dans la page.</li><li>Le script n'a pas été testé sous Opéra</li><li>Sous Internet Explorer il n'est pas possible d'installer ce script.</li></ul>Une fois le script installé, il vous suffit de cliquer sur le bouton \"<b>".$load['fr']."</b>\" ci-dessous pour commencer la quête.";
 	$infoContent["en"] = "TODO";
 	
 	$notFoundTitle = array();
@@ -66,7 +66,7 @@
 			$title = utf8_encode($res["name"]);
 			$description = $description[ $lang ]."<div class='description'>".utf8_encode($res["description"])."</div>";
 			$description .= "<br /><strong class='collapser'>".$infoTitle[$lang]."</strong><div class='description collapsed'>".$infoContent[ $lang ]."</div>";
-			$description .= "<br /><center><button class='button' onClick='window.open(\"http://kube.muxxu.com/?kuest=".htmlspecialchars($_GET['id'])."\");'><img src='/kuest/img/submit.png'/>".$load[$lang]."</button></center>";
+			$description .= "<br /><center><button class='button' onClick='window.location = \"/kuest/redirect?kuest=".htmlspecialchars($_GET['id'])."\";'><img src='/kuest/img/submit.png'/>".$load[$lang]."</button></center>";
 		}
 	}
 ?>
