@@ -9,7 +9,7 @@ package com.twinoid.kube.quest.editor.model {
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.crypto.XOR;
 	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
-	import com.twinoid.kube.quest.editor.cmd.LoadCmd;
+	import com.twinoid.kube.quest.editor.cmd.LoadQuestCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoginCmd;
 	import com.twinoid.kube.quest.editor.cmd.SaveCmd;
 	import com.twinoid.kube.quest.editor.error.KuestException;
@@ -64,7 +64,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _saveCmd:SaveCmd;
 		private var _currentKuestId:String;
 		private var _kuests:Vector.<KuestInfo>;
-		private var _loadCmd:LoadCmd;
+		private var _loadCmd:LoadQuestCmd;
 		private var _ksaCmd:KeepSessionAliveCmd;
 		private var _ksaInterval:uint;
 		private var _lcManager:LCManager;
@@ -325,7 +325,7 @@ package com.twinoid.kube.quest.editor.model {
 			bytes.writeObject(_comments);//Should be removed when file has to be optimized but it would actually be a quite useless weight gain
 			bytes.writeObject(_commentsViewports);//Should be removed when file has to be optimized but it would actually be a quite useless weight gain
 			bytes.deflate();
-			XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Shitty XOR key to loose hackers
+			XOR(bytes, optimise? "ErrorEvent :: kuest cannot be optimised..." : "ErrorEvent :: kuest cannot be saved...");//Shitty XOR key to loose hackers
 			
 			var maxSize:Number = Config.getNumVariable("maxFileSize");
 			var currentSize:String = (bytes.length / 1024 / 1024).toPrecision(2);
@@ -416,7 +416,7 @@ package com.twinoid.kube.quest.editor.model {
 			_saveCmd.addEventListener(CommandEvent.ERROR, saveErrorHandler);
 //			_saveCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);
 			
-			_loadCmd = new LoadCmd();
+			_loadCmd = new LoadQuestCmd();
 			_loadCmd.addEventListener(CommandEvent.COMPLETE, loadKuestCompleteHandler);
 			_loadCmd.addEventListener(CommandEvent.ERROR, loadKuestErrorHandler);
 			_loadCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);

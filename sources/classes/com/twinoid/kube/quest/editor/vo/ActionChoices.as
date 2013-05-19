@@ -54,7 +54,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Gets a string representation of the value object.
 		 */
 		public function toString():String {
-			return "[ActionChoices :: ]";
+			return "[ActionChoices :: length="+_choices.length+" ]";
 		}
 		
 		/**

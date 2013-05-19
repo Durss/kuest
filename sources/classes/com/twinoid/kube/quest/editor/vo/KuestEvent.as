@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.vo {
+	import flash.utils.Dictionary;
 	import com.nurun.core.lang.Disposable;
 
 	import flash.display.BitmapData;
@@ -26,7 +27,9 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _actionType:ActionType;
 		private var _actionChoices:ActionChoices;
 		private var _endsQuest:Boolean;
+		private var _firstOfLoop:Boolean;
 		private var _guid:int;
+		private var _children:Vector.<KuestEvent>;
 		
 		
 		
@@ -131,7 +134,7 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Sets if this event validates the quest.
 		 */
-		public function set endsQuest(endsQuest:Boolean):void { _endsQuest = endsQuest; }
+		public function set endsQuest(value:Boolean):void { _endsQuest = value; }
 		
 		/**
 		 * @private
@@ -143,7 +146,14 @@ package com.twinoid.kube.quest.editor.vo {
 		 * @private
 		 * here for serialization purpose only!
 		 */
-		public function set dependencies(dependencies:Vector.<Dependency>):void { _dependencies = dependencies; }
+		public function set dependencies(value:Vector.<Dependency>):void {
+			_dependencies = value;
+			var i:int, len:int;
+			len = _dependencies.length;
+			for(i = 0; i < len; ++i) {
+				_dependencies[i].event.registerChild(this);
+			}
+		}
 
 		/**
 		 * @private
@@ -175,6 +185,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * @return if the dependency has been made or not. The dependency cannot be built in case of looped or self dependency.
 		 */
 		public function addDependency(entry:KuestEvent, choiceIndex:int):Boolean {
+			
 			if(deepDependencyCheck(entry)) {
 				//Check if the entry isn't already a direct dependency.
 				var i:int, len:int;
@@ -185,6 +196,24 @@ package com.twinoid.kube.quest.editor.vo {
 				}
 				
 				_dependencies.push( new Dependency(entry, choiceIndex) );
+
+//				var path:Vector.<KuestEvent> = new Vector.<KuestEvent>();
+//				var done:Dictionary = new Dictionary();
+//				if(searchForLoopFromEvent(this, path, done)) {
+//					len = path.length;
+//					var tl:Point = path[0].boxPosition.clone();
+//					var firstBox:KuestEvent = path[0];
+//					for(i = 0; i < len; ++i) {
+//						if(path[i].boxPosition.x < tl.x || (path[i].boxPosition.x == tl.x && path[i].boxPosition.y < tl.y)) {
+//							tl = path[i].boxPosition.clone();
+//							firstBox = path[i];
+//						}
+//					}
+//					firstBox.firstOfLoop = true;
+//					firstBox.submit();
+//					trace(firstBox)
+//					trace("KuestEvent.addDependency(entry, choiceIndex)");
+//				}
 				return true;
 			}else{
 				return false;
@@ -270,6 +299,26 @@ package com.twinoid.kube.quest.editor.vo {
 		private function initialize():void {
 			_guid = ++GUID;
 			_dependencies = new Vector.<Dependency>();
+			_children = new Vector.<KuestEvent>();
+		}
+		
+		/**
+		 * Registers a child of mine.
+		 * Used during deserialization to make some logic easier while playing
+		 * the quest.
+		 */
+		internal function registerChild(event:KuestEvent):void {
+			_children.push(event);
+		}
+		
+		/**
+		 * Gets this event's children.
+		 * DO NOT ACCESS THIS IN THE EDITOR !!!
+		 * This is only available in the player module.
+		 * The children are defined only at deserialization when loading a quest.
+		 */
+		public function getChildren():Vector.<KuestEvent> {
+			return _children;
 		}
 		
 		/**
@@ -305,12 +354,41 @@ package com.twinoid.kube.quest.editor.vo {
 		}
 		
 		/**
+		 * Searches for a looped reference
+		 */
+		private function searchForLoopFromEvent(target:KuestEvent, path:Vector.<KuestEvent>, done:Dictionary):Boolean {
+			var i:int, len:int;
+			len = target.dependencies.length;
+			if(done[target]) return false;
+			done[target] = true;
+			for(i = 0; i < len; ++i) {
+				if(target.dependencies[i].event == this) {
+					path.push(target.dependencies[i].event);
+					return true;
+				}
+				if(searchForLoopFromEvent(target.dependencies[i].event, path, done)) {
+					path.push(target.dependencies[i].event);
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		/**
 		 * Called when the source data of the event type is cleared.
 		 * For example, if an object or a character is delete from the main menu
 		 * and this value object is linked to it, this event will be fired.
 		 */
 		private function typeClearedHandler(event:Event):void {
 			dispatchEvent(new Event(Event.CHANGE));
+		}
+
+		public function get firstOfLoop():Boolean {
+			return _firstOfLoop;
+		}
+
+		public function set firstOfLoop(firstOfLoop:Boolean):void {
+			_firstOfLoop = firstOfLoop;
 		}
 		
 	}

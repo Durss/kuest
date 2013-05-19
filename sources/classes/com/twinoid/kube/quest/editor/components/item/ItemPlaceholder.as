@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.item {
+	import flash.display.CapsStyle;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.Disposable;
@@ -151,7 +152,7 @@ package com.twinoid.kube.quest.editor.components.item {
 		 */
 		private function initialize():void {
 			_frame = addChild(new Shape()) as Shape;
-			_frame.graphics.lineStyle(0, 0x2D89B0, 1);
+			_frame.graphics.lineStyle(0, 0x2D89B0, 1, false, "normal", CapsStyle.NONE);
 			_frame.graphics.beginFill(0x7EC3DF, 1);
 			_frame.graphics.drawRect(0, 0, WIDTH, HEIGHT);
 			_frame.graphics.endFill();

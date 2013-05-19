@@ -26,6 +26,7 @@
 		<path code="loadWS"><![CDATA[{v_root}/php/services/load.php]]></path>
 		<path code="deleteWS"><![CDATA[{v_root}/php/services/delete.php]]></path>
 		<path code="getDetailsWS"><![CDATA[{v_root}/php/services/loadDetails.php]]></path>
+		<path code="loadProgressionWS"><![CDATA[{v_root}/php/services/loadProgression.php]]></path>
 		<path code="ksaWS"><![CDATA[{v_root}/php/services/keepAlive.php]]></path>
 	</paths>
 	

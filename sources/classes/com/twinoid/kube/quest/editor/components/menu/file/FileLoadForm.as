@@ -1,6 +1,7 @@
 package com.twinoid.kube.quest.editor.components.menu.file {
+	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.graphics.CancelIcon;
-	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.nurun.components.button.TextAlign;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.lang.Disposable;
@@ -8,19 +9,20 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 	import com.nurun.utils.draw.createRect;
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
 	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
+
 	import flash.display.InteractiveObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
-	import gs.TweenLite;
 
 
 	
