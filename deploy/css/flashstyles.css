@@ -66,5 +66,6 @@
 /* KUEST PLAYER */
 
 .kuest-login { font-family:Verdana; font-weight:bold; font-size:14; color:#ffffff; }
-.kuest-title { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }
+.kuest-title { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; flash-charcase:upper; text-align:left; }
 .kuest-description { font-family:Verdana; font-size:14; color:#ffffff; }
+.kuest-date { font-family:Verdana; font-weight:normal; font-size:12; color:#ffffff; text-align:right; }

@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.player.model {
+	import com.twinoid.kube.quest.editor.utils.logJS;
+	import flash.utils.getTimer;
 	import com.nurun.core.commands.SequentialCommand;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -78,6 +80,8 @@ package com.twinoid.kube.quest.player.model {
 		private var _save:Object;
 		private var _currentEvent:KuestEvent;
 		private var _lastPosData:*;
+		private var _time:*;
+		private var _date:Date;
 		
 		
 		
@@ -140,9 +144,18 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets the current event
 		 */
 		public function get currentEvent():KuestEvent { return _currentEvent; }
-
-
-
+		
+		/**
+		 * Gets the current date
+		 */
+		public function get currentDate():Date {
+			_date.time = _time + getTimer();
+			return _date;
+		}
+		
+		
+		
+		
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
@@ -150,7 +163,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Initialize the class.
 		 */
 		public function initialize(progressCallback:Function):void {
-			_inGamePosition = new Point();
+			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
 			_progressCallback = progressCallback;
 			initSerializableClasses();
 			
@@ -204,8 +217,10 @@ package com.twinoid.kube.quest.player.model {
 			_receiverGame.allowDomain("*");
 			_receiverGame.connect(_lcGameName);
 			
-			Config.addVariable("kuestID", "5194100a4a94f");//TODO remove !
-			Config.addVariable("currentUID", "89");//TODO remove !
+			if(Capabilities.playerType == "StandAlone") {
+				Config.addVariable("kuestID", "5194100a4a94f");
+				Config.addVariable("currentUID", "89");
+			}
 			if(Config.getVariable("kuestID") != null) {
 				var spool:SequentialCommand = new SequentialCommand();
 				if(Capabilities.playerType == "StandAlone") {
@@ -228,6 +243,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Answers a question
 		 */
 		public function answer(index:int):void {
+			_save[getPosId(_currentEvent.actionPlace)].index ++;
 			_save[_currentEvent.guid].complete = true;
 			_save[_currentEvent.guid].answerIndex = index;
 			selectEventFromPos(_lastPosData);
@@ -237,6 +253,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Load next event
 		 */
 		public function next():void {
+			_save[getPosId(_currentEvent.actionPlace)].index ++;
 			_save[_currentEvent.guid].complete = true;
 			selectEventFromPos(_lastPosData);
 		}
@@ -337,6 +354,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Called when player enters a new zone
 		 */
 		private function onUpdatePosition(px:int, py:int):void {
+			logJS(px, py)
 			if(px == 0xffffff && py == 0xffffff //first undefined coord fired by the game. Ignore it.
 			|| (_inGamePosition.x == px && _inGamePosition.y == py)) return;
 			_inGamePosition.x = px;
@@ -398,6 +416,8 @@ package com.twinoid.kube.quest.player.model {
 				_pseudo	= event.data["name"];
 				_pubkey	= event.data["pubkey"];
 				_lang	= event.data["lang"];
+				_time	= event.data["time"];
+				_date	= new Date();
 				
 				Config.addVariable("lang", _lang);
 				
@@ -555,9 +575,11 @@ package com.twinoid.kube.quest.player.model {
 				
 				if(_save[nodes[i].guid] == undefined) {
 					var data:Object = {};
-					data.index = 0;
 					data.complete = false;
 					_save[nodes[i].guid] = data;
+					data = {};
+					data.index = 0;
+					_save[id] = data;
 				}
 			}
 		}
@@ -578,21 +600,65 @@ package com.twinoid.kube.quest.player.model {
 		private function selectEventFromPos(pos:*):void {
 			//TODO Manage time limitations
 			var i:int, len:int, item:KuestEvent, selectedEvent:KuestEvent;
-			var j:int, lenJ:int;
+			var j:int, lenJ:int, dates:Vector.<Date>, allowed:Boolean, days:Array, timestamp:int;
+			var today:Date = currentDate;
+			timestamp = today.hours * 60 + today.minutes;
 			_lastPosData = pos;
 			var id:String = getPosId(pos);
-			//Grab all the event located at the current position. Convert the array to a vector
+			//Grab all the event located at the current position.
 			var items:Vector.<KuestEvent> = _placeToEvents[id]==null? new Vector.<KuestEvent>() : _placeToEvents[id] as Vector.<KuestEvent>;
 			items.sort(sortByPosition);
 			len = items.length;
 			//Search for the active one.
-			if(_save[id] == null) _save[id] = 0;
-			var offset:int = _save[id];
-			mainloop: for(i = offset; i < len; ++i) {
+			if(_save[id] == undefined) _save[id] = {index:0};
+			var offset:int = _save[id].index % len;
+			mainloop: for(i = offset; i < offset + len; ++i) {
 				item = items[i%len];
 				
+				//Item complete, skip it
 				if(_save[item.guid].complete) continue;
 				
+				//==================================================
+				//================= TIME SELECTION =================
+				//==================================================
+				dates = item.actionDate.dates;
+				if (dates != null && dates.length > 0 ) {
+					//Test dates
+					len = dates.length;
+					allowed = false;
+					for(i = 0; i < len; ++i) {
+						//Allowed date, break this loop and continue.
+						if(dates[i].date == today.date && dates[i].fullYear == today.fullYear && dates[i].month == dates[i].month) {
+							allowed = true;
+							break;
+						}
+					}
+					//Today not found in dates, skip this loop turn
+					if(!allowed) continue;
+				}
+				
+				days = item.actionDate.days;
+				if (days != null && days.length > 0 ) {
+					//Test days and hours
+					len = days.length;
+					allowed = false;
+					for(i = 0; i < len; ++i) {
+						if(days[i] == today.day
+							&& timestamp >= item.actionDate.startTime
+							&& timestamp < item.actionDate.endTime) {
+								allowed = true;
+								break;
+							}
+					}
+					//Day and jours not found, skip this loop turn
+					if(!allowed) continue;
+				}
+				
+				
+				
+				//===================================================
+				//============= DEPENDENCIES MANAGEMENT =============
+				//===================================================
 				//If the event has no dependency, just select it !
 				if(item.dependencies.length == 0) {
 					selectedEvent = item;
@@ -616,14 +682,18 @@ package com.twinoid.kube.quest.player.model {
 				}
 			}
 			
+			//===================================================
+			//============= DEPENDENCIES MANAGEMENT =============
+			//===================================================
 			if (selectedEvent != null) {
 				_currentEvent = selectedEvent;
-				trace('selectedEvent.actionChoices: ' + (selectedEvent.actionChoices));
+				//Flag as complete only if the event proposes no choice.
+				//If the event proposes choices, it will be flagged as complete
+				//when the user answers it.
 				if (selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length == 0) {
 					_save[selectedEvent.guid].complete = true;
-					trace("DataManager.selectEventFromPos(pos)");
 				}
-//				_save[id] ++;
+				_save[id].index ++;
 				dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
 			}
 			if(_currentEvent != null && selectedEvent == null) {

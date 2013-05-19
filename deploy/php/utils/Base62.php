@@ -23,7 +23,7 @@ class Base62 {
      * @param integer $to_base
      * @return $conveted_number.
      */
-    public static function  convert($number, $from_base=10, $to_base=62) {
+    public static function convert($number, $from_base=10, $to_base=62) {
         if($to_base > 62 || $to_base < 2) {
             trigger_error("Invalid base (".he($to_base)."). Max base can be 62. Min base can be 2.", E_USER_ERROR);
         }

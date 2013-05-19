@@ -17,6 +17,7 @@
 		<var code="version"><![CDATA[1]]></var>
 		<var code="lang"><![CDATA[fr]]></var>
 		<var code="root"><![CDATA[http://fevermap.org/kuest]]></var>
+		<var code="dateFormat"><![CDATA[_d_/_m_/_Y_ _h_:_i_:_s_]]></var>
 	</vars>
 	
 	<paths>
@@ -39,6 +40,11 @@
 				<font><![CDATA[swf/fonts/fonts.swf?v={v_version}]]></font>
 			</fonts>
 		</local>
+		<lang value="en">
+			<vars override="true">
+				<var code="dateFormat"><![CDATA[_m_/_d_/_Y_ _h_:_i_:_s_]]></var>
+			</vars>
+		</lang>
 	</conditionnals>
 	
 </root>

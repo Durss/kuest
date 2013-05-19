@@ -51,6 +51,7 @@ package com.twinoid.kube.quest.editor.vo {
 			if(_image != null) {
 				_image.removeEventListener(Event.CHANGE, dispatchEvent);
 			}
+			if(value == null) return;
 			value.addEventListener(Event.CHANGE, dispatchEvent);
 			_image = value;
 			dispatchEvent(new Event(Event.CHANGE));

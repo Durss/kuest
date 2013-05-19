@@ -72,7 +72,7 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	var url = "http://fevermap.org/kuest/swf/player.swf?";
 	var kuestApp = unsafeWindow.document.createElement('div');
 	if(kuestID) url += "kuestID="+kuestID;
-	url += "&version=1";
+	url += "&version=" + Math.round( Math.round( new Date().getTime() / 1000 )  / 3600 ) * 3600;//bypass cache every hour
 	url += "&lang="+lang;
 	url += "&configXml=http://fevermap.org/kuest/xml/config.xml";
 
@@ -98,6 +98,11 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	kuestApp.style.marginTop = "25px";
 	kuestApp.style.marginLeft = "34px";
 	gameDiv.parentNode.appendChild(kuestApp);
+	
+	var app = document.getElementById("kuestApp");
+	app.style.overflow = "hidden";
+	app.style.transition = "all .35s ease-in-out";
+	app.style.webkitTransition = "all .35s ease-in-out";
 	if(!kuestID) {
 		var btLabel = [];
 		btLabel["fr"] = "Choisir une quête";
@@ -111,10 +116,29 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	}
 
 	function resizeSWF(height) {
-		//var app = document.getElementById("kuestApp");
-		//app.style.height = height+"px";
+		var app = document.getElementById("kuestSWF");
+		var h = parseInt(app.style.height);
+		if(document.kuestResizeTimeout) clearTimeout(document.kuestResizeTimeout);
+		if(height < h) {
+			document.kuestResizeTimeout = setTimeout(function(){ app.style.height = height + "px"; }, 350);
+		}else{
+			app.style.height = height + "px";
+		}
 		
-		app = document.getElementById("kuestSWF");
+		//Any smoothed resize is source of glitches on chrome...
+		/*clearInterval(document.resizeInterval);
+		function resize() {
+			var h = parseInt(app.style.height);
+			if(isNaN(h)) h = 1;
+			app.style.height = Math.round(h + (height - h) * .5) + "px";
+			if(Math.abs(h - height) < 2) {
+				app.style.height = height + "px";
+				clearInterval(document.resizeInterval);
+			}
+		}
+		document.resizeInterval = setInterval(resize, 31);*/
+		
+		var app = document.getElementById("kuestApp");
 		app.style.height = height+"px";
 	}
 
