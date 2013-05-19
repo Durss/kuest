@@ -55,7 +55,22 @@ function addItem(i, node, holder) {
 	entry['uname']	= node.getElementsByTagName("u")[0].childNodes[0].nodeValue
 	entry['title']	= node.getElementsByTagName("title")[0].childNodes[0].nodeValue
 	var div = document.createElement('div');
-	div.onclick = (function () { var id = entry['guid']; return function (e) { window.location = (e.layerX > 30)? "/kuest/redirect.php?kuest="+id : "/kuest/k/"+id; } })();
+	div.onclick = (function () {
+						var id = entry['guid'];
+						return function (e) {
+							//If not in muxxu's context, just redirect
+							if(window.parent == window) {
+								window.location = (e.layerX > 30)? "/kuest/redirect.php?kuest="+id : "/kuest/k/"+id;
+							}else{
+								//If in muxxu's contest, rewrite main URL if we watch details
+								if(e.layerX > 30) {
+									window.location = "/kuest/redirect.php?kuest="+id;
+								} else {
+									window.parent.location = "http://muxxu.com/a/kuest/?act=k_kid="+id;
+								}
+							}
+						}
+					})();
 	div.className = i%2 == 0? "item" : "item mod";
 	div.innerHTML = template.replace(/\{GUID\}/gi, entry['guid']).replace(/\{PSEUDO\}/gi, entry['uname']).replace(/\{TITLE\}/gi, entry['title']).replace(/\{UID\}/gi, entry['uid']);
 	holder.appendChild(div);
