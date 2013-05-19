@@ -264,18 +264,18 @@ package com.twinoid.kube.quest.editor.views {
 			len = _boxesHolder.numChildren;
 			for(i = 0; i < len; ++i) {
 				item = _boxesHolder.getChildAt(i);
-				if(item is Box) {
-					box = item as Box;
-					//Should actually be done in the model.
-					box.data.removeDependency(target.data);//remove eventual dependencies
-				}else
-				if(item is BoxLink) {
-					link = item as BoxLink;
-					if(link.startEntry == target || link.endEntry == target) {
-						link.deleteLink();
-						i--;
-						len--;
-					}
+				box = item as Box;
+				//Should actually be done in the model.
+				box.data.removeDependency(target.data);//remove eventual dependencies
+			}
+			len = _linksHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				item = _linksHolder.getChildAt(i);
+				link = item as BoxLink;
+				if(link.startEntry == target || link.endEntry == target) {
+					link.deleteLink();
+					i--;
+					len--;
 				}
 			}
 			

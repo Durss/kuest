@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.views {
+	import gs.TweenLite;
 	import com.nurun.structure.environnement.label.Label;
 	import flash.utils.Dictionary;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
@@ -95,6 +96,8 @@ package com.twinoid.kube.quest.player.views {
 			_buttonToIndex[_choice2] = 1;
 			_buttonToIndex[_choice3] = 2;
 			
+			_image.defaultTweenEnabled = false;
+			
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, newEventHandler);
 			computePositions();
 			_image.addEventListener(MouseEvent.ROLL_OVER, rollOverImageHandler);
@@ -105,8 +108,6 @@ package com.twinoid.kube.quest.player.views {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			_tf.width = _width - _image.width - 10;
-			_tf.x = _image.width + 10;
 		}
 		
 		/**
@@ -119,10 +120,13 @@ package com.twinoid.kube.quest.player.views {
 			visible = _data != null;
 			if(!visible) {
 				if(wasVisible) dispatchEvent(new Event(Event.RESIZE, true));
+				visible = true;
+				TweenLite.to(this, .01, {autoAlpha:0, delay:.35});
 				return;
 			}
+			alpha = 1;
 			
-			_choice1.width = _choice2.width = _choice3.width = -1;//Reset autosize
+			_choice1.width = _choice2.width = _choice3.width = -1;//Reset autosize capabilities
 			if(contains(_choice1)) removeChild(_choice1);
 			if(contains(_choice2)) removeChild(_choice2);
 			if(contains(_choice3)) removeChild(_choice3);
@@ -141,8 +145,20 @@ package com.twinoid.kube.quest.player.views {
 				addChild(_next);
 			}
 			
-			_image.setBitmapData( _data.actionType.getItem().image.getConcreteBitmapData() );
+			graphics.clear();
+			if(_data.actionType.getItem().image != null) {
+				_image.visible = true;
+				_image.setBitmapData( _data.actionType.getItem().image.getConcreteBitmapData() );
+				graphics.beginFill(0x2D89B0);
+				graphics.drawRect(_image.x - 2, _image.y - 2, 104, 104);
+				graphics.endFill();
+			}else{
+				_image.visible = false;
+				_image.clear();
+			}
 			_tf.text = _data.actionType.text;
+			_tf.x = _image.visible? _image.width + 10 : 10;
+			_tf.width = _image.visible? _width - _image.width - 10 : _width - 20;
 			
 			PosUtils.vPlaceNext(5, _tf, _choice1, _choice2, _choice3);
 			PosUtils.vPlaceNext(5, _tf, _next);
@@ -152,10 +168,6 @@ package com.twinoid.kube.quest.player.views {
 //			PosUtils.hCenterIn(_choice3, _tf);
 			_choice1.x = _choice2.x = _choice3.x = _next.x = _tf.x;
 			
-			graphics.clear();
-			graphics.beginFill(0x2D89B0);
-			graphics.drawRect(_image.x - 2, _image.y - 2, 104, 104);
-			graphics.endFill();
 			dispatchEvent(new Event(Event.RESIZE, true));
 		}
 	

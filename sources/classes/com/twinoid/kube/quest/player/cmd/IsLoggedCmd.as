@@ -1,9 +1,13 @@
 package com.twinoid.kube.quest.player.cmd {
+	import flash.utils.ByteArray;
+	import by.blooddy.crypto.Base64;
+
 	import com.nurun.core.commands.Command;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.boolean.parseBoolean;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.utils.commands.LoadFileCmd;
+	import com.nurun.utils.crypto.XOR;
 
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -57,12 +61,15 @@ package com.twinoid.kube.quest.player.cmd {
 			}
 			
 			if(parseBoolean(xml.child("result")[0].@success)) {
+				var ba:ByteArray = Base64.decode(xml.child("time")[0]);
+				XOR(ba, "DataManagerEvent");//Decode time
 				var ret:Object = {};
 				ret["logged"]	= parseBoolean(xml.child("logged")[0]);
 				ret["uid"]		= xml.child("uid")[0];
 				ret["name"]		= xml.child("name")[0];
 				ret["pubkey"]	= xml.child("pubkey")[0];
 				ret["lang"]		= xml.child("lang")[0];
+				ret["time"]		= parseFloat(ba.readUTFBytes(ba.length)) * 1000;
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, ret));
 			}else{
 				dispatchEvent(new CommandEvent(CommandEvent.ERROR, xml.child("error")[0].@id));

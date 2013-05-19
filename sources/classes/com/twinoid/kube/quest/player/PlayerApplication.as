@@ -1,5 +1,6 @@
 package com.twinoid.kube.quest.player {
-	import com.twinoid.kube.quest.editor.views.ToolTipView;
+	import gs.TweenLite;
+	import gs.easing.Sine;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -10,7 +11,10 @@ package com.twinoid.kube.quest.player {
 	import com.nurun.components.button.focus.NurunButtonKeyFocusManager;
 	import com.nurun.components.form.Input;
 	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.utils.date.DateUtils;
+	import com.nurun.utils.draw.createRect;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.pos.roundPos;
 	import com.spikything.utils.MouseWheelTrap;
@@ -19,6 +23,7 @@ package com.twinoid.kube.quest.player {
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
 	import com.twinoid.kube.quest.editor.components.window.BackWindow;
 	import com.twinoid.kube.quest.editor.views.ExceptionView;
+	import com.twinoid.kube.quest.editor.views.ToolTipView;
 	import com.twinoid.kube.quest.editor.vo.SplitterType;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
@@ -31,11 +36,14 @@ package com.twinoid.kube.quest.player {
 
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
+	import flash.utils.setInterval;
 
 	/**
 	 * Bootstrap class of the application.
@@ -60,6 +68,8 @@ package com.twinoid.kube.quest.player {
 		private var _default:PlayerDefaultView;
 		private var _event:PlayerEventView;
 		private var _inventory:PlayerInventoryView;
+		private var _holder:Sprite;
+		private var _mask:Shape;
 		
 		
 		
@@ -150,15 +160,19 @@ package com.twinoid.kube.quest.player {
 				_splitter	= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 				_background	= addChild(new BackWindow(false)) as BackWindow;
 				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
-				_default	= addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
-				_event		= addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
-				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - 20)) as PlayerInventoryView;
+				_holder		= addChild(new Sprite()) as Sprite;
+				_mask		= addChild(createRect(0xffff0000)) as Shape;
+				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
+				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
+				_inventory	= _holder.addChild(new PlayerInventoryView(stage.stageWidth - 20)) as PlayerInventoryView;
 				addChild(new ToolTipView());
 				addChild(new ExceptionView());
 				
+				_mask.height = 0;
+				_holder.mask = _mask;
+				_title.selectable = true;
 				_title.text = Label.getLabel("player-loading-kuest");
 				_title.filters = [new DropShadowFilter(2, 135, 0x265367, 1, 1, 1, 10, 2)];
-				_title.selectable = true;
 				
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_COMPLETE, loadQuestCompleteHandler);
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_ERROR, loadQuestErrorHandler);
@@ -189,25 +203,33 @@ package com.twinoid.kube.quest.player {
 			_splitter.x			= BackWindow.CELL_WIDTH;
 			_splitter.y			= 25;
 			
-			_default.x = _event.x = _inventory.x = BackWindow.CELL_WIDTH + margin;
-			_default.y = _event.y = _inventory.y = _splitter.y + _splitter.height + margin;
+			_holder.x = _mask.x = BackWindow.CELL_WIDTH + margin;
+			_holder.y = _mask.y = _splitter.y + _splitter.height + margin;
 			
 			_background.x		= 0;
 			_background.y		= 0;
 			_background.width	= stage.stageWidth;
+			var prevMaskHeight:int	= _mask.height;
+			var prevBackHeight:int	= _background.height;
 			if(event == null || event.target == stage) {
+				_mask.height		= 0;
 				_background.height	= Math.max(30, stage.stageHeight);
 			}else{
-				_background.height	= Math.max(30, DisplayObject(event.target).y + DisplayObject(event.target).height + margin + BackWindow.CELL_WIDTH);
+				_mask.height		= DisplayObject(event.target).height;
+				_background.height	= Math.max(30, _mask.y + _mask.height + margin + BackWindow.CELL_WIDTH);
 			}
 			
-			_title.x			= 10;
+			_title.x		= 10;
+			_title.width	= _background.width - 20;
+			_mask.width		= _title.width;
 			
-			_spinning.y			= _spinning.height * .5 + 40;
-			_spinning.x			= stage.stageWidth * .5;
+			_spinning.y		= _spinning.height * .5 + 40;
+			_spinning.x		= stage.stageWidth * .5;
 			roundPos(_spinning);
 			if(event == null || event.target != stage) {
 				resizeFlashTo(_background.height);
+				TweenLite.from(_mask, .35, {height:prevMaskHeight, ease:Sine.easeInOut});
+				TweenLite.from(_background, .35, {height:prevBackHeight, ease:Sine.easeInOut});
 			}
 		}
 
@@ -221,6 +243,8 @@ package com.twinoid.kube.quest.player {
 		 */
 		private function loadQuestCompleteHandler(event:DataManagerEvent):void {
 			_title.text = DataManager.getInstance().title;
+			setInterval(updateTime, 1000);
+			updateTime();
 			_spinning.close(Label.getLabel("loader-loadingOK"));
 		}
 		
@@ -229,6 +253,14 @@ package com.twinoid.kube.quest.player {
 		 */
 		private function loadQuestErrorHandler(event:DataManagerEvent):void {
 			_spinning.close(Label.getLabel("loader-loadingKO"));
+		}
+		
+		/**
+		 * Updates the date/time.
+		 */
+		private function updateTime():void {
+			var date:String = DateUtils.format(DataManager.getInstance().currentDate, Config.getVariable("dateFormat"));
+			_title.text = DataManager.getInstance().title + "<p class='kuest-date'><font size='5'><br /><br /></font>" + date + "</p>";
 		}
 		
 	}
