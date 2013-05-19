@@ -44,7 +44,7 @@
 	$notFoundTitle["en"] = "Quest not found";
 	
 	$notFoundContent = array();
-	$notFoundContent["fr"] = "<img src='/kuest/img/error.png' alt='error'/> La quête que vous avez demandé n'existe pas.<br /><br />Assurez-vous que le lien qui vous a amené ici est valide.";
+	$notFoundContent["fr"] = "<img src='/kuest/img/error.png' alt='error'/> La quête que vous avez demandé n'existe pas.<br /><br />Assurez-vous que le lien qui vous a amené ici soit valide.";
 	$notFoundContent["en"] = "<img src='/kuest/img/error.png' alt='error'/> Quest not found";
 	
 	if(!$notFoundTitle[ $lang ]) $lang = "en";
