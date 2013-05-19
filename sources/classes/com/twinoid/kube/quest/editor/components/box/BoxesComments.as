@@ -156,6 +156,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		public function setScale(value:Number):void {
 			scaleX = scaleY = value;
+			_rubberIcon.scaleX = _rubberIcon.scaleY = 1 / value;
 			GraphicsStroke(_drawingData[0]).thickness = 3 / value;
 			GraphicsStroke(_drawingDataHit[0]).thickness = 50 / value;
 			clipDrawings();

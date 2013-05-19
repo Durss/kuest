@@ -120,6 +120,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				data.actionPlace.y = _kubeY.numValue;
 				data.actionPlace.z = _kubeZ.numValue;
 			}
+			data.actionPlace.kubeMode = !isZone;
 		}
 		
 		/**
@@ -136,7 +137,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				return;
 			}
 			
-			if(data.actionPlace.zoneMode()) {
+			if(!data.actionPlace.kubeMode) {
 				selectedIndex = 0;
 				_zoneX.text = data.actionPlace.x.toString();
 				_zoneY.text = data.actionPlace.y.toString();

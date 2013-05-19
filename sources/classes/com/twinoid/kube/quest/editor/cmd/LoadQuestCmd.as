@@ -18,7 +18,7 @@ package com.twinoid.kube.quest.editor.cmd {
 	 * @author Francois
 	 * @date 28 avr. 2013;
 	 */
-	public class LoadCmd extends LoadFileCmd implements ProgressiveCommand {
+	public class LoadQuestCmd extends LoadFileCmd implements ProgressiveCommand {
 		
 		private var _id:String;
 		private var _callback:Function;
@@ -31,7 +31,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * CONSTRUCTOR *
 		 * *********** */
 
-		public function LoadCmd(release:Boolean = false) {
+		public function LoadQuestCmd(release:Boolean = false) {
 			_release = release;
 			super(Config.getPath("loadWS"), URLLoaderDataFormat.BINARY);
 			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);

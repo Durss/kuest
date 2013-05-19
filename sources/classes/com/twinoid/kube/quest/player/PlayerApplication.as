@@ -1,5 +1,5 @@
 package com.twinoid.kube.quest.player {
-	import com.twinoid.kube.quest.player.utils.resizeFlashTo;
+	import com.twinoid.kube.quest.editor.views.ToolTipView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -22,9 +22,14 @@ package com.twinoid.kube.quest.player {
 	import com.twinoid.kube.quest.editor.vo.SplitterType;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
+	import com.twinoid.kube.quest.player.utils.resizeFlashTo;
+	import com.twinoid.kube.quest.player.views.PlayerDefaultView;
+	import com.twinoid.kube.quest.player.views.PlayerEventView;
+	import com.twinoid.kube.quest.player.views.PlayerInventoryView;
 
 	import org.libspark.ui.SWFWheel;
 
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -52,6 +57,9 @@ package com.twinoid.kube.quest.player {
 		private var _title:CssTextField;
 		private var _loginBt:ButtonKube;
 		private var _tf:CssTextField;
+		private var _default:PlayerDefaultView;
+		private var _event:PlayerEventView;
+		private var _inventory:PlayerInventoryView;
 		
 		
 		
@@ -124,7 +132,6 @@ package com.twinoid.kube.quest.player {
 		 * Called when we know if the user is logged in or not
 		 */
 		private function loginStateHandler(event:DataManagerEvent):void {
-			_spinning.close();
 			if(!DataManager.getInstance().logged) {
 				_tf			= addChild(new CssTextField("kuest-login")) as CssTextField;
 				_loginBt	= addChild(new ButtonKube(Label.getLabel("player-login"))) as ButtonKube;
@@ -136,22 +143,27 @@ package com.twinoid.kube.quest.player {
 				PosUtils.vPlaceNext(5, _tf, _loginBt);
 				_loginBt.addEventListener(MouseEvent.CLICK, clickLoginHandler);
 				resizeFlashTo(_loginBt.y + _loginBt.height);
+				_spinning.close();
 				
 			}else{
 				
 				_splitter	= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 				_background	= addChild(new BackWindow(false)) as BackWindow;
 				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
+				_default	= addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
+				_event		= addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
+				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - 20)) as PlayerInventoryView;
+				addChild(new ToolTipView());
 				addChild(new ExceptionView());
 				
 				_title.text = Label.getLabel("player-loading-kuest");
 				_title.filters = [new DropShadowFilter(2, 135, 0x265367, 1, 1, 1, 10, 2)];
+				_title.selectable = true;
 				
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_COMPLETE, loadQuestCompleteHandler);
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_ERROR, loadQuestErrorHandler);
 				
 				stage.addEventListener(Event.RESIZE, computePositions);
-				computePositions();
 			}
 		}
 		
@@ -166,26 +178,35 @@ package com.twinoid.kube.quest.player {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
+			var margin:int = 10;
+			
 			graphics.clear();
 			graphics.beginFill(0x2D89B0, 1);
 			graphics.drawRect(0, 0, stage.stageWidth, 30);
 			graphics.endFill();
 			
-			_background.x		= 0;
-			_background.y		= 0;
-			_background.width	= stage.stageWidth;
-			_background.height	= Math.max(200, stage.stageHeight);
-			
 			_splitter.width		= stage.stageWidth - BackWindow.CELL_WIDTH * 2;
 			_splitter.x			= BackWindow.CELL_WIDTH;
 			_splitter.y			= 25;
+			
+			_default.x = _event.x = _inventory.x = BackWindow.CELL_WIDTH + margin;
+			_default.y = _event.y = _inventory.y = _splitter.y + _splitter.height + margin;
+			
+			_background.x		= 0;
+			_background.y		= 0;
+			_background.width	= stage.stageWidth;
+			if(event == null || event.target == stage) {
+				_background.height	= Math.max(30, stage.stageHeight);
+			}else{
+				_background.height	= Math.max(30, DisplayObject(event.target).y + DisplayObject(event.target).height + margin + BackWindow.CELL_WIDTH);
+			}
 			
 			_title.x			= 10;
 			
 			_spinning.y			= _spinning.height * .5 + 40;
 			_spinning.x			= stage.stageWidth * .5;
 			roundPos(_spinning);
-			if(event == null) {
+			if(event == null || event.target != stage) {
 				resizeFlashTo(_background.height);
 			}
 		}
@@ -200,15 +221,14 @@ package com.twinoid.kube.quest.player {
 		 */
 		private function loadQuestCompleteHandler(event:DataManagerEvent):void {
 			_title.text = DataManager.getInstance().title;
-			_spinning.close(Label.getLabel("loader-loginOK"));
-//			_title.text = DataManager.getInstance().kuest.
+			_spinning.close(Label.getLabel("loader-loadingOK"));
 		}
 		
 		/**
 		 * Called if quest loading fails
 		 */
 		private function loadQuestErrorHandler(event:DataManagerEvent):void {
-			_spinning.close(Label.getLabel("loader-loginKO"));
+			_spinning.close(Label.getLabel("loader-loadingKO"));
 		}
 		
 	}

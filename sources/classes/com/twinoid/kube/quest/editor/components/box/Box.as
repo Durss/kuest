@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
@@ -43,6 +44,7 @@ package com.twinoid.kube.quest.editor.components.box {
 	[Event(name="delete", type="com.twinoid.kube.quest.editor.events.BoxEvent")]
 	
 	/**
+	 * Displays a Box instance inside the board.
 	 * 
 	 * @author Francois
 	 * @date 3 févr. 2013;
@@ -157,6 +159,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		public function render(event:Event = null):void {
 			if(_data == null || _data.isEmpty()) {
 				_label.text = Label.getLabel("box-empty");
+//				if(_data != null) _label.text += _data.guid;
 			}else{
 				if(_data.getImage() != null) {
 					_image.setBitmapData(_data.getImage());
@@ -169,6 +172,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				}else{
 					_label.text = _data.getLabel();
 				}
+//				_label.text += _data.guid;
 				if(!_data.actionDate.getAlwaysEnabled()) {
 					addChild(_timeIcon);
 				}else {
@@ -186,8 +190,8 @@ package com.twinoid.kube.quest.editor.components.box {
 				if(contains(_outBox3)) removeChild(_outBox3);
 				if(_data.actionChoices != null) {
 					var numChoices:int = Math.max(1, _data.actionChoices.choices.length);
-					if(numChoices > 1) addChildAt(_outBox2, 1);
-					if(numChoices > 2) addChildAt(_outBox3, 2);
+					if(numChoices > 1) addChildAt(_outBox2, getChildIndex(_outBox1)+1);
+					if(numChoices > 2) addChildAt(_outBox3, getChildIndex(_outBox2)+1);
 				}
 				
 				//If choices have been deleted, some links might have to be cleared
@@ -210,6 +214,9 @@ package com.twinoid.kube.quest.editor.components.box {
 						if(_links[i].choiceIndex == 2) _links[i].deleteLink();
 					}
 				}
+			}
+			if(_data != null && _data.firstOfLoop) {
+				_background.filters = [new ColorMatrixFilter([-0.5002703666687012,1.5227876901626587,0.15748271346092224,0,-3.1700010299682617,0.47912952303886414,0.5433875918388367,0.1574828177690506,0,-3.1700010299682617,0.4791295826435089,1.52278733253479,-0.8219171166419983,0,-3.1700007915496826,0,0,0,1,0])];
 			}
 			
 			//Render the box.

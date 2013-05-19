@@ -62,6 +62,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _spacePressed:Boolean;
 		private var _comments:BoxesComments;
 		private var _scisors:ScissorsGraphic;
+		private var _linksHolder:Sprite;
 		
 		
 		
@@ -135,8 +136,9 @@ package com.twinoid.kube.quest.editor.views {
 			_tempBox		= new Box();
 			_scisors		= new ScissorsGraphic();
 			_comments		= addChild(new BoxesComments()) as BoxesComments;
+			_linksHolder	= addChild(new Sprite()) as Sprite;
 			_boxesHolder	= addChild(new Sprite()) as Sprite;
-			_tempLink		= _boxesHolder.addChild(new BoxLink(null, null)) as BoxLink;
+			_tempLink		= _linksHolder.addChild(new BoxLink(null, null)) as BoxLink;
 			
 			_scisors.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 			_scisors.mouseChildren = false;
@@ -219,6 +221,8 @@ package com.twinoid.kube.quest.editor.views {
 			//Move the board
 			_boxesHolder.x += (_endX - _boxesHolder.x) * .5;
 			_boxesHolder.y += (_endY - _boxesHolder.y) * .5;
+			_linksHolder.x = _boxesHolder.x;
+			_linksHolder.y = _boxesHolder.y;
 			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
 			_comments.scrollTo(_boxesHolder.x, _boxesHolder.y);
 			
@@ -238,7 +242,7 @@ package com.twinoid.kube.quest.editor.views {
 			_tempLink.choiceIndex = event.choiceIndex;
 			_tempLink.startEntry = event.currentTarget as Box;
 			_tempLink.drawToMouse();
-			_boxesHolder.addChildAt(_tempLink, 0);
+			_linksHolder.addChild(_tempLink);
 			//Prevents from scrolling n borders if we actually start to frag the
 			//item on the drag_gap zone.
 			_startDragInGap = (stage.mouseX < DRAG_GAP || stage.mouseY < DRAG_GAP
@@ -283,18 +287,20 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		private function clear():void {
 			var item:DisplayObject;
-			while(_boxesHolder.numChildren > 0) {
-				item = _boxesHolder.getChildAt(0);
-				
-				
+			//Clear boxes
+			while(_boxesHolder.numChildren > 0) _boxesHolder.removeChild(_boxesHolder.getChildAt(0));
+			
+			//Clear links
+			while(_linksHolder.numChildren > 0) {
+				item = _linksHolder.getChildAt(0);
 				if(item != _tempLink) {
 					if(item is Disposable) Disposable(item).dispose();
 					item.removeEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
 					item.removeEventListener(BoxEvent.DELETE, deleteBoxHandler);
 				}
-				_boxesHolder.removeChild(item);
+				_linksHolder.removeChild(item);
 			}
-			_boxesHolder.addChild(_tempLink);
+			_linksHolder.addChild(_tempLink);
 		}
 		
 		/**
@@ -321,7 +327,7 @@ package com.twinoid.kube.quest.editor.views {
 				lenJ = dependencies[i].data.dependencies.length;
 				for(j = 0; j < lenJ; ++j) {
 					var link:BoxLink = new BoxLink( dataToBox[ dependencies[i].data.dependencies[j].event ], dependencies[i], dependencies[i].data.dependencies[j].choiceIndex );
-					_boxesHolder.addChildAt(link, 0);
+					_linksHolder.addChild(link);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
 				}
@@ -390,10 +396,13 @@ package com.twinoid.kube.quest.editor.views {
 			var p:Point = new Point(_boxesHolder.mouseX, _boxesHolder.mouseY);
 			_boxesHolder.scaleX = _boxesHolder.scaleY += MathUtils.sign(event.delta) * .15;
 			_boxesHolder.scaleX = _boxesHolder.scaleY = MathUtils.restrict(_boxesHolder.scaleX, .25, 1);
+			_linksHolder.scaleX = _linksHolder.scaleY = _boxesHolder.scaleX;
 			
 			p = _boxesHolder.localToGlobal(p);
 			_boxesHolder.x += stage.mouseX - p.x;
 			_boxesHolder.y += stage.mouseY - p.y;
+			_linksHolder.x = _boxesHolder.x;
+			_linksHolder.y = _boxesHolder.y;
 			_endX = Math.round(_boxesHolder.x);
 			_endY = Math.round(_boxesHolder.y);
 			_background.setScale(_boxesHolder.scaleX);
@@ -468,7 +477,7 @@ package com.twinoid.kube.quest.editor.views {
 					_tempLink.showError();
 				} else {
 					var link:BoxLink = _tempLink.clone();
-					_boxesHolder.addChildAt(link, 0);
+					_linksHolder.addChild(link);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
 				}
@@ -506,6 +515,7 @@ package com.twinoid.kube.quest.editor.views {
 				Mouse.show();
 				if(contains(_scisors)) removeChild(_scisors);
 				_scisors.stopDrag();
+				addChild(_boxesHolder);
 			}
 		}
 
@@ -521,6 +531,7 @@ package com.twinoid.kube.quest.editor.views {
 				_scisors.x = mouseX;
 				_scisors.y = mouseY;
 				_scisors.startDrag();
+				addChild(_linksHolder);
 				addChild(_scisors);
 			}
 		}
@@ -532,7 +543,7 @@ package com.twinoid.kube.quest.editor.views {
 			if(event.type == BoxesCommentsEvent.ENTER_EDIT_MODE) {
 				addChild(_comments);
 			}else{
-				addChildAt(_comments, getChildIndex(_boxesHolder));
+				addChildAt(_comments, 0);
 			}
 		}
 	}

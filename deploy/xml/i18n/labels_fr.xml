@@ -112,7 +112,7 @@
 		<label code="editWindow-place-kubeTT"><![CDATA[Kube]]></label>
 		<label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
 		<label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
-		<label code="editWindow-place-kubeHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.]]></label>
+		<label code="editWindow-place-kubeHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.<br /><i>Attention, ceci ne fonctionne que si le forum est en zone publique !</i>]]></label>
 		<label code="editWindow-place-kubeConnectHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.<br />Pour fonctionner, cette option nécessite l'installation du script GreaseMonkey <a href="js/kuest.user.js" class="link">Kuest</a>.<br />Si vous l'avez déjà installé alors lancez simplement le jeu puis touchez un kube forum.]]></label>
 		<label code="editWindow-place-capture"><![CDATA[Capturer]]></label>
 		<label code="editWindow-place-captureTT"><![CDATA[Lancez le jeu Kube et cliquez sur<br />ce bouton pour remplir les champs<br />avec votre position actuelle.]]></label>
@@ -166,6 +166,7 @@
 		<label code="player-loginTitle"><![CDATA[Rendez-vous sur l'application Kuest pour vous y connecter en ainsi être en mesure de l'utiliser.<br />Rafraîchissez ensuite simplement cette page.]]></label>
 		<label code="player-login"><![CDATA[Aller sur l'application.]]></label>
 		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
+		<label code="player-next"><![CDATA[Suite &gt;]]></label>
 	</labels>
 	
 </root>

@@ -12,6 +12,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _x:int;
 		private var _y:int;
 		private var _z:int;
+		private var _zoneMode:Boolean;
 
 		
 		
@@ -23,7 +24,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Creates an instance of <code>ActionPlace</code>.
 		 */
 		public function ActionPlace() {
-			_z = int.MIN_VALUE;
+			_zoneMode = false;
 		}
 
 		
@@ -40,9 +41,19 @@ package com.twinoid.kube.quest.editor.vo {
 
 		public function set y(value:int):void { _y = value; }
 
-		public function get z():int { return _z == int.MIN_VALUE? 0 : _z; }
+		public function get z():int { return _z; }
 
 		public function set z(value:int):void { _z = value; }
+
+		/**
+		 * Gets if the coordinates represent a zone (true) or a kube (false)
+		 */
+		public function get kubeMode():Boolean { return _zoneMode; }
+
+		/**
+		 * Sets if the coordinates represent a zone (true) or a kube (false)
+		 */
+		public function set kubeMode(value:Boolean):void { _zoneMode = value; }
 
 
 
@@ -53,14 +64,12 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Gets a string representation of the value object.
 		 */
 		public function toString():String {
-			return "[ActionPlace :: x="+x+", y="+y+", z="+z+", zoneMode="+zoneMode()+"]";
+			return "[ActionPlace :: x="+x+", y="+y+", z="+z+", kubeMode="+kubeMode+"]";
 		}
 		
 		/**
-		 * Gets if the coordinates represent a zone (true) or a kube (false)
+		 * Clones the object
 		 */
-		public function zoneMode():Boolean { return _z == int.MIN_VALUE; }
-		
 		public function clone():ActionPlace {
 			var a:ActionPlace = new ActionPlace();
 			a.x = x;
