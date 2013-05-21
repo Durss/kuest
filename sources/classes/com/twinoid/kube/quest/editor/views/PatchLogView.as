@@ -1,9 +1,8 @@
 package com.twinoid.kube.quest.editor.views {
-	import flash.utils.clearTimeout;
-	import flash.utils.clearInterval;
-	import com.muxxu.kub3dit.graphics.CancelIcon;
-	import com.nurun.utils.pos.roundPos;
-	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import gs.TweenLite;
+
+	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -14,33 +13,25 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.model.Model;
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
-	import com.twinoid.kube.quest.graphics.TutorialGraphic;
+
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 	import flash.net.SharedObject;
-	import flash.ui.Keyboard;
-	import flash.utils.setTimeout;
-	import gs.TweenLite;
-	
-	[Event(name="close", type="flash.events.Event")]
+
 
 
 	/**
-	 * Displays the tutorial the first time
+	 * DIsplays the patch log view
 	 * 
 	 * @author Francois
 	 * @date 5 mai 2013;
 	 */
-	public class TutorialView extends AbstractView implements Closable {
+	public class PatchLogView extends AbstractView implements Closable {
 		
-		private var _tutorial:TutorialGraphic;
 		private var _isClosed:Boolean;
 		private var _window:TitledWindow;
 		private var _so:SharedObject;
-		private var _closeBt:ButtonKube;
-		private var _openTimeout:uint;
+		private var _label:CssTextField;
 		
 		
 		
@@ -49,9 +40,9 @@ package com.twinoid.kube.quest.editor.views {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>TutorialView</code>.
+		 * Creates an instance of <code>PatchLogView</code>.
 		 */
-		public function TutorialView() {
+		public function PatchLogView() {
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
 		}
 
@@ -76,12 +67,22 @@ package com.twinoid.kube.quest.editor.views {
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
 			_so = model.sharedObjects;
+			var tutorial:TutorialView = ViewLocator.getInstance().locateViewByType(TutorialView) as TutorialView;
+			ViewLocator.getInstance().removeView(this);
 			
-			if(_so.data["tutorialSeen"] == undefined) {
-				clearTimeout(_openTimeout);
-				_openTimeout = setTimeout(open, 500);
-			}else{
-				ViewLocator.getInstance().removeView(this);
+			//If no log related to the current version has been seen by the user.
+			if(_so.data["log_"+Config.getVariable("version")+"_Seen"] == undefined) {
+				//A label related to the current version exists
+				if( !/^\[missing.*]/gi.test( Label.getLabel("patchlog"+Config.getVariable("version")+"-content")) ) {
+					//If tutorial has been seen.
+					if(tutorial == null) {
+						//Show log !
+						open();
+					}else{
+						//Wait for tutorial to be seen before opening this view
+						tutorial.addEventListener(Event.CLOSE, open);
+					}
+				}
 			}
 		}
 		
@@ -89,21 +90,18 @@ package com.twinoid.kube.quest.editor.views {
 		 * @inheritDoc
 		 */
 		public function close():void {
-			clearInterval(_openTimeout);
-			ViewLocator.getInstance().removeView(this);
 			_isClosed = true;
-			_tutorial.gotoAndStop(1);
 			TweenLite.killTweensOf(this);
 			TweenLite.to(this, .25, {autoAlpha:0});
-			dispatchEvent(new Event(Event.CLOSE));
 		}
 		
 		/**
 		 * Opens the view
 		 */
-		public function open():void {
+		public function open(...args):void {
 			_isClosed = false;
-			_tutorial.gotoAndPlay(1);
+			_so.data["log_"+Config.getVariable("version")+"_Seen"] = true;
+			_so.flush();
 			TweenLite.killTweensOf(this);
 			TweenLite.to(this, .25, {autoAlpha:1});
 		}
@@ -120,45 +118,22 @@ package com.twinoid.kube.quest.editor.views {
 		private function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_tutorial	= new TutorialGraphic();
-			_window		= addChild(new TitledWindow(Label.getLabel("tutorial-title"), _tutorial)) as TitledWindow;
-			_closeBt	= addChild(new ButtonKube(Label.getLabel("tutorial-close"), new CancelIcon())) as ButtonKube;
+			_label		= new CssTextField("window-content");
+			_window		= addChild(new TitledWindow(Label.getLabel("patchlog-title"), _label)) as TitledWindow;
 			
 			alpha = 0;
 			visible = false;
 			_isClosed = true;
-			_tutorial.stop();
-			_tutorial.scrollRect = new Rectangle(0,0,600,450);
 			_window.width = 600;
+			_label.text = Label.getLabel("patchlog"+Config.getVariable("version")+"-content");
 			
 			makeEscapeClosable(this);
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
-			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
-			_tutorial.addFrameScript(_tutorial.totalFrames - 1, onTutorialComplete);
 			ViewLocator.getInstance().addEventListener(ViewEvent.TUTORIAL, tutorialHandler);
 			
 			computePositions();
-		}
-		
-		/**
-		 * Called when tutorial is completely seen.
-		 */
-		private function onTutorialComplete():void {
-			_so.data["tutorialSeen"] = true;
-			_so.flush();
-		}
-
-		
-		/**
-		 * Called when a key is released.
-		 * Detects for F1 key to open help.
-		 */
-		private function keyUpHandler(event:KeyboardEvent):void {
-			if(event.keyCode == Keyboard.F1) {
-				open();
-			}
 		}
 		
 		/**
@@ -173,10 +148,6 @@ package com.twinoid.kube.quest.editor.views {
 			_window.updateSizes();
 			
 			PosUtils.centerInStage(_window);
-			
-			_closeBt.x = _window.x +_window.width - _closeBt.width;
-			_closeBt.y = _window.y - _closeBt.height;
-			roundPos(_window, _closeBt);
 		}
 		
 		/**
@@ -190,7 +161,6 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when something is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			if(event.target == _closeBt) onTutorialComplete();
 			close();
 		}
 		

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor {
+	import com.twinoid.kube.quest.editor.views.PatchLogView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -94,6 +95,7 @@ package com.twinoid.kube.quest.editor {
 			addChild(new SideMenuView());
 			addChild(new ItemSelectorView());
 			addChild(new TutorialView());
+			addChild(new PatchLogView());
 			addChild(new PromptWindowView());
 			addChild(new ToolTipView());
 			addChild(new BoxDebugView());

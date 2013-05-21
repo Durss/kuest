@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.components.menu.file {
+	import com.twinoid.kube.quest.editor.vo.KuestInfo;
+	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
@@ -8,17 +11,19 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.form.input.ComboboxKube;
 	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
 	import com.twinoid.kube.quest.editor.components.form.input.TextArea;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
+	import com.twinoid.kube.quest.editor.vo.UserInfo;
+
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.setTimeout;
-	import gs.TweenLite;
 
 
 	
@@ -41,6 +46,10 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _closed:Boolean;
 		private var _mask:Shape;
 		private var _spinning:LoaderSpinning;
+		private var _rightsLabel:CssTextField;
+		private var _friendsCB:ComboboxKube;
+		private var _friends:Vector.<UserInfo>;
+		private var _editMode:Boolean;
 		
 		
 		
@@ -51,6 +60,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Creates an instance of <code>FileSaveForm</code>.
 		 */
+
 		public function FileSaveForm(width:int) {
 			_width = width;
 			initialize();
@@ -80,6 +90,11 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Gets the kuest description
 		 */
 		public function get description():String { return _descriptionInput.text; }
+		
+		/**
+		 * Gets the friends allowed to access this quest
+		 */
+		public function get friends():Array { return _friendsCB.list.scrollableList.selectedDatas; }
 
 
 
@@ -90,19 +105,27 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Toggles the open state.
 		 */
 		public function toggle():void {
-			if(_closed) open();
+			if(_closed || _editMode) open();
 			else close();
 		}
 		
 		/**
 		 * Opens the form
 		 */
-		public function open():void {
-			if(!_closed) return;
+		public function open(editMode:Boolean = false):void {
+			if (!editMode && !_closed && editMode == _editMode) return;
+			if(editMode != _editMode || _closed) stage.focus = _nameInput;
 			_closed = false;
-			stage.focus = _nameInput;
+			_editMode = editMode;
+			_submit.visible = !editMode;
+			var oldH:int = _mask.height;
+			_mask.scaleY = 1;
+			var h:int = editMode? _submit.y : _mask.height;
+			_mask.height = oldH;
+			_friendsCB.close();
+			TweenLite.killTweensOf(_mask);
 			var e:Event = new Event(Event.RESIZE);
-			TweenLite.to(_mask, .25, {scaleY:1, onUpdate:dispatchEvent, onUpdateParams:[e]});
+			TweenLite.to(_mask, .25, {height:h, onUpdate:dispatchEvent, onUpdateParams:[e]});
 		}
 		
 		/**
@@ -111,8 +134,34 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		public function close():void {
 			if(_closed) return;
 			_closed = true;
+			TweenLite.killTweensOf(_mask);
 			var e:Event = new Event(Event.RESIZE);
 			TweenLite.to(_mask, .25, {scaleY:0, onUpdate:dispatchEvent, onUpdateParams:[e]});
+		}
+		
+		/**
+		 * Sets the users
+		 */
+		public function populate(info:KuestInfo, friends:Vector.<UserInfo>):void {
+			var i:int, len:int;
+			if (info != null) {
+				_nameInput.text = info.title;
+				_descriptionInput.text = info.description;
+				if(!_closed) open(true);
+			}
+			
+			if (friends != null && _friendsCB.list.scrollableList.length == 0) {
+				_friends = friends;
+				len = _friends.length;
+				for(i = 0; i < len; ++i) {
+					_friendsCB.addSkinnedItem(_friends[i].uname+" <span class='friendItemId'>(ID:"+_friends[i].uid+")</span>", _friends[i].uid);
+				}
+			}
+			
+			//Select users
+			if(_friends != null && info != null) {
+				_friendsCB.selectedDatas = info.users;
+			}
 		}
 
 
@@ -125,19 +174,22 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_mask				= addChild(createRect()) as Shape;
-			_nameLabel			= addChild(new CssTextField("menu-label")) as CssTextField;
-			_nameInput			= addChild(new InputKube()) as InputKube;
-			_descriptionLabel	= addChild(new CssTextField("menu-label")) as CssTextField;
-			_descriptionInput	= addChild(new TextArea("textarea", "", false)) as TextArea;
-			_submit				= addChild(new ButtonKube(Label.getLabel("menu-file-new-submit"), new SubmitIcon())) as ButtonKube;
-			_spinning			= addChild(new LoaderSpinning()) as LoaderSpinning;
+			_mask					= addChild(createRect()) as Shape;
+			_nameLabel				= addChild(new CssTextField("menu-label")) as CssTextField;
+			_nameInput				= addChild(new InputKube()) as InputKube;
+			_descriptionLabel		= addChild(new CssTextField("menu-label")) as CssTextField;
+			_descriptionInput		= addChild(new TextArea("textarea", "", false)) as TextArea;
+			_submit					= addChild(new ButtonKube(Label.getLabel("menu-file-new-submit"), new SubmitIcon())) as ButtonKube;
+			_spinning				= addChild(new LoaderSpinning()) as LoaderSpinning;
+			_rightsLabel			= addChild(new CssTextField("menu-label")) as CssTextField;
+			_friendsCB				= addChild(new ComboboxKube(Label.getLabel("menu-file-rightsCB"), true)) as ComboboxKube;
 			
 			mask					= _mask;
 			_nameInput.style		= "input-menu";
 			_nameLabel.text			= Label.getLabel("menu-file-new-name");
 			_descriptionLabel.text	= Label.getLabel("menu-file-new-description");
-			makeEscapeClosable(this);
+			_rightsLabel.text		= Label.getLabel("menu-file-rights");
+			makeEscapeClosable(this, 1);
 			
 			computePositions();
 			
@@ -146,6 +198,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_submit.enabled = false;
 			_nameInput.textfield.maxChars = 30;
 			_descriptionInput.textfield.maxChars = 255;
+			_friendsCB.allowMultipleSelection = true;
 			
 			_submit.addEventListener(MouseEvent.CLICK, submitHandler);
 			_nameInput.addEventListener(Event.CHANGE, changeHandler);
@@ -158,13 +211,19 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private function computePositions():void {
 			var margin:int = 5;
 			_descriptionInput.height = 100;
-			_nameLabel.x = _nameInput.x = _descriptionLabel.x = _descriptionInput.x = margin;
-			_nameLabel.width = _nameInput.width = _descriptionLabel.width = _descriptionInput.width = _width - margin*2;
-			_submit.x = Math.round((_width - _submit.width) * .5);
-			PosUtils.vPlaceNext(2, _nameLabel, _nameInput, _descriptionLabel, _descriptionInput, _submit);
-			_submit.y += margin;
+			_nameLabel.x = _nameInput.x = _descriptionLabel.x =
+			_descriptionInput.x = _rightsLabel.x = _friendsCB.x = margin;
 			
-			roundPos(_nameLabel, _nameInput, _descriptionLabel, _descriptionInput, _submit);
+			_nameLabel.width = _nameInput.width = _descriptionLabel.width =
+			_descriptionInput.width = _friendsCB.width = _width - margin*2;
+			
+			_submit.x = Math.round((_width - _submit.width) * .5);
+			
+			PosUtils.vPlaceNext(2, _nameLabel, _nameInput, _descriptionLabel, _descriptionInput, _rightsLabel, _friendsCB, _submit);
+			_submit.y += margin;
+			_friendsCB.listHeight = _friendsCB.y - margin;
+			
+			roundPos(_nameLabel, _nameInput, _descriptionLabel, _descriptionInput, _submit, _rightsLabel, _friendsCB);
 			
 			var h:int = Math.round(_submit.y + _submit.height) + margin * 2;
 			
@@ -189,7 +248,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private function submitHandler(event:MouseEvent):void {
 			_submit.enabled = false;
 			_spinning.open(Label.getLabel("loader-saving"));
-			FrontControler.getInstance().save(title, description, onSaveResult);
+			FrontControler.getInstance().save(title, description, friends, onSaveResult);
 		}
 		
 		/**
@@ -197,6 +256,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 */
 		private function onSaveResult(success:Boolean, errorID:String = "", progress:Number = NaN):void {
 			progress;//Cannot get progression fo upload :(
+			errorID;
+			
 //			if(!isNaN(progress)) {
 //				_spinning.label = Label.getLabel("loader-saving")+" "+Math.round(progress*100)+"%";
 //				return;
@@ -207,7 +268,6 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				setTimeout(close, 1000);
 			}else{
 				_spinning.close(Label.getLabel("loader-savingKO"));
-				trace(errorID);
 			}
 		}
 		

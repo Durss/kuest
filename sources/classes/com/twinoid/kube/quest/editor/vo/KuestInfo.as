@@ -10,6 +10,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _id:String;
 		private var _title:String;
 		private var _description:String;
+		private var _users:Array;
 		
 		
 		
@@ -19,7 +20,8 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Creates an instance of <code>KuestInfo</code>.
 		 */
-		public function KuestInfo(title:String, description:String, id:String) {
+		public function KuestInfo(title:String, description:String, id:String, users:Array) {
+			_users = users;
 			_id = id;
 			_title = title;
 			_description = description;
@@ -33,6 +35,8 @@ package com.twinoid.kube.quest.editor.vo {
 
 		public function get id():String { return _id; }
 
+		public function get users():Array { return _users; }
+
 		public function get title():String { return _title; }
 
 		public function get description():String { return _description; }
@@ -42,6 +46,12 @@ package com.twinoid.kube.quest.editor.vo {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Gets a string representation of the value object.
+		 */
+		public function toString():String {
+			return "[KuestInfo :: id="+id+", title=\""+title+"\"]";
+		}
 
 
 		

@@ -27,15 +27,15 @@
 .buttonBig_down { font-family:Verdana; font-size:16; font-weight:bold; color:#ffffff; }
 .buttonBig_disabled { font-family:Verdana; font-size:16; font-weight:bold; color:#ffffff; flash-alpha:.4; }
 
-.comboboxButtonItem { font-family:Verdana; font-size:20; font-weight:bold; color:#265367; flash-alpha:1; }
-.comboboxButtonItem_over { font-family:Verdana; font-size:20; font-weight:bold; color:#36748D; }
-.comboboxButtonItem_down { font-family:Verdana; font-size:20; font-weight:bold; color:#36748D; }
-.comboboxButtonItem_disabled { font-family:Verdana; font-size:20; font-weight:bold; color:#234B5C; flash-alpha:.4; }
+.comboboxButtonItem { font-family:Verdana; font-size:14; font-weight:bold; color:#265367; flash-alpha:1; }
+.comboboxButtonItem_over { font-family:Verdana; font-size:14; font-weight:bold; color:#36748D; }
+.comboboxButtonItem_down { font-family:Verdana; font-size:14; font-weight:bold; color:#36748D; }
+.comboboxButtonItem_disabled { font-family:Verdana; font-size:14; font-weight:bold; color:#234B5C; flash-alpha:.4; }
 
-.comboboxButtonItemSelected { font-family:Verdana; font-size:20; font-weight:bold; color:#8E2424; flash-alpha:1; }
-.comboboxButtonItemSelected_over { font-family:Verdana; font-size:20; font-weight:bold; color:#A22B2B; }
-.comboboxButtonItemSelected_down { font-family:Verdana; font-size:20; font-weight:bold; color:#792020; }
-.comboboxButtonItemSelected_disabled { font-family:Verdana; font-size:20; font-weight:bold; color:#8E2424; flash-alpha:.4; }
+.comboboxButtonItemSelected { font-family:Verdana; font-size:14; font-weight:bold; color:#8E2424; flash-alpha:1; }
+.comboboxButtonItemSelected_over { font-family:Verdana; font-size:14; font-weight:bold; color:#A22B2B; }
+.comboboxButtonItemSelected_down { font-family:Verdana; font-size:14; font-weight:bold; color:#792020; }
+.comboboxButtonItemSelected_disabled { font-family:Verdana; font-size:14; font-weight:bold; color:#8E2424; flash-alpha:.4; }
 
 .checkBox { font-family:Verdana; font-size:12; color:#ffffff; }
 .checkBox_selected { font-family:Verdana; font-size:12; color:#ffffff; }
@@ -62,6 +62,7 @@
 .editWindow-label { font-family:Verdana; font-size:12; color:#ffffff; }
 .editWindow-zoneTitle { font-family:Verdana; font-size:14; color:#ffffff; }
 
+.friendItemId { font-family:Verdana; font-size:10; font-weight:normal; color:#265367; }
 
 /* KUEST PLAYER */
 

@@ -355,7 +355,7 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function onUpdatePosition(px:int, py:int):void {
 			logJS(px, py)
-			if(px == 0xffffff && py == 0xffffff //first undefined coord fired by the game. Ignore it.
+			if(px == 0xffffff || py == 0xffffff //first undefined coord fired by the game. Ignore it.
 			|| (_inGamePosition.x == px && _inGamePosition.y == py)) return;
 			_inGamePosition.x = px;
 			_inGamePosition.y = py;

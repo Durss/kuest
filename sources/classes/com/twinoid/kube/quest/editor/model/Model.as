@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.model {
+	import com.twinoid.kube.quest.editor.vo.UserInfo;
 	import com.twinoid.kube.quest.editor.cmd.DeleteQuestCmd;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
@@ -71,6 +72,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _connectedToPlayer:Boolean;
 		private var _forumPosition:Point3D;
 		private var _cmdDelete:DeleteQuestCmd;
+		private var _friends:Vector.<UserInfo>;
 		
 		
 		
@@ -172,9 +174,26 @@ package com.twinoid.kube.quest.editor.model {
 		public function get currentKuestId():String { return _currentKuestId; }
 		
 		/**
+		 * Gets the currently loaded kuest's info
+		 */
+		public function get currentKuest():KuestInfo {
+			var i:int, len:int;
+			len = _kuests == null? 0 : _kuests.length;
+			for(i = 0; i < len; ++i) {
+				if (_kuests[i].id == _currentKuestId) return _kuests[i];
+			}
+			return null;
+		}
+		
+		/**
 		 * Gets the kuests list.
 		 */
 		public function get kuests():Vector.<KuestInfo> { return _kuests; }
+		
+		/**
+		 * Gets the friends list
+		 */
+		public function get friends():Vector.<UserInfo> { return _friends; }
 		
 
 
@@ -283,7 +302,7 @@ package com.twinoid.kube.quest.editor.model {
 		/**
 		 * Saves the current quest
 		 */
-		public function save(title:String, description:String, callback:Function, optimise:Boolean = false):void {
+		public function save(title:String, description:String, friends:Array, callback:Function, optimise:Boolean = false, updateMode:Boolean = false):void {
 			var chars:Vector.<CharItemData> = new Vector.<CharItemData>();
 			var objs:Vector.<ObjectItemData> = new Vector.<ObjectItemData>();
 			
@@ -335,7 +354,8 @@ package com.twinoid.kube.quest.editor.model {
 				return;
 			}
 			
-			_saveCmd.populate(title, description, bytes, callback, title == null && description == null? _currentKuestId : "", optimise);
+			var id:String = updateMode? _currentKuestId : "";
+			_saveCmd.populate(title, description, bytes, friends, callback, id, optimise);
 			if(optimise) {
 				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback);
 			}else{
@@ -496,9 +516,18 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function saveCompleteHandler(event:CommandEvent):void {
 			_currentKuestId = event.data["id"];
-			//If title and description are null, that's because we updated an existing kuest.
-			if(_saveCmd.title != null && _saveCmd.description != null) {
-				_kuests.unshift(new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestId));
+			// If title and description are null, that's because we updated an existing kuest.
+			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestId, []);
+			if(isEmpty(_saveCmd.id)) {
+				_kuests.unshift(vo);
+			}else{
+				var i:int, len:int;
+				len = _kuests.length;
+				for(i = 0; i < len; ++i) {
+					if(_kuests[i].id == _currentKuestId) {
+						_kuests[i] = vo;
+					}
+				}
 			}
 			_saveCmd.callback(true, "", _saveCmd.publish? event.data["guid"] : 0);
 			update();
@@ -538,6 +567,7 @@ package com.twinoid.kube.quest.editor.model {
 			_name = event.data["name"];
 			_pubkey = event.data["pubkey"];
 			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
+			_friends = event.data["friends"] as Vector.<UserInfo>;
 			
 			_so.data["uid"] = _uid;
 			_so.data["lang"] = event.data["lang"];
@@ -549,6 +579,7 @@ package com.twinoid.kube.quest.editor.model {
 			_ksaInterval = setInterval(_ksaCmd.execute, 10 * 60*1000);//Every 10 minutes
 			
 			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGIN_SUCCESS));
+			update();
 		}
 
 		/**

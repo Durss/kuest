@@ -53,10 +53,21 @@
 				$_SESSION["pubkey"]	= $_POST["pubkey"];
 				$_SESSION["name"]	= (string) $xml->attributes()->name;
 				$_SESSION["lang"]	= (string)$xml->attributes()->lang;
+				$_SESSION["version"]= SESSION_VERSION;
 			}else {
 				Out::printOut(false, '', 'Invalid UID and/or PUBKEY', 'INVALID_IDS');
 				die;
 			}
+			
+			$dataKey = (string) $xml->attributes()->friends;
+			$url = "http://muxxu.com/app/xml?app=".$app."&xml=friends&id=".$_POST['uid']."&key=".md5($key . $dataKey);
+			$xml = @simplexml_load_file($url);
+			$children = $xml->children();
+			$friends = array();
+			foreach ($children as $row) {
+				$friends[] = array( 'name' => (string) $row['name'], 'id' => (string) $row['id'] );
+			}
+			$_SESSION["friends"] = $friends;
 		}
 		
 		$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
@@ -87,8 +98,8 @@
 		$additionnals .= "\t<pubkey>".$_SESSION["pubkey"]."</pubkey>\n";
 		$additionnals .= "\t<lang>".$_SESSION["lang"]."</lang>\n";
 		
-		$sql = "SELECT * FROM kuests WHERE uid=:uid ORDER BY id DESC";
-		$params = array(':uid' => $_SESSION["uid"]);
+		$sql = "SELECT * FROM kuests WHERE uid=:uid OR friends LIKE :uid2 ORDER BY id DESC";
+		$params = array(':uid' => $_SESSION["uid"], ':uid2' => "%,".$_SESSION["uid"].",%");
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -99,13 +110,19 @@
 		$res = $req->fetchAll();
 		$additionnals .= "\t<kuests>\n";
 		for ($i = 0; $i < count($res); $i++) {
-			$additionnals .= "\t\t<k id='".$res[$i]['id']."'>\n";
-			$additionnals .= "\t\t\t<t><![CDATA[".$res[$i]['name']."]]></t>\n";
-			$additionnals .= "\t\t\t<d><![CDATA[".$res[$i]['description']."]]></d>\n";
+			$additionnals .= "\t\t<k id='".$res[$i]['id']."' r='".substr($res[$i]["friends"], 1, strlen($res[$i]["friends"])-2 )."'>\n";
+			$additionnals .= "\t\t\t<t><![CDATA[".utf8_encode($res[$i]['name'])."]]></t>\n";
+			$additionnals .= "\t\t\t<d><![CDATA[".utf8_encode($res[$i]['description'])."]]></d>\n";
 			$additionnals .= "\t\t</k>\n";
 		}
 		$additionnals .= "\t</kuests>\n";
-			
+		
+		$additionnals .= "\t<friends>\n";
+		foreach ($_SESSION["friends"] as $row) {
+			$additionnals .= "\t\t<f id='".$row['id']."'><![CDATA[".$row['name']."]]></f>\n";
+		}
+		$additionnals .= "\t</friends>";
+		
 	}else if(!isset($_POST["logout"])){
 		Out::printOut(false, '', 'POST data missing', 'INCOMPLETE_FORM');
 		die;

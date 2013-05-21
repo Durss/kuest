@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor.vo {
-	import flash.utils.Dictionary;
 	import com.nurun.core.lang.Disposable;
 
 	import flash.display.BitmapData;
@@ -356,23 +355,23 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Searches for a looped reference
 		 */
-		private function searchForLoopFromEvent(target:KuestEvent, path:Vector.<KuestEvent>, done:Dictionary):Boolean {
-			var i:int, len:int;
-			len = target.dependencies.length;
-			if(done[target]) return false;
-			done[target] = true;
-			for(i = 0; i < len; ++i) {
-				if(target.dependencies[i].event == this) {
-					path.push(target.dependencies[i].event);
-					return true;
-				}
-				if(searchForLoopFromEvent(target.dependencies[i].event, path, done)) {
-					path.push(target.dependencies[i].event);
-					return true;
-				}
-			}
-			return false;
-		}
+//		private function searchForLoopFromEvent(target:KuestEvent, path:Vector.<KuestEvent>, done:Dictionary):Boolean {
+//			var i:int, len:int;
+//			len = target.dependencies.length;
+//			if(done[target]) return false;
+//			done[target] = true;
+//			for(i = 0; i < len; ++i) {
+//				if(target.dependencies[i].event == this) {
+//					path.push(target.dependencies[i].event);
+//					return true;
+//				}
+//				if(searchForLoopFromEvent(target.dependencies[i].event, path, done)) {
+//					path.push(target.dependencies[i].event);
+//					return true;
+//				}
+//			}
+//			return false;
+//		}
 		
 		/**
 		 * Called when the source data of the event type is cleared.
