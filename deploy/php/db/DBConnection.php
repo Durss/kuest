@@ -9,7 +9,12 @@
 				self::$connection = new PDO('mysql:host=mysql5-21.bdb;dbname=fevermapmysql', 'fevermapmysql', 'reyhPGwW');
 			}
 			
+			define("SESSION_VERSION", 1);
 			session_start();
+			if (!isset($_SESSION["version"]) || $_SESSION["version"] != SESSION_VERSION) {
+				session_unset();
+				$_SESSION["version"] = SESSION_VERSION;
+			}
 		}
 		
 		public static function close() {

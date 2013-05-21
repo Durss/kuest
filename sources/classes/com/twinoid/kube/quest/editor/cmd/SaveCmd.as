@@ -28,6 +28,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		private var _title:String;
 		private var _description:String;
 		private var _publish:Boolean;
+		private var _id:String;
 		
 		
 		
@@ -68,6 +69,11 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * Gets the kuest description
 		 */
 		public function get description():String { return _description; }
+
+		/**
+		 * Gets the kuest's ID if in update mode
+		 */
+		public function get id():String { return _id; }
 		
 		/**
 		 * Gets if we just published the quest
@@ -104,17 +110,20 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * @param id			kuest ID to modify (or empty if new kuest)
 		 * @param publish		defines if the quest should be published
 		 */
-		public function populate(title:String, description:String, data:ByteArray, callback:Function, id:String = "", publish:Boolean = false):void {
+		public function populate(title:String, description:String, data:ByteArray, friends:Array, callback:Function, id:String = "", publish:Boolean = false):void {
 			_publish = publish;
 			_description = description;
 			_title = title;
 			_callback = callback;
 			_request.data = data;
+			_id = id;
 			data.position = 0;
 			var url:String = Config.getPath("saveWS") + "?title=" + escape(title) + "&description=" + escape(description);
 			if(StringUtils.trim(id).length > 0) url = url+"&id="+id;
 			if(publish) url = url+"&publish";
+			url = url+"&friends="+friends.join(",");
 			url = url+"&size="+data.length;
+			
 			_request.url = url;
 		}
 

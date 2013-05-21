@@ -232,7 +232,10 @@ package com.twinoid.kube.quest.player {
 				TweenLite.from(_background, .35, {height:prevBackHeight, ease:Sine.easeInOut});
 			}
 		}
-
+		
+		/**
+		 * Called when loading progresses
+		 */
 		private function onLoadProgress(percent:Number):void {
 			_spinning.label = Label.getLabel("loader-loading") + " " + Math.round(percent * 100) + "%";
 		}

@@ -24,6 +24,9 @@ package com.twinoid.kube.quest.editor.components.box {
 	 * @date 3 févr. 2013;
 	 */
 	public class BoxLink extends Sprite implements Disposable {
+		
+		public static const COLORS:Array = [0xCA4F4F, 0xDD7600, 0xDDDD00, 0x9BDD00, 0x00DD58, 0x007FDD];
+		public static const COLORS_OVER:Array = [0xdf8c8c, 0xFD9935, 0xEEEE33, 0xaffb00, 0x00f462, 0x55b7ff];
 
 		private var _startEntry:Box;
 		private var _endEntry:Box;
@@ -279,12 +282,9 @@ package com.twinoid.kube.quest.editor.components.box {
 			var ctrl2Y:int = endY;
 			var halfX:int = endX * .5;
 			var halfY:int = endY * .5;
-			var colors:Array = !_isOver? [0xCA4F4F, 0x348CB1, 0x5AB035] : [0xdf8c8c, 0x7abcd8, 0xa0db88];
-			if(_choiceIndex == 1) {
-				colors[0] = !_isOver? 0xDD7600 : 0xFD9935;
-			}
-			if(_choiceIndex == 2) {
-				colors[0] = !_isOver? 0xDDDD00 : 0xEEEE33;
+			var colors:Array = !_isOver? [COLORS[0], 0x348CB1, 0x5AB035] : [0xdf8c8c, 0x7abcd8, 0xa0db88];
+			if(_choiceIndex > 0) {
+				colors[0] = !_isOver? COLORS[_choiceIndex] : COLORS_OVER[_choiceIndex];
 			}
 			
 			var a:Number = 0;//Math.atan2(mouseY, mouseX);

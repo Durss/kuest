@@ -35,15 +35,16 @@
 		$dir = "../../kuests/saves/";
 	}
 	$additionnals = "";
-	if (isset($_GET["title"], $_GET["description"], $_GET["size"], $GLOBALS['HTTP_RAW_POST_DATA'])) {
+	if (isset($_GET["title"], $_GET["description"], $_GET["size"], $_GET["friends"], $GLOBALS['HTTP_RAW_POST_DATA'])) {
 		if (strlen($GLOBALS['HTTP_RAW_POST_DATA']) != $_GET["size"]) {
 			Out::printOut(false, '', 'Server didn\'t received all the data. Received ' .strlen($GLOBALS['HTTP_RAW_POST_DATA'])."bytes instead of ".$_GET["size"]." bytes.", 'MISSING_DATA_PART');
 			die;
 		}
+		
 		//Update a kuest !
-		if (isset($_GET["id"])) {
+		if (isset($_GET["id"]) && strlen($_GET["id"]) > 0) {
 			//Check for edition rights
-			$sql = "SELECT uid, guid, dataFile FROM kuests WHERE id=:id";
+			$sql = "SELECT uid, guid, dataFile, friends FROM kuests WHERE id=:id";
 			$params = array(':id' => $_GET["id"]);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
@@ -59,9 +60,22 @@
 			}
 			
 			$res = $req->fetch();
-			if ($_SESSION["uid"] != $res['uid']) {
+			if ($_SESSION["uid"] != $res['uid'] && strpos(",".$_SESSION["uid"].",", $res['friends']) ) {
 				//Not a map of ours, can't edit it.
 				Out::printOut(false, '', 'Loading denied.', 'EDITION_NO_RIGHTS');
+				die;
+			}
+			
+			$friends = $_GET["friends"];
+			if ($_SESSION["uid"] != $res['uid']) $friends .= ",89";
+			
+			$sql = "UPDATE kuests SET name=:name, description=:description, friends=:friends WHERE id=:id";
+			$params = array(':id' => $_GET["id"], ':name' => $_GET["title"], ':description' => $_GET["description"], ':friends' => ",".$friends.",");
+			$req = DBConnection::getLink()->prepare($sql);
+			if (!$req->execute($params)) {
+				$error = $req->errorInfo();
+				$error = $error[2];
+				Out::printOut(false, '', $error, 'SQL_ERROR');
 				die;
 			}
 			
@@ -111,8 +125,8 @@
 			}
 			
 			//Insert into DB
-			$sql = "INSERT into kuests (guid, uid, lang, name, description, dataFile) VALUES (:guid, :uid, :lang, :name, :description, :dataFile)";
-			$params = array('guid' => uniqid(), ':uid' => $_SESSION['uid'], ':lang' => $_SESSION['lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index);
+			$sql = "INSERT into kuests (guid, uid, lang, name, description, dataFile, friends) VALUES (:guid, :uid, :lang, :name, :description, :dataFile, :friends)";
+			$params = array('guid' => uniqid(), ':uid' => $_SESSION['uid'], ':lang' => $_SESSION['lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index, ':friends' => ",".$_GET["friends"].",");
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();

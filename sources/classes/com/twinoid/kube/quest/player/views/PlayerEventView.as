@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.views {
+	import com.nurun.utils.vector.VectorUtils;
 	import gs.TweenLite;
 	import com.nurun.structure.environnement.label.Label;
 	import flash.utils.Dictionary;
@@ -32,12 +33,10 @@ package com.twinoid.kube.quest.player.views {
 		private var _width:int;
 		private var _image:ImageResizer;
 		private var _tf:CssTextField;
-		private var _choice1:ButtonKube;
-		private var _choice2:ButtonKube;
-		private var _choice3:ButtonKube;
 		private var _data:KuestEvent;
 		private var _buttonToIndex:Dictionary;
 		private var _next:ButtonKube;
+		private var _choicesSpool:Vector.<ButtonKube>;
 		
 		
 		
@@ -80,21 +79,14 @@ package com.twinoid.kube.quest.player.views {
 		private function initialize():void {
 			visible = false;
 			
+			_choicesSpool = new Vector.<ButtonKube>();
+			_buttonToIndex = new Dictionary();
+			
 			_image	= addChild(new ImageResizer(ImageResizerAlign.CENTER, true, true, 100, 100)) as ImageResizer;
 			_tf		= addChild(new CssTextField("kuest-description")) as CssTextField;
-			_choice1= addChild(new ButtonKube("")) as ButtonKube;
-			_choice2= addChild(new ButtonKube("")) as ButtonKube;
-			_choice3= addChild(new ButtonKube("")) as ButtonKube;
 			_next	= addChild(new ButtonKube(Label.getLabel("player-next"))) as ButtonKube;
 			
 			_tf.selectable = true;
-			_choice1.textAlign = TextAlign.LEFT;
-			_choice2.textAlign = TextAlign.LEFT;
-			_choice3.textAlign = TextAlign.LEFT;
-			_buttonToIndex = new Dictionary();
-			_buttonToIndex[_choice1] = 0;
-			_buttonToIndex[_choice2] = 1;
-			_buttonToIndex[_choice3] = 2;
 			
 			_image.defaultTweenEnabled = false;
 			
@@ -126,21 +118,25 @@ package com.twinoid.kube.quest.player.views {
 			}
 			alpha = 1;
 			
-			_choice1.width = _choice2.width = _choice3.width = -1;//Reset autosize capabilities
-			if(contains(_choice1)) removeChild(_choice1);
-			if(contains(_choice2)) removeChild(_choice2);
-			if(contains(_choice3)) removeChild(_choice3);
+			var i:int, len:int, maxWidth:int;
+			len = _choicesSpool.length;
+			for(i = 0; i < len; ++i) removeChild(_choicesSpool[i]);
+			
+			len = _data.actionChoices.choices.length;
+			for(i = 0; i < len; ++i) {
+				if(_choicesSpool.length <= i) {
+					_choicesSpool[i] = new ButtonKube("");
+					_choicesSpool[i].textAlign = TextAlign.LEFT;
+					_buttonToIndex[_choicesSpool[i]] = i;
+				}
+				_choicesSpool[i].width = -1;//Reset autosize capabilities
+				addChild(_choicesSpool[i]);
+				_choicesSpool[i].label = "● " + _data.actionChoices.choices[i];
+				maxWidth = Math.max(maxWidth, _choicesSpool[i].width);
+			}
+			
 			if(contains(_next)) removeChild(_next);
-			if(_data.actionChoices.choices.length > 1) {
-				addChild(_choice1);
-				addChild(_choice2);
-				_choice1.label = "● " + _data.actionChoices.choices[0];
-				_choice2.label = "● " + _data.actionChoices.choices[1];
-			}
-			if(_data.actionChoices.choices.length > 2) {
-				addChild(_choice3);
-				_choice3.label = "● " + _data.actionChoices.choices[2];
-			}
+			
 			if(_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0) {//TODO Check for time
 				addChild(_next);
 			}
@@ -160,13 +156,15 @@ package com.twinoid.kube.quest.player.views {
 			_tf.x = _image.visible? _image.width + 10 : 10;
 			_tf.width = _image.visible? _width - _image.width - 10 : _width - 20;
 			
-			PosUtils.vPlaceNext(5, _tf, _choice1, _choice2, _choice3);
+			PosUtils.vPlaceNext(5, _tf, VectorUtils.toArray(_choicesSpool));
 			PosUtils.vPlaceNext(5, _tf, _next);
-			_choice1.width = _choice2.width = _choice3.width = Math.max(_choice1.width, _choice2.width, _choice3.width) + 10;
-//			PosUtils.hCenterIn(_choice1, _tf);
-//			PosUtils.hCenterIn(_choice2, _tf);
-//			PosUtils.hCenterIn(_choice3, _tf);
-			_choice1.x = _choice2.x = _choice3.x = _next.x = _tf.x;
+			len = _choicesSpool.length;
+			for(i = 0; i < len; ++i) {
+				_choicesSpool[i].x = _tf.x;
+				_choicesSpool[i].width = maxWidth + 10;
+//				PosUtils.hCenterIn(_choicesSpool[i], _tf);
+			}
+			_next.x = _tf.x;
 			
 			dispatchEvent(new Event(Event.RESIZE, true));
 		}

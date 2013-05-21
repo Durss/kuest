@@ -28,10 +28,10 @@
 	if (isset($_POST["id"])) {
 		//Check for loading rights
 		if ($releaseMode) {
-			$sql = "SELECT uid, dataFile FROM kuests WHERE guid=:guid";
+			$sql = "SELECT uid, dataFile, friends FROM kuests WHERE guid=:guid";
 			$params = array(':guid' => $_POST["id"]);
 		}else{
-			$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
+			$sql = "SELECT uid, dataFile, friends FROM kuests WHERE id=:id";
 			$params = array(':id' => $_POST["id"]);
 		}
 		$req = DBConnection::getLink()->prepare($sql);
@@ -49,7 +49,7 @@
 		
 		//Check if we have rights to load this kuest.
 		$res = $req->fetch();
-		if (!$releaseMode && $_SESSION["uid"] != $res['uid']) {
+		if (!$releaseMode && ($_SESSION["uid"] != $res['uid'] && strpos(",".$_SESSION["uid"].",", $res['friends']))) {
 			Out::printOut(false, '', 'Quest loading denied.', 'LOADING_NO_RIGHTS');
 			die;
 		}

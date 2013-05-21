@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
+		<label code="patchlog52-content"><![CDATA[● Ajout de la possibilité de modifier le titre et la description d'une quête<br />● Ajout de la possibilité de donner les droits d'édition à nos amis<br />● Il est maintenant possible de saisir jusqu'à 6 choix sur un événement<br />● On ne reste plus bloqué sur un événement s'il ne possède qu'un seul choix<br />● Ajout de cette merveilleuse popin pour montrer les dernières MàJ]]></label>
+		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
 		<label code="tutorial-close"><![CDATA[J'ai vu !]]></label>
 		
@@ -80,6 +83,8 @@
 		<label code="menu-file-saveNewTT"><![CDATA[Enregistrer en tant<br />que nouvelle quête.]]></label>
 		<label code="menu-file-publishTT"><![CDATA[Publie votre quête afin de la<br />rendre jouable par n'importe qui.]]></label>
 		<label code="menu-file-clearTT"><![CDATA[Efface toutes les données de la quête courrante.]]></label>
+		<label code="menu-file-rights"><![CDATA[Donnez les droits d'édition à vos amis.]]></label>
+		<label code="menu-file-rightsCB"><![CDATA[Sélectionnez des amis]]></label>
 		
 		<label code="menu-credits"><![CDATA[Credits]]></label>
 		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.

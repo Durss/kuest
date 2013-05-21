@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor.components.box {
-	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
@@ -10,10 +9,10 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.components.vo.Margin;
 	import com.nurun.structure.environnement.label.Label;
-	import com.nurun.utils.math.MathUtils;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.pos.roundPos;
 	import com.nurun.utils.string.StringUtils;
+	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.events.BoxEvent;
 	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
@@ -29,7 +28,6 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.twinoid.kube.quest.graphics.BoxTimerEventGraphic;
 	import com.twinoid.kube.quest.graphics.ClearBoxGraphic;
 
-	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -37,6 +35,7 @@ package com.twinoid.kube.quest.editor.components.box {
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 
 
 	
@@ -51,18 +50,19 @@ package com.twinoid.kube.quest.editor.components.box {
 	 */
 	public class Box extends Sprite {
 		
+		public static const NUM_CHOICES:int = 6;
+		
 		private var _data:KuestEvent;
 		private var _label:CssTextField;
 		private var _image:ImageResizer;
 		private var _background:BoxEventGraphic;
 		private var _dragOffset:Point;
-		private var _outBox1:GraphicButton;
 		private var _inBox:GraphicButton;
 		private var _links:Vector.<BoxLink>;
 		private var _timeIcon:BoxTimerEventGraphic;
 		private var _deleteBt:GraphicButton;
-		private var _outBox2:GraphicButton;
-		private var _outBox3:GraphicButton;
+		private var _outBoxes:Vector.<GraphicButton>;
+		private var _outBoxToIndex:Dictionary;
 		
 		
 		
@@ -92,7 +92,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		/**
 		 * Gets the width of the component.
 		 */
-		override public function get width():Number { return _outBox1.x + _outBox1.width; }
+		override public function get width():Number { return _outBoxes[0].x + _outBoxes[0].width; }
 		
 		/**
 		 * Gets the height of the component.
@@ -182,39 +182,35 @@ package com.twinoid.kube.quest.editor.components.box {
 				_background.filters = _data.endsQuest? [new ColorMatrixFilter([-1.2100542783737183,1.388539433479309,1.2215150594711304,0,-25.40000343322754,0.7383951544761658,0.7626101970672607,-0.1010054349899292,0,-25.400001525878906,-0.2772481143474579,2.9502274990081787,-1.2729790210723877,0,-25.400007247924805,0,0,0,1,0])] : [];
 				
 				//============ LINKS MANAGEMNT ============
-				var wasLink2:Boolean = contains(_outBox2);
-				var wasLink3:Boolean = contains(_outBox3);
+				var i:int, len:int;
+				var wasLinkHere:Array = [];
+				len = _outBoxes.length;
+				for(i = 1; i < len; ++i) {
+					wasLinkHere[i] = contains(_outBoxes[i]);
+					if(contains(_outBoxes[i])) removeChild(_outBoxes[i]);
+				}
 				
 				//Define how much links output should be displayed
-				if(contains(_outBox2)) removeChild(_outBox2);
-				if(contains(_outBox3)) removeChild(_outBox3);
 				if(_data.actionChoices != null) {
 					var numChoices:int = Math.max(1, _data.actionChoices.choices.length);
-					if(numChoices > 1) addChildAt(_outBox2, getChildIndex(_outBox1)+1);
-					if(numChoices > 2) addChildAt(_outBox3, getChildIndex(_outBox2)+1);
+					for(i = 1; i < numChoices; ++i) {
+						addChildAt(_outBoxes[i], getChildIndex(_outBoxes[i-1])+1);
+					}
 				}
 				
 				//If choices have been deleted, some links might have to be cleared
 				//Clear the links for the second output.
-				var i:int, len:int, choicesUpdate:Boolean;
-				if(wasLink2 != contains(_outBox2)) choicesUpdate = true;
-				if(wasLink3 != contains(_outBox3)) choicesUpdate = true;
-				
-				len = _links.length;
-				if(wasLink2 && !contains(_outBox2)) {
-					for(i = 0; i < len; ++i) {
-						if(_links[i].choiceIndex == 1) _links[i].deleteLink();
-					}
-				}
-				
-				//If choices have been deleted, some links might have to be cleared
-				//Clear the links for the third output.
-				if(wasLink3 && !contains(_outBox3)) {
-					for(i = 0; i < len; ++i) {
-						if(_links[i].choiceIndex == 2) _links[i].deleteLink();
+				var j:int, lenJ:int;
+				lenJ = _links.length;
+				for(i = 1; i < len; ++i) {
+					if(wasLinkHere[i] && !contains(_outBoxes[i])) {
+						for(j = 0; j < lenJ; ++j) {
+							if(_links[j].choiceIndex == i) _links[j].deleteLink();
+						}
 					}
 				}
 			}
+				
 			if(_data != null && _data.firstOfLoop) {
 				_background.filters = [new ColorMatrixFilter([-0.5002703666687012,1.5227876901626587,0.15748271346092224,0,-3.1700010299682617,0.47912952303886414,0.5433875918388367,0.1574828177690506,0,-3.1700010299682617,0.4791295826435089,1.52278733253479,-0.8219171166419983,0,-3.1700007915496826,0,0,0,1,0])];
 			}
@@ -222,20 +218,18 @@ package com.twinoid.kube.quest.editor.components.box {
 			//Render the box.
 			computePositions();
 			
-			//If there have ben an update in the choices, update the links rendering.
+			//Update the links rendering in case choices have been modified.
 			//As the links update depending on the box's state, we need to render
 			//the box before doing this. That's why "computePositions" is called before.
-			if(choicesUpdate) {
-				for(i = 0; i < len; ++i) _links[i].update();
-			}
+			len = _links.length;
+			for(i = 0; i < len; ++i) _links[i].update();
 		}
 		
 		/**
 		 * Gets the Y offset position of an output button by its choice index.
 		 */
 		public function getChoiceIndexPosition(index:int):int {
-			var target:DisplayObject = this["_outBox" + MathUtils.restrict(index + 1, 1, 3)];
-			return target.y + target.height * .5;
+			return _outBoxes[index].y + _outBoxes[index].height * .5;
 		}
 
 
@@ -250,10 +244,23 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		private function initialize():void {
 			_links		= new Vector.<BoxLink>();
-			
-			_outBox1	= addChild(new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
-			_outBox2	= new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic());
-			_outBox3	= new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic());
+			_outBoxes	= new Vector.<GraphicButton>();
+			_outBoxToIndex = new Dictionary();
+			var i:int, len:int;
+			var colors:Array = [0xE95B5B, 0xff8800, 0xffff00, 0xb3ff00, 0x00ff66, 0x0093ff];
+			len = NUM_CHOICES;
+			for(i = 0; i < len; ++i) {
+				_outBoxes[i] = new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic());
+				_outBoxes[i].width = 30;
+				_outBoxes[i].iconAlign = IconAlign.LEFT;
+				_outBoxes[i].contentMargin = new Margin(10, 0, 0, 0);
+				_outBoxes[i].background.filters = [new ColorMatrixFilter(hexToMatrix( colors[i] ))];
+				_outBoxes[i].addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+				_outBoxes[i].addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
+				applyDefaultFrameVisitorNoTween(_outBoxes[i], _outBoxes[i].background);
+				_outBoxToIndex[ _outBoxes[i] ] = i;
+				if(i == 0) addChild(_outBoxes[i]);
+			}
 			_background	= addChild(new BoxEventGraphic()) as BoxEventGraphic;
 			_inBox		= addChild(new GraphicButton(new BoxInGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
 			_image		= addChild(new ImageResizer()) as ImageResizer;
@@ -264,25 +271,18 @@ package com.twinoid.kube.quest.editor.components.box {
 			_dragOffset = new Point();
 			_label.mouseEnabled = false;
 			
-			applyDefaultFrameVisitorNoTween(_outBox1, _outBox1.background);
-			applyDefaultFrameVisitorNoTween(_outBox2, _outBox2.background);
-			applyDefaultFrameVisitorNoTween(_outBox3, _outBox3.background);
 			applyDefaultFrameVisitorNoTween(_deleteBt, _deleteBt.background, _deleteBt.icon);
 			
 			_deleteBt.width = 27;
 			_deleteBt.height = 22;
-			_inBox.width = _outBox1.width = _outBox2.width = _outBox3.width = 30;
+			_inBox.width = 30;
+			_inBox.iconAlign = IconAlign.LEFT;
+			_inBox.contentMargin = new Margin(10, 0, 0, 0);
 			
 			_deleteBt.iconAlign = IconAlign.LEFT;
-			_outBox1.iconAlign = _outBox2.iconAlign = _outBox3.iconAlign = _inBox.iconAlign = IconAlign.LEFT;
+			
 			_inBox.contentMargin = new Margin(10, 0, 0, 0);
-			_outBox1.contentMargin = new Margin(10, 0, 0, 0);
-			_outBox2.contentMargin = new Margin(10, 0, 0, 0);
-			_outBox3.contentMargin = new Margin(10, 0, 0, 0);
 			_deleteBt.contentMargin = new Margin(7, 0, 0, 0);
-			_outBox1.background.filters = [new ColorMatrixFilter(hexToMatrix( 0xE95B5B ))];
-			_outBox2.background.filters = [new ColorMatrixFilter(hexToMatrix( 0xff8800 ))];
-			_outBox3.background.filters = [new ColorMatrixFilter(hexToMatrix( 0xffff00 ))];
 			
 			if(_data != null && _data.boxPosition != null) {
 				x = _data.boxPosition.x;
@@ -298,12 +298,6 @@ package com.twinoid.kube.quest.editor.components.box {
 			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 			_deleteBt.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 //			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_outBox1.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_outBox2.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_outBox3.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_outBox1.addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
-			_outBox2.addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
-			_outBox3.addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
 			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphic);
 			
 			render();
@@ -313,29 +307,28 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			_background.width = BackgroundView.CELL_SIZE * 8 - _inBox.width - _outBox1.width + 4;
+			_background.width = BackgroundView.CELL_SIZE * 8 - _inBox.width - _outBoxes[0].width + 4;
 			_background.height = _inBox.height = BackgroundView.CELL_SIZE * 3;
 			_background.x = _inBox.width - 2;
-			_outBox1.x = _outBox2.x = _outBox3.x = _background.x + _background.width - 2;
-			
-			var t:int = 1;
-			if(contains(_outBox2)) t++;
-			if(contains(_outBox3)) t++;
+			var t:int = 0;
 			var h:int = _inBox.height;
-			if(contains(_outBox2)) h+=4;
-			if(contains(_outBox3)) h+=4;
-			h = Math.round(h/t);
-			_outBox1.height = _outBox2.height = _outBox3.height = h;
-			PosUtils.vPlaceNext(-4, _outBox1, _outBox2, _outBox3);
+			for(var i:int = 0; i < _outBoxes.length; ++i) {
+				_outBoxes[i].x = _background.x + _background.width - 2;
+				if(contains(_outBoxes[i])) {
+					t++;
+					if(i > 0) h+=4;
+				}
+			}
 			
-			//Dirty hack to offset the icon's position as the contentMargin
-			//seems to be fucked up...
-			_outBox1.validate();
-			_outBox2.validate();
-			_outBox3.validate();
-			_outBox1.icon.y -= 3;
-			_outBox2.icon.y -= 3;
-			_outBox3.icon.y -= 3;
+			h = Math.round(h/t);
+			for(i = 0; i < _outBoxes.length; ++i) {
+				_outBoxes[i].height = h;
+				_outBoxes[i].validate();
+				//Dirty hack to offset the icon's position as the contentMargin
+				//seems to be fucked up...
+				_outBoxes[i].icon.y -= 3;
+			}
+			PosUtils.vPlaceNext(-4, VectorUtils.toArray(_outBoxes));
 			
 			var margin:int = 3;
 			var isImage:Boolean = _data != null && _data.getImage() != null;
@@ -359,7 +352,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			_deleteBt.x = _background.x + _background.width - _deleteBt.width;
 			_deleteBt.y = -_deleteBt.height;
 			
-			roundPos(_outBox1, _background, _timeIcon, _deleteBt);
+			roundPos(_background, _timeIcon, _deleteBt);
 		}
 		
 		
@@ -378,7 +371,6 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when mouse goes over the component
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
-			if(event.target != this) return; //Fuckin bug ! Without that, we get a rollover fired when we click "out" or "delete" button, even if we're already over. Probably due to GraphicButton component...
 			cacheAsBitmap = false;
 			addChildAt(_deleteBt, 0);
 			TweenLite.killTweensOf(_deleteBt);
@@ -392,9 +384,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function overOutHBoxandler(event:MouseEvent):void {
 			if(_data.actionChoices != null && _data.actionChoices.choices.length > 0) {
 				var label:String;
-				if(event.currentTarget == _outBox1) label = _data.actionChoices.choices[0];
-				if(event.currentTarget == _outBox2) label = _data.actionChoices.choices[1];
-				if(event.currentTarget == _outBox3) label = _data.actionChoices.choices[2];
+				label = _data.actionChoices.choices[ _outBoxToIndex[event.currentTarget] ];
 				InteractiveObject(event.currentTarget).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.RIGHT));
 			}
 		}
@@ -403,7 +393,6 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when mouse goes out the component.
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
-			if(event.target != this) return; //Fuckin bug ! Without that, we get a rollover fired when we click "out" or "delete" button, even if we're already over. Probably due to GraphicButton component...
 			cacheAsBitmap = true;//TODO check if that's a sufficient optimization. If not, remove everything from holder and replace it by a bitmap snapshot
 			TweenLite.killTweensOf(_deleteBt);
 			TweenLite.to(_deleteBt, .15, {y:0, removeChild:true});
@@ -413,7 +402,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when the component is clicked to open the edition view
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			if(event.target == _deleteBt || event.target == _outBox1 || event.target == _outBox2 || event.target == _outBox3) {
+			if(event.target == _deleteBt || _outBoxToIndex[event.target] != undefined) {
 				event.stopPropagation();
 				if(event.target == _deleteBt) {
 					if(_data.isEmpty()) {
@@ -442,7 +431,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function mouseDownHandler(event:MouseEvent):void {
 			event.stopPropagation();
 			if (event.currentTarget != _deleteBt) {
-				var index:int = event.currentTarget == _outBox1 ? 0 : event.currentTarget == _outBox2 ? 1 : 2;
+				var index:int = _outBoxToIndex[event.currentTarget];
 				dispatchEvent(new BoxEvent(BoxEvent.CREATE_LINK, index));
 			}
 		}

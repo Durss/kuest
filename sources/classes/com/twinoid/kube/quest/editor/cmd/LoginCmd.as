@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.cmd {
+	import com.twinoid.kube.quest.editor.vo.UserInfo;
 	import com.nurun.core.commands.Command;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.boolean.parseBoolean;
@@ -69,14 +70,26 @@ package com.twinoid.kube.quest.editor.cmd {
 				ret["name"]		= xml.child("name")[0];
 				ret["pubkey"]	= xml.child("pubkey")[0];
 				ret["lang"]		= xml.child("lang")[0];
+				
+				//Get kuests
 				var nodes:XMLList = XML(xml.child("kuests")[0]).child("k");
 				var i:int, len:int, kuests:Vector.<KuestInfo>;
 				len = nodes.length();
 				kuests = new Vector.<KuestInfo>();
 				for(i = 0; i < len; ++i) {
-					kuests[i] = new KuestInfo(XML(nodes[i]).child("t")[0], XML(nodes[i]).child("d")[0], nodes[i].@id);
+					kuests[i] = new KuestInfo(XML(nodes[i]).child("t")[0], XML(nodes[i]).child("d")[0], nodes[i].@id, String(nodes[i].@r).split(","));
 				}
 				ret["kuests"] = kuests;
+				
+				//Get friends
+				nodes = XML(xml.child("friends")[0]).child("f");
+				len = nodes.length();
+				var friends:Vector.<UserInfo> = new Vector.<UserInfo>();
+				for(i = 0; i < len; ++i) {
+					friends[i] = new UserInfo(nodes[i][0], nodes[i].@id);
+				}
+				ret["friends"] = friends;
+				
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, ret));
 			}else{
 				dispatchEvent(new CommandEvent(CommandEvent.ERROR, xml.child("error")[0].@id));

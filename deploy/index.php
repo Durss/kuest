@@ -57,10 +57,6 @@
 			if ($xml->getName() != "error") {
 				$pseudo	= (string) $xml->attributes()->name;
 				$lang = (string)$xml->attributes()->lang;
-				$_SESSION['lang'] = $lang;
-				$_SESSION['uid'] = $_GET['uid'];
-				$_SESSION['name'] = $pseudo;
-				$_SESSION["pubkey"]	= $_GET["pubkey"];
 			}
 		}else {
 			header("location: /kuest/down");
@@ -113,7 +109,7 @@
 			if(lang != "fr" && lang != "en") lang = "en";
 			
 			var flashvars = {};
-			flashvars["version"] = "44";
+			flashvars["version"] = "52";
 			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
 			flashvars["lang"] = lang;
 <?php

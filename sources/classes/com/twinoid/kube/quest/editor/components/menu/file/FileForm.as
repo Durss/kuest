@@ -14,9 +14,9 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 	import com.twinoid.kube.quest.graphics.DeployIcon;
 	import com.twinoid.kube.quest.graphics.LoadIcon;
 	import com.twinoid.kube.quest.graphics.NewFileIcon;
-	import com.twinoid.kube.quest.graphics.ParamsIcon;
 	import com.twinoid.kube.quest.graphics.SaveIcon;
 	import com.twinoid.kube.quest.graphics.SaveNewIcon;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -42,7 +42,6 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _clearBt:ButtonKube;
 		private var _loadBt:ButtonKube;
 		private var _saveBt:ButtonKube;
-		private var _paramsBt:ButtonKube;
 		private var _saveForm:FileSaveForm;
 		private var _saveNewBt:GraphicButtonKube;
 		private var _spin:LoaderSpinning;
@@ -51,6 +50,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _publishBt:ButtonKube;
 		private var _publishForm:FilePublishForm;
 		private var _prevKuestId:String;
+		private var _lastEditMode:Boolean;
 		
 		
 		
@@ -85,6 +85,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_saveNewBt.visible = model.currentKuestId != null;
 			_publishBt.enabled = _saveNewBt.visible;
 			_loadForm.populate(model.kuests);
+			_saveForm.populate(model.currentKuest, model.friends);
 			if(model.currentKuestId != _prevKuestId) _publishForm.close();
 			_prevKuestId = model.currentKuestId;
 			computePositions();
@@ -105,13 +106,11 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_saveBt		= addChild(new ButtonKube(Label.getLabel("menu-file-save"), new SaveIcon(), true)) as ButtonKube;
 			_saveNewBt	= addChild(new GraphicButtonKube(new SaveNewIcon())) as GraphicButtonKube;
 			_publishBt	= addChild(new ButtonKube(Label.getLabel("menu-file-publish"), new DeployIcon(), true)) as ButtonKube;
-			_paramsBt	= addChild(new ButtonKube(Label.getLabel("menu-file-params"), new ParamsIcon(), true)) as ButtonKube;
 			_loadForm	= addChild(new FileLoadForm(_width)) as FileLoadForm;
 			_saveForm	= addChild(new FileSaveForm(_width)) as FileSaveForm;
 			_publishForm= addChild(new FilePublishForm(_width)) as FilePublishForm;
 			_spin		= addChild(new LoaderSpinning()) as LoaderSpinning;
 			
-			_paramsBt.enabled = false;
 			_saveNewBt.visible = false;
 			
 			_componentToTTID = new Dictionary();
@@ -120,7 +119,12 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_componentToTTID[_publishBt] = "menu-file-publishTT";
 //			_componentToTTID[_loadBt] = "file-loadTT";
 			
-			addEventListener(MouseEvent.MOUSE_OVER, rollHandler);
+			_saveBt.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_saveNewBt.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_saveForm.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_saveBt.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
+			_saveForm.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
+			_saveNewBt.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			_saveForm.addEventListener(Event.RESIZE, computePositions);
 			_loadForm.addEventListener(Event.RESIZE, computePositions);
@@ -143,14 +147,13 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_clearBt.width = _loadBt.width = _saveBt.width = _paramsBt.width = _publishBt.width = _width;
+			_clearBt.width = _loadBt.width = _saveBt.width = _publishBt.width = _width;
 			PosUtils.vPlaceNext(10, _clearBt, _loadBt);
 			PosUtils.vPlaceNext(0, _loadBt, _loadForm);
 			PosUtils.vPlaceNext(10, _loadForm, _saveBt);
 			PosUtils.vPlaceNext(0, _saveBt, _saveForm);
 			PosUtils.vPlaceNext(10, _saveForm, _publishBt);
 			PosUtils.vPlaceNext(0, _publishBt, _publishForm);
-			PosUtils.vPlaceNext(10, _publishForm, _paramsBt);
 			
 			//If we already saved the kuest or if we loaded one, display the
 			//"save new" button to allow to save it as a new map.
@@ -165,7 +168,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			if(_loadForm.height == 0 && _loadForm.isClosed && contains(_loadForm)) removeChild(_loadForm);
 			if(_publishForm.height == 0 && _publishForm.isClosed && contains(_publishForm)) removeChild(_publishForm);
 			
-			roundPos(_clearBt, _saveForm, _loadBt, _saveBt, _saveNewBt, _publishBt, _publishForm, _paramsBt);
+			roundPos(_clearBt, _saveForm, _loadBt, _saveBt, _saveNewBt, _publishBt, _publishForm);
 			
 			dispatchEvent(new Event(Event.RESIZE));
 		}
@@ -173,11 +176,33 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Called when a component is rolled over.
 		 */
-		private function rollHandler(event:MouseEvent):void {
-			var labelID:String = _componentToTTID[event.target];
+		private function rollOverHandler(event:MouseEvent):void {
+			var labelID:String = _componentToTTID[event.currentTarget];
 			if(labelID != null) {
-				EventDispatcher(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel(labelID), ToolTipAlign.TOP));
+				EventDispatcher(event.currentTarget).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel(labelID), ToolTipAlign.TOP));
 			}
+			if( (event.currentTarget == _saveBt || event.currentTarget == _saveForm) && _saveNewBt.visible) {
+				if(event.currentTarget == _saveBt || event.currentTarget == _saveNewBt) _lastEditMode = true;
+				addChildAt(_saveForm, getChildIndex(_saveBt)+1);
+				_saveForm.open(_lastEditMode);
+			}
+			if(event.currentTarget == _saveNewBt) {
+				addChildAt(_saveForm, getChildIndex(_saveBt)+1);
+				_saveForm.open();
+				_lastEditMode = false;
+			}
+		}
+		
+		/**
+		 * Called when a component is rolled out
+		 */
+		private function rollOutHandler(event:MouseEvent):void {
+			//Prevents from a bug when testing in standalone mode.
+			//When using mouse wheel a ROLL_OUT is fired :/...
+			if(event.relatedObject == null) return;
+			
+			if(event.currentTarget == _saveForm && (stage.focus == null || !_saveForm.contains(stage.focus)) ) _saveForm.close();
+			if(_saveNewBt.visible && event.currentTarget != _saveForm) _saveForm.close();
 		}
 		
 		/**
@@ -191,16 +216,16 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 					_spin.x = _saveBt.x + _saveBt.width * .5;
 					_spin.y = _saveBt.y + _saveBt.height * .5;
 					_spin.open(Label.getLabel("loader-saving"));
-					FrontControler.getInstance().save(null, null, onSave);
+					FrontControler.getInstance().save(_saveForm.title, _saveForm.description, _saveForm.friends, onSave, false, true);
 				}
 				if((_saveNewBt.visible && event.target == _saveNewBt) || !_saveNewBt.visible) {
-					addChild(_saveForm);
+					addChildAt(_saveForm, getChildIndex(_saveBt)+1);
 					_saveForm.toggle();
 				}
 			}else
 			
 			if(event.target == _loadBt) {
-				addChild(_loadForm);
+				addChildAt(_loadForm, getChildIndex(_loadBt)+1);
 				_loadForm.toggle();
 			}else
 			
@@ -213,14 +238,14 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				_spin.x = _publishBt.x + _publishBt.width * .5;
 				_spin.y = _publishBt.y + _publishBt.height * .5;
 				_spin.open(Label.getLabel("loader-publishing"));
-				FrontControler.getInstance().save(null, null, onPublish, true);
+				FrontControler.getInstance().save(_saveForm.title, _saveForm.description, _saveForm.friends, onPublish, true);
 			}
 		}
 		
 		/**
 		 * Called when saving completes/fails
 		 */
-		private function onSave(succes:Boolean, errorID:String = "", progress:Number = NaN):void {
+		private function onSave(succes:Boolean = false, errorID:String = "", progress:Number = NaN):void {
 			progress;//can't work for upload :(
 			errorID;//
 			_saveBt.enabled = true;
@@ -262,7 +287,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				_spin.open(Label.getLabel("loader-saving"));
 				_saveBt.enabled = false;
 				_saveNewBt.enabled = false;
-				FrontControler.getInstance().save(null, null, onSave);
+				FrontControler.getInstance().save(_saveForm.title, _saveForm.description, _saveForm.friends, onSave, false, true);
 			}
 		}
 		

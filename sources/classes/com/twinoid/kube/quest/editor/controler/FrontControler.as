@@ -127,8 +127,8 @@ package com.twinoid.kube.quest.editor.controler {
 		/**
 		 * Saves the current quest
 		 */
-		public function save(title:String, description:String, callback:Function, optimise:Boolean = false):void {
-			_model.save(title, description, callback, optimise);
+		public function save(title:String, description:String, friends:Array, callback:Function, optimise:Boolean = false, updateMode:Boolean = false):void {
+			_model.save(title, description, friends, callback, optimise, updateMode);
 		}
 		
 		/**
