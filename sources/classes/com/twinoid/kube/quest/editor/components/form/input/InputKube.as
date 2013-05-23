@@ -44,16 +44,14 @@ package com.twinoid.kube.quest.editor.components.form.input {
 			super("input", new InputSkin(), defaultLabel, "inputDefault", locMargins);
 			
 			if(isNumeric) {
-				textfield.restrict = "[0-9]";
-				textfield.maxChars = maxNumValue.toString().length;
+				textfield.restrict = "[0-9]\\-";
+				textfield.maxChars = Math.max(maxNumValue.toString().length, minNumValue.toString().length);
 				width = textfield.maxChars * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style)["fontSize"])+1) + locMargins.width;
 				addEventListener(Event.CHANGE, changeValueHandler);
 				addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+				addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			}else{
 				width = 10 * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style)["fontSize"])+1) + locMargins.width;
-			}
-			if(isNumeric) {
-				addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			}
 		}
 		
@@ -63,6 +61,14 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		public function errorFlash():void {
 			transform.colorTransform = new ColorTransform();
 			TweenLite.from(this, .5, {tint:0xff0000});
+		}
+		
+		/**
+		 * Make a green flash
+		 */
+		public function successFlash():void {
+			transform.colorTransform = new ColorTransform();
+			TweenLite.from(this, .5, {tint:0x00ff00});
 		}
 
 
@@ -112,11 +118,24 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Called when the input's value changes
 		 */
 		private function changeValueHandler(event:Event):void {
-			var v:Number = Math.round(parseFloat(text));
+			var txt:String = text;
+			var minus:Boolean = txt.charAt(0) == "-"; 
+			txt = txt.replace(/\-/g, "");
+			if(minus) txt = "-"+txt;
+			
+			if (txt == "-" || txt == defaultLabel) return;
+			if(txt.length == 0) {
+				text = defaultLabel;
+				return;
+			}
+			
+			var v:Number = Math.round(parseFloat(txt));
 			v = MathUtils.restrict(v, _minNumValue, _maxNumValue);
-			if(v.toString() != text) {
+			if(v.toString() != txt) {
 				event.stopPropagation();
 				text = v.toString();
+			}else{
+				text = txt;
 			}
 		}
 		
@@ -158,16 +177,17 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		}
 
 		private function mouseUpHandler(event:MouseEvent):void {
-			if(hasEventListener(Event.ENTER_FRAME)) {
-				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			}
+			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 
 		private function enterFrameHandler(event:Event):void {
 			var dist:Number = (mouseX - _dragOffset.x) + (mouseY - _dragOffset.y);//Math.sqrt(Math.pow(mouseX - _dragOffset.x, 2) + Math.pow(mouseY - _dragOffset.y, 2));
+			if(Math.abs(dist) < 2) return;
+			
 			var v:int = parseInt(textfield.text) + Math.round(dist);
 			v = MathUtils.restrict(v, _minNumValue, _maxNumValue);
 			text = v.toString();
+			
 			_dragOffset.x = mouseX;
 			_dragOffset.y = mouseY;
 			dispatchEvent(new Event(Event.CHANGE));

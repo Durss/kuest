@@ -77,7 +77,7 @@ package com.twinoid.kube.quest.editor.cmd {
 				len = nodes.length();
 				kuests = new Vector.<KuestInfo>();
 				for(i = 0; i < len; ++i) {
-					kuests[i] = new KuestInfo(XML(nodes[i]).child("t")[0], XML(nodes[i]).child("d")[0], nodes[i].@id, String(nodes[i].@r).split(","));
+					kuests[i] = new KuestInfo(XML(nodes[i]).child("t")[0], XML(nodes[i]).child("d")[0], nodes[i].@guid, String(nodes[i].@r).split(","));
 				}
 				ret["kuests"] = kuests;
 				

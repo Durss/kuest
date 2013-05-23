@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player {
+	import com.twinoid.kube.quest.player.views.ActionSimulatorView;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 	import gs.plugins.RemoveChildPlugin;
@@ -165,8 +166,9 @@ package com.twinoid.kube.quest.player {
 				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
 				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
 				_inventory	= _holder.addChild(new PlayerInventoryView(stage.stageWidth - 20)) as PlayerInventoryView;
+				if (Config.getBooleanVariable("testMode")) addChild(new ActionSimulatorView());
 				addChild(new ToolTipView());
-				addChild(new ExceptionView());
+				addChild(new ExceptionView(true));
 				
 				_mask.height = 0;
 				_holder.mask = _mask;
@@ -178,6 +180,7 @@ package com.twinoid.kube.quest.player {
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_ERROR, loadQuestErrorHandler);
 				
 				stage.addEventListener(Event.RESIZE, computePositions);
+				computePositions();
 			}
 		}
 		

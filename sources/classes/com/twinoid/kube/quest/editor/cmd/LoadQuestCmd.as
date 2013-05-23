@@ -20,7 +20,7 @@ package com.twinoid.kube.quest.editor.cmd {
 	 */
 	public class LoadQuestCmd extends LoadFileCmd implements ProgressiveCommand {
 		
-		private var _id:String;
+		private var _guid:String;
 		private var _callback:Function;
 		private var _release:Boolean;
 		
@@ -46,7 +46,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		/**
 		 * Gets the kuest's ID
 		 */
-		public function get id():String { return _id; }
+		public function get guid():String { return _guid; }
 
 		/**
 		 * Gets the method to be called when saving completes
@@ -76,10 +76,10 @@ package com.twinoid.kube.quest.editor.cmd {
 		/**
 		 * Populates the command
 		 */
-		public function populate(id:String, callback:Function = null):void {
+		public function populate(guid:String, callback:Function = null):void {
 			_callback = callback;
-			_id = id;
-			_urlVariables['id'] = id;
+			_guid = guid;
+			_urlVariables['id'] = guid;
 			if(_release) _urlVariables['release'] = "";
 		}
 

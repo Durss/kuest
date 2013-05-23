@@ -12,7 +12,7 @@ package com.twinoid.kube.quest.editor.model {
 	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoadQuestCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoginCmd;
-	import com.twinoid.kube.quest.editor.cmd.SaveCmd;
+	import com.twinoid.kube.quest.editor.cmd.SaveQuestCmd;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.events.LCManagerEvent;
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
@@ -62,8 +62,8 @@ package com.twinoid.kube.quest.editor.model {
 		private var _objectsUpdate:Boolean;
 		private var _comments:Vector.<GraphicsPath>;
 		private var _commentsViewports:Vector.<Rectangle>;
-		private var _saveCmd:SaveCmd;
-		private var _currentKuestId:String;
+		private var _saveCmd:SaveQuestCmd;
+		private var _currentKuestGUID:String;
 		private var _kuests:Vector.<KuestInfo>;
 		private var _loadCmd:LoadQuestCmd;
 		private var _ksaCmd:KeepSessionAliveCmd;
@@ -171,7 +171,7 @@ package com.twinoid.kube.quest.editor.model {
 		/**
 		 * Gets the currently loaded kuest's ID
 		 */
-		public function get currentKuestId():String { return _currentKuestId; }
+		public function get currentKuestGUID():String { return _currentKuestGUID; }
 		
 		/**
 		 * Gets the currently loaded kuest's info
@@ -180,7 +180,7 @@ package com.twinoid.kube.quest.editor.model {
 			var i:int, len:int;
 			len = _kuests == null? 0 : _kuests.length;
 			for(i = 0; i < len; ++i) {
-				if (_kuests[i].id == _currentKuestId) return _kuests[i];
+				if (_kuests[i].guid == _currentKuestGUID) return _kuests[i];
 			}
 			return null;
 		}
@@ -354,7 +354,7 @@ package com.twinoid.kube.quest.editor.model {
 				return;
 			}
 			
-			var id:String = updateMode? _currentKuestId : "";
+			var id:String = updateMode || optimise? _currentKuestGUID : "";
 			_saveCmd.populate(title, description, bytes, friends, callback, id, optimise);
 			if(optimise) {
 				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback);
@@ -369,11 +369,11 @@ package com.twinoid.kube.quest.editor.model {
 		 * @return false if loading is ignored because map is already loaded
 		 */
 		public function load(kuest:KuestInfo, callback:Function, cancelCallback:Function):Boolean {
-			if(kuest.id == _currentKuestId) {
+			if(kuest.guid == _currentKuestGUID) {
 				return false;
 			}
 			
-			_loadCmd.populate(kuest.id, callback);
+			_loadCmd.populate(kuest.guid, callback);
 			if(_kuestData.nodes.length > 0) {
 				prompt("menu-file-load-prompt-title", "menu-file-load-prompt-content", _loadCmd.execute, "loadLooseData", cancelCallback);
 			}else{
@@ -406,7 +406,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		public function deleteSave(data:KuestInfo):void {
 			_cmdDelete = new DeleteQuestCmd();
-			_cmdDelete.populate(data.id);
+			_cmdDelete.populate(data.guid);
 			prompt("menu-file-delete-prompt-title", "menu-file-delete-prompt-content", onDelete, "deleteKuest");
 		}
 
@@ -431,7 +431,7 @@ package com.twinoid.kube.quest.editor.model {
 			_loginCmd.addEventListener(CommandEvent.COMPLETE, loginCompleteHandler);
 			_loginCmd.addEventListener(CommandEvent.ERROR, loginErrorHandler);
 			
-			_saveCmd = new SaveCmd();
+			_saveCmd = new SaveQuestCmd();
 			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveCompleteHandler);
 			_saveCmd.addEventListener(CommandEvent.ERROR, saveErrorHandler);
 //			_saveCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);
@@ -476,7 +476,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function reset():void {
 			_comments = null;
-			_currentKuestId = null;
+			_currentKuestGUID = null;
 			_currentBoxToEdit = null;
 			_commentsViewports = null;
 			_kuestData.reset();
@@ -490,10 +490,11 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function onDelete():void {
 			_cmdDelete.execute();
+			if(_cmdDelete.guid == _currentKuestGUID) _currentKuestGUID = null;
 			var i:int, len:int;
 			len = _kuests.length;
 			for(i = 0; i < len; ++i) {
-				if(_kuests[i].id == _cmdDelete.id) {
+				if(_kuests[i].guid == _cmdDelete.guid) {
 					_kuests.splice(i, 1);
 					i --;
 					len --;
@@ -515,16 +516,16 @@ package com.twinoid.kube.quest.editor.model {
 		 * Called when saving completes
 		 */
 		private function saveCompleteHandler(event:CommandEvent):void {
-			_currentKuestId = event.data["id"];
+			_currentKuestGUID = event.data["guid"];
 			// If title and description are null, that's because we updated an existing kuest.
-			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestId, []);
-			if(isEmpty(_saveCmd.id)) {
+			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, []);
+			if(isEmpty(_saveCmd.guid)) {
 				_kuests.unshift(vo);
 			}else{
 				var i:int, len:int;
 				len = _kuests.length;
 				for(i = 0; i < len; ++i) {
-					if(_kuests[i].id == _currentKuestId) {
+					if(_kuests[i].guid == _currentKuestGUID) {
 						_kuests[i] = vo;
 					}
 				}
@@ -616,7 +617,7 @@ package com.twinoid.kube.quest.editor.model {
 			if(bytes.position < bytes.length) _comments = bytes.readObject();
 			if(bytes.position < bytes.length) _commentsViewports = bytes.readObject();
 			
-			_currentKuestId = _loadCmd.id;
+			_currentKuestGUID = _loadCmd.guid;
 			_charactersUpdate = _objectsUpdate = true;
 			_loadCmd.callback(true);
 			update();

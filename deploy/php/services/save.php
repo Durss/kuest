@@ -43,9 +43,10 @@
 		
 		//Update a kuest !
 		if (isset($_GET["id"]) && strlen($_GET["id"]) > 0) {
+			$guid = $_GET["id"];
 			//Check for edition rights
-			$sql = "SELECT uid, guid, dataFile, friends FROM kuests WHERE id=:id";
-			$params = array(':id' => $_GET["id"]);
+			$sql = "SELECT uid, guid, dataFile, friends FROM kuests WHERE guid=:id";
+			$params = array(':id' => $guid);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();
@@ -69,8 +70,8 @@
 			$friends = $_GET["friends"];
 			if ($_SESSION["uid"] != $res['uid']) $friends .= ",89";
 			
-			$sql = "UPDATE kuests SET name=:name, description=:description, friends=:friends WHERE id=:id";
-			$params = array(':id' => $_GET["id"], ':name' => $_GET["title"], ':description' => $_GET["description"], ':friends' => ",".$friends.",");
+			$sql = "UPDATE kuests SET name=:name, description=:description, friends=:friends WHERE guid=:id";
+			$params = array(':id' => $guid, ':name' => $_GET["title"], ':description' => $_GET["description"], ':friends' => ",".$friends.",");
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();
@@ -85,10 +86,8 @@
 				fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
 				fclose($fp);
 			}
-			$id = $_GET["id"];
+			
 			if (isset($_GET["publish"])) {
-				$guid = $res['guid'];
-				
 				//Flag as published
 				$sql = "UPDATE kuests SET published=:published WHERE guid=:guid";
 				$params = array('guid' => $guid, ':published' => true);
@@ -125,8 +124,9 @@
 			}
 			
 			//Insert into DB
+			$guid = uniqid();
 			$sql = "INSERT into kuests (guid, uid, lang, name, description, dataFile, friends) VALUES (:guid, :uid, :lang, :name, :description, :dataFile, :friends)";
-			$params = array('guid' => uniqid(), ':uid' => $_SESSION['uid'], ':lang' => $_SESSION['lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index, ':friends' => ",".$_GET["friends"].",");
+			$params = array('guid' => $guid, ':uid' => $_SESSION['uid'], ':lang' => $_SESSION['lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index, ':friends' => ",".$_GET["friends"].",");
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();
@@ -134,11 +134,9 @@
 				Out::printOut(false, '', $error, 'SQL_ERROR');
 				die;
 			}
-			$id = DBConnection::getLink()->lastInsertId();
 		}
 	
-		$additionnals .= "<id>".$id."</id>\n";
-		if(isset($guid)) $additionnals .= "\t<guid>".$res['guid']."</guid>\n";
+		$additionnals .= "<guid>".$guid."</guid>\n";
 		Out::printOut(true, $additionnals);
 	
 	}else {

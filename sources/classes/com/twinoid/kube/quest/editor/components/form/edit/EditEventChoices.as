@@ -82,7 +82,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			if(data.actionChoices != null) {
 				for(i = 0; i < len; ++i) {
 					if (data.actionChoices.choices.length > i && data.actionChoices.choices[i].length > 0) {
-						_choices[i].text = data.actionChoices.choices[0];
+						_choices[i].text = data.actionChoices.choices[i];
 						selectedIndex = 1;
 					}
 				}

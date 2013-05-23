@@ -17,13 +17,13 @@
 		die;
 	}
 	
-	$dir1 = "../../kuests/published/";
 	$dir1 = "../../kuests/saves/";
+	$dir2 = "../../kuests/published/";
 	
 	if (isset($_POST["id"])) {
 		//Check for loading rights
-		$sql = "SELECT uid, dataFile FROM kuests WHERE id=:id";
-		$params = array(':id' => $_POST["id"]);
+		$sql = "SELECT id, uid, dataFile FROM kuests WHERE guid=:guid";
+		$params = array(':guid' => $_POST["id"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -45,7 +45,7 @@
 		}
 		
 		//Deletes the DB entry
-		$sql = "DELETE FROM kuests WHERE id=:id";
+		$sql = "DELETE FROM kuests WHERE guid=:guid";
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -54,6 +54,7 @@
 			die;
 		}
 		
+		$params = array(':id' => $res["id"]);
 		//Deletes the users saves
 		$sql = "DELETE FROM kuestSaves WHERE kid=:id";
 		$req = DBConnection::getLink()->prepare($sql);
@@ -74,6 +75,7 @@
 			die;
 		}
 		
+		//Delete quests files.
 		@unlink($dir1.$res["dataFile"].".kst");
 		@unlink($dir2.$res["dataFile"].".kst");
 		

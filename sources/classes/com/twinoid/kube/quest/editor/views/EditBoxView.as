@@ -1,5 +1,7 @@
 package com.twinoid.kube.quest.editor.views {
-	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
+	import gs.TweenLite;
+	import gs.easing.Back;
+
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.nurun.structure.environnement.label.Label;
@@ -9,8 +11,10 @@ package com.twinoid.kube.quest.editor.views {
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventChoices;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventPlace;
+	import com.twinoid.kube.quest.editor.components.form.edit.EditEventSound;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventTime;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventType;
 	import com.twinoid.kube.quest.editor.components.window.TitledWindow;
@@ -19,13 +23,12 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.setTimeout;
-	import gs.TweenLite;
-	import gs.easing.Back;
 
 
 
@@ -52,6 +55,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _choices:EditEventChoices;
 		private var _disable:Sprite;
 		private var _endEvent:CheckBoxKube;
+		private var _sound:EditEventSound;
 		
 		
 		
@@ -110,6 +114,7 @@ package com.twinoid.kube.quest.editor.views {
 					_type.load( _data );
 					_times.load( _data );
 					_choices.load( _data );
+					_sound.load( _data );
 					_endEvent.selected = _data.endsQuest;
 					
 					computePositions();
@@ -157,6 +162,7 @@ package com.twinoid.kube.quest.editor.views {
 			_type	= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
 			_choices= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
 			_times	= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
+			_sound	= _holder.addChild(new EditEventSound(_WIDTH)) as EditEventSound;
 			_endEvent= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-endEvent"))) as CheckBoxKube;
 			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
 			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
@@ -250,6 +256,7 @@ package com.twinoid.kube.quest.editor.views {
 			_type.save( _data );
 			_times.save( _data );
 			_choices.save( _data );
+			_sound.save( _data );
 			_data.endsQuest = _endEvent.selected;
 			_data.submit();
 			close();

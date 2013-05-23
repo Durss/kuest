@@ -10,8 +10,9 @@
 			if($additionnals && strlen($additionnals) > 0)	$str .= "	".$additionnals."\n";
 			$str .= "</root>";
 			
-			if(!$success) {
-				Logger::getInstance()->log($errorID." :: ".$error."\r\n\t\tGET : ".print_r($_GET, true)."\r\n\t\tPOST : ".print_r($_POST, true));
+			//No logs for me on prod server 'coz i don't give shit about that :D (yeah, i'll probably regret that...)
+			if(!$success && (!isset($_SESSION['uid']) || $_SESSION['uid'] != '89' || $_SERVER['HTTP_HOST'] != "localhost")) {
+				Logger::getInstance()->log($errorID." :: ".$error."\r\n\t\tGET : ".print_r($_GET, true)."\r\n\t\tPOST : ".print_r($_POST, true)."\r\n\t\tSESSION : ".print_r($_SESSION, true));
 			}
 			
 			//Close DB connection

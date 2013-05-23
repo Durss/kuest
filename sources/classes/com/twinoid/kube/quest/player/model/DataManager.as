@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.player.model {
-	import com.twinoid.kube.quest.editor.utils.logJS;
 	import flash.utils.getTimer;
 	import com.nurun.core.commands.SequentialCommand;
 	import com.nurun.core.commands.events.CommandEvent;
@@ -218,8 +217,9 @@ package com.twinoid.kube.quest.player.model {
 			_receiverGame.connect(_lcGameName);
 			
 			if(Capabilities.playerType == "StandAlone") {
-				Config.addVariable("kuestID", "5194100a4a94f");
+				Config.addVariable("kuestID", "519d5abb4faa7");
 				Config.addVariable("currentUID", "89");
+				Config.addVariable("testMode", 'true');
 			}
 			if(Config.getVariable("kuestID") != null) {
 				var spool:SequentialCommand = new SequentialCommand();
@@ -244,8 +244,8 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		public function answer(index:int):void {
 			_save[getPosId(_currentEvent.actionPlace)].index ++;
-			_save[_currentEvent.guid].complete = true;
 			_save[_currentEvent.guid].answerIndex = index;
+			flagAsComplete(_currentEvent);
 			selectEventFromPos(_lastPosData);
 		}
 		
@@ -254,8 +254,27 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		public function next():void {
 			_save[getPosId(_currentEvent.actionPlace)].index ++;
-			_save[_currentEvent.guid].complete = true;
+			flagAsComplete(_currentEvent);
 			selectEventFromPos(_lastPosData);
+		}
+		
+		/**
+		 * Simulates a zone change
+		 */
+		public function simulateZoneChange(x:Number, y:Number):void {
+			_inGamePosition.x = x;
+			_inGamePosition.y = y;
+			selectEventFromPos(_inGamePosition);
+		}
+		
+		/**
+		 * Simulate a forum touch
+		 */
+		public function simulateForumChange(x:Number, y:Number, z:Number):void {
+			_lastTouchPosition.x = x;
+			_lastTouchPosition.y = y;
+			_lastTouchPosition.z = z;
+			selectEventFromPos(_lastTouchPosition);
 		}
 
 
@@ -354,7 +373,6 @@ package com.twinoid.kube.quest.player.model {
 		 * Called when player enters a new zone
 		 */
 		private function onUpdatePosition(px:int, py:int):void {
-			logJS(px, py)
 			if(px == 0xffffff || py == 0xffffff //first undefined coord fired by the game. Ignore it.
 			|| (_inGamePosition.x == px && _inGamePosition.y == py)) return;
 			_inGamePosition.x = px;
@@ -435,7 +453,7 @@ package com.twinoid.kube.quest.player.model {
 				_loadProgressionCmd.addEventListener(CommandEvent.ERROR, loadProgressionErrorHandler);
 				_loadProgressionCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
 				
-				_loadKuestCmd = new LoadQuestCmd(true);
+				_loadKuestCmd = new LoadQuestCmd(!Config.getBooleanVariable("testMode"));
 				_loadKuestCmd.addEventListener(CommandEvent.COMPLETE, loadQuestCompleteHandler);
 				_loadKuestCmd.addEventListener(CommandEvent.ERROR, loadQuestErrorHandler);
 				_loadKuestCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
@@ -467,7 +485,12 @@ package com.twinoid.kube.quest.player.model {
 		private function loadQuestCompleteHandler(event:CommandEvent):void {
 			var bytes:ByteArray = event.data as ByteArray;
 			bytes.position = 0;
-			XOR(bytes, "ErrorEvent :: kuest cannot be optimised...");//Decrypt data
+			//If testing quest
+			if(Config.getBooleanVariable("testMode")) {
+				XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Decrypt data
+			}else{
+				XOR(bytes, "ErrorEvent :: kuest cannot be optimised...");//Decrypt data
+			}
 			bytes.inflate();
 			bytes.position = 0;
 			var fileVersion:int = bytes.readInt();
@@ -598,7 +621,6 @@ package com.twinoid.kube.quest.player.model {
 		 * Determines which event is the current one depending on the current user's action position
 		 */
 		private function selectEventFromPos(pos:*):void {
-			//TODO Manage time limitations
 			var i:int, len:int, item:KuestEvent, selectedEvent:KuestEvent;
 			var j:int, lenJ:int, dates:Vector.<Date>, allowed:Boolean, days:Array, timestamp:int;
 			var today:Date = currentDate;
@@ -614,7 +636,6 @@ package com.twinoid.kube.quest.player.model {
 			var offset:int = _save[id].index % len;
 			mainloop: for(i = offset; i < offset + len; ++i) {
 				item = items[i%len];
-				
 				//Item complete, skip it
 				if(_save[item.guid].complete) continue;
 				
@@ -680,25 +701,76 @@ package com.twinoid.kube.quest.player.model {
 						}
 					}
 				}
+				
+				//If the event is the first one of a loop, check if all its
+				//dependencies are part of the loop or not.
+				//If not, go fuck up !
+				if(item.firstOfLoop) {
+					var allLoop:Boolean = true, children:Vector.<KuestEvent>;
+					if(lenJ == 1) {
+						for(j = 0; j < lenJ; ++j) {
+							children = item.loopsFrom(item.dependencies[j].event);
+							allLoop &&= children != null;
+						}
+						if(allLoop) {
+							selectedEvent = item;
+							break mainloop;
+						}
+					}
+				}
 			}
+			//Resets the index to a correct value. WIthout that it would be fucked up.
+			//Lets say we have 5 items, only the 2 first are acessible, from index 2 to 4
+			//the loop would go back to the 1st item until the index equals 0 or 1 again.
+			//This index reset prevents from that problem.
+			_save[id].index = i%len;
 			
-			//===================================================
-			//============= DEPENDENCIES MANAGEMENT =============
-			//===================================================
+			//==================================================
+			//================ EVENT SUBMISSION ================
+			//==================================================
 			if (selectedEvent != null) {
 				_currentEvent = selectedEvent;
 				//Flag as complete only if the event proposes no choice.
 				//If the event proposes choices, it will be flagged as complete
 				//when the user answers it.
 				if (selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length == 0) {
-					_save[selectedEvent.guid].complete = true;
+					flagAsComplete(selectedEvent);
 				}
 				_save[id].index ++;
 				dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
 			}
+			//???
 			if(_currentEvent != null && selectedEvent == null) {
 				_currentEvent = null;
 				dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
+			}
+		}
+		
+		/**
+		 * Flags an event as complete.
+		 * If the item is part of a looped dependency and it's next dependent
+		 * is the first of the loop, reset all the items of the loop and flag
+		 * them as "no complete" so they can be played again.
+		 */
+		private function flagAsComplete(event:KuestEvent):void {
+			_save[event.guid].complete = true;
+			var i:int, len:int, children:Vector.<KuestEvent>;
+			children = event.getChildren();
+			len = children.length;
+			for(i = 0; i < len; ++i) {
+				//If one of our child is the first of a loop, and if the current
+				//item is actually part of that loop, reset the loop's event to
+				// "not complete" state.
+				if (children[i].firstOfLoop) {
+					var tree:Vector.<KuestEvent> = children[i].loopsFrom(event);
+						if(tree != null) {
+						var j:int, lenJ:int;
+						lenJ = tree.length;
+						for(j = 0; j < lenJ; ++j) {
+							_save[tree[j].guid].complete = false;
+						}
+					}
+				}
 			}
 		}
 		

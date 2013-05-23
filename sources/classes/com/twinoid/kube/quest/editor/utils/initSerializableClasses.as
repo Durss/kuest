@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.utils {
+	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.ActionDate;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
@@ -21,7 +22,7 @@ package com.twinoid.kube.quest.editor.utils {
 	public function initSerializableClasses():void {
 			//Check if the value objects are all serializable and registers aliases
 			//so that ByteArray.readObject() can instanciate the value objects.
-			var serializableClasses:Array = [Point, Date, GraphicsPath, Rectangle, String, Dependency, KuestEvent, ActionDate, ActionPlace, ActionType, ActionChoices, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
+			var serializableClasses:Array = [Point, Date, GraphicsPath, Rectangle, String, Dependency, KuestEvent, ActionDate, ActionPlace, ActionType, ActionChoices, ActionSound, IItemData, ObjectItemData, CharItemData, SerializableBitmapData];
 			var i:int, len:int;
 			var j:int, lenJ:int;
 			len = serializableClasses.length;

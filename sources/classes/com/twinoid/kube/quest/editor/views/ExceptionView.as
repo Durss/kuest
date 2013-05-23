@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.twinoid.kube.quest.player.utils.resizeFlashTo;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
@@ -23,6 +24,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _window:TitledWindow;
 		private var _closed:Boolean;
 		private var _disable:Sprite;
+		private var _resizeFlash:Boolean;
 		
 		
 		
@@ -33,7 +35,8 @@ package com.twinoid.kube.quest.editor.views {
 		/**
 		 * Creates an instance of <code>ExceptionView</code>.
 		 */
-		public function ExceptionView() {
+		public function ExceptionView(resizeFlash:Boolean = false) {
+			_resizeFlash = resizeFlash;
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
 		}
 
@@ -111,6 +114,7 @@ package com.twinoid.kube.quest.editor.views {
 			_window.updateSizes();
 			
 			PosUtils.centerInStage(_window);
+			if(event == null) resizeFlashTo(_window.height + 50);
 		}
 		
 		/**

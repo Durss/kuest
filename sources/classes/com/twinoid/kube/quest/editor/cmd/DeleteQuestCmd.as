@@ -19,7 +19,7 @@ package com.twinoid.kube.quest.editor.cmd {
 	 */
 	public class DeleteQuestCmd extends LoadFileCmd implements Command {
 
-		private var _id:String;
+		private var _guid:String;
 		
 		
 		
@@ -39,7 +39,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		/**
 		 * Gets the quest ID
 		 */
-		public function get id():String { return _id; }
+		public function get guid():String { return _guid; }
 
 
 
@@ -49,9 +49,9 @@ package com.twinoid.kube.quest.editor.cmd {
 		/**
 		 * Populates the component
 		 */
-		public function populate(id:String):void {
-			_id = id;
-			_urlVariables["id"] = id;
+		public function populate(guid:String):void {
+			_guid = guid;
+			_urlVariables["id"] = guid;
 		}
 
 

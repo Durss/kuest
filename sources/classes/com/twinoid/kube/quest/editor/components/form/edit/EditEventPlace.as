@@ -190,6 +190,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			PosUtils.hPlaceNext(10, label, _zoneX, _zoneY, _captureBt);
 			_captureZone.x = _captureBt.x;
 			_captureZone.y = _captureBt.y;
+			_captureBt.height = _zoneX.height;
 			
 			_captureZone.graphics.beginFill(0xff0000, 0);
 			_captureZone.graphics.drawRect(0, 0, _captureBt.width, _captureBt.height);
