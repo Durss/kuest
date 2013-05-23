@@ -375,6 +375,9 @@ package com.twinoid.kube.quest.editor.components.box {
 			addChildAt(_deleteBt, 0);
 			TweenLite.killTweensOf(_deleteBt);
 			TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
+			if(event.shiftKey && event.altKey) {
+				_label.text = _data.guid.toString();
+			}
 		}
 		
 		/**

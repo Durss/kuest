@@ -36,6 +36,7 @@
 		session_destroy();
 	}
 	$additionnals = "";
+	$friends = array();
 	if (isset($_POST["pubkey"], $_POST["uid"])) {
 		if(!isset($_SESSION['uid']) || ($_SESSION["uid"] != $_POST["uid"]) || !isset($_SESSION['pubkey']) || $_SESSION["pubkey"] != $_POST["pubkey"]) {
 			$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
@@ -63,11 +64,12 @@
 			$url = "http://muxxu.com/app/xml?app=".$app."&xml=friends&id=".$_POST['uid']."&key=".md5($key . $dataKey);
 			$xml = @simplexml_load_file($url);
 			$children = $xml->children();
-			$friends = array();
 			foreach ($children as $row) {
 				$friends[] = array( 'name' => (string) $row['name'], 'id' => (string) $row['id'] );
 			}
 			$_SESSION["friends"] = $friends;
+		}else if(isset($_SESSION["friends"])){
+			$friends = $_SESSION["friends"];
 		}
 		
 		$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
@@ -110,7 +112,7 @@
 		$res = $req->fetchAll();
 		$additionnals .= "\t<kuests>\n";
 		for ($i = 0; $i < count($res); $i++) {
-			$additionnals .= "\t\t<k id='".$res[$i]['id']."' r='".substr($res[$i]["friends"], 1, strlen($res[$i]["friends"])-2 )."'>\n";
+			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' r='".substr($res[$i]["friends"], 1, strlen($res[$i]["friends"])-2 )."'>\n";
 			$additionnals .= "\t\t\t<t><![CDATA[".utf8_encode($res[$i]['name'])."]]></t>\n";
 			$additionnals .= "\t\t\t<d><![CDATA[".utf8_encode($res[$i]['description'])."]]></d>\n";
 			$additionnals .= "\t\t</k>\n";
@@ -118,7 +120,7 @@
 		$additionnals .= "\t</kuests>\n";
 		
 		$additionnals .= "\t<friends>\n";
-		foreach ($_SESSION["friends"] as $row) {
+		foreach ($friends as $row) {
 			$additionnals .= "\t\t<f id='".$row['id']."'><![CDATA[".$row['name']."]]></f>\n";
 		}
 		$additionnals .= "\t</friends>";

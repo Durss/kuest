@@ -2,7 +2,7 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog52-content"><![CDATA[● Ajout de la possibilité de modifier le titre et la description d'une quête<br />● Ajout de la possibilité de donner les droits d'édition à nos amis<br />● Il est maintenant possible de saisir jusqu'à 6 choix sur un événement<br />● On ne reste plus bloqué sur un événement s'il ne possède qu'un seul choix<br />● Ajout de cette merveilleuse popin pour montrer les dernières MàJ]]></label>
+		<label code="patchlog55-content"><![CDATA[● Ajout de la possibilité de modifier le titre et la description d'une quête<br />● Ajout de la possibilité de donner les droits d'édition à nos amis<br />● Il est maintenant possible de saisir jusqu'à 6 choix sur un événement<br />● On ne reste plus bloqué sur un événement s'il ne possède qu'un seul choix<br />● Ajout de cette merveilleuse popin pour montrer les dernières MàJ<br />● Ajout d'un bouton pour tester notre quête sans avoir à la publier]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
 		<label code="tutorial-close"><![CDATA[J'ai vu !]]></label>
@@ -21,11 +21,13 @@
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
 		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données.]]></label>
 		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
-		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
-		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur...]]></label>
+		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur.]]></label>
+		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur.]]></label>
+		<label code="exception-QUEST_NOT_PUBLISHED"><![CDATA[La quête demandée n'a pas encore été publiée.]]></label>
 		<label code="exception-IOERROR"><![CDATA[Impossible de contacter le serveur...<br />Vérifiez que vous êtes bien connecté à internet.]]></label>
 		<label code="exception-DELETE_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
 		<label code="exception-DELETE_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour supprimer cette quête.]]></label>
+		<label code="exception-DEEP_CHECK_OVERFLOW"><![CDATA[L'arborescence de votre quête est trop complexe pour construire cette liaison.]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
@@ -85,6 +87,7 @@
 		<label code="menu-file-clearTT"><![CDATA[Efface toutes les données de la quête courrante.]]></label>
 		<label code="menu-file-rights"><![CDATA[Donnez les droits d'édition à vos amis.]]></label>
 		<label code="menu-file-rightsCB"><![CDATA[Sélectionnez des amis]]></label>
+		<label code="menu-file-test"><![CDATA[Tester la quête]]></label>
 		
 		<label code="menu-credits"><![CDATA[Credits]]></label>
 		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.
@@ -146,6 +149,15 @@
 		<label code="editWindow-time-hourIntervalEnd"><![CDATA[Heure de fin : ]]></label>
 		<label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
 		<label code="editWindow-time-hourInterval-miutesLabel"><![CDATA[m]]></label>
+		
+		<label code="editWindow-sound-title"><![CDATA[Fond sonore]]></label>
+		<label code="editWindow-sound-noneTT"><![CDATA[Aucun]]></label>
+		<label code="editWindow-sound-urlTT"><![CDATA[Oui]]></label>
+		<label code="editWindow-sound-urlTitle"><![CDATA[Entrez ici l'URL d'un fichier son à jouer lorsque cet événement est déclenché :]]></label>
+		<label code="editWindow-sound-testTT"><![CDATA[Tester si le son se lit correctement.]]></label>
+		<label code="editWindow-sound-loop"><![CDATA[Jouer le son en boucle.]]></label>
+		<label code="editWindow-sound-testSuccess"><![CDATA[<font color="#006600">Son valide.</font>]]></label>
+		<label code="editWindow-sound-testError"><![CDATA[<font color="#cc0000">Son invalide.</font>]]></label>
 		
 		<label code="month1"><![CDATA[Janvier]]></label>
 		<label code="month2"><![CDATA[Février]]></label>

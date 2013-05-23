@@ -1,9 +1,10 @@
 package com.twinoid.kube.quest.editor.components.box {
-	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
+	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
 	import com.twinoid.kube.quest.editor.utils.Simplify;
 	import com.twinoid.kube.quest.graphics.RubberCursorGraphic;
 
+	import flash.display.DisplayObject;
 	import flash.display.GraphicsPath;
 	import flash.display.GraphicsPathCommand;
 	import flash.display.GraphicsSolidFill;
@@ -253,15 +254,19 @@ package com.twinoid.kube.quest.editor.components.box {
 			
 			//Detect CTRL or SHIFT key
 			if(event.keyCode == Keyboard.CONTROL || event.keyCode == Keyboard.SHIFT) {
-				if(!_eraseMode && !_drawing) {
-					splitGraphics();
-					_eraseMode = true;
-					_rubberIcon.visible = true;
-					_rubberIcon.x = mouseX;
-					_rubberIcon.y = mouseY;
-					_rubberIcon.startDrag();
-					Mouse.hide();
-					dispatchEvent(new BoxesCommentsEvent(BoxesCommentsEvent.ENTER_EDIT_MODE));
+				var objs:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
+				var top:DisplayObject = objs[objs.length - 1];
+				if(top != null && (contains(top) || top == parent)) {
+					if(!_eraseMode && !_drawing) {
+						splitGraphics();
+						_eraseMode = true;
+						_rubberIcon.visible = true;
+						_rubberIcon.x = mouseX;
+						_rubberIcon.y = mouseY;
+						_rubberIcon.startDrag();
+						Mouse.hide();
+						dispatchEvent(new BoxesCommentsEvent(BoxesCommentsEvent.ENTER_EDIT_MODE));
+					}
 				}
 			}
 		}

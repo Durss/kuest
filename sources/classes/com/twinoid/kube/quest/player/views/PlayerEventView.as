@@ -118,10 +118,12 @@ package com.twinoid.kube.quest.player.views {
 			}
 			alpha = 1;
 			
+			//Remove choices buttons
 			var i:int, len:int, maxWidth:int;
 			len = _choicesSpool.length;
-			for(i = 0; i < len; ++i) removeChild(_choicesSpool[i]);
+			for(i = 0; i < len; ++i) if(contains(_choicesSpool[i])) removeChild(_choicesSpool[i]);
 			
+			//Add necessary choices buttons.
 			len = _data.actionChoices.choices.length;
 			for(i = 0; i < len; ++i) {
 				if(_choicesSpool.length <= i) {
@@ -131,18 +133,20 @@ package com.twinoid.kube.quest.player.views {
 				}
 				_choicesSpool[i].width = -1;//Reset autosize capabilities
 				addChild(_choicesSpool[i]);
-				_choicesSpool[i].label = "● " + _data.actionChoices.choices[i];
+				_choicesSpool[i].label = "● " + _data.actionChoices.choices[i].replace(/</gi, "&lt;").replace(/>/gi, "&gt;");
 				maxWidth = Math.max(maxWidth, _choicesSpool[i].width);
 			}
 			
-			if(contains(_next)) removeChild(_next);
-			
+			//Add/remove next button
 			if(_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0) {//TODO Check for time
 				addChild(_next);
+			}else if(contains(_next)) {
+				removeChild(_next);
 			}
 			
+			//Display image
 			graphics.clear();
-			if(_data.actionType.getItem().image != null) {
+			if (_data.actionType.getItem() != null && _data.actionType.getItem().image != null) {
 				_image.visible = true;
 				_image.setBitmapData( _data.actionType.getItem().image.getConcreteBitmapData() );
 				graphics.beginFill(0x2D89B0);
@@ -153,6 +157,8 @@ package com.twinoid.kube.quest.player.views {
 				_image.clear();
 			}
 			_tf.text = _data.actionType.text;
+			
+			//Place elements
 			_tf.x = _image.visible? _image.width + 10 : 10;
 			_tf.width = _image.visible? _width - _image.width - 10 : _width - 20;
 			

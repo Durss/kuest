@@ -9,7 +9,18 @@
 				self::$connection = new PDO('mysql:host=mysql5-21.bdb;dbname=fevermapmysql', 'fevermapmysql', 'reyhPGwW');
 			}
 			
-			define("SESSION_VERSION", 1);
+			if (get_magic_quotes_gpc()) {
+				function stripslashes_gpc(&$value)
+				{
+					$value = stripslashes($value);
+				}
+				array_walk_recursive($_GET, 'stripslashes_gpc');
+				array_walk_recursive($_POST, 'stripslashes_gpc');
+				array_walk_recursive($_COOKIE, 'stripslashes_gpc');
+				array_walk_recursive($_REQUEST, 'stripslashes_gpc');
+			}
+			
+			define("SESSION_VERSION", 2);
 			session_start();
 			if (!isset($_SESSION["version"]) || $_SESSION["version"] != SESSION_VERSION) {
 				session_unset();

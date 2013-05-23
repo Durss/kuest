@@ -196,7 +196,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_closed = true;
 			_mask.scaleY = 0;
 			_submit.enabled = false;
-			_nameInput.textfield.maxChars = 30;
+			_nameInput.textfield.maxChars = 50;
 			_descriptionInput.textfield.maxChars = 255;
 			_friendsCB.allowMultipleSelection = true;
 			

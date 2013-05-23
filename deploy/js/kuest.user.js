@@ -44,8 +44,10 @@ function inject(source) {
 	document.body.appendChild(script);
 }
 
-var lang = "";
-var kuestID = getQueryString(window.location.href)['kuest'];
+var lang		= "";
+var local		= 'local' in getQueryString(window.location.href);
+var kuestID		= getQueryString(window.location.href)['kuest'];
+var testMode	= 'test' in getQueryString(window.location.href);
 if(lang.length == 0) {//Get browser's language
 	lang = (navigator.language) ? navigator.language : navigator.userLanguage;
 	lang = lang.split("-")[0];
@@ -54,27 +56,31 @@ if(lang != "fr" && lang != "en") lang = "en";//Restrict to defaults
 
 //Rewrite spawn URls if on zone selection page.
 if(/zone\/choose/gi.test(window.location.href)) {
-	var kuestID = getQueryString(document.referrer)['kuest'];
-	console.log("kuestID "+kuestID);
+	kuestID = getQueryString(document.referrer)['kuest'];
+	testMode = 'test' in getQueryString(document.referrer);
 	if(kuestID) {
 		var buttons = document.getElementsByClassName("button");
 		for(var i=0; i < buttons.length; i++) {
 			var href = buttons[i].getAttribute("href");
 			if(href && /\?z=[0-9]+/gi.test(href)) {
-				buttons[i].setAttribute("href", href+"&kuest="+kuestID);
+				var url = href+"&kuest="+kuestID;
+				if(testMode) url += "&test";
+				buttons[i].setAttribute("href", url);
 			}
 		}
 	}
 	
 }else{
-	//Add SWF module		
+	//Add SWF module
+	var server = local? "localhost" : "fevermap.org";
 	var gameDiv = unsafeWindow.document.getElementsByClassName("game")[0];
-	var url = "http://fevermap.org/kuest/swf/player.swf?";
+	var url = "http://"+server+"/kuest/swf/player.swf?";
 	var kuestApp = unsafeWindow.document.createElement('div');
 	if(kuestID) url += "kuestID="+kuestID;
+	if(testMode) url += "&testMode=true";
 	url += "&version=" + Math.round( Math.round( new Date().getTime() / 1000 )  / 3600 ) * 3600;//bypass cache every hour
 	url += "&lang="+lang;
-	url += "&configXml=http://fevermap.org/kuest/xml/config.xml";
+	url += "&configXml=http://"+server+"/kuest/xml/config.xml";
 
 	//Gets the current's session user's ID.
 	//If the fevermap server's UID isn't the same, the user will be disconnected.

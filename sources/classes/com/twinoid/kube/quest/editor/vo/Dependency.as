@@ -45,6 +45,12 @@ package com.twinoid.kube.quest.editor.vo {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Gets a string representation of the value object.
+		 */
+		public function toString():String {
+			return "[Dependency :: eventGUID="+event.guid+", choiceIndex="+choiceIndex+"]";
+		}
 
 
 		

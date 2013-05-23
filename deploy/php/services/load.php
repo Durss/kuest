@@ -23,17 +23,10 @@
 	}else {
 		$dir = "../../kuests/saves/";
 	}
-	if (isset($_GET["id"])) $_POST["id"] = $_GET["id"];
-	
 	if (isset($_POST["id"])) {
 		//Check for loading rights
-		if ($releaseMode) {
-			$sql = "SELECT uid, dataFile, friends FROM kuests WHERE guid=:guid";
-			$params = array(':guid' => $_POST["id"]);
-		}else{
-			$sql = "SELECT uid, dataFile, friends FROM kuests WHERE id=:id";
-			$params = array(':id' => $_POST["id"]);
-		}
+		$sql = "SELECT uid, dataFile, friends, published FROM kuests WHERE guid=:guid";
+		$params = array(':guid' => $_POST["id"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -43,7 +36,7 @@
 		}
 		$tot = $req->rowCount();
 		if ($tot == 0) {
-			Out::printOut(false, '', 'Guest not found.', 'LOADING_KUEST_NOT_FOUND');
+			Out::printOut(false, '', 'Quest not found.', 'LOADING_KUEST_NOT_FOUND');
 			die;
 		}
 		
@@ -51,6 +44,11 @@
 		$res = $req->fetch();
 		if (!$releaseMode && ($_SESSION["uid"] != $res['uid'] && strpos(",".$_SESSION["uid"].",", $res['friends']))) {
 			Out::printOut(false, '', 'Quest loading denied.', 'LOADING_NO_RIGHTS');
+			die;
+		}
+		
+		if ($releaseMode && !$res['published']) {
+			Out::printOut(false, '', 'Quest not published.', 'QUEST_NOT_PUBLISHED');
 			die;
 		}
 		
