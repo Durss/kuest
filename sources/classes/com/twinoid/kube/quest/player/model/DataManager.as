@@ -221,6 +221,7 @@ package com.twinoid.kube.quest.player.model {
 			_receiverGame.connect(_lcGameName);
 			
 			if(Capabilities.playerType == "StandAlone") {
+				//XXX repère local conf
 				Config.addVariable("kuestID", "519d5abb4faa7");
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
@@ -755,16 +756,16 @@ package com.twinoid.kube.quest.player.model {
 				//If not, go fuck up !
 				if(item.firstOfLoop) {
 					var allLoop:Boolean = true, children:Vector.<KuestEvent>;
-					if(lenJ == 1) {
+//					if(lenJ == 1) {
 						for(j = 0; j < lenJ; ++j) {
 							children = item.loopsFrom(item.dependencies[j].event);
 							allLoop &&= children != null;
 						}
-						if(allLoop) {
+						if (allLoop) {
 							selectedEvent = item;
 							break mainloop;
 						}
-					}
+//					}
 				}
 			}
 			//Resets the index to a correct value. WIthout that it would be fucked up.

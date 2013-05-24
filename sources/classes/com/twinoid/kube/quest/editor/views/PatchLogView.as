@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.views {
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	import flash.text.TextFieldAutoSize;
 	import gs.TweenLite;
 
 	import com.nurun.components.text.CssTextField;
@@ -32,6 +35,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _window:TitledWindow;
 		private var _so:SharedObject;
 		private var _label:CssTextField;
+		private var _holder:Sprite;
 		
 		
 		
@@ -91,6 +95,8 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		public function close():void {
 			_isClosed = true;
+			_so.data["log_"+Config.getVariable("version")+"_Seen"] = true;
+			_so.flush();
 			TweenLite.killTweensOf(this);
 			TweenLite.to(this, .25, {autoAlpha:0});
 		}
@@ -100,8 +106,6 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		public function open(...args):void {
 			_isClosed = false;
-			_so.data["log_"+Config.getVariable("version")+"_Seen"] = true;
-			_so.flush();
 			TweenLite.killTweensOf(this);
 			TweenLite.to(this, .25, {autoAlpha:1});
 		}
@@ -118,14 +122,17 @@ package com.twinoid.kube.quest.editor.views {
 		private function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_label		= new CssTextField("window-content");
-			_window		= addChild(new TitledWindow(Label.getLabel("patchlog-title"), _label)) as TitledWindow;
+			_holder		= new Sprite();
+			_label		= _holder.addChild(new CssTextField("window-content")) as CssTextField;
+			_window		= addChild(new TitledWindow(Label.getLabel("patchlog-title"), _holder)) as TitledWindow;
 			
 			alpha = 0;
 			visible = false;
 			_isClosed = true;
-			_window.width = 600;
-			_label.text = Label.getLabel("patchlog"+Config.getVariable("version")+"-content");
+			_label.y = -5;
+			_label.selectable = true;
+			_label.text = Label.getLabel("patchlog"+Config.getVariable("version")+"-content").replace(/\r|\n|\t/gi, "");
+			_label.autoWrap = true;
 			
 			makeEscapeClosable(this);
 			
@@ -145,6 +152,9 @@ package com.twinoid.kube.quest.editor.views {
 			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 			graphics.endFill();
 			
+			_label.autoSize = TextFieldAutoSize.LEFT;
+			if(_label.width > 500) _label.width = 500;
+			
 			_window.updateSizes();
 			
 			PosUtils.centerInStage(_window);
@@ -161,7 +171,9 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when something is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			close();
+			if(event.target != _window && !_window.contains(event.target as DisplayObject)) {
+				close();
+			}
 		}
 		
 	}
