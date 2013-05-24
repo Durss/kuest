@@ -61,17 +61,23 @@
 			}
 			
 			$res = $req->fetch();
-			if ($_SESSION["uid"] != $res['uid'] && strpos(",".$_SESSION["uid"].",", $res['friends']) ) {
+			if ($_SESSION["uid"] != $res['uid'] && strlen($res['friends']) > 0 && strpos(",".$_SESSION["uid"].",", $res['friends']) ) {
 				//Not a map of ours, can't edit it.
 				Out::printOut(false, '', 'Loading denied.', 'EDITION_NO_RIGHTS');
 				die;
 			}
 			
-			$friends = $_GET["friends"];
-			if ($_SESSION["uid"] != $res['uid']) $friends .= ",89";
+			$friendsA = explode(",", $_GET["friends"]);
+			if ($_SESSION["uid"] != $res['uid']) $friendsA[] = "89";
+			//Remove empty items.
+			for ($i = 0; $i < count($friendsA); $i++) {
+				if (strlen($friendsA[$i]) == array_splice($friendsA, $i, 1)) $i --;
+			}
+			if (count($friendsA) == 0) $friends = "";
+			else $friends = ",".implode(",", $friendsA).",";
 			
 			$sql = "UPDATE kuests SET name=:name, description=:description, friends=:friends WHERE guid=:id";
-			$params = array(':id' => $guid, ':name' => $_GET["title"], ':description' => $_GET["description"], ':friends' => ",".$friends.",");
+			$params = array(':id' => $guid, ':name' => $_GET["title"], ':description' => $_GET["description"], ':friends' => $friends);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();
@@ -82,7 +88,7 @@
 			
 			//Updates the kuest.
 			$index = $res["dataFile"];
-			if(@$fp = fopen($dir.$index.".kst", 'wb')) {
+			if($fp = @fopen($dir.$index.".kst", 'wb')) {
 				fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
 				fclose($fp);
 			}
@@ -116,7 +122,7 @@
 			file_put_contents($filepath, $index);
 			fclose($handler);
 			$index = Base62::convert($index, 10, 62);
-				
+			
 			//Save file
 			if(@$fp = fopen($dir.$index.".kst", 'wb')) {
 				fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);

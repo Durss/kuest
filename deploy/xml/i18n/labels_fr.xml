@@ -2,7 +2,18 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog55-content"><![CDATA[● Ajout de la possibilité de modifier le titre et la description d'une quête<br />● Ajout de la possibilité de donner les droits d'édition à nos amis<br />● Il est maintenant possible de saisir jusqu'à 6 choix sur un événement<br />● On ne reste plus bloqué sur un événement s'il ne possède qu'un seul choix<br />● Ajout de cette merveilleuse popin pour montrer les dernières MàJ<br />● Ajout d'un bouton pour tester notre quête sans avoir à la publier]]></label>
+		<label code="patchlog57-content"><![CDATA[<ul>
+			<li>Notre avancement dans la quête est maintenant sauvegardé</li>
+			<li>Ajout de la possibilité d'ajouter un son sur un évènement (pas encore géré en jeu)</li>
+			<li>Gestion des références bouclées<i> (<b>A TESTER A FOND</b> parce que j'suis pas serein :3)</i></li>
+			<li>Ajout d'un formulaire de simulation de déplacement lorsqu'on teste une quête</li>
+			<li>Fix des champs de saisie de nombres dans lesquels on ne pouvait pas saisir de nombres négatifs</li>
+			<li>Correction des choix qui étaient tous passés à la valeur du 1er choix lors de l'édition d'un événement</li>
+			<li>Correction du bouton de test</li>
+			<li>Passage du nombre de choix possibles de 3 à 6</li>
+			<li>Correction du problème empêchant l'accès à un événement si son heure de début était suppérieur à l'heure de fin</li>
+			<li>Légère mise à jour graphique des liens</li>
+		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
 		<label code="tutorial-close"><![CDATA[J'ai vu !]]></label>
@@ -19,7 +30,7 @@
 		<label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
-		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données.]]></label>
+		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données à sauvegarder.]]></label>
 		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
 		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur.]]></label>
 		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur.]]></label>
@@ -28,6 +39,7 @@
 		<label code="exception-DELETE_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
 		<label code="exception-DELETE_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour supprimer cette quête.]]></label>
 		<label code="exception-DEEP_CHECK_OVERFLOW"><![CDATA[L'arborescence de votre quête est trop complexe pour construire cette liaison.]]></label>
+		<label code="exception-CANNOT_WRITE_SAVE"><![CDATA[L'écriture de votre progression sur le serveur a échoue...]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>

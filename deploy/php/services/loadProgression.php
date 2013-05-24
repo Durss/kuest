@@ -19,7 +19,7 @@
 	
 	$additionnals = "";
 	if (isset($_POST["id"])) {
-		//Check for loading rights
+		//Get the save
 		$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid)";
 		$params = array(':guid' => $_POST["id"]);
 		$req = DBConnection::getLink()->prepare($sql);
@@ -31,11 +31,11 @@
 		}
 		$tot = $req->rowCount();
 		if ($tot == 0) {
-			Out::printOut(false, '', 'Save not found.', 'SAVE_KUEST_NOT_FOUND');
+			Out::printOut(false, '', 'Save not found. ', 'SAVE_KUEST_NOT_FOUND');
 			die;
 		}else {
 			$res = $req->fetch();
-			$url = "../../saves/".$res['dataFile'].".save";
+			$url = "../../saves/".$res['dataFile'].".sav";
 			DBConnection::close();
 			//If don't send the content-length header, flash cannot get the bytesLoaded and bytesTotal during loading
 			header('Content-type: application/octet-stream');

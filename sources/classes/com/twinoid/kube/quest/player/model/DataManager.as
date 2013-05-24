@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.player.model {
-	import flash.utils.getTimer;
 	import com.nurun.core.commands.SequentialCommand;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -18,6 +17,7 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.player.cmd.IsLoggedCmd;
 	import com.twinoid.kube.quest.player.cmd.LoadKuestDetailsCmd;
 	import com.twinoid.kube.quest.player.cmd.LoadProgressionCmd;
+	import com.twinoid.kube.quest.player.cmd.SaveProgressionCmd;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 
 	import flash.errors.IllegalOperationError;
@@ -33,6 +33,7 @@ package com.twinoid.kube.quest.player.model {
 	import flash.utils.Timer;
 	import flash.utils.clearInterval;
 	import flash.utils.clearTimeout;
+	import flash.utils.getTimer;
 	import flash.utils.setInterval;
 	import flash.utils.setTimeout;
 	
@@ -79,8 +80,11 @@ package com.twinoid.kube.quest.player.model {
 		private var _save:Object;
 		private var _currentEvent:KuestEvent;
 		private var _lastPosData:*;
-		private var _time:*;
+		private var _time:Number;
 		private var _date:Date;
+		private var _timeoutSave:uint;
+		private var _saveProgressionCmd:SaveProgressionCmd;
+		private var _currentQuestID:String;
 		
 		
 		
@@ -221,7 +225,8 @@ package com.twinoid.kube.quest.player.model {
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
-			if(Config.getVariable("kuestID") != null) {
+			_currentQuestID = Config.getVariable("kuestID");
+			if(_currentQuestID != null) {
 				var spool:SequentialCommand = new SequentialCommand();
 				if(Capabilities.playerType == "StandAlone") {
 					//Force login if testing locally as session are fucked up instandalone mode...
@@ -443,7 +448,11 @@ package com.twinoid.kube.quest.player.model {
 				//Keep the session alive
 				clearInterval(_ksaInterval);
 				_ksaInterval = setInterval(_ksaCmd.execute, 10 * 60*1000);//Every 10 minutes
-	
+				
+				_saveProgressionCmd = new SaveProgressionCmd();
+				_saveProgressionCmd.addEventListener(CommandEvent.COMPLETE, saveProgressionCompleteHandler);
+				_saveProgressionCmd.addEventListener(CommandEvent.ERROR, saveProgressionErrorsHandler);
+				
 				_loadDetailsCmd = new LoadKuestDetailsCmd();
 				_loadDetailsCmd.addEventListener(CommandEvent.COMPLETE, loadDetailsCompleteHandler);
 				_loadDetailsCmd.addEventListener(CommandEvent.ERROR, loadDetailsErrorsHandler);
@@ -458,9 +467,9 @@ package com.twinoid.kube.quest.player.model {
 				_loadKuestCmd.addEventListener(CommandEvent.ERROR, loadQuestErrorHandler);
 				_loadKuestCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
 				
-				_loadKuestCmd.populate( Config.getVariable("kuestID") );
-				_loadDetailsCmd.populate( Config.getVariable("kuestID") );
-				_loadProgressionCmd.populate( Config.getVariable("kuestID") );
+				_loadKuestCmd.populate( _currentQuestID );
+				_loadDetailsCmd.populate( _currentQuestID );
+				_loadProgressionCmd.populate( _currentQuestID );
 				var spool:SequentialCommand = new SequentialCommand();
 				spool.addCommand(_loadDetailsCmd);
 				spool.addCommand(_loadProgressionCmd);
@@ -521,7 +530,6 @@ package com.twinoid.kube.quest.player.model {
 				_save = {};
 			}else{
 				var bytes:ByteArray = event.data as ByteArray;
-				bytes.position = 0;
 				bytes.inflate();
 				bytes.position = 0;
 				_save = bytes.readObject();
@@ -561,6 +569,38 @@ package com.twinoid.kube.quest.player.model {
 			var label:String = Label.getLabel("exception-"+event.data);
 			if(/^\[missing.*/gi.test(label)) label = event.data as String;
 			throw new KuestException(label, "loading");
+		}
+		
+		
+		
+		
+		//__________________________________________________________ SAVE PROGRESSION
+		
+		/**
+		 * Saves the progression
+		 */
+		private function onSaveProgression():void {
+			var ba:ByteArray = new ByteArray();
+			ba.writeObject( _save );
+			ba.deflate();
+			_saveProgressionCmd.populate(_currentQuestID, ba);
+			_saveProgressionCmd.execute();
+		}
+
+		/**
+		 * Called when progression save completes.
+		 */
+		private function saveProgressionCompleteHandler(event:CommandEvent):void {
+			//Don't care !
+		}
+		
+		/**
+		 * Called if progression save fails.
+		 */
+		private function saveProgressionErrorsHandler(event:CommandEvent):void {
+			clearTimeout(_timeoutSave);
+			_timeoutSave = setTimeout(onSaveProgression, 5000);//Try again
+			throw new KuestException(String(event.data), "0");
 		}
 		
 		
@@ -664,12 +704,20 @@ package com.twinoid.kube.quest.player.model {
 					len = days.length;
 					allowed = false;
 					for(i = 0; i < len; ++i) {
-						if(days[i] == today.day
-							&& timestamp >= item.actionDate.startTime
-							&& timestamp < item.actionDate.endTime) {
+						if (days[i] == today.day) {
+							var start:int = item.actionDate.startTime;
+							var end:int = item.actionDate.endTime;
+							if(start > end) {
+								if(timestamp >= start || timestamp < end) {
+									allowed = true;
+									break;
+								}
+							}else
+							if(timestamp >= start && timestamp < end) {
 								allowed = true;
 								break;
 							}
+						}
 					}
 					//Day and jours not found, skip this loop turn
 					if(!allowed) continue;
@@ -733,7 +781,12 @@ package com.twinoid.kube.quest.player.model {
 				//Flag as complete only if the event proposes no choice.
 				//If the event proposes choices, it will be flagged as complete
 				//when the user answers it.
-				if (selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length == 0) {
+				if (selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length < 2) {
+					//If there is only one choice, answer automatically
+					if(selectedEvent.actionChoices.choices.length == 1) {
+						_save[getPosId(selectedEvent.actionPlace)].index ++;
+						_save[selectedEvent.guid].answerIndex = 0;
+					}
 					flagAsComplete(selectedEvent);
 				}
 				_save[id].index ++;
@@ -772,6 +825,8 @@ package com.twinoid.kube.quest.player.model {
 					}
 				}
 			}
+			clearTimeout(_timeoutSave);
+			_timeoutSave = setTimeout(onSaveProgression, 3000);
 		}
 		
 		/**
