@@ -166,9 +166,6 @@ package com.twinoid.kube.quest.player {
 				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
 				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
 				_inventory	= _holder.addChild(new PlayerInventoryView(stage.stageWidth - 20)) as PlayerInventoryView;
-				if (Config.getBooleanVariable("testMode")) addChild(new ActionSimulatorView());
-				addChild(new ToolTipView());
-				addChild(new ExceptionView(true));
 				
 				_mask.height = 0;
 				_holder.mask = _mask;
@@ -248,6 +245,10 @@ package com.twinoid.kube.quest.player {
 		 * Called when quest loading completes
 		 */
 		private function loadQuestCompleteHandler(event:DataManagerEvent):void {
+			if (Config.getBooleanVariable("testMode")) addChild(new ActionSimulatorView());
+			addChild(new ExceptionView(true));
+			addChild(new ToolTipView());
+			
 			_title.text = DataManager.getInstance().title;
 			setInterval(updateTime, 1000);
 			updateTime();
