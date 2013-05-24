@@ -2,6 +2,7 @@ package com.twinoid.kube.quest.editor.components.box {
 	import gs.TweenLite;
 
 	import com.nurun.core.lang.Disposable;
+	import com.twinoid.kube.quest.editor.views.BackgroundView;
 	import com.twinoid.kube.quest.graphics.WarningGraphic;
 
 	import flash.display.CapsStyle;
@@ -276,25 +277,33 @@ package com.twinoid.kube.quest.editor.components.box {
 			alpha = startEntry != null && endEntry != null? 1 : .45;
 			
 			//Compute control points
-			var ctrl1X:int = endX * .35;
+			var ctrl1X:int = endX * .4;
 			var ctrl1Y:int = 0;
-			var ctrl2X:int = endX * .65;
+			var ctrl2X:int = endX * .6;
 			var ctrl2Y:int = endY;
 			var halfX:int = endX * .5;
 			var halfY:int = endY * .5;
-			var colors:Array = !_isOver? [COLORS[0], 0x348CB1, 0x5AB035] : [0xdf8c8c, 0x7abcd8, 0xa0db88];
+			if(endX < BackgroundView.CELL_SIZE) {
+				ctrl1X = Math.min((100 - endX)*.5, 300);
+				ctrl2X = endX-ctrl1X;
+				if(endY == 0 && alpha == 1) halfY = 50;
+				ctrl1Y = ctrl2Y = halfY;
+			}
+			var colors:Array = !_isOver? [COLORS[0], 0x5AB035] : [0xdf8c8c, 0xa0db88];
 			if(_choiceIndex > 0) {
 				colors[0] = !_isOver? COLORS[_choiceIndex] : COLORS_OVER[_choiceIndex];
 			}
 			
-			var a:Number = 0;//Math.atan2(mouseY, mouseX);
+			var a:Number = 0;//Math.atan2(endY, endX);
 			var m:Matrix = new Matrix();
 			var g:Graphics = graphics;
 			g.clear();
+	//			var points:Vector.<Point> = new <Point>[new Point(0,0), new Point(ctrl1X, ctrl1Y), new Point(ctrl2X, ctrl2Y), new Point(endX, endY)];
 			if(alpha == 1) {
 				//Hit zone
 				g.moveTo(0, 0);
 				g.lineStyle(30, 0xffffff, 0, false, "normal", CapsStyle.NONE);
+	//				CurveTo.drawPath(g, points);
 				g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 				g.curveTo(ctrl2X, ctrl2Y, endX, endY);
 			}
@@ -304,18 +313,23 @@ package com.twinoid.kube.quest.editor.components.box {
 			g.lineStyle(14, 0xffffff, 1, false, "normal", CapsStyle.NONE);
 			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+	//			CurveTo.drawPath(g, points);
 			
 			//Draw gradient line
 			g.moveTo(0, 0);
 			g.lineStyle(10, 0xffffff, 1, false, "normal", CapsStyle.NONE);
 			
-			m.createGradientBox(halfX, halfY, a);
-			g.lineGradientStyle(GradientType.LINEAR, [colors[0], colors[1]], [1, 1], [0, 0xff], m);
+			m.createGradientBox(endX, endY, a);
+			g.lineGradientStyle(GradientType.LINEAR, colors, [1, 1], [0x10, 0xf0], m);
 			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
-			
-			m.createGradientBox(halfX, halfY, a, halfX, halfY);
-			g.lineGradientStyle(GradientType.LINEAR, [colors[1], colors[2]], [1, 1], [0, 0xff], m);
+//			
+//			m.createGradientBox(halfX, halfY, a, halfX, halfY);
+//			g.lineGradientStyle(GradientType.LINEAR, [colors[1], colors[2]], [1, 1], [0, 0xff], m);
 			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+
+	//			m.createGradientBox(endX, endY, a, x, y);
+	//			g.lineGradientStyle(GradientType.LINEAR, [colors[0], colors[2]], [1, 1], [0, 0xff], m);
+	//			CurveTo.drawPath(g, points);
 			
 //			g.lineStyle(0, 0, 0);
 //			g.beginFill(0x00ff00);

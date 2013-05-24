@@ -159,6 +159,17 @@ package com.twinoid.kube.quest.editor.vo {
 		 * here for serialization purpose only!
 		 */
 		public function get dependencies():Vector.<Dependency> { return _dependencies; }
+		
+		/**
+		 * Gets if the item is the first one of a loop
+		 */
+		public function get firstOfLoop():Boolean { return _firstOfLoop; }
+
+		/**
+		 * @private
+		 * here for serialization purpose only!
+		 */
+		public function set firstOfLoop(firstOfLoop:Boolean):void { _firstOfLoop = firstOfLoop; }
 
 		/**
 		 * @private
@@ -171,6 +182,7 @@ package com.twinoid.kube.quest.editor.vo {
 			for(i = 0; i < len; ++i) {
 				_dependencies[i].event.registerChild(this);
 			}
+			refreshFirstLoopState();
 		}
 
 		/**
@@ -215,21 +227,8 @@ package com.twinoid.kube.quest.editor.vo {
 				
 				_dependencies.push( new Dependency(entry, choiceIndex) );
 
-				var path:Vector.<KuestEvent> = new Vector.<KuestEvent>();
-				var done:Dictionary = new Dictionary();
-				if(searchForLoopFromEvent(this, path, done)) {
-					len = path.length;
-					var tl:Point = path[0].boxPosition.clone();
-					var firstBox:KuestEvent = path[0];
-					for(i = 0; i < len; ++i) {
-						if(path[i].boxPosition.x < tl.x || (path[i].boxPosition.x == tl.x && path[i].boxPosition.y < tl.y)) {
-							tl = path[i].boxPosition.clone();
-							firstBox = path[i];
-						}
-					}
-					firstBox.firstOfLoop = true;
-					firstBox.submit();
-				}
+//				refreshFirstLoopState();
+				
 				return true;
 //			}else{
 //				return false;
@@ -250,6 +249,7 @@ package com.twinoid.kube.quest.editor.vo {
 					len --;
 				}
 			}
+//			refreshFirstLoopState();
 		}
 		
 		/**
@@ -388,6 +388,29 @@ package com.twinoid.kube.quest.editor.vo {
 		}
 		
 		/**
+		 * Refreshes the firstLoop state of the tree from this node.
+		 */
+		public function refreshFirstLoopState():void {
+			var i:int, len:int;
+			var path:Vector.<KuestEvent> = new Vector.<KuestEvent>();
+			var done:Dictionary = new Dictionary();
+			if(searchForLoopFromEvent(this, path, done)) {
+				len = path.length;
+				var tl:Point = path[0].boxPosition.clone();
+				var firstBox:KuestEvent = path[0];
+				for(i = 0; i < len; ++i) {
+					path[i].firstOfLoop = false;
+					if(path[i].boxPosition.x < tl.x || (path[i].boxPosition.x == tl.x && path[i].boxPosition.y < tl.y)) {
+						tl = path[i].boxPosition.clone();
+						firstBox = path[i];
+					}
+				}
+				firstBox.firstOfLoop = true;
+				firstBox.submit();
+			}
+		}
+		
+		/**
 		 * Searches for a looped reference
 		 */
 		private function searchForLoopFromEvent(target:KuestEvent, path:Vector.<KuestEvent>, done:Dictionary):Boolean {
@@ -415,14 +438,6 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		private function typeClearedHandler(event:Event):void {
 			dispatchEvent(new Event(Event.CHANGE));
-		}
-//TODO REMOVE
-		public function get firstOfLoop():Boolean {
-			return _firstOfLoop;
-		}
-
-		public function set firstOfLoop(firstOfLoop:Boolean):void {
-			_firstOfLoop = firstOfLoop;
 		}
 		
 	}
