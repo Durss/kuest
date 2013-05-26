@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.twinoid.kube.quest.player.utils.computeTreeGUIDs;
 	import gs.TweenLite;
 	import gs.easing.Back;
 
@@ -63,6 +64,8 @@ package com.twinoid.kube.quest.editor.views {
 		private var _comments:BoxesComments;
 		private var _scisors:ScissorsGraphic;
 		private var _linksHolder:Sprite;
+		private var _nodes:Vector.<KuestEvent>;
+		private var _tree:Dictionary;
 		
 		
 		
@@ -307,6 +310,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * Builds the items from a collection of items.
 		 */
 		private function buildFromCollection(nodes:Vector.<KuestEvent>):void {
+			_nodes = nodes;
 			var i:int, len:int, box:Box;
 			var j:int, lenJ:int;
 			len = nodes.length;
@@ -387,7 +391,52 @@ package com.twinoid.kube.quest.editor.views {
 				if (_spacePressed) Mouse.cursor = MouseCursor.AUTO;
 				_spacePressed = false;
 			}
+			if(event.keyCode == Keyboard.ESCAPE) {
+				if(event.shiftKey) {
+					_tree = new Dictionary();
+					computeTreeGUIDs(_nodes, _tree, oncomputeTreeComplete);
+				}else {
+					_boxesHolder.graphics.clear();
+				}
+			}
 		}
+		
+		/**
+		 * Called when tree GUIDs computation completes
+		 */
+		private function oncomputeTreeComplete():void {
+			var idToMinX:Array = [];
+			var idToMaxX:Array = [];
+			var idToMinY:Array = [];
+			var idToMaxY:Array = [];
+			var id:int, k:KuestEvent;
+			for(var j:* in _tree) {
+				k = j as KuestEvent;
+				id = _tree[k];
+				k.setTreeID(id);
+				if(idToMinX[ id ] == undefined) {
+					idToMinX[ id ] = k.boxPosition.x;
+					idToMaxX[ id ] = k.boxPosition.x + BackgroundView.CELL_SIZE * 8;
+					idToMinY[ id ] = k.boxPosition.y;
+					idToMaxY[ id ] = k.boxPosition.y + BackgroundView.CELL_SIZE * 3;
+				}else{
+					idToMinX[ id ] = Math.min(idToMinX[ id ], k.boxPosition.x);
+					idToMaxX[ id ] = Math.max(idToMaxX[ id ], k.boxPosition.x + BackgroundView.CELL_SIZE * 8);
+					idToMinY[ id ] = Math.min(idToMinY[ id ], k.boxPosition.y);
+					idToMaxY[ id ] = Math.max(idToMaxY[ id ], k.boxPosition.y + BackgroundView.CELL_SIZE * 3);
+				}
+			}
+			_boxesHolder.graphics.clear();
+			_boxesHolder.graphics.lineStyle(.5, 0xff0000, 1);
+			var i:int, len:int, margin:int = 20;
+			len = idToMaxX.length;
+			for(j in idToMaxX) {
+				i = j as int;
+				_boxesHolder.graphics.beginFill(0x55555 + Math.random() * 0xAAAAAA, .2);
+				_boxesHolder.graphics.drawRect(idToMinX[i] - margin, idToMinY[i] - margin, idToMaxX[i] - idToMinX[i] + margin * 2, idToMaxY[i] - idToMinY[i] + margin * 2);
+			}
+		}
+
 		
 		/**
 		 * Called when user scrolls its mouse wheel to zoom in/out the board

@@ -57,7 +57,7 @@ package com.twinoid.kube.quest.editor.components.selector {
 		 */
 		public function populate(data:*, engineRef:TileEngine2D):void {
 			_data = data as IItemData;
-			if (data is EmptyItemData && !EmptyItemData(data).isDefined) {
+			if (data is EmptyItemData && !EmptyItemData(data).isDefined || _data == null) {
 				_image.image = null;
 				_label.text = "";
 				visible = false;

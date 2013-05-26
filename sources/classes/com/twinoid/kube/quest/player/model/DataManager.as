@@ -22,6 +22,7 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.player.cmd.LoadProgressionCmd;
 	import com.twinoid.kube.quest.player.cmd.SaveProgressionCmd;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
+	import com.twinoid.kube.quest.player.utils.computeTreeGUIDs;
 	import com.twinoid.kube.quest.player.vo.InventoryObject;
 
 	import flash.errors.IllegalOperationError;
@@ -34,6 +35,7 @@ package com.twinoid.kube.quest.player.model {
 	import flash.net.LocalConnection;
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import flash.utils.clearInterval;
 	import flash.utils.clearTimeout;
@@ -92,6 +94,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _clearProgression:ClearProgressionCmd;
 		private var _testMode : Boolean;
 		private var _isObjectPut:Boolean;
+		private var _nodeToTreeID:Dictionary;
 		
 		
 		
@@ -248,7 +251,10 @@ package com.twinoid.kube.quest.player.model {
 			
 			if(Capabilities.playerType == "StandAlone") {
 				//XXX repère local conf
-				Config.addVariable("kuestID", "51a10174aa7e2");//structure tester - 519d5abb4faa7
+				//structure tester - 51a272f115f96
+				//MlleNolwenn - 51a1e15e398b4
+				//TFFS bordel - 519e7fe42ff5a
+				Config.addVariable("kuestID", "519e7fe42ff5a");
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
@@ -566,9 +572,9 @@ package com.twinoid.kube.quest.player.model {
 			_kuest = new KuestData();
 			_kuest.deserialize(bytes);
 			preAnalyseQuest();
-			_timer.start();
-			attemptToConnectToGame();
-			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_COMPLETE));
+			
+			_nodeToTreeID = new Dictionary();
+			computeTreeGUIDs(_kuest.nodes, _nodeToTreeID, onTreeComputeComplete);
 		}
 
 		/**
@@ -712,13 +718,16 @@ package com.twinoid.kube.quest.player.model {
 			_placeToEvents = {};
 			for(i = 0; i < len; ++i) {
 				id = getPosId(nodes[i].actionPlace);
+				//Register the event to the place
 				if(_placeToEvents[id] == undefined) _placeToEvents[id] = new Vector.<KuestEvent>();
 				(_placeToEvents[id] as Vector.<KuestEvent>).push(nodes[i]);
 				
+				//Init properties
 				if(_save[nodes[i].guid] == undefined) {
 					var data:Object = {};
 					data.complete = false;
 					_save[nodes[i].guid] = data;
+					
 					data = {};
 					data.index = 0;
 					_save[id] = data;
@@ -726,7 +735,30 @@ package com.twinoid.kube.quest.player.model {
 			}
 			
 			if(_save["objects"] == undefined) _save["objects"] = {};
+			if(_save["priorities"] == undefined) _save["priorities"] = {};
+			if(_save["treePriority"] == undefined) _save["treePriority"] = {};
 		}
+		
+		/**
+		 * Called when tree IDs are computed
+		 */
+		private function onTreeComputeComplete():void {
+//			var ids:Array = [];
+//			var done:Object = {};
+//			for each (var i : int in _nodeGUIDToTreeID) {
+//				if(done[i] == undefined) {
+//					done[i] = true;
+//					ids.push(i);
+//				}
+//			}
+//			trace(ids)
+			if(_lastPosData != null) selectEventFromPos(_lastPosData);
+			
+			_timer.start();
+			attemptToConnectToGame();
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_COMPLETE));
+		}
+
 		
 		/**
 		 * Called when entering a new zone
@@ -742,116 +774,66 @@ package com.twinoid.kube.quest.player.model {
 		 * Determines which event is the current one depending on the current user's action position
 		 */
 		private function selectEventFromPos(pos:*):void {
-			var i:int, len:int, item:KuestEvent, selectedEvent:KuestEvent;
-			var j:int, lenJ:int, dates:Vector.<Date>, allowed:Boolean, days:Array, timestamp:int;
-			var today:Date = currentDate;
-			timestamp = today.hours * 60 + today.minutes;
 			_lastPosData = pos;
+			if(_nodeToTreeID == null) return;
+			
+			var i:int, len:int, item:KuestEvent, selectedEvent:KuestEvent;
 			var id:String = getPosId(pos);
+			var treeID:int;
+			
 			//Grab all the event located at the current position.
 			var items:Vector.<KuestEvent> = _placeToEvents[id]==null? new Vector.<KuestEvent>() : _placeToEvents[id] as Vector.<KuestEvent>;
 			items.sort(sortByPosition);
 			len = items.length;
+			
 			//Search for the active one.
+			//If an item has the priority, select it !
+			if (_save["priorities"][id] != undefined) {
+				var guid:int = _save["priorities"][id][0];
+				for(i = 0; i < len; ++i) {
+					treeID = _nodeToTreeID[ items[i] ];
+					if(items[i].guid == guid
+					&& (_save["treePriority"][treeID] == undefined || _save["treePriority"][treeID] == items[i].guid)
+					&& isEventAccessible(items[i], false)) {
+						selectedEvent = items[i];
+					}
+				}
+				if(selectedEvent!= null) {
+					len = 0;//Prevents from useless loop
+				}
+			}
+			// Go through all the events to find an active one
 			if(_save[id] == undefined) _save[id] = {index:0};
 			var offset:int = _save[id].index % len;
-			
-			mainloop: for(i = offset; i < offset + len; ++i) {
+			for(i = offset; i < offset + len; ++i) {
 				item = items[i%len];
 				//Item complete, skip it
 				if(_save[item.guid].complete) continue;
 				
-				//==================================================
-				//================= TIME SELECTION =================
-				//==================================================
-				dates = item.actionDate.dates;
-				if (dates != null && dates.length > 0 ) {
-					//Test dates
-					len = dates.length;
-					allowed = false;
-					for(i = 0; i < len; ++i) {
-						//Allowed date, break this loop and continue.
-						if(dates[i].date == today.date && dates[i].fullYear == today.fullYear && dates[i].month == dates[i].month) {
-							allowed = true;
-							break;
-						}
-					}
-					//Today not found in dates, skip this loop turn
-					if(!allowed) continue;
-				}
-				
-				days = item.actionDate.days;
-				if (days != null && days.length > 0 ) {
-					//Test days and hours
-					len = days.length;
-					allowed = false;
-					for(i = 0; i < len; ++i) {
-						if (days[i] == today.day) {
-							var start:int = item.actionDate.startTime;
-							var end:int = item.actionDate.endTime;
-							if(start > end) {
-								if(timestamp >= start || timestamp < end) {
-									allowed = true;
-									break;
-								}
-							}else
-							if(timestamp >= start && timestamp < end) {
-								allowed = true;
-								break;
-							}
-						}
-					}
-					//Day and jours not found, skip this loop turn
-					if(!allowed) continue;
-				}
-				
-				
-				
-				//===================================================
-				//============= DEPENDENCIES MANAGEMENT =============
-				//===================================================
-				//If the event has no dependency, just select it !
-				if(item.dependencies.length == 0) {
+				if(isEventAccessible(item)) {
 					selectedEvent = item;
-					break mainloop;
-				}
-				//If the event has one or more dependency, check if one of them
-				//has been complete or not.
-				lenJ = item.dependencies.length;
-				for(j = 0; j < lenJ; ++j) {
-					if(_save[item.dependencies[j].event.guid].complete == true) {
-						if(item.dependencies[j].event.actionChoices.choices.length > 0) {
-							if(_save[item.dependencies[j].event.guid] != undefined && item.dependencies[j].choiceIndex == _save[item.dependencies[j].event.guid].answerIndex) {
-								selectedEvent = item;
-								break mainloop;
-							}
-						}else{
-							selectedEvent = item;
-							break mainloop;
-						}
-					}
-				}
-				
-				//If the event is the first one of a loop, check if all its
-				//dependencies are part of the loop or not.
-				//If not, go fuck up !
-				if (item.isFirstOfLoop()) {
-					var allLoop:Boolean = true, children:Vector.<KuestEvent>;
-					for(j = 0; j < lenJ; ++j) {
-						children = item.loopsFrom(item.dependencies[j].event);
-						allLoop &&= children != null;
-					}
-					if (allLoop) {
-						selectedEvent = item;
-						break mainloop;
-					}
+					break;
 				}
 			}
+			
 			//Resets the index to a correct value. WIthout that it would be fucked up.
 			//Lets say we have 5 items, only the 2 first are acessible, from index 2 to 4
 			//the loop would go back to the 1st item until the index equals 0 or 1 again.
 			//This index reset prevents from that problem.
-			_save[id].index = i%len;
+			if(len > 0 && selectedEvent != null) {
+				_save[id].index = i%len;
+			}
+			
+			//If no item has been selected
+			if(selectedEvent == null && _save[id].index == 0 && len > 0) {
+				for(i = 0; i < len; ++i) {
+					if(_save["treePriority"][ _nodeToTreeID[ items[i] ] ] == undefined) {
+						selectedEvent = items[i];
+						addPriorityTo( items[i] );
+						break;
+					}
+				}
+			}
 			
 			
 			//==================================================
@@ -867,12 +849,13 @@ package com.twinoid.kube.quest.player.model {
 				if ((selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length < 2) && !_isObjectPut) {
 					//If there is only one choice, answer automatically
 					if(selectedEvent.actionChoices.choices.length == 1) {
-						_save[getPosId(selectedEvent.actionPlace)].index ++;
+						_save[id].index ++;
 						_save[selectedEvent.guid].answerIndex = 0;
 					}
 					flagAsComplete(selectedEvent);
 				}
-				if(!_isObjectPut) _save[id].index ++;
+				//If it's not an object put and if the event has no children, go forward.
+				if(!_isObjectPut && selectedEvent.getChildren().length < 2) _save[id].index ++;
 				dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
 			}
 			
@@ -885,6 +868,101 @@ package com.twinoid.kube.quest.player.model {
 		}
 		
 		/**
+		 * Checks if an event is accessible or not
+		 */
+		private function isEventAccessible(item:KuestEvent, checkDependencies:Boolean = true):Boolean {
+			var i:int, len:int, allowed:Boolean;
+			var j:int, lenJ:int;
+			var today:Date = currentDate;
+			var timestamp:int = today.hours * 60 + today.minutes;
+			//==================================================
+			//================= TIME SELECTION =================
+			// ==================================================
+			var dates:Vector.<Date> = item.actionDate.dates;
+			if (dates != null && dates.length > 0 ) {
+				//Test dates
+				len = dates.length;
+				allowed = false;
+				for(i = 0; i < len; ++i) {
+					//Allowed date, break this loop and continue.
+					if(dates[i].date == today.date && dates[i].fullYear == today.fullYear && dates[i].month == dates[i].month) {
+						allowed = true;
+						break;
+					}
+				}
+				//Today not found in dates, skip this loop turn
+				if(!allowed) return false;
+			}
+
+			var days:Array = item.actionDate.days;
+			if (days != null && days.length > 0 ) {
+				//Test days and hours
+				len = days.length;
+				allowed = false;
+				for(i = 0; i < len; ++i) {
+					if (days[i] == today.day) {
+						var start:int = item.actionDate.startTime;
+						var end:int = item.actionDate.endTime;
+						if(start > end) {
+							if(timestamp >= start || timestamp < end) {
+								allowed = true;
+								break;
+							}
+						}else
+						if(timestamp >= start && timestamp < end) {
+							allowed = true;
+							break;
+						}
+					}
+				}
+				//Day and hours not found, skip this loop turn
+				if(!allowed) return false;
+			}
+			
+			if(!checkDependencies) return true;
+			
+			
+			//===================================================
+			//============= DEPENDENCIES MANAGEMENT =============
+			//===================================================
+			//If the event has no dependency, just select it !
+			if(item.dependencies.length == 0) {
+				return true;
+			}
+			//If the event has one or more dependency, check if one of them
+			//has been complete or not.
+			lenJ = item.dependencies.length;
+			for(j = 0; j < lenJ; ++j) {
+				if(_save[item.dependencies[j].event.guid].complete == true) {
+					if(item.dependencies[j].event.actionChoices.choices.length > 0) {
+						if(_save[item.dependencies[j].event.guid] != undefined && item.dependencies[j].choiceIndex == _save[item.dependencies[j].event.guid].answerIndex) {
+							return true;
+						}
+					}else{
+						return true;
+					}
+				}
+			}
+			
+			//If the event is the first one of a loop, check if all its
+			//dependencies are part of the loop or not.
+			//If not, go fuck up !
+//			trace('item.isFirstOfLoop(): ' + (item.isFirstOfLoop()));
+//			if (item.isFirstOfLoop()) {
+//				var allLoop:Boolean = true, children:Vector.<KuestEvent>;
+//				for(j = 0; j < lenJ; ++j) {
+//					children = item.loopsFrom(item.dependencies[j].event);
+//					allLoop &&= children != null;
+//				}
+//				if (allLoop) {
+//					return true;
+//				}
+//			}
+			
+			return false;
+		}
+		
+		/**
 		 * Flags an event as complete.
 		 * If the item is part of a looped dependency and it's next dependent
 		 * is the first of the loop, reset all the items of the loop and flag
@@ -893,27 +971,28 @@ package com.twinoid.kube.quest.player.model {
 		private function flagAsComplete(event:KuestEvent):void {
 			if(_save[event.guid].complete === true) return;//Uncool test... flagsAsComplete is called twice on some/every events.
 			
+			//Looped references management
 			_save[event.guid].complete = true;
 			var i:int, len:int, children:Vector.<KuestEvent>;
+			var j:int, lenJ:int;
 			children = event.getChildren();
 			len = children.length;
-			for(i = 0; i < len; ++i) {
-				//If one of our child is the first of a loop, and if the current
-				//item is actually part of that loop, reset the loop's event to
-				// "not complete" state.
-				if (children[i].isFirstOfLoop()) {
-					var tree:Vector.<KuestEvent> = children[i].loopsFrom(event);
-					if(tree != null) {
-						var j:int, lenJ:int;
-						lenJ = tree.length;
-						for(j = 0; j < lenJ; ++j) {
-							_save[tree[j].guid].complete = false;
-						}
-					}
-				}
-			}
-			clearTimeout(_timeoutSave);
-			_timeoutSave = setTimeout(onSaveProgression, 3000);
+//			for(i = 0; i < len; ++i) {
+//				//If one of our child is the first of a loop, and if the current
+//				//item is actually part of that loop, reset the loop's event to
+//				// "not complete" state.
+//				if (children[i].isFirstOfLoop()) {
+//					var tree:Vector.<KuestEvent> = children[i].loopsFrom(event);
+//					if(tree != null) {
+//						lenJ = tree.length;
+//						for(j = 0; j < lenJ; ++j) {
+//							_save[tree[j].guid].complete = false;
+//						}
+//					}
+//				}
+//			}
+			
+			//Remove or add object if the vent consists of an objet'x put/get
 			if(event.actionType != null && event.actionType.type == ActionType.TYPE_OBJECT) {
 				var guid:int = event.actionType.getItem() != null? event.actionType.getItem().guid : -1;
 				if(guid > -1) {
@@ -924,6 +1003,70 @@ package com.twinoid.kube.quest.player.model {
 					}
 				}
 			}
+			
+			//Give the priority to the child related to the choosen answer
+			if(children.length > 0) {
+				//If there are choices available
+				if(event.actionChoices != null && event.actionChoices.choices.length > 0) {
+					var answerIndex:int = _save[event.guid].answerIndex;
+					len = children.length;
+					for(i = 0; i < len; ++i) {
+						lenJ = children[i].dependencies.length;
+						for(j = 0; j < lenJ; ++j) {
+							if(children[i].dependencies[j].event == event && children[i].dependencies[j].choiceIndex == answerIndex) {
+								addPriorityTo( children[i] );
+								break;
+							}
+						}
+					}
+				}else{
+					//Give priority to objects put
+					var isAnObject:Boolean = false;
+					len = children.length;
+					for(i = 0; i < len; ++i) {
+						var isObjectPut:Boolean = children[i].actionType != null && children[i].actionType.type == ActionType.TYPE_OBJECT && !children[i].actionType.takeMode;
+						if (isObjectPut) {
+							isAnObject = true;
+							addPriorityTo(children[i]);
+						}
+					}
+					//If no object, just select the first
+					if(!isAnObject) addPriorityTo(children[0]);
+				}
+			}
+			
+			//Remove the priority if the event had it
+			var id:String = getPosId(event.actionPlace.getAsPoint());
+			if(_save["priorities"][id] != undefined) {
+				var priorities:Array = _save["priorities"][ id ] as Array;
+				if(priorities != null) {
+					len = priorities.length;
+					for(i = 0; i < len; ++i) {
+						if(priorities[i] == event.guid) {
+							priorities.splice(i, 1);
+							i --;
+							len --;
+						}
+					}
+				}
+			}
+			
+			//Send to server
+			clearTimeout(_timeoutSave);
+			_timeoutSave = setTimeout(onSaveProgression, 3000);
+		}
+		
+		/**
+		 * Adds the priority to a specific event
+		 */
+		private function addPriorityTo(event:KuestEvent):void {
+			var id:String = getPosId( event.actionPlace.getAsPoint() );
+			if(_save["priorities"][id] == undefined) {
+				_save["priorities"][id] = [];
+			}
+			_save["treePriority"][ _nodeToTreeID[event] ] = event.guid;
+			(_save["priorities"][id] as Array).unshift( event.guid );
+			_save[event.guid].complete = false;
 		}
 		
 		/**

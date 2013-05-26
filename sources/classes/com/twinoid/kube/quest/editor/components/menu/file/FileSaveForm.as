@@ -247,7 +247,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private function submitHandler(event:MouseEvent):void {
 			_submit.enabled = false;
 			_spinning.open(Label.getLabel("loader-saving"));
-			FrontControler.getInstance().save(title, description, friends, onSaveResult);
+			FrontControler.getInstance().save(title, description, friends, onSaveResult, false, _editMode);
 		}
 		
 		/**

@@ -190,6 +190,7 @@ package com.twinoid.kube.quest.player {
 				stage.addEventListener(Event.RESIZE, computePositions);
 				computePositions();
 			}
+			addChild(_spinning);
 		}
 		
 		/**

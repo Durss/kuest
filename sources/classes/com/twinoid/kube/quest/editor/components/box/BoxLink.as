@@ -210,6 +210,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				removeChildAt(0);
 			}
 			
+			cacheAsBitmap = false;
 			graphics.clear();
 			if(_warning != null) _warning.filters = [];
 			
@@ -256,6 +257,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function rollOverHandler(event:MouseEvent):void {
 			if(event.ctrlKey) return;
 			_isOver = true;
+			cacheAsBitmap = false;
 			parent.addChild(this);
 			update();
 		}
@@ -266,6 +268,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function rollOutHandler(event:MouseEvent):void {
 			if(event.ctrlKey) return;
 			_isOver = false;
+			cacheAsBitmap = true;
 			update();
 		}
 		
