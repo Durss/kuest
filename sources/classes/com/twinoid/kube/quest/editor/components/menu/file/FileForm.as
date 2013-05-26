@@ -55,7 +55,6 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _model:Model;
 		private var _publishForm:FilePublishForm;
 		private var _prevKuestGUID:String;
-		private var _lastEditMode:Boolean;
 		
 		
 		
@@ -128,9 +127,6 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_saveBt.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 			_saveNewBt.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 			_saveForm.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
-			_saveBt.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
-			_saveForm.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
-			_saveNewBt.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			_saveForm.addEventListener(Event.RESIZE, computePositions);
 			_loadForm.addEventListener(Event.RESIZE, computePositions);
@@ -188,48 +184,22 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			if(labelID != null) {
 				EventDispatcher(event.currentTarget).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel(labelID), ToolTipAlign.TOP));
 			}
-			if( (event.currentTarget == _saveBt || event.currentTarget == _saveForm) && _saveNewBt.visible) {
-				if(event.currentTarget == _saveBt || event.currentTarget == _saveNewBt) _lastEditMode = true;
-				addChildAt(_saveForm, getChildIndex(_saveBt)+1);
-				_saveForm.open(_lastEditMode);
-			}
-			if(event.currentTarget == _saveNewBt) {
-				addChildAt(_saveForm, getChildIndex(_saveBt)+1);
-				_saveForm.open();
-				_lastEditMode = false;
-			}
-		}
-		
-		/**
-		 * Called when a component is rolled out
-		 */
-		private function rollOutHandler(event:MouseEvent):void {
-			//Prevents from a bug when testing in standalone mode.
-			//When using mouse wheel a ROLL_OUT is fired :/...
-			if(event.relatedObject == null) return;
-			
-			if(event.currentTarget == _saveForm && (stage.focus == null || !_saveForm.contains(stage.focus)) ) _saveForm.close();
-			if(_saveNewBt.visible && event.currentTarget != _saveForm) _saveForm.close();
 		}
 		
 		/**
 		 * Called when a component is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			if(event.target == _saveBt || event.target == _saveNewBt) {
-				if(_saveNewBt.visible && event.target == _saveBt) {
-					_saveBt.enabled = false;
-					_saveNewBt.enabled = false;
-					_spin.x = _saveBt.x + _saveBt.width * .5;
-					_spin.y = _saveBt.y + _saveBt.height * .5;
-					_spin.open(Label.getLabel("loader-saving"));
-					FrontControler.getInstance().save(_saveForm.title, _saveForm.description, _saveForm.friends, onSave, false, true);
-				}
-				if((_saveNewBt.visible && event.target == _saveNewBt) || !_saveNewBt.visible) {
-					addChildAt(_saveForm, getChildIndex(_saveBt)+1);
-					_saveForm.toggle();
-				}
+			if(event.target == _saveBt) {
+				if(_saveForm.isClosed) addChildAt(_saveForm, getChildIndex(_saveBt)+1);
+				_saveForm.toggle(_saveNewBt.visible);
 			}else
+			 
+			if(event.target == _saveNewBt) {
+				if(_saveForm.isClosed) addChildAt(_saveForm, getChildIndex(_saveBt)+1);
+				_saveForm.toggle();
+				
+			}else 
 			
 			if(event.target == _loadBt) {
 				addChildAt(_loadForm, getChildIndex(_loadBt)+1);

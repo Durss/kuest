@@ -71,7 +71,10 @@
 			if ($_SESSION["uid"] != $res['uid']) $friendsA[] = "89";
 			//Remove empty items.
 			for ($i = 0; $i < count($friendsA); $i++) {
-				if (strlen($friendsA[$i]) == array_splice($friendsA, $i, 1)) $i --;
+				if (strlen($friendsA[$i]) == 0) {
+					array_splice($friendsA, $i, 1);
+					$i --;
+				}
 			}
 			if (count($friendsA) == 0) $friends = "";
 			else $friends = ",".implode(",", $friendsA).",";

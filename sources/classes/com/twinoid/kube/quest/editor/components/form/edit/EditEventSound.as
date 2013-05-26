@@ -1,19 +1,21 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
-	import com.nurun.utils.string.StringUtils;
-	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
-	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import gs.TweenLite;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
-	import flash.utils.getTimer;
+
+	import treefortress.sound.SoundAS;
+	import treefortress.sound.SoundInstance;
+
 	import com.nurun.components.button.visitors.applyDefaultFrameVisitorNoTween;
+	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.roundPos;
+	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
+	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
 	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
+	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.EventChoiceNoneIcon;
 	import com.twinoid.kube.quest.graphics.EventChoiceYupIcon;
@@ -24,13 +26,10 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
-	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
-	import flash.media.Sound;
-	import flash.media.SoundChannel;
-	import flash.media.SoundMixer;
-	import flash.net.URLRequest;
-	import flash.utils.ByteArray;
+	import flash.utils.clearTimeout;
+	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 	
 	/**
 	 * 
@@ -41,8 +40,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private var _formUrlHolder:Sprite;
 		private var _inputURL:InputKube;
 		private var _testBt:GraphicButtonKube;
-		private var _soundLoader:Sound;
-		private var _soundChannel:SoundChannel;
 		private var _spin:LoaderSpinning;
 		private var _stopIcon:StopSoundIcon;
 		private var _playIcon:DisplayObject;
@@ -50,6 +47,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private var _result:CssTextField;
 		private var _timeout:uint;
 		private var _loop:CheckBoxKube;
+		private var _currentSound:SoundInstance;
 		
 		
 		
@@ -92,6 +90,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 					break;
 				default:
 			}
+			SoundAS.stopAll();
 		}
 		
 		/**
@@ -107,8 +106,14 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				}
 			}
 			selectedIndex = 0;
+			SoundAS.stopAll();
 			_inputURL.text = "";
+			_spin.close();
+			_inputURL.enabled = true;
 			_loop.selected = false;
+			_testBt.icon = _playIcon;
+			_testBt.enabled = false;
+			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 
 
@@ -159,10 +164,13 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_result.alpha	= 0;
 			_result.visible	= false;
 			
+			SoundAS.loadFailed.addOnce(onSoundError);
+			
 			_testBt.addEventListener(MouseEvent.CLICK, clickTestHandler);
 			_inputURL.addEventListener(Event.CHANGE, changeUrlHandler);
 			_inputURL.addEventListener(FocusEvent.FOCUS_IN, focusInputHandler);
 			_inputURL.addEventListener(MouseEvent.MOUSE_DOWN, mouseUpInputHandler);
+			_inputURL.addEventListener(FormComponentEvent.SUBMIT, clickTestHandler);
 			
 			roundPos(_testBt, _inputURL, _result, _loop);
 			
@@ -182,14 +190,10 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * If no sound is playing, start the loading/playing and wait for
 		 * data to come on SoundMixer.
 		 */
-		private function clickTestHandler(event:MouseEvent):void {
-			if(_soundLoader != null) {
-				_soundLoader.removeEventListener(IOErrorEvent.IO_ERROR, soundErrorHandler);
-				try{ _soundLoader.close(); }catch(error:Error) { }
-			}
-			if(_soundChannel != null) _soundChannel.stop();
+		private function clickTestHandler(event:Event):void {
+			if(!_testBt.enabled) return;
 			
-			
+			SoundAS.stopAll();
 			if(_testBt.icon == _playIcon) {
 				_testBt.enabled = false;
 				_inputURL.enabled = false;
@@ -197,11 +201,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				_spin.x = _width * .5;
 				_spin.y = _inputURL.y + _inputURL.height * .5;
 				
-				_soundLoader = new Sound();
-				_soundLoader.addEventListener(IOErrorEvent.IO_ERROR, soundErrorHandler);
-				_soundLoader.load(new URLRequest(_inputURL.text));
-				_soundChannel = _soundLoader.play();
-				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);//Just in case...
+				SoundAS.loadSound(_inputURL.text, "test", 0);
+				_currentSound = SoundAS.play("test");
+				_currentSound.soundCompleted.addOnce(onSoundComplete);
 				addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			}else{
 				_testBt.icon = _playIcon;
@@ -209,30 +211,24 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		}
 
 		private function enterFrameHandler(event:Event):void {
-			if(_testBt.icon == _playIcon) {
-				var bytes:ByteArray = new ByteArray();
-				SoundMixer.computeSpectrum(bytes);
-				var i:int, len:int, tot:int;
-				len = bytes.length;
-				for(i = 0; i < len; ++i) {
-					tot += bytes.readByte();
-				}
-				if(tot != 0) {
-					_testBt.enabled = _inputURL.enabled = true;
-					_spin.close();				
-					_inputURL.successFlash();
-					_testBt.icon = _stopIcon;
-					_result.text = Label.getLabel("editWindow-sound-testSuccess");
-					TweenLite.to(_result, .25, {autoAlpha:1});
-					clearTimeout(_timeout);
-					_timeout = setTimeout(hideResult, 2000);
-				}
-			}else
-			if(_soundChannel.position > _soundLoader.length - 100) {
-				_testBt.icon = _playIcon;
+			if (_currentSound.position > 100) {
+				_testBt.enabled = _inputURL.enabled = true;
+				_spin.close();				
+				_inputURL.successFlash();
+				_testBt.icon = _stopIcon;
+				_result.text = Label.getLabel("editWindow-sound-testSuccess");
+				TweenLite.to(_result, .25, {autoAlpha:1});
+				clearTimeout(_timeout);
+				_timeout = setTimeout(hideResult, 2000);
 				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			}
 		}
+
+		private function onSoundComplete(s:SoundInstance):void {
+			s;//avoid unused warning
+			_testBt.icon = _playIcon;
+		}
+
 
 		private function focusInputHandler(event:FocusEvent):void {
 			if(_inputURL.text.length == 0) {
@@ -247,7 +243,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			}
 		}
 
-		private function soundErrorHandler(event:IOErrorEvent):void {
+		private function onSoundError(s:SoundInstance):void {
+			s;//avoid unused warning
 			TweenLite.to(_result, .25, {autoAlpha:1});
 			_result.text	= Label.getLabel("editWindow-sound-testError");
 			_testBt.enabled	= _inputURL.enabled = true;

@@ -122,7 +122,7 @@ package com.twinoid.kube.quest.editor.views {
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler, true, 2);
 			_scrollpane.vScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);
-			_scrollpane.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler);
+			_scrollpane.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler, false, int.MAX_VALUE);
 		}
 		
 		/**

@@ -27,6 +27,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _bmd:BitmapData;
 		private var _bytes:ByteArray;
 		private var _lastBytes:ByteArray;
+		private var _alreadyCompressed:ByteArray;
 		
 		
 		
@@ -62,17 +63,18 @@ package com.twinoid.kube.quest.editor.vo {
 		}
 		
 		public function get bytes():ByteArray {
-			return JPEGEncoder.encode( _bmd, 80 );
+			return _alreadyCompressed? _lastBytes : JPEGEncoder.encode( _bmd, 80 );
 		}
 		
 		public function set bytes(value:ByteArray):void {
+			_alreadyCompressed = value;
 			value.position = 0;
 			_lastBytes = value;
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadCompleteHandler);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loadErrorHandler);
 			loader.loadBytes(value);
-			initBmd();
+//			initBmd();
 		}
 
 

@@ -10,15 +10,19 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.events.LCManagerEvent;
 	import com.twinoid.kube.quest.editor.utils.initSerializableClasses;
+	import com.twinoid.kube.quest.editor.utils.prompt;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
+	import com.twinoid.kube.quest.editor.vo.ActionType;
 	import com.twinoid.kube.quest.editor.vo.KuestData;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.Point3D;
+	import com.twinoid.kube.quest.player.cmd.ClearProgressionCmd;
 	import com.twinoid.kube.quest.player.cmd.IsLoggedCmd;
 	import com.twinoid.kube.quest.player.cmd.LoadKuestDetailsCmd;
 	import com.twinoid.kube.quest.player.cmd.LoadProgressionCmd;
 	import com.twinoid.kube.quest.player.cmd.SaveProgressionCmd;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
+	import com.twinoid.kube.quest.player.vo.InventoryObject;
 
 	import flash.errors.IllegalOperationError;
 	import flash.events.EventDispatcher;
@@ -84,7 +88,10 @@ package com.twinoid.kube.quest.player.model {
 		private var _date:Date;
 		private var _timeoutSave:uint;
 		private var _saveProgressionCmd:SaveProgressionCmd;
-		private var _currentQuestID:String;
+		private var _currentQuestGUID:String;
+		private var _clearProgression:ClearProgressionCmd;
+		private var _testMode : Boolean;
+		private var _isObjectPut:Boolean;
 		
 		
 		
@@ -146,7 +153,7 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Gets the current event
 		 */
-		public function get currentEvent():KuestEvent { return _currentEvent; }
+		public function get currentEvent():KuestEvent { return _isObjectPut? null : _currentEvent; }
 		
 		/**
 		 * Gets the current date
@@ -154,6 +161,25 @@ package com.twinoid.kube.quest.player.model {
 		public function get currentDate():Date {
 			_date.time = _time + getTimer();
 			return _date;
+		}
+		
+		/**
+		 * Gets the inventory objects.
+		 */
+		public function get objects():Vector.<InventoryObject> {
+			var res:Vector.<InventoryObject> = new Vector.<InventoryObject>();
+			var i:int, len:int, guidToObject:Object;
+			len = _kuest.objects.length;
+			guidToObject = {};
+			for(i = 0; i < len; ++i) {
+				guidToObject[ _kuest.objects[i].guid ] = _kuest.objects[i];
+			}
+			
+			for(var k:String in _save["objects"]) {
+				res.push(new InventoryObject(guidToObject[ parseInt(k) ], _save["objects"][k]) );
+			}
+			
+			return res;
 		}
 		
 		
@@ -222,12 +248,13 @@ package com.twinoid.kube.quest.player.model {
 			
 			if(Capabilities.playerType == "StandAlone") {
 				//XXX repère local conf
-				Config.addVariable("kuestID", "519d5abb4faa7");
+				Config.addVariable("kuestID", "51a10174aa7e2");//structure tester - 519d5abb4faa7
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
-			_currentQuestID = Config.getVariable("kuestID");
-			if(_currentQuestID != null) {
+			_testMode = Config.getBooleanVariable("testMode");
+			_currentQuestGUID = Config.getVariable("kuestID");
+			if(_currentQuestGUID != null) {
 				var spool:SequentialCommand = new SequentialCommand();
 				if(Capabilities.playerType == "StandAlone") {
 					//Force login if testing locally as session are fucked up instandalone mode...
@@ -281,6 +308,33 @@ package com.twinoid.kube.quest.player.model {
 			_lastTouchPosition.y = y;
 			_lastTouchPosition.z = z;
 			selectEventFromPos(_lastTouchPosition);
+		}
+		
+		/**
+		 * Clears the user's progression.
+		 */
+		public function clearProgression():void {
+			_clearProgression.populate(_currentQuestGUID);
+			if(_testMode) {
+				_clearProgression.execute();
+			}else{
+				prompt("player-restTitle", "player-restContent", _clearProgression.execute, "resetQuest");
+			}
+		}
+		
+		/**
+		 * Use an object
+		 */
+		public function useObject(data:InventoryObject):void {
+			//If the action consists of putting an object in place
+			if(_currentEvent != null && _currentEvent.actionType != null
+			 && _currentEvent.actionType.type == ActionType.TYPE_OBJECT
+			 && !_currentEvent.actionType.takeMode) {
+				if(_currentEvent.actionType.getItem().guid == data.vo.guid) {
+					_isObjectPut = false;
+					dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
+				}
+			}
 		}
 
 
@@ -450,27 +504,31 @@ package com.twinoid.kube.quest.player.model {
 				clearInterval(_ksaInterval);
 				_ksaInterval = setInterval(_ksaCmd.execute, 10 * 60*1000);//Every 10 minutes
 				
+				_clearProgression = new ClearProgressionCmd();
+				_clearProgression.addEventListener(CommandEvent.COMPLETE, clearProgressionCompleteHandler);
+				_clearProgression.addEventListener(CommandEvent.ERROR, clearProgressionErrorHandler);
+				
 				_saveProgressionCmd = new SaveProgressionCmd();
 				_saveProgressionCmd.addEventListener(CommandEvent.COMPLETE, saveProgressionCompleteHandler);
-				_saveProgressionCmd.addEventListener(CommandEvent.ERROR, saveProgressionErrorsHandler);
+				_saveProgressionCmd.addEventListener(CommandEvent.ERROR, saveProgressionErrorHandler);
 				
 				_loadDetailsCmd = new LoadKuestDetailsCmd();
 				_loadDetailsCmd.addEventListener(CommandEvent.COMPLETE, loadDetailsCompleteHandler);
-				_loadDetailsCmd.addEventListener(CommandEvent.ERROR, loadDetailsErrorsHandler);
+				_loadDetailsCmd.addEventListener(CommandEvent.ERROR, loadDetailsErrorHandler);
 				
 				_loadProgressionCmd = new LoadProgressionCmd();
 				_loadProgressionCmd.addEventListener(CommandEvent.COMPLETE, loadProgressionCompleteHandler);
 				_loadProgressionCmd.addEventListener(CommandEvent.ERROR, loadProgressionErrorHandler);
 				_loadProgressionCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
 				
-				_loadKuestCmd = new LoadQuestCmd(!Config.getBooleanVariable("testMode"));
+				_loadKuestCmd = new LoadQuestCmd(!_testMode);
 				_loadKuestCmd.addEventListener(CommandEvent.COMPLETE, loadQuestCompleteHandler);
 				_loadKuestCmd.addEventListener(CommandEvent.ERROR, loadQuestErrorHandler);
 				_loadKuestCmd.addEventListener(ProgressEvent.PROGRESS,  loadProgressHandler);
 				
-				_loadKuestCmd.populate( _currentQuestID );
-				_loadDetailsCmd.populate( _currentQuestID );
-				_loadProgressionCmd.populate( _currentQuestID );
+				_loadKuestCmd.populate( _currentQuestGUID );
+				_loadDetailsCmd.populate( _currentQuestGUID );
+				_loadProgressionCmd.populate( _currentQuestGUID );
 				var spool:SequentialCommand = new SequentialCommand();
 				spool.addCommand(_loadDetailsCmd);
 				spool.addCommand(_loadProgressionCmd);
@@ -496,7 +554,7 @@ package com.twinoid.kube.quest.player.model {
 			var bytes:ByteArray = event.data as ByteArray;
 			bytes.position = 0;
 			//If testing quest
-			if(Config.getBooleanVariable("testMode")) {
+			if(_testMode) {
 				XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Decrypt data
 			}else{
 				XOR(bytes, "ErrorEvent :: kuest cannot be optimised...");//Decrypt data
@@ -536,6 +594,26 @@ package com.twinoid.kube.quest.player.model {
 				_save = bytes.readObject();
 			}
 		}
+		
+		/**
+		 * Called when progression is cleared.
+		 */
+		private function clearProgressionCompleteHandler(event:CommandEvent):void {
+			_save = {};
+			preAnalyseQuest();
+			if(_lastPosData is Point) selectEventFromPos(_lastPosData);
+			else _lastPosData = null;
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE));
+		}
+		
+		/**
+		 * Called if progression clearing failed.
+		 */
+		private function clearProgressionErrorHandler(event:CommandEvent):void {
+			var label:String = Label.getLabel("exception-"+event.data);
+			if(/^\[missing.*/gi.test(label)) label = event.data as String;
+			throw new KuestException(label, "loading");
+		}
 
 		/**
 		 * Called if user's progression loading fails.
@@ -565,7 +643,7 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Called if quest details loading failed.
 		 */
-		private function loadDetailsErrorsHandler(event:CommandEvent):void {
+		private function loadDetailsErrorHandler(event:CommandEvent):void {
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_ERROR));
 			var label:String = Label.getLabel("exception-"+event.data);
 			if(/^\[missing.*/gi.test(label)) label = event.data as String;
@@ -584,7 +662,7 @@ package com.twinoid.kube.quest.player.model {
 			var ba:ByteArray = new ByteArray();
 			ba.writeObject( _save );
 			ba.deflate();
-			_saveProgressionCmd.populate(_currentQuestID, ba);
+			_saveProgressionCmd.populate(_currentQuestGUID, ba);
 			_saveProgressionCmd.execute();
 		}
 
@@ -598,7 +676,7 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Called if progression save fails.
 		 */
-		private function saveProgressionErrorsHandler(event:CommandEvent):void {
+		private function saveProgressionErrorHandler(event:CommandEvent):void {
 			clearTimeout(_timeoutSave);
 			_timeoutSave = setTimeout(onSaveProgression, 5000);//Try again
 			throw new KuestException(String(event.data), "0");
@@ -646,6 +724,8 @@ package com.twinoid.kube.quest.player.model {
 					_save[id] = data;
 				}
 			}
+			
+			if(_save["objects"] == undefined) _save["objects"] = {};
 		}
 		
 		/**
@@ -675,6 +755,7 @@ package com.twinoid.kube.quest.player.model {
 			//Search for the active one.
 			if(_save[id] == undefined) _save[id] = {index:0};
 			var offset:int = _save[id].index % len;
+			
 			mainloop: for(i = offset; i < offset + len; ++i) {
 				item = items[i%len];
 				//Item complete, skip it
@@ -754,18 +835,16 @@ package com.twinoid.kube.quest.player.model {
 				//If the event is the first one of a loop, check if all its
 				//dependencies are part of the loop or not.
 				//If not, go fuck up !
-				if(item.firstOfLoop) {
+				if (item.isFirstOfLoop()) {
 					var allLoop:Boolean = true, children:Vector.<KuestEvent>;
-//					if(lenJ == 1) {
-						for(j = 0; j < lenJ; ++j) {
-							children = item.loopsFrom(item.dependencies[j].event);
-							allLoop &&= children != null;
-						}
-						if (allLoop) {
-							selectedEvent = item;
-							break mainloop;
-						}
-//					}
+					for(j = 0; j < lenJ; ++j) {
+						children = item.loopsFrom(item.dependencies[j].event);
+						allLoop &&= children != null;
+					}
+					if (allLoop) {
+						selectedEvent = item;
+						break mainloop;
+					}
 				}
 			}
 			//Resets the index to a correct value. WIthout that it would be fucked up.
@@ -773,6 +852,7 @@ package com.twinoid.kube.quest.player.model {
 			//the loop would go back to the 1st item until the index equals 0 or 1 again.
 			//This index reset prevents from that problem.
 			_save[id].index = i%len;
+			
 			
 			//==================================================
 			//================ EVENT SUBMISSION ================
@@ -782,7 +862,9 @@ package com.twinoid.kube.quest.player.model {
 				//Flag as complete only if the event proposes no choice.
 				//If the event proposes choices, it will be flagged as complete
 				//when the user answers it.
-				if (selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length < 2) {
+				//Same thing if the event proposes to put an object.
+				_isObjectPut = selectedEvent.actionType != null && selectedEvent.actionType.type == ActionType.TYPE_OBJECT && !selectedEvent.actionType.takeMode;
+				if ((selectedEvent.actionChoices == null || selectedEvent.actionChoices.choices.length < 2) && !_isObjectPut) {
 					//If there is only one choice, answer automatically
 					if(selectedEvent.actionChoices.choices.length == 1) {
 						_save[getPosId(selectedEvent.actionPlace)].index ++;
@@ -790,10 +872,12 @@ package com.twinoid.kube.quest.player.model {
 					}
 					flagAsComplete(selectedEvent);
 				}
-				_save[id].index ++;
+				if(!_isObjectPut) _save[id].index ++;
 				dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
 			}
-			//???
+			
+			//If there was an event selected and there is no new one, tell the
+			//view to update with nothing (so it clears)
 			if(_currentEvent != null && selectedEvent == null) {
 				_currentEvent = null;
 				dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
@@ -807,6 +891,8 @@ package com.twinoid.kube.quest.player.model {
 		 * them as "no complete" so they can be played again.
 		 */
 		private function flagAsComplete(event:KuestEvent):void {
+			if(_save[event.guid].complete === true) return;//Uncool test... flagsAsComplete is called twice on some/every events.
+			
 			_save[event.guid].complete = true;
 			var i:int, len:int, children:Vector.<KuestEvent>;
 			children = event.getChildren();
@@ -815,9 +901,9 @@ package com.twinoid.kube.quest.player.model {
 				//If one of our child is the first of a loop, and if the current
 				//item is actually part of that loop, reset the loop's event to
 				// "not complete" state.
-				if (children[i].firstOfLoop) {
+				if (children[i].isFirstOfLoop()) {
 					var tree:Vector.<KuestEvent> = children[i].loopsFrom(event);
-						if(tree != null) {
+					if(tree != null) {
 						var j:int, lenJ:int;
 						lenJ = tree.length;
 						for(j = 0; j < lenJ; ++j) {
@@ -828,6 +914,16 @@ package com.twinoid.kube.quest.player.model {
 			}
 			clearTimeout(_timeoutSave);
 			_timeoutSave = setTimeout(onSaveProgression, 3000);
+			if(event.actionType != null && event.actionType.type == ActionType.TYPE_OBJECT) {
+				var guid:int = event.actionType.getItem() != null? event.actionType.getItem().guid : -1;
+				if(guid > -1) {
+					if(_save["objects"][ guid ] == undefined) {
+						_save["objects"][ guid ] = 1;
+					} else {
+						_save["objects"][ guid ] += event.actionType.takeMode? 1 : -1;
+					}
+				}
+			}
 		}
 		
 		/**

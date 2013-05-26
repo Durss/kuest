@@ -256,6 +256,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function rollOverHandler(event:MouseEvent):void {
 			if(event.ctrlKey) return;
 			_isOver = true;
+			parent.addChild(this);
 			update();
 		}
 		
@@ -298,22 +299,25 @@ package com.twinoid.kube.quest.editor.components.box {
 			var m:Matrix = new Matrix();
 			var g:Graphics = graphics;
 			g.clear();
-	//			var points:Vector.<Point> = new <Point>[new Point(0,0), new Point(ctrl1X, ctrl1Y), new Point(ctrl2X, ctrl2Y), new Point(endX, endY)];
 			if(alpha == 1) {
 				//Hit zone
 				g.moveTo(0, 0);
 				g.lineStyle(30, 0xffffff, 0, false, "normal", CapsStyle.NONE);
-	//				CurveTo.drawPath(g, points);
 				g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 				g.curveTo(ctrl2X, ctrl2Y, endX, endY);
 			}
-			
 			//Borders
 			g.moveTo(0, 0);
-			g.lineStyle(14, 0xffffff, 1, false, "normal", CapsStyle.NONE);
+			g.lineStyle(14, _isOver? 0xff0000: 0xffffff, 1, false, "normal", CapsStyle.NONE);
 			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
-	//			CurveTo.drawPath(g, points);
+			
+			if(_isOver) {
+				g.moveTo(0, 0);
+				g.lineStyle(10, 0xffffff, 0, false, "normal", CapsStyle.NONE);
+				g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
+				g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+			}
 			
 			//Draw gradient line
 			g.moveTo(0, 0);
@@ -322,20 +326,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			m.createGradientBox(endX, endY, a);
 			g.lineGradientStyle(GradientType.LINEAR, colors, [1, 1], [0x10, 0xf0], m);
 			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
-//			
-//			m.createGradientBox(halfX, halfY, a, halfX, halfY);
-//			g.lineGradientStyle(GradientType.LINEAR, [colors[1], colors[2]], [1, 1], [0, 0xff], m);
 			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
-
-	//			m.createGradientBox(endX, endY, a, x, y);
-	//			g.lineGradientStyle(GradientType.LINEAR, [colors[0], colors[2]], [1, 1], [0, 0xff], m);
-	//			CurveTo.drawPath(g, points);
-			
-//			g.lineStyle(0, 0, 0);
-//			g.beginFill(0x00ff00);
-//			g.drawCircle( ctrl1X, ctrl1Y, 5);
-//			g.beginFill(0x0000ff);
-			// g.drawCircle( ctrl2X, ctrl2Y, 5);
 		}
 		
 	}

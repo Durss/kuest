@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor.components.menu.file {
-	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
@@ -17,6 +16,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
+	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import com.twinoid.kube.quest.editor.vo.UserInfo;
 
 	import flash.display.Shape;
@@ -60,7 +60,6 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Creates an instance of <code>FileSaveForm</code>.
 		 */
-
 		public function FileSaveForm(width:int) {
 			_width = width;
 			initialize();
@@ -104,8 +103,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Toggles the open state.
 		 */
-		public function toggle():void {
-			if(_closed || _editMode) open();
+		public function toggle(editMode:Boolean = false):void {
+			if (_closed || editMode != _editMode) open(editMode);
 			else close();
 		}
 		
@@ -113,16 +112,16 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Opens the form
 		 */
 		public function open(editMode:Boolean = false):void {
-			if (!editMode && !_closed && editMode == _editMode) return;
-			if(editMode != _editMode || _closed) stage.focus = _nameInput;
-			_closed = false;
+			if (_closed) stage.focus = _nameInput;
 			_editMode = editMode;
-			_submit.visible = !editMode;
+			_closed = false;
+			_submit.label = editMode? Label.getLabel("menu-file-new-edit") : Label.getLabel("menu-file-new-submit");
 			var oldH:int = _mask.height;
 			_mask.scaleY = 1;
-			var h:int = editMode? _submit.y : _mask.height;
+			var h:int = _mask.height;
 			_mask.height = oldH;
 			_friendsCB.close();
+			computePositions();
 			TweenLite.killTweensOf(_mask);
 			var e:Event = new Event(Event.RESIZE);
 			TweenLite.to(_mask, .25, {height:h, onUpdate:dispatchEvent, onUpdateParams:[e]});

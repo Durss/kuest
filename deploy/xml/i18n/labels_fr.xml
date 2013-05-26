@@ -2,21 +2,20 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog57-content"><![CDATA[<ul>
-			<li>Notre avancement dans la quête est maintenant sauvegardé</li>
-			<li>Ajout de la possibilité d'ajouter un son sur un évènement (pas encore géré en jeu)</li>
-			<li>Gestion des références bouclées<i> (<b>A TESTER A FOND</b> parce que j'suis pas serein :3)</i></li>
-			<li>Ajout d'un formulaire de simulation de déplacement lorsqu'on teste une quête</li>
-			<li>Fix des champs de saisie de nombres dans lesquels on ne pouvait pas saisir de nombres négatifs</li>
-			<li>Correction des choix qui étaient tous passés à la valeur du 1er choix lors de l'édition d'un événement</li>
-			<li>Correction du bouton de test</li>
-			<li>Passage du nombre de choix possibles de 3 à 6</li>
-			<li>Correction du problème empêchant l'accès à un événement si son heure de début était suppérieur à l'heure de fin</li>
-			<li>Légère mise à jour graphique des liens</li>
+		<label code="patchlog58-content"><![CDATA[<ul>
+			<li>Ajout de la gestion du son dans le lecteur de quête !</li>
+			<li>Ajout de la visualisation de notre inventaire</li>
+			<li>Ajout d'une option pour effacer notre progression dans une quête</li>
+			<li>Les objets ne sont plus posés automatiquement, il faut maintenant les utiliser via l'inventaire</li>
+			<li>Debug pour éviter un crash en cas de références bouclées croisées</li>
+			<li>Debug de l'ajout de droits <i>(si plusieurs amis étaient sélectionnés, seul le 1er recevait les droits)</i></li>
+			<li>Debug du scroll via roulette souri sur les contenus draggables</li>
+			<li>Debug de compression multiple des images. A chaque sauvegarde leur qualité été réduite</li>
+			<li>Change du comportement du menu de sauvegarde. Fini les roll-over à la noix !</li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
-		<label code="tutorial-close"><![CDATA[J'ai vu !]]></label>
+		<label code="tutorial-close"><![CDATA[J'ai vu merci !]]></label>
 		
 		<label code="exception-title"><![CDATA[Erreur]]></label>
 		<label code="exception-INCOMPLETE_FORM"><![CDATA[Données manquantes dans la requête.]]></label>
@@ -78,6 +77,7 @@
 		<label code="menu-file-new-name"><![CDATA[Nom de votre quête :]]></label>
 		<label code="menu-file-new-description"><![CDATA[Description :]]></label>
 		<label code="menu-file-new-submit"><![CDATA[Créer]]></label>
+		<label code="menu-file-new-edit"><![CDATA[Mettre à jour]]></label>
 		<label code="menu-file-load"><![CDATA[Charger une quête]]></label>
 		<label code="menu-file-load-title"><![CDATA[Quêtes que vous avez créées :]]></label>
 		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrer une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
@@ -196,6 +196,11 @@
 		<label code="player-login"><![CDATA[Aller sur l'application.]]></label>
 		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
 		<label code="player-next"><![CDATA[Suite &gt;]]></label>
+		<label code="player-resetTT"><![CDATA[Effacer votre progression et recommencer la quête du début.<br /><b>Cette action est irréversible !</b>]]></label>
+		<label code="player-restTitle"><![CDATA[Effacer votre progression</b>]]></label>
+		<label code="player-restContent"><![CDATA[Êtes-vous sûr de vouloir effacer votre progression et recommencer la quête depuis le début ?<br /><b>Cette action est irréversible !</b>]]></label>
+		<label code="player-inventory"><![CDATA[Inventaire]]></label>
+		<label code="player-inventoryEmpty"><![CDATA[Vous n'avez trouvé aucun objet pour l'instant.]]></label>
 	</labels>
 	
 </root>

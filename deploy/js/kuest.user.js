@@ -4,8 +4,8 @@
 // @description	        Adds the possibility to play a quest inside the game Kube aswell as some connections with the editor.
 // @include	            http://kube.muxxu.com/
 // @include	            http://kube.muxxu.com/zone/choose
-// @include	            /http://kube.muxxu.com/\?z=[0-9]+/
-// @include	            /http://kube.muxxu.com/\?kuest=[0-9]+/
+// @include	            http://kube.muxxu.com/?z=*
+// @include	            http://kube.muxxu.com/?kuest=*
 // ==/UserScript==
 
 //Gets the query's parameters as an anonymous object
@@ -131,21 +131,8 @@ if(/zone\/choose/gi.test(window.location.href)) {
 			app.style.height = height + "px";
 		}
 		
-		//Any smoothed resize is source of glitches on chrome...
-		/*clearInterval(document.resizeInterval);
-		function resize() {
-			var h = parseInt(app.style.height);
-			if(isNaN(h)) h = 1;
-			app.style.height = Math.round(h + (height - h) * .5) + "px";
-			if(Math.abs(h - height) < 2) {
-				app.style.height = height + "px";
-				clearInterval(document.resizeInterval);
-			}
-		}
-		document.resizeInterval = setInterval(resize, 31);*/
-		
-		var app = document.getElementById("kuestApp");
-		app.style.height = height+"px";
+		//Resize the div holder smoothly instead of the flash directly which would be source of glitches.
+		document.getElementById("kuestApp").style.height = height+"px";
 	}
 
 	inject(resizeSWF);

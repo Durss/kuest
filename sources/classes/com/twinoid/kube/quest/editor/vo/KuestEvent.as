@@ -159,17 +159,6 @@ package com.twinoid.kube.quest.editor.vo {
 		 * here for serialization purpose only!
 		 */
 		public function get dependencies():Vector.<Dependency> { return _dependencies; }
-		
-		/**
-		 * Gets if the item is the first one of a loop
-		 */
-		public function get firstOfLoop():Boolean { return _firstOfLoop; }
-
-		/**
-		 * @private
-		 * here for serialization purpose only!
-		 */
-		public function set firstOfLoop(firstOfLoop:Boolean):void { _firstOfLoop = firstOfLoop; }
 
 		/**
 		 * @private
@@ -281,6 +270,16 @@ package com.twinoid.kube.quest.editor.vo {
 		public function getLabel():String { return _actionType == null? "" : _actionType.text.substr(0, 60).replace(/\r|\n/gi, " "); }
 		
 		/**
+		 * Gets if the item is the first one of a loop
+		 */
+		public function isFirstOfLoop():Boolean { return _firstOfLoop; }
+
+		/**
+		 * Sets if the item is the first one of a loop
+		 */
+		public function setFirstOfLoop(value:Boolean):void { _firstOfLoop = value; }
+		
+		/**
 		 * Checks if the current items loops to the one in paramters.
 		 * The test goes upward.
 		 * It takes all the dependencies recursively. So, the "from" parameter
@@ -355,13 +354,18 @@ package com.twinoid.kube.quest.editor.vo {
 		 * 
 		 * @return	if a looped dependency has been found (true) or not (false).
 		 */
-		private function deepDependencyCheck(entry:KuestEvent):Vector.<KuestEvent> {
+		private function deepDependencyCheck(entry:KuestEvent, done:Dictionary = null):Vector.<KuestEvent> {
 			var i:int, len:int;
 			var tree:Vector.<KuestEvent> = new Vector.<KuestEvent>();
 			tree.push(entry);
+			if(done == null) done = new Dictionary();
 			len = entry.getDependencies().length;
 			//Go through all parents
 			for(i = 0; i < len; ++i) {
+				//Prevent from infinite loop.
+				if(done[ entry.getDependencies()[i].event ] === true) continue;
+				done[ entry.getDependencies()[i].event ] = true;
+				
 				//If the dependency entry is the current one, stop everything
 				//we found what we were searching for.
 				if(entry.getDependencies()[i].event == this) {
@@ -371,7 +375,7 @@ package com.twinoid.kube.quest.editor.vo {
 				
 				try {
 					//The entry doesn't match, check if its parents do.
-					var res:Vector.<KuestEvent> = deepDependencyCheck(entry.getDependencies()[i].event);
+					var res:Vector.<KuestEvent> = deepDependencyCheck(entry.getDependencies()[i].event, done);
 					if(res != null) {
 						tree = tree.concat( res );
 						return tree;
@@ -399,13 +403,13 @@ package com.twinoid.kube.quest.editor.vo {
 				var tl:Point = path[0].boxPosition.clone();
 				var firstBox:KuestEvent = path[0];
 				for(i = 0; i < len; ++i) {
-					path[i].firstOfLoop = false;
+					path[i].setFirstOfLoop(false);
 					if(path[i].boxPosition.x < tl.x || (path[i].boxPosition.x == tl.x && path[i].boxPosition.y < tl.y)) {
 						tl = path[i].boxPosition.clone();
 						firstBox = path[i];
 					}
 				}
-				firstBox.firstOfLoop = true;
+				firstBox.setFirstOfLoop(true);
 				firstBox.submit();
 			}
 		}

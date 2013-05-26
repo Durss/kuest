@@ -64,6 +64,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * Called when upload completes
 		 */
 		override protected function loadCompleteHandler(event:Event = null):void {
+			trace('_loader.data: ' + (_loader.data));
 			try {
 				var xml:XML = new XML(_loader.data);
 			}catch(error:Error) {
@@ -74,7 +75,8 @@ package com.twinoid.kube.quest.editor.cmd {
 			if(!parseBoolean(xml.child("result")[0].@success)) {
 				throw new KuestException(Label.getLabel("exception-" + xml.child("error")[0].@id), "DELETE_ERROR");
 			}else{
-				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE));
+				var selfDelete:Boolean = xml.child("selfDelete") != undefined;
+				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, selfDelete));
 			}
 		}
 		

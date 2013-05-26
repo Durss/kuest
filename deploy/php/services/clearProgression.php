@@ -19,9 +19,11 @@
 	
 	$additionnals = "";
 	if (isset($_POST["id"])) {
-		//Get the save
-		$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid)";
-		$params = array(':guid' => $_POST["id"]);
+		$dataFile = $_POST["id"]."_".$_SESSION['uid'];
+		
+		//Delete DB entry
+		$sql = "DELETE FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
+		$params = array(':guid' => $_POST["id"], ':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -29,19 +31,11 @@
 			Out::printOut(false, '', $error, 'SQL_ERROR');
 			die;
 		}
-		$tot = $req->rowCount();
-		if ($tot == 0) {
-			Out::printOut(false, '', 'Save not found. ', 'SAVE_KUEST_NOT_FOUND', false);
-			die;
-		}else {
-			$res = $req->fetch();
-			$url = "../../saves/".$res['dataFile'].".sav";
-			DBConnection::close();
-			//If don't send the content-length header, flash cannot get the bytesLoaded and bytesTotal during loading
-			header('Content-type: application/octet-stream');
-			header("Content-length: ".filesize($url));
-			echo file_get_contents($url);
-		}
+		
+		//Delete file
+		@unlink("../../saves/".$dataFile.".sav");
+		Out::printOut(true, "");
+		
 	}else{
 		Out::printOut(false, '', 'POST data missing', 'INCOMPLETE_FORM');
 	}
