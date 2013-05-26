@@ -114,7 +114,7 @@ package com.twinoid.kube.quest.editor.views {
 			_window.updateSizes();
 			
 			PosUtils.centerInStage(_window);
-			if(event == null) resizeFlashTo(_window.height + 50);
+			if(event == null && !_closed) resizeFlashTo(_window.height + 50);
 		}
 		
 		/**

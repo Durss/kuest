@@ -60,6 +60,8 @@ package com.twinoid.kube.quest.editor.vo {
 
 		/**
 		 * Gets the action's type (dialogue or object).
+		 * 
+		 * @see com.twinoid.kube.quest.editor.vo.ActionType
 		 */
 		public function get type():String { return _type; }
 

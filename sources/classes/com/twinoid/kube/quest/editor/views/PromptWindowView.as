@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.views {
+	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.nurun.components.text.CssTextField;
@@ -16,13 +18,13 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
 	import com.twinoid.kube.quest.editor.vo.PromptData;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.net.SharedObject;
 	import flash.ui.Keyboard;
-	import gs.TweenLite;
 
 
 
@@ -43,6 +45,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _closed:Boolean;
 		private var _ignore:CheckBoxKube;
 		private var _so:SharedObject;
+		private var _resizeFlash:Boolean;
 		
 		
 		
@@ -53,7 +56,8 @@ package com.twinoid.kube.quest.editor.views {
 		/**
 		 * Creates an instance of <code>PromptWindowView</code>.
 		 */
-		public function PromptWindowView() {
+		public function PromptWindowView(resizeFlash:Boolean = false) {
+			_resizeFlash = resizeFlash;
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
 		}
 
@@ -66,6 +70,16 @@ package com.twinoid.kube.quest.editor.views {
 		 * @inheritDoc
 		 */
 		public function get isClosed():Boolean { return _closed; }
+		
+		/**
+		 * Gets the component's height
+		 */
+		override public function get height():Number {
+			if(_so == null) {
+				return _closed? 0 : _window.height;
+			}
+			return super.height;
+		}
 
 
 
@@ -86,6 +100,9 @@ package com.twinoid.kube.quest.editor.views {
 			_data = null;
 			_closed = true;
 			TweenLite.to(this, .25, {autoAlpha:0});
+			if(_so == null) {
+				dispatchEvent(new Event(Event.RESIZE, true));
+			}
 		}
 
 
@@ -102,6 +119,7 @@ package com.twinoid.kube.quest.editor.views {
 			
 			alpha	= 0;
 			visible	= false;
+			_closed = true;
 			_holder	= new Sprite();
 			_label	= _holder.addChild(new CssTextField("window-content")) as CssTextField;
 			_yes	= _holder.addChild(new ButtonKube(Label.getLabel("prompt-window-submit"), new SubmitIcon())) as ButtonKube;
@@ -117,12 +135,13 @@ package com.twinoid.kube.quest.editor.views {
 			ViewLocator.getInstance().addEventListener(ViewEvent.PROMPT, promptHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			stage.addEventListener(Event.RESIZE, computePositions);
 		}
 		
 		/**
 		 * Resizes and replaces the elements.
 		 */
-		private function computePositions():void {
+		private function computePositions(event:Event = null):void {
 			var w:int = 350;
 			_label.width = w;
 			_yes.x = w * .4 - _yes.width;
@@ -140,6 +159,9 @@ package com.twinoid.kube.quest.editor.views {
 			_disable.graphics.endFill();
 			
 			PosUtils.centerInStage(_window);
+			if(event == null && _resizeFlash) {
+				dispatchEvent(new Event(Event.RESIZE, true));
+			}
 		}
 		
 		/**
@@ -153,11 +175,17 @@ package com.twinoid.kube.quest.editor.views {
 			
 			_data = event.data as  PromptData;
 			
-			//If user asked to ignore si kind of action and automatically submit it
-			//submit it without asking anything.
-			if(_so.data["ignoredPromptActions"] != null && _so.data["ignoredPromptActions"][_data.actionID] === true) {
-				submit();
-				return;
+			//Shared object is null if we are in the player's context which has
+			//no model.
+			if(_so == null) {
+				if(_holder.contains(_ignore)) _holder.removeChild(_ignore);
+			}else{
+				//If user asked to ignore si kind of action and automatically submit it
+				//submit it without asking anything.
+				if(_so.data["ignoredPromptActions"] != null && _so.data["ignoredPromptActions"][_data.actionID] === true) {
+					submit();
+					return;
+				}
 			}
 			
 			_closed = false;
@@ -191,7 +219,7 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		private function submit():void {
-			if(_ignore.selected) {
+			if(_so != null && _ignore.selected) {
 				if(_so.data["ignoredPromptActions"] == undefined) {
 					_so.data["ignoredPromptActions"] = {};
 					_so.flush();

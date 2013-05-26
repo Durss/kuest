@@ -27,7 +27,7 @@ package com.twinoid.kube.quest.editor.utils {
 		}
 		
 		function keyUpHandler(event:KeyboardEvent):void {
-			if(event.keyCode != Keyboard.ESCAPE) return;
+			if(event.keyCode != Keyboard.ESCAPE || DisplayObject(target).stage == null) return;
 			
 			var f:InteractiveObject = DisplayObjectContainer(target).stage == null? null : DisplayObjectContainer(target).stage.focus;
 			if(f == null) {

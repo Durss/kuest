@@ -14,6 +14,7 @@ package com.twinoid.kube.quest.player.events {
 		public static const ON_LOGIN_STATE:String = "longinState";
 		public static const NO_KUEST_SELECTED:String = "noKuest";
 		public static const NEW_EVENT:String = "newEvent";
+		public static const CLEAR_PROGRESSION_COMPLETE:String = "clearProgressComplete";
 		
 		
 		

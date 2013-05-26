@@ -61,6 +61,7 @@ package com.twinoid.kube.quest.player.views {
 		private function initialize():void {
 			visible = false;
 			
+			DataManager.getInstance().addEventListener(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE, loadCompleteHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_COMPLETE, loadCompleteHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, newEventHandler);
 			_tf = addChild(new CssTextField("kuest-description")) as CssTextField;

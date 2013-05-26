@@ -1,12 +1,13 @@
 package com.twinoid.kube.quest.player {
-	import com.twinoid.kube.quest.player.views.ActionSimulatorView;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 	import gs.plugins.RemoveChildPlugin;
+	import gs.plugins.ScrollRectPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
 	import gs.plugins.VisiblePlugin;
 
+	import com.muxxu.kub3dit.graphics.CheckGraphic;
 	import com.muxxu.kub3dit.graphics.KeyFocusGraphics;
 	import com.nurun.components.button.AbstractNurunButton;
 	import com.nurun.components.button.focus.NurunButtonKeyFocusManager;
@@ -24,16 +25,17 @@ package com.twinoid.kube.quest.player {
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
 	import com.twinoid.kube.quest.editor.components.window.BackWindow;
 	import com.twinoid.kube.quest.editor.views.ExceptionView;
+	import com.twinoid.kube.quest.editor.views.PromptWindowView;
 	import com.twinoid.kube.quest.editor.views.ToolTipView;
 	import com.twinoid.kube.quest.editor.vo.SplitterType;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
 	import com.twinoid.kube.quest.player.utils.resizeFlashTo;
+	import com.twinoid.kube.quest.player.views.ActionSimulatorView;
+	import com.twinoid.kube.quest.player.views.MenuView;
 	import com.twinoid.kube.quest.player.views.PlayerDefaultView;
 	import com.twinoid.kube.quest.player.views.PlayerEventView;
 	import com.twinoid.kube.quest.player.views.PlayerInventoryView;
-
-	import org.libspark.ui.SWFWheel;
 
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -42,9 +44,12 @@ package com.twinoid.kube.quest.player {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
+	import flash.filters.GlowFilter;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
+	import flash.utils.clearTimeout;
 	import flash.utils.setInterval;
+	import flash.utils.setTimeout;
 
 	/**
 	 * Bootstrap class of the application.
@@ -71,6 +76,11 @@ package com.twinoid.kube.quest.player {
 		private var _inventory:PlayerInventoryView;
 		private var _holder:Sprite;
 		private var _mask:Shape;
+		private var _prompt:PromptWindowView;
+		private var _check:CheckGraphic;
+		private var _exception:ExceptionView;
+		private var _menu:DisplayObject;
+		private var _timeOutResize:uint;
 		
 		
 		
@@ -109,18 +119,17 @@ package com.twinoid.kube.quest.player {
 		private function initialize(event:Event):void {
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			TweenPlugin.activate([TransformAroundCenterPlugin, RemoveChildPlugin, VisiblePlugin]);
+			TweenPlugin.activate([TransformAroundCenterPlugin, RemoveChildPlugin, VisiblePlugin, ScrollRectPlugin]);
 			var types:Array = [AbstractNurunButton, CssTextField, Input];
 			NurunButtonKeyFocusManager.getInstance().initialize(stage, new KeyFocusGraphics(), types);
 			addChild(NurunButtonKeyFocusManager.getInstance());
 			stage.stageFocusRect = false;
 			
-			SWFWheel.initialize(stage);
 			MouseWheelTrap.setup(stage);
 			
 			_spinning	= addChild(new LoaderSpinning()) as LoaderSpinning;
 			_spinning.open(Label.getLabel("loader-loading"));
-			_spinning.y	= _spinning.height * .5;
+			_spinning.y	= stage.stageHeight * .5;
 			_spinning.x	= stage.stageWidth * .5;
 			roundPos(_spinning);
 			resizeFlashTo(_spinning.height + 20);
@@ -162,10 +171,11 @@ package com.twinoid.kube.quest.player {
 				_background	= addChild(new BackWindow(false)) as BackWindow;
 				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
 				_holder		= addChild(new Sprite()) as Sprite;
+				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2)) as PlayerInventoryView;
 				_mask		= addChild(createRect(0xffff0000)) as Shape;
 				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
 				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
-				_inventory	= _holder.addChild(new PlayerInventoryView(stage.stageWidth - 20)) as PlayerInventoryView;
+				_exception	= addChild(new ExceptionView(true)) as ExceptionView;
 				
 				_mask.height = 0;
 				_holder.mask = _mask;
@@ -175,10 +185,34 @@ package com.twinoid.kube.quest.player {
 				
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_COMPLETE, loadQuestCompleteHandler);
 				DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_ERROR, loadQuestErrorHandler);
+				DataManager.getInstance().addEventListener(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE, clearProgressionCompleteHandler);
 				
 				stage.addEventListener(Event.RESIZE, computePositions);
 				computePositions();
 			}
+		}
+		
+		/**
+		 * Called when progression is cleared.
+		 */
+		private function clearProgressionCompleteHandler(event:DataManagerEvent):void {
+			if(_check == null) {
+				_check = addChild(new CheckGraphic()) as CheckGraphic;
+				_check.scaleX = _check.scaleY = 10;
+				_check.filters = [new GlowFilter(0xffffffff, 1, 10, 10, 2, 2)];
+				_check.addFrameScript(_check.totalFrames-1, onCheck);
+			}
+			_check.gotoAndStop(1);
+			setTimeout(_check.gotoAndPlay, 200, 1);
+			_check.alpha = 1;
+			_check.visible = true;
+			PosUtils.centerIn(_check);
+			computePositions();
+		}
+
+		private function onCheck():void {
+			_check.stop();
+			TweenLite.to(_check, .25, {autoAlpha:0, onComplete:computePositions});
 		}
 		
 		/**
@@ -192,6 +226,8 @@ package com.twinoid.kube.quest.player {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
+			if(event != null && event.target == stage) return;
+			
 			var margin:int = 10;
 			
 			graphics.clear();
@@ -206,30 +242,62 @@ package com.twinoid.kube.quest.player {
 			_holder.x = _mask.x = BackWindow.CELL_WIDTH + margin;
 			_holder.y = _mask.y = _splitter.y + _splitter.height + margin;
 			
-			_background.x		= 0;
-			_background.y		= 0;
-			_background.width	= stage.stageWidth;
+			_background.x			= 0;
+			_background.y			= 0;
+			_background.width		= stage.stageWidth;
 			var prevMaskHeight:int	= _mask.height;
 			var prevBackHeight:int	= _background.height;
-			if(event == null || event.target == stage) {
-				_mask.height		= 0;
-				_background.height	= Math.max(30, stage.stageHeight);
-			}else{
-				_mask.height		= DisplayObject(event.target).height;
-				_background.height	= Math.max(30, _mask.y + _mask.height + margin + BackWindow.CELL_WIDTH);
+			var items:Vector.<DisplayObject> = new <DisplayObject>[_default, _event, _prompt, _check];
+			var i:int, len:int, h:int;
+			len = items.length;
+			for(i = 0; i < len; ++i) { if(items[i] != null && items[i].visible) h = Math.max(items[i].height, h); }
+			
+			if(_menu != null) {
+				_menu.x = BackWindow.CELL_WIDTH + 2;
+				_menu.width = stage.stageWidth - (BackWindow.CELL_WIDTH - 1) * 2;
 			}
+			
+			_mask.height		= h;
+			if(_prompt!=null && !_prompt.isClosed) h = Math.max(h, _prompt.height);
+			if(_exception!=null && !_exception.isClosed) h = Math.max(h, _exception.height);
+			h					= Math.max(50, _mask.y + h + margin + _inventory.height + BackWindow.CELL_WIDTH);
+			_background.height	= h;
+
+			var prevMenuY:Number;
+			if (_menu != null) {
+				prevMenuY = _menu.y;
+				_menu.y = _background.height - BackWindow.CELL_WIDTH - 2 - _menu.height;
+			}
+
+			var prevInventoryY:Number = _inventory.y;
+			_inventory.x = BackWindow.CELL_WIDTH;
+			_inventory.y = _background.height - BackWindow.CELL_WIDTH - 2 - _inventory.height;
 			
 			_title.x		= 10;
 			_title.width	= _background.width - 20;
 			_mask.width		= _title.width;
 			
-			_spinning.y		= _spinning.height * .5 + 40;
 			_spinning.x		= stage.stageWidth * .5;
+			_spinning.y		= _background.height * .5;
 			roundPos(_spinning);
+			
 			if(event == null || event.target != stage) {
-				resizeFlashTo(_background.height);
+				clearTimeout(_timeOutResize);
+				if(h < prevBackHeight) {
+					_timeOutResize = setTimeout(resizeFlashTo, 100, h);
+				}else{
+					resizeFlashTo(h);
+				}
+				TweenLite.killTweensOf(_mask);
+				TweenLite.killTweensOf(_background);
+				TweenLite.killTweensOf(_inventory);
 				TweenLite.from(_mask, .35, {height:prevMaskHeight, ease:Sine.easeInOut});
 				TweenLite.from(_background, .35, {height:prevBackHeight, ease:Sine.easeInOut});
+				TweenLite.from(_inventory, .35, {y:prevInventoryY, ease:Sine.easeInOut});
+				if(_menu != null) {
+					TweenLite.killTweensOf(_menu);
+					TweenLite.from(_menu, .35, {y:prevMenuY, ease:Sine.easeInOut});
+				}
 			}
 		}
 		
@@ -246,13 +314,17 @@ package com.twinoid.kube.quest.player {
 		 */
 		private function loadQuestCompleteHandler(event:DataManagerEvent):void {
 			if (Config.getBooleanVariable("testMode")) addChild(new ActionSimulatorView());
-			addChild(new ExceptionView(true));
+			_prompt	= addChild(new PromptWindowView(true)) as PromptWindowView;
+			_menu	= addChild(new MenuView());
 			addChild(new ToolTipView());
+			addChild(_exception);
 			
 			_title.text = DataManager.getInstance().title;
+			_spinning.close(Label.getLabel("loader-loadingOK"));
 			setInterval(updateTime, 1000);
 			updateTime();
-			_spinning.close(Label.getLabel("loader-loadingOK"));
+			
+			computePositions();
 		}
 		
 		/**
