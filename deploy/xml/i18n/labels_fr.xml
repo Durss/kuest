@@ -2,16 +2,12 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog58-content"><![CDATA[<ul>
-			<li>Ajout de la gestion du son dans le lecteur de quête !</li>
-			<li>Ajout de la visualisation de notre inventaire</li>
-			<li>Ajout d'une option pour effacer notre progression dans une quête</li>
-			<li>Les objets ne sont plus posés automatiquement, il faut maintenant les utiliser via l'inventaire</li>
-			<li>Debug pour éviter un crash en cas de références bouclées croisées</li>
-			<li>Debug de l'ajout de droits <i>(si plusieurs amis étaient sélectionnés, seul le 1er recevait les droits)</i></li>
-			<li>Debug du scroll via roulette souri sur les contenus draggables</li>
-			<li>Debug de compression multiple des images. A chaque sauvegarde leur qualité été réduite</li>
-			<li>Change du comportement du menu de sauvegarde. Fini les roll-over à la noix !</li>
+		<label code="patchlog60-content"><![CDATA[<ul>
+			<li><b>La logique des quêtes devrait maintenant être bonne lors de la lecture \o/.</b> Les événements ne devraient donc plus se jouer dans un ordre plus ou moins apocalyptique. Testez moi ça à fond le citron !</li>
+			<li>Correction de l'édition d'une sauvegarde qui créait une nouvelle quête</li>
+			<li>Debug de la sélection de personnages/objets que j'avais tout pété :3</li>
+			<li></li>
+			<li></li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>

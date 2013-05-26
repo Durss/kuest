@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.vo {
+	import flash.geom.Point;
 	import com.nurun.core.lang.Disposable;
 	
 	/**
@@ -12,7 +13,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _x:int;
 		private var _y:int;
 		private var _z:int;
-		private var _zoneMode:Boolean;
+		private var _kubeMode:Boolean;
 
 		
 		
@@ -24,7 +25,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Creates an instance of <code>ActionPlace</code>.
 		 */
 		public function ActionPlace() {
-			_zoneMode = false;
+			_kubeMode = false;
 		}
 
 		
@@ -48,12 +49,12 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Gets if the coordinates represent a zone (true) or a kube (false)
 		 */
-		public function get kubeMode():Boolean { return _zoneMode; }
+		public function get kubeMode():Boolean { return _kubeMode; }
 
 		/**
 		 * Sets if the coordinates represent a zone (true) or a kube (false)
 		 */
-		public function set kubeMode(value:Boolean):void { _zoneMode = value; }
+		public function set kubeMode(value:Boolean):void { _kubeMode = value; }
 
 
 
@@ -76,6 +77,13 @@ package com.twinoid.kube.quest.editor.vo {
 			a.y = y;
 			a.z = z;
 			return a;
+		}
+
+		/**
+		 * Gets the value object as Point or Point3D instance
+		 */
+		public function getAsPoint():* {
+			return !_kubeMode? new Point(x, y) : new Point3D(x, y, z);
 		}
 
 		/**

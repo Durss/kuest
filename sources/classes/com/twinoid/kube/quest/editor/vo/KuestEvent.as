@@ -33,6 +33,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _firstOfLoop:Boolean;
 		private var _guid:int;
 		private var _children:Vector.<KuestEvent>;
+		private var _treeID:int;
 		
 		
 		
@@ -171,7 +172,7 @@ package com.twinoid.kube.quest.editor.vo {
 			for(i = 0; i < len; ++i) {
 				_dependencies[i].event.registerChild(this);
 			}
-			refreshFirstLoopState();
+//			refreshFirstLoopState();
 		}
 
 		/**
@@ -272,12 +273,12 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Gets if the item is the first one of a loop
 		 */
-		public function isFirstOfLoop():Boolean { return _firstOfLoop; }
+//		public function isFirstOfLoop():Boolean { return _firstOfLoop; }
 
 		/**
 		 * Sets if the item is the first one of a loop
 		 */
-		public function setFirstOfLoop(value:Boolean):void { _firstOfLoop = value; }
+//		public function setFirstOfLoop(value:Boolean):void { _firstOfLoop = value; }
 		
 		/**
 		 * Checks if the current items loops to the one in paramters.
@@ -288,6 +289,20 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		public function loopsFrom(from:KuestEvent):Vector.<KuestEvent> {
 			return deepDependencyCheck(from);
+		}
+		
+		/**
+		 * Sets the tree's ID
+		 */
+		public function setTreeID(id:int):void {
+			_treeID = id;
+		}
+		
+		/**
+		 * Gets the tree's ID
+		 */
+		public function getTreeID():int {
+			return _treeID;
 		}
 		
 		/**
@@ -394,25 +409,29 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Refreshes the firstLoop state of the tree from this node.
 		 */
-		public function refreshFirstLoopState():void {
-			var i:int, len:int;
-			var path:Vector.<KuestEvent> = new Vector.<KuestEvent>();
-			var done:Dictionary = new Dictionary();
-			if(searchForLoopFromEvent(this, path, done)) {
-				len = path.length;
-				var tl:Point = path[0].boxPosition.clone();
-				var firstBox:KuestEvent = path[0];
-				for(i = 0; i < len; ++i) {
-					path[i].setFirstOfLoop(false);
-					if(path[i].boxPosition.x < tl.x || (path[i].boxPosition.x == tl.x && path[i].boxPosition.y < tl.y)) {
-						tl = path[i].boxPosition.clone();
-						firstBox = path[i];
-					}
-				}
-				firstBox.setFirstOfLoop(true);
-				firstBox.submit();
-			}
-		}
+//		public function refreshFirstLoopState():void {
+//			var i:int, len:int;
+//			var path:Vector.<KuestEvent> = new Vector.<KuestEvent>();
+//			var done:Dictionary = new Dictionary();
+//			if(searchForLoopFromEvent(this, path, done)) {
+//				len = path.length;
+//				var firstBox:KuestEvent = path[0];
+//				var tl:Point = firstBox.boxPosition.clone();
+//				for(i = 0; i < len; ++i) {
+//					trace("\n"+path[i].guid)
+//					path[i].setFirstOfLoop(false);
+//					if(path[i].boxPosition.x < tl.x || (path[i].boxPosition.x == tl.x && path[i].boxPosition.y < tl.y)) {
+//						trace(path[i].boxPosition.x , tl.x)
+//						trace(path[i].guid ,firstBox.guid)
+//						tl = path[i].boxPosition.clone();
+//						firstBox = path[i];
+//						trace("is first "+path[i].guid)
+//					}
+//				}
+//				firstBox.setFirstOfLoop(true);
+//				firstBox.submit();
+//			}
+//		}
 		
 		/**
 		 * Searches for a looped reference
