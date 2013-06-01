@@ -30,7 +30,6 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _actionChoices:ActionChoices;
 		private var _actionSound:ActionSound;
 		private var _endsQuest:Boolean;
-		private var _firstOfLoop:Boolean;
 		private var _guid:int;
 		private var _children:Vector.<KuestEvent>;
 		private var _treeID:int;
@@ -436,23 +435,23 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Searches for a looped reference
 		 */
-		private function searchForLoopFromEvent(target:KuestEvent, path:Vector.<KuestEvent>, done:Dictionary):Boolean {
-			var i:int, len:int;
-			len = target.dependencies.length;
-			if(done[target]) return false;
-			done[target] = true;
-			for(i = 0; i < len; ++i) {
-				if(target.dependencies[i].event == this) {
-					path.push(target.dependencies[i].event);
-					return true;
-				}
-				if(searchForLoopFromEvent(target.dependencies[i].event, path, done)) {
-					path.push(target.dependencies[i].event);
-					return true;
-				}
-			}
-			return false;
-		}
+//		private function searchForLoopFromEvent(target:KuestEvent, path:Vector.<KuestEvent>, done:Dictionary):Boolean {
+//			var i:int, len:int;
+//			len = target.dependencies.length;
+//			if(done[target]) return false;
+//			done[target] = true;
+//			for(i = 0; i < len; ++i) {
+//				if(target.dependencies[i].event == this) {
+//					path.push(target.dependencies[i].event);
+//					return true;
+//				}
+//				if(searchForLoopFromEvent(target.dependencies[i].event, path, done)) {
+//					path.push(target.dependencies[i].event);
+//					return true;
+//				}
+//			}
+//			return false;
+//		}
 		
 		/**
 		 * Called when the source data of the event type is cleared.

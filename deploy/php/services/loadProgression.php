@@ -20,8 +20,8 @@
 	$additionnals = "";
 	if (isset($_POST["id"])) {
 		//Get the save
-		$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid)";
-		$params = array(':guid' => $_POST["id"]);
+		$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
+		$params = array(':guid' => $_POST["id"], ':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
