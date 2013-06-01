@@ -253,8 +253,10 @@ package com.twinoid.kube.quest.player.model {
 				//XXX repère local conf
 				//structure tester - 51a272f115f96
 				//MlleNolwenn - 51a1e15e398b4
-				//TFFS bordel - 519e7fe42ff5a
-				Config.addVariable("kuestID", "519e7fe42ff5a");
+				//TFS bordel - 519e7fe42ff5a
+				//Test Lilith - 51a207ff98070
+				//Cristal Atlante - 5194100a4a94f
+				Config.addVariable("kuestID", "5194100a4a94f");
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
@@ -792,6 +794,7 @@ package com.twinoid.kube.quest.player.model {
 				var guid:int = _save["priorities"][id][0];
 				for(i = 0; i < len; ++i) {
 					treeID = _nodeToTreeID[ items[i] ];
+					//FIXME is that loop really necessary.? Oo
 					if(items[i].guid == guid
 					&& (_save["treePriority"][treeID] == undefined || _save["treePriority"][treeID] == items[i].guid)
 					&& isEventAccessible(items[i], false)) {
@@ -808,7 +811,9 @@ package com.twinoid.kube.quest.player.model {
 			for(i = offset; i < offset + len; ++i) {
 				item = items[i%len];
 				//Item complete, skip it
-				if(_save[item.guid].complete) continue;
+				if(_save[item.guid].complete === true) {
+					continue;
+				}
 				
 				if(isEventAccessible(item)) {
 					selectedEvent = item;
@@ -933,7 +938,7 @@ package com.twinoid.kube.quest.player.model {
 			//has been complete or not.
 			lenJ = item.dependencies.length;
 			for(j = 0; j < lenJ; ++j) {
-				if(_save[item.dependencies[j].event.guid].complete == true) {
+				if(_save[item.dependencies[j].event.guid].complete === true) {
 					if(item.dependencies[j].event.actionChoices.choices.length > 0) {
 						if(_save[item.dependencies[j].event.guid] != undefined && item.dependencies[j].choiceIndex == _save[item.dependencies[j].event.guid].answerIndex) {
 							return true;
@@ -970,7 +975,6 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function flagAsComplete(event:KuestEvent):void {
 			if(_save[event.guid].complete === true) return;//Uncool test... flagsAsComplete is called twice on some/every events.
-			
 			//Looped references management
 			_save[event.guid].complete = true;
 			var i:int, len:int, children:Vector.<KuestEvent>;

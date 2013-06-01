@@ -147,6 +147,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				_nameInput.text = info.title;
 				_descriptionInput.text = info.description;
 				if(!_closed) open(true);
+			}else{
+				_nameInput.text = _descriptionInput.text = "";
 			}
 			
 			if (friends != null && _friendsCB.list.scrollableList.length == 0) {
@@ -161,6 +163,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			if(_friends != null && info != null) {
 				_friendsCB.selectedDatas = info.users;
 			}
+			changeHandler();
 		}
 
 
@@ -273,7 +276,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Called when an input's value changes
 		 */
-		private function changeHandler(event:Event):void {
+		private function changeHandler(event:Event = null):void {
 			_submit.enabled = StringUtils.trim(title).length > 0 && StringUtils.trim(description).length > 0;
 		}
 		

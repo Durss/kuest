@@ -292,6 +292,7 @@ package com.twinoid.kube.quest.player {
 				TweenLite.killTweensOf(_mask);
 				TweenLite.killTweensOf(_background);
 				TweenLite.killTweensOf(_inventory);
+				TweenLite.killTweensOf(_menu);
 				TweenLite.from(_mask, .35, {height:prevMaskHeight, ease:Sine.easeInOut});
 				TweenLite.from(_background, .35, {height:prevBackHeight, ease:Sine.easeInOut});
 				TweenLite.from(_inventory, .35, {y:prevInventoryY, ease:Sine.easeInOut});

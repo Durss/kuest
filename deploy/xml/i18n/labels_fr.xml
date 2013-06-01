@@ -2,12 +2,9 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog60-content"><![CDATA[<ul>
-			<li><b>La logique des quêtes devrait maintenant être bonne lors de la lecture \o/.</b> Les événements ne devraient donc plus se jouer dans un ordre plus ou moins apocalyptique. Testez moi ça à fond le citron !</li>
-			<li>Correction de l'édition d'une sauvegarde qui créait une nouvelle quête</li>
-			<li>Debug de la sélection de personnages/objets que j'avais tout pété :3</li>
-			<li></li>
-			<li></li>
+		<label code="patchlog61-content"><![CDATA[<ul>
+			<li>Debug de la gestion des sauvegardes de progression. Tous ceux qui jouaient à une quête se retrouvaient avec la sauvegarde de la 1ère personne ayant joué à cette quête. Ahem :3...</li>
+			<li>Correction du formulaire de sauvegarde. Le bouton de soumission restait désactivé après le chargement d'une quête</li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
