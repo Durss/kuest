@@ -1,11 +1,15 @@
 package com.twinoid.kube.quest.editor.vo {
 	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.editor.utils.restoreDependencies;
+	import com.twinoid.kube.quest.player.utils.computeTreeGUIDs;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 
 	
 	/**
@@ -31,6 +35,10 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _characters:Vector.<CharItemData>;
 		private var _objects:Vector.<ObjectItemData>;
 		private var _guid:int;
+		private var _lastTreeComputationKey : Number;
+		private var _tree:Dictionary;
+		private var _lastUpdatedEvent : KuestEvent;
+		private var _playerMode:Boolean;
 		
 		
 		
@@ -41,7 +49,8 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Creates an instance of <code>KuestData</code>.
 		 */
-		public function KuestData() {
+		public function KuestData(playerMode:Boolean) {
+			_playerMode = playerMode;
 			initialize();
 			_guid = 1;
 		}
@@ -97,6 +106,7 @@ package com.twinoid.kube.quest.editor.vo {
 			e.boxPosition.y = py;
 			_nodes.push(e);
 			_lastItemAdded = e;
+			if(!_playerMode) e.addEventListener(Event.CHANGE, changeEventHandler);
 		}
 		
 		/**
@@ -108,6 +118,14 @@ package com.twinoid.kube.quest.editor.vo {
 			_objects = data.readObject();
 			_nodes = data.readObject();
 			restoreDependencies(_nodes, _characters, _objects);
+			
+			if(_playerMode)  return;
+			
+			var i:int, len:int;
+			len = _nodes.length;
+			for(i = 0; i < len; ++i) {
+				_nodes[i].addEventListener(Event.CHANGE, changeEventHandler);
+			}
 		}
 		
 		/**
@@ -123,6 +141,7 @@ package com.twinoid.kube.quest.editor.vo {
 					len --;
 				}
 			}
+			data.removeEventListener(Event.CHANGE, changeEventHandler);
 			data.dispose();
 		}
 		
@@ -245,6 +264,43 @@ package com.twinoid.kube.quest.editor.vo {
 				obj.image.fromBitmapData(bmd);
 				obj.name = names[i];
 				_objects.push(obj);
+			}
+		}
+
+		/**
+		 * Called when an event is updated.
+		 * Removes the start tree's state from other events if that event is
+		 * defined as start point
+		 */
+		private function changeEventHandler(event:Event):void {
+			var e:KuestEvent = event.target as KuestEvent;
+			if (e.startsTree) {
+				_lastUpdatedEvent = e;
+				_lastTreeComputationKey = new Date().getTime();
+				_tree = new Dictionary();
+				computeTreeGUIDs(nodes, _tree, completeTreeCallback, true, [_lastTreeComputationKey]);
+			}
+		}
+		
+		/**
+		 * Called when dependency trees are computed
+		 */
+		private function completeTreeCallback(key:Number):void {
+			if (key != _lastTreeComputationKey) return;
+			
+			var id:int, k:KuestEvent;
+			for(var j:* in _tree) {
+				k = j as KuestEvent;
+				id = _tree[k];
+				k.setTreeID(id);
+			}
+			var i:int, len:int;
+			len = _nodes.length;
+			for(i = 0; i < len; ++i) {
+				if(_nodes[i].startsTree && _nodes[i] != _lastUpdatedEvent && _nodes[i].getTreeID() == _lastUpdatedEvent.getTreeID()) {
+					_nodes[i].startsTree = false;
+					_nodes[i].submit();
+				}
 			}
 		}
 		

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import com.twinoid.kube.quest.editor.utils.prompt;
 	import gs.TweenLite;
 
 	import com.nurun.core.lang.Disposable;
@@ -248,7 +249,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when link is clicked to cut it
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			deleteLink();
+			prompt("editor-linkDelPromptTitle", "editor-linkDelPromptContent", deleteLink, "deleteLink");
 		}
 		
 		/**

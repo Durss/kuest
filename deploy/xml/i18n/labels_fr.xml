@@ -1,10 +1,16 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog61-content"><![CDATA[<ul>
-			<li>Debug de la gestion des sauvegardes de progression. Tous ceux qui jouaient à une quête se retrouvaient avec la sauvegarde de la 1ère personne ayant joué à cette quête. Ahem :3...</li>
-			<li>Correction du formulaire de sauvegarde. Le bouton de soumission restait désactivé après le chargement d'une quête</li>
+		<label code="patchlog62-content"><![CDATA[<ul>
+			<li>Ajout d'un formulaire pour noter une quête lorsqu'on la termine.</li>
+			<li>Ajout d'une option pour définir qu'un événement est le point d'entrée d'une structure de dépendences.</li>
+			<li>Visualisation des structures de dépendences au survol d'un événement <i>(la structure "s'allume")</i>.</li>
+			<li>Ajout de l'affichage des coordonnées de l'événement à son survol.</li>
+			<li>Affichage d'une indication si on essaie d'utiliser un mauvais objet ou qu'aucun objet n'est utilisable.</li>
+			<li>Ajout d'une confirmation sur la suppression des liens.</li>
+			<li>Amélioration //(encore)// de la logique des quêtes. Ca devrait bientôt être bon ce fichu bazar !</li>
+			<li>Léger debug de l'utilisation d'objet.</li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
@@ -16,7 +22,7 @@
 		<label code="exception-API_ERROR"><![CDATA[Muxxu est actuellement indisponible.<br />Essayez à nouveau d'effectuer cette action dans quelques minutes.]]></label>
 		<label code="exception-INVALID_IDS"><![CDATA[Identifiants invalides.]]></label>
 		<label code="exception-NOT_LOGGED"><![CDATA[Vous devez être connecté pour effectuer cette action.]]></label>
-		<label code="exception-SQL_ERROR"><![CDATA[La requête SQL effectuée comportait des erreur.]]></label>
+		<label code="exception-SQL_ERROR"><![CDATA[La requête SQL effectuée comportait des erreurs.]]></label>
 		<label code="exception-EDITION_KUEST_NOT_FOUND"><![CDATA[La quête à éditer n'existe pas.]]></label>
 		<label code="exception-EDITION_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour éditer cette quête.]]></label>
 		<label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
@@ -32,6 +38,8 @@
 		<label code="exception-DELETE_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour supprimer cette quête.]]></label>
 		<label code="exception-DEEP_CHECK_OVERFLOW"><![CDATA[L'arborescence de votre quête est trop complexe pour construire cette liaison.]]></label>
 		<label code="exception-CANNOT_WRITE_SAVE"><![CDATA[L'écriture de votre progression sur le serveur a échoue...]]></label>
+		<label code="exception-KUEST_EVALUATION_INVALID_KEY"><![CDATA[La clé de vérification fournie est invalide.]]></label>
+		<label code="exception-KUEST_ALREADY_EVALUATED"><![CDATA[Vous avez déjà évalué cette quête.]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
@@ -115,10 +123,15 @@
 		<label code="menu-chars-delete-title"><![CDATA[Suppression]]></label>
 		<label code="menu-chars-delete-content"><![CDATA[La suppression de ce personnage est irréversible.<br />Si des évènements y sont associés, ils se retrouveront vides.]]></label>
 		
+		<label code="editor-linkDelPromptTitle"><![CDATA[Supprimer la liaison?]]></label>
+		<label code="editor-linkDelPromptContent"><![CDATA[Souhaitez-vous vraiment supprimer cette liaison ?<br /><span class="window-content-small"><i>Cette boite de dialogue a pour but d'éviter une suppression malencontreuse de lien.</i></span>]]></label>
+		
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
 		<label code="editWindow-submit"><![CDATA[Valider]]></label>
 		<label code="editWindow-cancel"><![CDATA[Annuler]]></label>
 		<label code="editWindow-endEvent"><![CDATA[Cet événement valide la complétion de la quête.]]></label>
+		<label code="editWindow-startTree"><![CDATA[Point de départ de la structure.]]></label>
+		<label code="editWindow-startTreeTT"><![CDATA[La structure correspond aux événements s'éclaircissant au survol d'un événement.<br />Par défaut le point d'entrée d'une structure sera son événement le plus en haut à gauche, sauf si un événement est explicitement défini comme point de départ via cette option.]]></label>
 		
 		<label code="editWindow-place-title"><![CDATA[Lieu de l'évènement]]></label>
 		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
@@ -194,6 +207,11 @@
 		<label code="player-restContent"><![CDATA[Êtes-vous sûr de vouloir effacer votre progression et recommencer la quête depuis le début ?<br /><b>Cette action est irréversible !</b>]]></label>
 		<label code="player-inventory"><![CDATA[Inventaire]]></label>
 		<label code="player-inventoryEmpty"><![CDATA[Vous n'avez trouvé aucun objet pour l'instant.]]></label>
+		<label code="player-evaluate"><![CDATA[Vous avez maintenant terminé la quête.<br />Comment l'avez-vous trouvée ?]]></label>
+		<label code="player-evaluateSubmit"><![CDATA[Valider]]></label>
+		<label code="player-evaluateComplete"><![CDATA[Merci !]]></label>
+		<label code="player-wrongObject"><![CDATA[Cet objet ne servira à rien ici.]]></label>
+		<label code="player-noNeedObject"><![CDATA[Aucun objet n'a besoin d'être utilisé ici pour le moment.]]></label>
 	</labels>
 	
 </root>

@@ -4,6 +4,7 @@ package com.twinoid.kube.quest.editor.views {
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
+	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -22,6 +23,7 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.model.Model;
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
+	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 
 	import flash.display.DisplayObject;
@@ -54,8 +56,10 @@ package com.twinoid.kube.quest.editor.views {
 		private var _data:KuestEvent;
 		private var _choices:EditEventChoices;
 		private var _disable:Sprite;
-		private var _endEvent:CheckBoxKube;
+		private var _endsQuest:CheckBoxKube;
 		private var _sound:EditEventSound;
+		private var _startTree:CheckBoxKube;
+		private var _group:FormComponentGroup;
 		
 		
 		
@@ -115,7 +119,8 @@ package com.twinoid.kube.quest.editor.views {
 					_times.load( _data );
 					_choices.load( _data );
 					_sound.load( _data );
-					_endEvent.selected = _data.endsQuest;
+					_endsQuest.selected = _data.endsQuest;
+					_startTree.selected = _data.startsTree;
 					
 					computePositions();
 					stage.focus = _window;
@@ -163,7 +168,8 @@ package com.twinoid.kube.quest.editor.views {
 			_choices= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
 			_times	= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
 			_sound	= _holder.addChild(new EditEventSound(_WIDTH)) as EditEventSound;
-			_endEvent= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-endEvent"))) as CheckBoxKube;
+			_startTree	= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-startTree"))) as CheckBoxKube;
+			_endsQuest	= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-endEvent"))) as CheckBoxKube;
 			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
 			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
@@ -174,7 +180,14 @@ package com.twinoid.kube.quest.editor.views {
 			_disable.alpha = 0;
 			_disable.visible = false;
 			_window.visible = false;
-//			_window.scaleX = _window.scaleY = 0;
+			
+			//Prevents from selecting both start and end boxes
+			_group = new FormComponentGroup();
+			_group.allowNoSelection = true;
+			_group.add(_startTree);
+			_group.add(_endsQuest);
+			
+			setToolTip(_startTree, Label.getLabel("editWindow-startTreeTT"));
 			
 			makeEscapeClosable(this);
 			computePositions();
@@ -257,7 +270,8 @@ package com.twinoid.kube.quest.editor.views {
 			_times.save( _data );
 			_choices.save( _data );
 			_sound.save( _data );
-			_data.endsQuest = _endEvent.selected;
+			_data.startsTree = _startTree.selected;
+			_data.endsQuest = _endsQuest.selected;
 			_data.submit();
 			close();
 		}

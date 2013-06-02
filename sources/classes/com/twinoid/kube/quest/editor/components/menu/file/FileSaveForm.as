@@ -154,8 +154,14 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			if (friends != null && _friendsCB.list.scrollableList.length == 0) {
 				_friends = friends;
 				len = _friends.length;
+				var amIIn:Boolean = false;
 				for(i = 0; i < len; ++i) {
+					if(!amIIn && _friends[i].uid == "89") amIIn = true;
 					_friendsCB.addSkinnedItem(_friends[i].uname+" <span class='friendItemId'>(ID:"+_friends[i].uid+")</span>", _friends[i].uid);
+				}
+				//Add myself for debug eventual technical support on quests
+				if(!amIIn) {
+					_friendsCB.addSkinnedItem("Durss <span class='friendItemId'>(ID:89)</span>", 89);
 				}
 			}
 			

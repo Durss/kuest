@@ -30,6 +30,7 @@
 		<path code="loadProgressionWS"><![CDATA[{v_root}/php/services/loadProgression.php]]></path>
 		<path code="saveProgressionWS"><![CDATA[{v_root}/php/services/saveProgression.php]]></path>
 		<path code="clearProgressionWS"><![CDATA[{v_root}/php/services/clearProgression.php]]></path>
+		<path code="evaluateWS"><![CDATA[{v_root}/php/services/evaluate.php]]></path>
 		<path code="ksaWS"><![CDATA[{v_root}/php/services/keepAlive.php]]></path>
 	</paths>
 	

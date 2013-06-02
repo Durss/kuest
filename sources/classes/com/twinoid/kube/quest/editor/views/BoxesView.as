@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
+	import flash.filters.ColorMatrixFilter;
 	import com.twinoid.kube.quest.player.utils.computeTreeGUIDs;
 	import gs.TweenLite;
 	import gs.easing.Back;
@@ -66,6 +67,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _linksHolder:Sprite;
 		private var _nodes:Vector.<KuestEvent>;
 		private var _tree:Dictionary;
+		private var _lastOverEvent:KuestEvent;
 		
 		
 		
@@ -394,7 +396,7 @@ package com.twinoid.kube.quest.editor.views {
 			if(event.keyCode == Keyboard.ESCAPE) {
 				if(event.shiftKey) {
 					_tree = new Dictionary();
-					computeTreeGUIDs(_nodes, _tree, oncomputeTreeComplete);
+					computeTreeGUIDs(_nodes, _tree, onComputeTreeComplete);
 				}else {
 					_boxesHolder.graphics.clear();
 				}
@@ -404,7 +406,7 @@ package com.twinoid.kube.quest.editor.views {
 		/**
 		 * Called when tree GUIDs computation completes
 		 */
-		private function oncomputeTreeComplete():void {
+		private function onComputeTreeComplete():void {
 			var idToMinX:Array = [];
 			var idToMaxX:Array = [];
 			var idToMinY:Array = [];
@@ -565,6 +567,16 @@ package com.twinoid.kube.quest.editor.views {
 				if(contains(_scisors)) removeChild(_scisors);
 				_scisors.stopDrag();
 				addChild(_boxesHolder);
+			}else
+			
+			if(DisplayObject(event.target).parent is Box) {
+				_lastOverEvent = null;
+				var i:int, len:int, b:Box;
+				len = _boxesHolder.numChildren;
+				for(i = 0; i < len; ++i) {
+					b = _boxesHolder.getChildAt(i) as Box;
+					b.filters = [];
+				}
 			}
 		}
 
@@ -575,13 +587,39 @@ package com.twinoid.kube.quest.editor.views {
 		private function overHandler(event:MouseEvent):void {
 			if(event.ctrlKey || _spacePressed) return;
 			
-			if(event.target is BoxLink && event.target != _tempLink) {
+			if (event.target is BoxLink && event.target != _tempLink) {
 				Mouse.hide();
 				_scisors.x = mouseX;
 				_scisors.y = mouseY;
 				_scisors.startDrag();
 				addChild(_linksHolder);
 				addChild(_scisors);
+			}else 
+			
+			if(DisplayObject(event.target).parent is Box) {
+				_lastOverEvent = (DisplayObject(event.target).parent as Box).data;
+				_tree = new Dictionary();
+				computeTreeGUIDs(_nodes, _tree, onComputeTreeOverComplete, true);
+			}
+		}
+		
+		/**
+		 * Called when trees are computed on roll over.
+		 */
+		private function onComputeTreeOverComplete():void {
+			if(_lastOverEvent == null) return;
+			var id:int, k:KuestEvent;
+			for(var j:* in _tree) {
+				k = j as KuestEvent;
+				id = _tree[k];
+				k.setTreeID(id);
+			}
+			var treeID:int = _lastOverEvent.getTreeID();
+			var i:int, len:int, b:Box;
+			len = _boxesHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				b = _boxesHolder.getChildAt(i) as Box;
+				b.filters = _tree[b.data] == treeID? [new ColorMatrixFilter([1,0,0,0,50, 0,1,0,0,50, 0,0,1,0,50, 0,0,0,1,0 ])] : [];
 			}
 		}
 		

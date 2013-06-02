@@ -47,6 +47,7 @@
 .window-title { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; text-align:center; flash-charcase:upper; }
 .window-content { font-family:Verdana; font-size:12; color:#ffffff; }
 .window-content-big { font-family:Verdana; font-size:12; color:#aa2222; font-weight:bold; }
+.window-content-small { font-family:Verdana; font-size:10; color:#C4E1EE; font-style:italic; }
 
 .calendarMonth { font-family:Verdana; font-weight:bold; font-size:12; color:#ffffff; text-align:center; flash-charcase:upper; }
 .calendarDay { font-family:Verdana; font-size:12; color:#ffffff; text-align:center; }
@@ -72,3 +73,4 @@
 .kuest-date { font-family:Verdana; font-weight:normal; font-size:12; color:#ffffff; text-align:right; }
 .kuest-objectCount { font-family:Verdana; font-size:12; color:#ffffff; text-align:right; }
 .kuest-inventoryEmpty { font-family:Verdana; font-size:18; font-weight:bold; color:#ffffff; text-align:right; }
+.kuest-evaluationTitle { font-family:Verdana; font-size:18; font-weight:bold; color:#ffffff; text-align:center; }

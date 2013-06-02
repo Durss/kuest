@@ -20,6 +20,7 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.twinoid.kube.quest.editor.utils.prompt;
 	import com.twinoid.kube.quest.editor.views.BackgroundView;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+	import com.twinoid.kube.quest.editor.vo.Point3D;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
 	import com.twinoid.kube.quest.graphics.BoxEventGraphic;
 	import com.twinoid.kube.quest.graphics.BoxInGraphic;
@@ -179,7 +180,16 @@ package com.twinoid.kube.quest.editor.components.box {
 					if(contains(_timeIcon)) removeChild(_timeIcon);
 				}
 				
-				_background.filters = _data.endsQuest? [new ColorMatrixFilter([-0.5002703666687012,1.5227876901626587,0.15748271346092224,0,-3.1700010299682617,0.47912952303886414,0.5433875918388367,0.1574828177690506,0,-3.1700010299682617,0.4791295826435089,1.52278733253479,-0.8219171166419983,0,-3.1700007915496826,0,0,0,1,0])] : [];
+				if(_data.endsQuest) {
+					_background.filters = [new ColorMatrixFilter([-0.5002703666687012,1.5227876901626587,0.15748271346092224,0,-3.1700010299682617,0.47912952303886414,0.5433875918388367,0.1574828177690506,0,-3.1700010299682617,0.4791295826435089,1.52278733253479,-0.8219171166419983,0,-3.1700007915496826,0,0,0,1,0])];
+				
+				}else
+				if(_data.startsTree) {
+					_background.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
+					
+				}else{
+					_background.filters = [];
+				}
 				
 				//============ LINKS MANAGEMNT ============
 				var i:int, len:int;
@@ -294,7 +304,8 @@ package com.twinoid.kube.quest.editor.components.box {
 			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 			_deleteBt.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 //			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphic);
+			_background.addEventListener(MouseEvent.ROLL_OVER, overBackGraphicHandler);
+			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphicHandler);
 			
 			render();
 		}
@@ -359,8 +370,16 @@ package com.twinoid.kube.quest.editor.components.box {
 		/**
 		 * Called when time icon is rolled over.
 		 */
-		private function overTimeIconGraphic(event:MouseEvent):void {
+		private function overTimeIconGraphicHandler(event:MouseEvent):void {
 			_timeIcon.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("box-timeIcon"), ToolTipAlign.TOP));
+		}
+
+		private function overBackGraphicHandler(event:MouseEvent):void {
+			var p:* = _data.actionPlace == null? new Point() : _data.actionPlace.getAsPoint();
+			var label:String;
+			if(p is Point) label = "["+Point(p).x+"]["+Point(p).y+"]";
+			if(p is Point3D) label = "["+Point3D(p).x+"]["+Point3D(p).y+"]["+Point3D(p).z+"]";
+			_background.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.BOTTOM, 10));
 		}
 		
 		/**

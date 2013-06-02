@@ -4,11 +4,15 @@ package com.twinoid.kube.quest.player.utils {
 	import flash.utils.Dictionary;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
+	
 	/**
+	 * Searches for trees and assigns tree IDs to every KuestEvent entry
+	 * 
 	 * @author Francois
 	 */
-	public function computeTreeGUIDs(nodes:Vector.<KuestEvent>, tree:Dictionary, completeCallback:Function):void {
+	public function computeTreeGUIDs(nodes:Vector.<KuestEvent>, tree:Dictionary, completeCallback:Function, lowConsumption:Boolean = false, completeParams:Array = null):void {
 		var len:int, pointer:int, _guid:int, nodeToPointer:Dictionary, nodeToCallback:Dictionary;
+		var durationMax:int = lowConsumption? 80 : 500;
 //		tree = new Dictionary();
 		nodeToPointer = new Dictionary();
 		nodeToCallback = new Dictionary();
@@ -25,7 +29,7 @@ package com.twinoid.kube.quest.player.utils {
 		nextEvent();
 		
 		function setChildrenTo(node:KuestEvent, guid:int, safeTimer:int, parents:Vector.<KuestEvent> = null, isDelayed:Boolean = false):Boolean {
-			if(getTimer() - safeTimer > 500 && !isDelayed) {
+			if(getTimer() - safeTimer > durationMax && !isDelayed) {
 //				trace("                delay "+node.guid, parents.length, getTimer())
 				setTimeout(setChildrenTo, 40, node, guid, getTimer() + 40, parents, true);
 				return false;
@@ -68,7 +72,7 @@ package com.twinoid.kube.quest.player.utils {
 		
 		function onComplete():void {
 //			trace("COMPLETE !")
-			completeCallback();
+			completeCallback.apply(this, completeParams);
 		}
 	}
 }

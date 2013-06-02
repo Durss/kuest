@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player {
+	import com.twinoid.kube.quest.player.views.EvaluateQuestView;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 	import gs.plugins.RemoveChildPlugin;
@@ -81,6 +82,7 @@ package com.twinoid.kube.quest.player {
 		private var _exception:ExceptionView;
 		private var _menu:DisplayObject;
 		private var _timeOutResize:uint;
+		private var _evaluation:EvaluateQuestView;
 		
 		
 		
@@ -169,12 +171,13 @@ package com.twinoid.kube.quest.player {
 				
 				_splitter	= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 				_background	= addChild(new BackWindow(false)) as BackWindow;
-				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
 				_holder		= addChild(new Sprite()) as Sprite;
-				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2)) as PlayerInventoryView;
+				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerInventoryView;
+				_evaluation	= addChild(new EvaluateQuestView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as EvaluateQuestView;
+				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
 				_mask		= addChild(createRect(0xffff0000)) as Shape;
-				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20)) as PlayerDefaultView;
-				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20)) as PlayerEventView;
+				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerDefaultView;
+				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerEventView;
 				_exception	= addChild(new ExceptionView(true)) as ExceptionView;
 				
 				_mask.height = 0;
@@ -207,7 +210,8 @@ package com.twinoid.kube.quest.player {
 			setTimeout(_check.gotoAndPlay, 200, 1);
 			_check.alpha = 1;
 			_check.visible = true;
-			PosUtils.centerIn(_check);
+			PosUtils.hCenterIn(_check, stage);
+			_check.y = _splitter.y + _splitter.height + 10;
 			computePositions();
 		}
 
@@ -240,8 +244,11 @@ package com.twinoid.kube.quest.player {
 			_splitter.x			= BackWindow.CELL_WIDTH;
 			_splitter.y			= 25;
 			
-			_holder.x = _mask.x = BackWindow.CELL_WIDTH + margin;
-			_holder.y = _mask.y = _splitter.y + _splitter.height + margin;
+			var prevHolderY:int	= _holder.y;
+			_holder.x			= _mask.x = BackWindow.CELL_WIDTH + margin;
+			_evaluation.x		= BackWindow.CELL_WIDTH + 1;
+			_evaluation.y		= _splitter.y + _splitter.height;
+			_holder.y = _mask.y = _evaluation.y + _evaluation.height + margin;
 			
 			_background.x			= 0;
 			_background.y			= 0;
@@ -264,15 +271,16 @@ package com.twinoid.kube.quest.player {
 			h					= Math.max(50, _mask.y + h + margin + _inventory.height + BackWindow.CELL_WIDTH);
 			_background.height	= h;
 
+			var prevInventoryY:Number = _inventory.y;
+			_inventory.x = BackWindow.CELL_WIDTH + 1;
+			_inventory.y = _background.height - BackWindow.CELL_WIDTH - 2 - _inventory.height;
+
 			var prevMenuY:Number;
 			if (_menu != null) {
 				prevMenuY = _menu.y;
-				_menu.y = _background.height - BackWindow.CELL_WIDTH - 2 - _menu.height;
+//				_menu.y = _background.height - BackWindow.CELL_WIDTH - 2 - _menu.height;
+				_menu.y = _inventory.y + _inventory.buttonHeight - _menu.height;
 			}
-
-			var prevInventoryY:Number = _inventory.y;
-			_inventory.x = BackWindow.CELL_WIDTH;
-			_inventory.y = _background.height - BackWindow.CELL_WIDTH - 2 - _inventory.height;
 			
 			_title.x		= 10;
 			_title.width	= _background.width - 20;
@@ -293,9 +301,12 @@ package com.twinoid.kube.quest.player {
 				TweenLite.killTweensOf(_background);
 				TweenLite.killTweensOf(_inventory);
 				TweenLite.killTweensOf(_menu);
-				TweenLite.from(_mask, .35, {height:prevMaskHeight, ease:Sine.easeInOut});
+				TweenLite.killTweensOf(_holder);
+				TweenLite.killTweensOf(_mask);
+				TweenLite.from(_mask, .35, {y:prevHolderY, height:prevMaskHeight, ease:Sine.easeInOut});
 				TweenLite.from(_background, .35, {height:prevBackHeight, ease:Sine.easeInOut});
 				TweenLite.from(_inventory, .35, {y:prevInventoryY, ease:Sine.easeInOut});
+				TweenLite.from(_holder, .35, {y:prevHolderY, ease:Sine.easeInOut});
 				if(_menu != null) {
 					TweenLite.killTweensOf(_menu);
 					TweenLite.from(_menu, .35, {y:prevMenuY, ease:Sine.easeInOut});

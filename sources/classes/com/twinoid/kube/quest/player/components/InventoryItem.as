@@ -69,13 +69,15 @@ package com.twinoid.kube.quest.player.components {
 		 */
 		public function populate(data:*, engineRef:TileEngine2D):void {
 			_engineRef = engineRef;
+			_maxX = (engineRef.itemWidth + engineRef.hMargin) * engineRef.numCols;
+			x = x;//Refresh visible state
+			if(!visible) return;
+			
 			if(_data != null) {
 				_data.vo.image.removeEventListener(Event.CHANGE, imageUpdateHandler);
 			}
 			
 			_data = data as InventoryObject;
-			_maxX = (engineRef.itemWidth + engineRef.hMargin) * engineRef.numCols;
-			x = x;//Refresh visible state
 			
 			if(_data == null) {
 				visible = false;
@@ -83,18 +85,20 @@ package com.twinoid.kube.quest.player.components {
 			}
 			//Images are loaded asynchronously at the quest init, wait for it just in case
 			_data.vo.image.addEventListener(Event.CHANGE, imageUpdateHandler);
-			imageUpdateHandler();
 			
 			_label.text		= "x"+_data.total;
 			_label.y		= 100 - _label.height;
 			_label.width	= 100;
-			
 			mouseEnabled	= _data.total > 0;
+			
 			if(_data.total == 0) {
-				filters = [new ColorMatrixFilter([ .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,.5,0 ])];
+				//Bug if the filter is set on the holder.. doesn't works without a second refresh :/
+				_image.filters = [new ColorMatrixFilter([ .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,.5,0 ])];
 			}else{
-				filters = [];
+				_image.filters = [];
 			}
+			
+			imageUpdateHandler();
 			
 //			graphics.clear();
 //			var margin:int = 5;
@@ -131,6 +135,7 @@ package com.twinoid.kube.quest.player.components {
 			_label = addChild(new CssTextField("kuest-objectCount")) as CssTextField;
 			_frame = addChild(new Shape()) as Shape;
 			
+			_image.defaultTweenEnabled = false;
 			_label.filters = [new DropShadowFilter(0,0,0,1,2,2,10,2)];
 			
 			var size:int = 5;

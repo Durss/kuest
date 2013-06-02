@@ -421,7 +421,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function initialize():void {
 			_so				= SharedObject.getLocal("kuest", "/");
-			_kuestData		= new KuestData();
+			_kuestData		= new KuestData(false);
 			_inGamePosition	= new Point(int.MAX_VALUE, int.MAX_VALUE);
 			_isConnected	= !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
 			
