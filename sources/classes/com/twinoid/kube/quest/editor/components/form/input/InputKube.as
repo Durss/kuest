@@ -143,7 +143,7 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Called when the user uses the mouse's wheel over the input
 		 */
 		private function mouseWheelHandler(event:MouseEvent):void {
-			var v:int = parseInt(text) + event.delta/Math.abs(event.delta);
+			var v:int = parseInt(text) - event.delta/Math.abs(event.delta);
 			v = MathUtils.restrict(v, _minNumValue, _maxNumValue);
 			text = v.toString();
 			dispatchEvent(new Event(Event.CHANGE));

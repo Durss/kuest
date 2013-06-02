@@ -95,6 +95,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _testMode : Boolean;
 		private var _isObjectPut:Boolean;
 		private var _nodeToTreeID:Dictionary;
+		private var _loadingAlreadyFired:Boolean;
 		
 		
 		
@@ -185,6 +186,16 @@ package com.twinoid.kube.quest.player.model {
 			return res;
 		}
 		
+		/**
+		 * Gets the user's pubkey
+		 */
+		public function get pubkey():String { return _pubkey; }
+		
+		/**
+		 * Gets the current quest's guid
+		 */
+		public function get currentQuestGUID():String { return _currentQuestGUID; }
+		
 		
 		
 		
@@ -248,7 +259,6 @@ package com.twinoid.kube.quest.player.model {
 			_receiverGame.client = client;
 			_receiverGame.allowDomain("*");
 			_receiverGame.connect(_lcGameName);
-			
 			if(Capabilities.playerType == "StandAlone") {
 				//XXX repère local conf
 				//structure tester - 51a272f115f96
@@ -256,7 +266,8 @@ package com.twinoid.kube.quest.player.model {
 				//TFS bordel - 519e7fe42ff5a
 				//Test Lilith - 51a207ff98070
 				//Cristal Atlante - 5194100a4a94f
-				Config.addVariable("kuestID", "5194100a4a94f");
+				//Tubasa labyrinthe - 51aa7b6cbe1ef
+				Config.addVariable("kuestID", "51a272f115f96");
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
@@ -338,11 +349,26 @@ package com.twinoid.kube.quest.player.model {
 			if(_currentEvent != null && _currentEvent.actionType != null
 			 && _currentEvent.actionType.type == ActionType.TYPE_OBJECT
 			 && !_currentEvent.actionType.takeMode) {
+				//If the object put is the good one
 				if(_currentEvent.actionType.getItem().guid == data.vo.guid) {
 					_isObjectPut = false;
+					flagAsComplete(_currentEvent);
 					dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
+				}else{
+					dispatchEvent(new DataManagerEvent(DataManagerEvent.WRONG_OBJECT));
 				}
+			}else{
+				dispatchEvent(new DataManagerEvent(DataManagerEvent.NO_NEED_FOR_OBJECT));
 			}
+		}
+		
+		/**
+		 * Flags the quest as evaluated
+		 */
+		public function questEvaluated():void {
+			_save["evaluated"] = true;
+			clearTimeout(_timeoutSave);
+			onSaveProgression();
 		}
 
 
@@ -571,12 +597,13 @@ package com.twinoid.kube.quest.player.model {
 			bytes.position = 0;
 			var fileVersion:int = bytes.readInt();
 			fileVersion;
-			_kuest = new KuestData();
+			_kuest = new KuestData(true);
 			_kuest.deserialize(bytes);
 			preAnalyseQuest();
 			
-			_nodeToTreeID = new Dictionary();
-			computeTreeGUIDs(_kuest.nodes, _nodeToTreeID, onTreeComputeComplete);
+			if(_save["questComplete"] === true && _save["evaluated"] !== true) {
+				dispatchEvent(new DataManagerEvent(DataManagerEvent.QUEST_COMPLETE));
+			}
 		}
 
 		/**
@@ -739,26 +766,30 @@ package com.twinoid.kube.quest.player.model {
 			if(_save["objects"] == undefined) _save["objects"] = {};
 			if(_save["priorities"] == undefined) _save["priorities"] = {};
 			if(_save["treePriority"] == undefined) _save["treePriority"] = {};
+			
+			_nodeToTreeID = new Dictionary();
+			computeTreeGUIDs(_kuest.nodes, _nodeToTreeID, onTreeComputeComplete);
 		}
 		
 		/**
 		 * Called when tree IDs are computed
 		 */
 		private function onTreeComputeComplete():void {
-//			var ids:Array = [];
-//			var done:Object = {};
-//			for each (var i : int in _nodeGUIDToTreeID) {
-//				if(done[i] == undefined) {
-//					done[i] = true;
-//					ids.push(i);
-//				}
-//			}
-//			trace(ids)
+			var id:int, k:KuestEvent;
+			for(var j:* in _nodeToTreeID) {
+				k = j as KuestEvent;
+				id = _nodeToTreeID[k];
+				k.setTreeID(id);
+				if(k.startsTree) addPriorityTo(k);
+			}
 			if(_lastPosData != null) selectEventFromPos(_lastPosData);
 			
-			_timer.start();
-			attemptToConnectToGame();
-			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_COMPLETE));
+			if(!_loadingAlreadyFired) {
+				_timer.start();
+				attemptToConnectToGame();
+				_loadingAlreadyFired = true;
+				dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_COMPLETE));
+			}
 		}
 
 		
@@ -789,35 +820,43 @@ package com.twinoid.kube.quest.player.model {
 			len = items.length;
 			
 			//Search for the active one.
-			//If an item has the priority, select it !
+			//If an item has the priority, check if it's accessible and if it
+			//corresponds to the tree's priority.
 			if (_save["priorities"][id] != undefined) {
 				var guid:int = _save["priorities"][id][0];
 				for(i = 0; i < len; ++i) {
 					treeID = _nodeToTreeID[ items[i] ];
-					//FIXME is that loop really necessary.? Oo
+					//Check if the current related tree has a priority, if so,
+					//check if the tree's priority is that item.
 					if(items[i].guid == guid
 					&& (_save["treePriority"][treeID] == undefined || _save["treePriority"][treeID] == items[i].guid)
 					&& isEventAccessible(items[i], false)) {
 						selectedEvent = items[i];
 					}
 				}
-				if(selectedEvent!= null) {
+				if(selectedEvent != null) {
 					len = 0;//Prevents from useless loop
 				}
 			}
+			
+			//No matching priority has been found.
 			// Go through all the events to find an active one
-			if(_save[id] == undefined) _save[id] = {index:0};
-			var offset:int = _save[id].index % len;
-			for(i = offset; i < offset + len; ++i) {
-				item = items[i%len];
-				//Item complete, skip it
-				if(_save[item.guid].complete === true) {
-					continue;
-				}
-				
-				if(isEventAccessible(item)) {
-					selectedEvent = item;
-					break;
+			if(_save["priorities"][id] == undefined) {
+				if(_save[id] == undefined) _save[id] = {index:0};
+				var offset:int = _save[id].index % len;
+				for(i = offset; i < offset + len; ++i) {
+					item = items[i%len];
+					//Item complete, skip it
+					if(_save[item.guid].complete === true) {
+						continue;
+					}
+					
+					if(isEventAccessible(item)) {
+						selectedEvent = item;
+						break;
+					}else{
+//						trace(item.guid + " not accessible")
+					}
 				}
 			}
 			
@@ -829,7 +868,14 @@ package com.twinoid.kube.quest.player.model {
 				_save[id].index = i%len;
 			}
 			
-			//If no item has been selected
+			//If no item has been selected give the priority
+			//FIXME si on arrive sur une zone qui n'est pas le début d'un arbre
+			//et qu'aucune priorité n'a été définie pour cet arbre, ça va sélectionner
+			//l'événement même s'il n'est pas censé être accessible à cause de
+			//ses dépendences.
+			//Faudrait pré-calculer les points d'entrée au chargement de la quête je pense
+			//et/ou juste virer ça et ajouter une case à cocher sur l'édition d'un
+			//évenement dans l'édituer pour dire que c'est un point d'entrée. 
 			if(selectedEvent == null && _save[id].index == 0 && len > 0) {
 				for(i = 0; i < len; ++i) {
 					if(_save["treePriority"][ _nodeToTreeID[ items[i] ] ] == undefined) {
@@ -1055,6 +1101,13 @@ package com.twinoid.kube.quest.player.model {
 				}
 			}
 			
+			if(event.endsQuest) {
+				_save["questComplete"] = true;
+				if(_save["evaluated"] !== true) {
+					dispatchEvent(new DataManagerEvent(DataManagerEvent.QUEST_COMPLETE));
+				}
+			}
+			
 			//Send to server
 			clearTimeout(_timeoutSave);
 			_timeoutSave = setTimeout(onSaveProgression, 3000);
@@ -1069,7 +1122,9 @@ package com.twinoid.kube.quest.player.model {
 				_save["priorities"][id] = [];
 			}
 			_save["treePriority"][ _nodeToTreeID[event] ] = event.guid;
-			(_save["priorities"][id] as Array).unshift( event.guid );
+			if((_save["priorities"][id] as Array).indexOf(event.guid) == -1) {
+				(_save["priorities"][id] as Array).unshift( event.guid );
+			}
 			_save[event.guid].complete = false;
 		}
 		

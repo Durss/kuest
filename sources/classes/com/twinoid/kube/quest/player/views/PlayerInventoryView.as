@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.views {
+	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 
@@ -41,7 +42,7 @@ package com.twinoid.kube.quest.player.views {
 		private var _swiper:SwipeManager;
 		private var _opened:Boolean;
 		private var _scrollpane:ScrollPane;
-		private var _emptyTf:CssTextField;
+		private var _labelTf:CssTextField;
 		
 		
 		
@@ -66,8 +67,13 @@ package com.twinoid.kube.quest.player.views {
 		 * Gets the height of the component.
 		 */
 		override public function get height():Number {
-			return _opened ? _scrollpane.y + _scrollpane.height + 25 : _inventoryBt.height;
+			return _opened ? _scrollpane.y + _scrollpane.height : _inventoryBt.height;
 		}
+		
+		/**
+		 * Gets the inventory button's height
+		 */
+		public function get buttonHeight():Number { return _inventoryBt.height; }
 		
 		public function get opened():Boolean { return _opened; }
 
@@ -102,9 +108,8 @@ package com.twinoid.kube.quest.player.views {
 			_scrollpane		= addChild(new ScrollPane(_engine, null, new ScrollbarKube())) as ScrollPane;
 			_inventoryBt	= addChild(new ButtonKube(Label.getLabel("player-inventory"), new MenuObjectIconGraphic())) as ButtonKube;
 			_swiper			= new SwipeManager(_engine, new Rectangle());
-			_emptyTf		= addChild(new CssTextField("kuest-inventoryEmpty")) as CssTextField;
+			_labelTf		= addChild(new CssTextField("kuest-inventoryEmpty")) as CssTextField;
 			
-			_emptyTf.text			= Label.getLabel("player-inventoryEmpty");
 			_inventoryBt.iconAlign	= IconAlign.LEFT;
 			_inventoryBt.textAlign	= TextAlign.LEFT;
 //			_engine.lockY			= true;
@@ -115,6 +120,7 @@ package com.twinoid.kube.quest.player.views {
 			_scrollpane.height		= h + 15;//15 = scrollbar's height;
 			_swiper.viewport.width	= w;
 			_swiper.viewport.height	= h;
+			_labelTf.filters		= [new DropShadowFilter(0,0,0,.4,5,5,1,2)];
 			_engine.addLine([]);
 			
 			computePositions();
@@ -126,6 +132,8 @@ package com.twinoid.kube.quest.player.views {
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, refreshInventoryHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_COMPLETE, refreshInventoryHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE, refreshInventoryHandler);
+			DataManager.getInstance().addEventListener(DataManagerEvent.WRONG_OBJECT, wrongObjectHandler);
+			DataManager.getInstance().addEventListener(DataManagerEvent.NO_NEED_FOR_OBJECT, noNeedObjectHandler);
 			_scrollpane.hScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);
 			_scrollpane.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler);
 		}
@@ -149,8 +157,8 @@ package com.twinoid.kube.quest.player.views {
 			_scrollpane.y		= _splitter.y + _splitter.height;
 			_swiper.start(false, false);
 			
-			_emptyTf.x = Math.round((_width - _emptyTf.width) * .5);
-			_emptyTf.y = Math.round((_scrollpane.height - _emptyTf.height) * .5) + _scrollpane.y - 15;
+			_labelTf.x = Math.round((_width - _labelTf.width) * .5);
+			_labelTf.y = Math.round((_scrollpane.height - _labelTf.height) * .5) + _scrollpane.y - 15;
 			
 			_scrollpane.update();
 			
@@ -181,7 +189,9 @@ package com.twinoid.kube.quest.player.views {
 				_engine.addLine(VectorUtils.toArray(objs));
 			}
 			_engine.validate();
-			_emptyTf.visible = objs.length == 0;
+			_labelTf.text		= Label.getLabel("player-inventoryEmpty");
+			_labelTf.x			= Math.round((_width - _labelTf.width) * .5);
+			_labelTf.visible	= objs.length == 0;
 		}
 		
 		/**
@@ -194,6 +204,28 @@ package com.twinoid.kube.quest.player.views {
 				var item:InventoryItem = InventoryItem(event.target);
 				DataManager.getInstance().useObject(item.data);
 			}
+		}
+		
+		/**
+		 * Called if the user put a wrong object
+		 */
+		private function wrongObjectHandler(event:DataManagerEvent):void {
+			_labelTf.text		= Label.getLabel("player-wrongObject");
+			_labelTf.x			= Math.round((_width - _labelTf.width) * .5);
+			_labelTf.alpha		= 0;
+			TweenLite.to(_labelTf, .25, {autoAlpha:1});
+			TweenLite.to(_labelTf, .25, {autoAlpha:0, delay:1});
+		}
+		/**
+		 * Called if the user put an object but no object was needed.
+		 */
+
+		private function noNeedObjectHandler(event:DataManagerEvent):void {
+			_labelTf.text		= Label.getLabel("player-noNeedObject");
+			_labelTf.x			= Math.round((_width - _labelTf.width) * .5);
+			_labelTf.alpha		= 0;
+			TweenLite.to(_labelTf, .25, {autoAlpha:1});
+			TweenLite.to(_labelTf, .25, {autoAlpha:0, delay:1});
 		}
 		
 	}

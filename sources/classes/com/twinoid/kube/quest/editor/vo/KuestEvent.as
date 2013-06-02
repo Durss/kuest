@@ -33,6 +33,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _guid:int;
 		private var _children:Vector.<KuestEvent>;
 		private var _treeID:int;
+		private var _startsTree:Boolean;
 		
 		
 		
@@ -155,6 +156,16 @@ package com.twinoid.kube.quest.editor.vo {
 		public function set endsQuest(value:Boolean):void { _endsQuest = value; }
 		
 		/**
+		 * Gets if this event is the entry point of its dependency tree.
+		 */
+		public function get startsTree():Boolean { return _startsTree; }
+
+		/**
+		 * Gets if this event is the entry point of its dependency tree.
+		 */
+		public function set startsTree(value:Boolean):void { _startsTree = value; }
+		
+		/**
 		 * @private
 		 * here for serialization purpose only!
 		 */
@@ -215,6 +226,7 @@ package com.twinoid.kube.quest.editor.vo {
 				}
 				
 				_dependencies.push( new Dependency(entry, choiceIndex) );
+				entry.registerChild(this);
 
 //				refreshFirstLoopState();
 				
@@ -238,6 +250,7 @@ package com.twinoid.kube.quest.editor.vo {
 					len --;
 				}
 			}
+			entry.unregisterChild(this);
 //			refreshFirstLoopState();
 		}
 		
@@ -349,6 +362,23 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		internal function registerChild(event:KuestEvent):void {
 			_children.push(event);
+		}
+		
+		/**
+		 * Unregisters a child of mine.
+		 * Used during deserialization to make some logic easier while playing
+		 * the quest.
+		 */
+		internal function unregisterChild(event:KuestEvent):void {
+			var i:int, len:int;
+			len = _children.length;
+			for(i = 0; i < len; ++i) {
+				if(_children[i] == event) {
+					_children.splice(i, 1);
+					i--;
+					len--;
+				}
+			}
 		}
 		
 		/**
