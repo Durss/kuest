@@ -37,7 +37,7 @@
 	}
 	$additionnals = "";
 	$friends = array();
-	if (isset($_POST["pubkey"], $_POST["uid"])) {
+	if (isset($_POST["pubkey"], $_POST["uid"], $_POST["samples"])) {
 		if(!isset($_SESSION['uid']) || ($_SESSION["uid"] != $_POST["uid"]) || !isset($_SESSION['pubkey']) || $_SESSION["pubkey"] != $_POST["pubkey"]) {
 			$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
 			$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
@@ -100,6 +100,7 @@
 		$additionnals .= "\t<pubkey>".$_SESSION["pubkey"]."</pubkey>\n";
 		$additionnals .= "\t<lang>".$_SESSION["lang"]."</lang>\n";
 		
+		//Get my quests
 		$sql = "SELECT * FROM kuests WHERE uid=:uid OR friends LIKE :uid2 ORDER BY id DESC";
 		$params = array(':uid' => $_SESSION["uid"], ':uid2' => "%,".$_SESSION["uid"].",%");
 		$req = DBConnection::getLink()->prepare($sql);
@@ -119,6 +120,33 @@
 		}
 		$additionnals .= "\t</kuests>\n";
 		
+		
+		
+		//Get the sample quests
+		$ids	= explode(",", $_POST["samples"]);
+		$plist	= ':id_'.implode(',:id_', array_keys($ids));
+		$sql	= "SELECT * FROM kuests WHERE GUID IN ($plist) ORDER BY id ASC";
+		$params = array_combine(explode(",", $plist), $ids);
+		$req = DBConnection::getLink()->prepare($sql);
+		if (!$req->execute($params)) {
+			$error = $req->errorInfo();
+			$error = $error[2];
+			Out::printOut(false, '', $error, 'SQL_ERROR');
+			die;
+		}
+		$res = $req->fetchAll();
+		$additionnals .= "\t<samples>\n";
+		for ($i = 0; $i < count($res); $i++) {
+			$additionnals .= "\t\t<s guid='".$res[$i]['guid']."' r=''>\n";
+			$additionnals .= "\t\t\t<t><![CDATA[".utf8_encode($res[$i]['name'])."]]></t>\n";
+			$additionnals .= "\t\t\t<d><![CDATA[".utf8_encode($res[$i]['description'])."]]></d>\n";
+			$additionnals .= "\t\t</s>\n";
+		}
+		$additionnals .= "\t</samples>\n";
+		
+		
+		
+		//Adds friends
 		$additionnals .= "\t<friends>\n";
 		foreach ($friends as $row) {
 			$additionnals .= "\t\t<f id='".$row['id']."'><![CDATA[".$row['name']."]]></f>\n";

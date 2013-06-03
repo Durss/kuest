@@ -73,6 +73,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _forumPosition:Point3D;
 		private var _cmdDelete:DeleteQuestCmd;
 		private var _friends:Vector.<UserInfo>;
+		private var _samples:Vector.<KuestInfo>;
 		
 		
 		
@@ -189,6 +190,11 @@ package com.twinoid.kube.quest.editor.model {
 		 * Gets the kuests list.
 		 */
 		public function get kuests():Vector.<KuestInfo> { return _kuests; }
+		
+		/**
+		 * Gets the kuests samples list.
+		 */
+		public function get samples():Vector.<KuestInfo> { return _samples; }
 		
 		/**
 		 * Gets the friends list
@@ -568,6 +574,7 @@ package com.twinoid.kube.quest.editor.model {
 			_name = event.data["name"];
 			_pubkey = event.data["pubkey"];
 			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
+			_samples = event.data["samples"] as Vector.<KuestInfo>;
 			_friends = event.data["friends"] as Vector.<UserInfo>;
 			
 			_so.data["uid"] = _uid;
@@ -605,13 +612,18 @@ package com.twinoid.kube.quest.editor.model {
 		 * Called when a map's loading completes
 		 */
 		private function loadKuestCompleteHandler(event:CommandEvent):void {
-			var bytes:ByteArray = event.data as ByteArray;
-			bytes.position = 0;
-			XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Descrypt data
-			bytes.inflate();
-			bytes.position = 0;
-			var fileVersion:int = bytes.readInt();
-			fileVersion;
+			try {
+				var bytes:ByteArray = event.data as ByteArray;
+				bytes.position = 0;
+				XOR(bytes, "ErrorEvent :: kuest cannot be saved...");//Descrypt data
+				bytes.inflate();
+				bytes.position = 0;
+				var fileVersion:int = bytes.readInt();
+				fileVersion;
+			}catch(e:Error) {
+				_loadCmd.callback(false, "read");
+				return;
+			}
 			
 			_kuestData.deserialize(bytes);
 			if(bytes.position < bytes.length) _comments = bytes.readObject();

@@ -2,14 +2,16 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog62-content"><![CDATA[<ul>
+		<label code="patchlog63-content"><![CDATA[<ul>
+			<li>Ajout d'un menu d'aide pour revoir le tutorial et consulter des exemples \o/</li>
+			<li></li>
 			<li>Ajout d'un formulaire pour noter une quête lorsqu'on la termine.</li>
 			<li>Ajout d'une option pour définir qu'un événement est le point d'entrée d'une structure de dépendences.</li>
 			<li>Visualisation des structures de dépendences au survol d'un événement <i>(la structure "s'allume")</i>.</li>
 			<li>Ajout de l'affichage des coordonnées de l'événement à son survol.</li>
 			<li>Affichage d'une indication si on essaie d'utiliser un mauvais objet ou qu'aucun objet n'est utilisable.</li>
 			<li>Ajout d'une confirmation sur la suppression des liens.</li>
-			<li>Amélioration //(encore)// de la logique des quêtes. Ca devrait bientôt être bon ce fichu bazar !</li>
+			<li>Amélioration <i>(encore)</i> de la logique des quêtes. Ca devrait bientôt être bon ce fichu bazar !</li>
 			<li>Léger debug de l'utilisation d'objet.</li>
 		</ul>]]></label>
 		
@@ -26,7 +28,6 @@
 		<label code="exception-EDITION_KUEST_NOT_FOUND"><![CDATA[La quête à éditer n'existe pas.]]></label>
 		<label code="exception-EDITION_NO_RIGHTS"><![CDATA[Vous n'avez pas les droits nécessaires pour éditer cette quête.]]></label>
 		<label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
-		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
 		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données à sauvegarder.]]></label>
 		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
@@ -53,6 +54,7 @@
 		<label code="loader-loading"><![CDATA[Chargement...]]></label>
 		<label code="loader-loadingOK"><![CDATA[Chargement OK]]></label>
 		<label code="loader-loadingKO"><![CDATA[Erreur...]]></label>
+		<label code="loader-loadingKORead"><![CDATA[Erreur de décompression]]></label>
 		
 		<label code="prompt-window-submit"><![CDATA[Valider]]></label>
 		<label code="prompt-window-cancel"><![CDATA[Annuler]]></label>
@@ -79,7 +81,7 @@
 		<label code="menu-file-new-description"><![CDATA[Description :]]></label>
 		<label code="menu-file-new-submit"><![CDATA[Créer]]></label>
 		<label code="menu-file-new-edit"><![CDATA[Mettre à jour]]></label>
-		<label code="menu-file-load"><![CDATA[Charger une quête]]></label>
+		<label code="menu-file-load"><![CDATA[Mes quêtes]]></label>
 		<label code="menu-file-load-title"><![CDATA[Quêtes que vous avez créées :]]></label>
 		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrer une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
@@ -101,6 +103,9 @@
 		<label code="menu-file-rights"><![CDATA[Donnez les droits d'édition à vos amis.]]></label>
 		<label code="menu-file-rightsCB"><![CDATA[Sélectionnez des amis]]></label>
 		<label code="menu-file-test"><![CDATA[Tester la quête]]></label>
+		<label code="menu-file-help"><![CDATA[Aide]]></label>
+		<label code="menu-file-help-tuto"><![CDATA[Voir le tutoriel]]></label>
+		<label code="menu-file-help-samples"><![CDATA[Examples de quêtes:]]></label>
 		
 		<label code="menu-credits"><![CDATA[Credits]]></label>
 		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.

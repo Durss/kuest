@@ -33,7 +33,7 @@ package com.twinoid.kube.quest.player {
 	import com.twinoid.kube.quest.player.model.DataManager;
 	import com.twinoid.kube.quest.player.utils.resizeFlashTo;
 	import com.twinoid.kube.quest.player.views.ActionSimulatorView;
-	import com.twinoid.kube.quest.player.views.MenuView;
+	import com.twinoid.kube.quest.player.views.PlayerMenuView;
 	import com.twinoid.kube.quest.player.views.PlayerDefaultView;
 	import com.twinoid.kube.quest.player.views.PlayerEventView;
 	import com.twinoid.kube.quest.player.views.PlayerInventoryView;
@@ -328,7 +328,7 @@ package com.twinoid.kube.quest.player {
 		private function loadQuestCompleteHandler(event:DataManagerEvent):void {
 			if (Config.getBooleanVariable("testMode")) addChild(new ActionSimulatorView());
 			_prompt	= addChild(new PromptWindowView(true)) as PromptWindowView;
-			_menu	= addChild(new MenuView());
+			_menu	= addChild(new PlayerMenuView());
 			addChild(new ToolTipView());
 			addChild(_exception);
 			

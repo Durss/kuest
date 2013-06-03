@@ -201,12 +201,11 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				_spinning.label = Label.getLabel("loader-loading")+" "+Math.round(progress*100)+"%";
 				return;
 			}
-			errorID;
 			mouseEnabled = mouseChildren = true;
 			if(success) {
 				_spinning.close(Label.getLabel("loader-loadingOK"));
 			}else{
-				_spinning.close(Label.getLabel("loader-loadingKO"));
+				_spinning.close(Label.getLabel("loader-loadingKO" + (errorID == "read"? "Read" : "")));
 			}
 		}
 
