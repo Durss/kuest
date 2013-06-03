@@ -48,6 +48,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		public function populate(uid:String, pubkey:String):void {
 			_urlVariables['uid'] = uid;
 			_urlVariables['pubkey'] = pubkey;
+			_urlVariables['samples'] = Config.getVariable("samples");
 		}
 
 
@@ -80,6 +81,15 @@ package com.twinoid.kube.quest.editor.cmd {
 					kuests[i] = new KuestInfo(XML(nodes[i]).child("t")[0], XML(nodes[i]).child("d")[0], nodes[i].@guid, String(nodes[i].@r).split(","));
 				}
 				ret["kuests"] = kuests;
+				
+				//Get sample kuests
+				nodes = XML(xml.child("samples")[0]).child("s");
+				len = nodes.length();
+				kuests = new Vector.<KuestInfo>();
+				for(i = 0; i < len; ++i) {
+					kuests[i] = new KuestInfo(XML(nodes[i]).child("t")[0], XML(nodes[i]).child("d")[0], nodes[i].@guid, String(nodes[i].@r).split(","));
+				}
+				ret["samples"] = kuests;
 				
 				//Get friends
 				nodes = XML(xml.child("friends")[0]).child("f");

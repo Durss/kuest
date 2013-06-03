@@ -120,7 +120,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			
 			_holder.content.graphics.clear();
 			
-			_scrollpane.y = _title.height + 10;
+			_scrollpane.y = Math.round(_title.height + 10);
 			_scrollpane.width = _width;
 			_scrollpane.height = stage.stageHeight - _scrollpane.y;
 			_scrollpane.validate();

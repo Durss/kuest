@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.menu.file {
+	import com.twinoid.kube.quest.graphics.HelpIcon;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.environnement.path.Path;
 	import com.nurun.structure.mvc.views.ViewLocator;
@@ -55,6 +56,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _model:Model;
 		private var _publishForm:FilePublishForm;
 		private var _prevKuestGUID:String;
+		private var _helpBt:ButtonKube;
+		private var _helpForm:FileHelpForm;
 		
 		
 		
@@ -86,10 +89,11 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 */
 		public function update(model:Model):void {
 			_model = model;
-			_saveNewBt.visible = model.currentKuestGUID != null;
+			_saveNewBt.visible = model.currentKuest != null;
 			_publishBt.enabled = _testBt.enabled = _saveNewBt.visible;
 			_loadForm.populate(model.kuests);
 			_saveForm.populate(model.currentKuest, model.friends);
+			_helpForm.populate(model.samples);
 			if(model.currentKuestGUID != _prevKuestGUID) _publishForm.close();
 			_prevKuestGUID = model.currentKuestGUID;
 			computePositions();
@@ -110,10 +114,12 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_saveBt		= addChild(new ButtonKube(Label.getLabel("menu-file-save"), new SaveIcon(), true)) as ButtonKube;
 			_publishBt	= addChild(new ButtonKube(Label.getLabel("menu-file-publish"), new DeployIcon(), true)) as ButtonKube;
 			_testBt		= addChild(new ButtonKube(Label.getLabel("menu-file-test"), new ParamsIcon(), true)) as ButtonKube;
+			_helpBt		= addChild(new ButtonKube(Label.getLabel("menu-file-help"), new HelpIcon(), true)) as ButtonKube;
 			_saveNewBt	= addChild(new GraphicButtonKube(new SaveNewIcon())) as GraphicButtonKube;
 			_loadForm	= addChild(new FileLoadForm(_width)) as FileLoadForm;
 			_saveForm	= addChild(new FileSaveForm(_width)) as FileSaveForm;
 			_publishForm= addChild(new FilePublishForm(_width)) as FilePublishForm;
+			_helpForm	= addChild(new FileHelpForm(_width)) as FileHelpForm;
 			_spin		= addChild(new LoaderSpinning()) as LoaderSpinning;
 			
 			_saveNewBt.visible = false;
@@ -130,6 +136,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			_saveForm.addEventListener(Event.RESIZE, computePositions);
 			_loadForm.addEventListener(Event.RESIZE, computePositions);
+			_helpForm.addEventListener(Event.RESIZE, computePositions);
 			_publishForm.addEventListener(Event.RESIZE, computePositions);
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			ViewLocator.getInstance().addEventListener(ViewEvent.LOGIN_SUCCESS, loginHandler);
@@ -149,14 +156,15 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_clearBt.width = _loadBt.width = _saveBt.width = _publishBt.width = _testBt.width = _width;
+			_clearBt.width = _loadBt.width = _saveBt.width = _publishBt.width = _testBt.width = _helpBt.width = _width;
 			PosUtils.vPlaceNext(10, _clearBt, _loadBt);
 			PosUtils.vPlaceNext(0, _loadBt, _loadForm);
 			PosUtils.vPlaceNext(10, _loadForm, _saveBt);
 			PosUtils.vPlaceNext(0, _saveBt, _saveForm);
 			PosUtils.vPlaceNext(10, _saveForm, _publishBt);
 			PosUtils.vPlaceNext(0, _publishBt, _publishForm);
-			PosUtils.vPlaceNext(10, _publishForm, _testBt);
+			PosUtils.vPlaceNext(10, _publishForm, _testBt, _helpBt);
+			PosUtils.vPlaceNext(0, _helpBt, _helpForm);
 			
 			//If we already saved the kuest or if we loaded one, display the
 			//"save new" button to allow to save it as a new map.
@@ -170,8 +178,9 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			if(_saveForm.height == 0 && _saveForm.isClosed && contains(_saveForm)) removeChild(_saveForm);
 			if(_loadForm.height == 0 && _loadForm.isClosed && contains(_loadForm)) removeChild(_loadForm);
 			if(_publishForm.height == 0 && _publishForm.isClosed && contains(_publishForm)) removeChild(_publishForm);
+			if(_helpForm.height == 0 && _helpForm.isClosed && contains(_helpForm)) removeChild(_helpForm);
 			
-			roundPos(_clearBt, _saveForm, _loadBt, _saveBt, _saveNewBt, _publishBt, _publishForm, _testBt);
+			roundPos(_clearBt, _saveForm, _loadBt, _saveBt, _saveNewBt, _publishBt, _publishForm, _testBt, _helpBt, _helpForm);
 			
 			dispatchEvent(new Event(Event.RESIZE));
 		}
@@ -220,6 +229,11 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			
 			if(event.target == _testBt) {
 				navigateToURL(new URLRequest(Path.compute("{v_root}/redirect.php?kuest="+_model.currentKuestGUID+"&test")));
+			}else
+			
+			if(event.target == _helpBt) {
+				addChildAt(_helpForm, getChildIndex(_helpBt)+1);
+				_helpForm.toggle();
 			}
 		}
 		
@@ -278,6 +292,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 */
 		private function loginHandler(event:ViewEvent):void {
 			_loadForm.populate(_model.kuests);
+			_helpForm.populate(_model.samples);
 		}
 		
 	}

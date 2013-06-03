@@ -1,7 +1,4 @@
 package com.twinoid.kube.quest.editor.views {
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.text.TextFieldAutoSize;
 	import gs.TweenLite;
 
 	import com.nurun.components.text.CssTextField;
@@ -12,14 +9,16 @@ package com.twinoid.kube.quest.editor.views {
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.pos.PosUtils;
 	import com.twinoid.kube.quest.editor.components.window.TitledWindow;
-	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.model.Model;
 	import com.twinoid.kube.quest.editor.utils.Closable;
 	import com.twinoid.kube.quest.editor.utils.makeEscapeClosable;
 
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.net.SharedObject;
+	import flash.text.TextFieldAutoSize;
 
 
 
@@ -138,7 +137,6 @@ package com.twinoid.kube.quest.editor.views {
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
-			ViewLocator.getInstance().addEventListener(ViewEvent.TUTORIAL, tutorialHandler);
 			
 			computePositions();
 		}
@@ -158,13 +156,6 @@ package com.twinoid.kube.quest.editor.views {
 			_window.updateSizes();
 			
 			PosUtils.centerInStage(_window);
-		}
-		
-		/**
-		 * Called when tutorial needs to be displayed
-		 */
-		private function tutorialHandler(event:ViewEvent):void {
-			open();
 		}
 		
 		/**
