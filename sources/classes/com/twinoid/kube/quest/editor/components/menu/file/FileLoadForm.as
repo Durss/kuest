@@ -90,6 +90,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			len = data == null? 0 : data.length;
 			_itemToData = new Dictionary();
 			for(i = 0; i < len; ++i) {
+				if (data[i].isSample) continue;
 				deleteBt		= _holder.addChild(new GraphicButtonKube(new CancelIcon())) as GraphicButtonKube;
 				item			= _holder.addChild(new ButtonKube(data[i].title)) as ButtonKube;
 				item.textAlign	= TextAlign.LEFT;

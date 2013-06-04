@@ -163,6 +163,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets the current date
 		 */
 		public function get currentDate():Date {
+			if(_testMode) return new Date();
 			_date.time = _time + getTimer();
 			return _date;
 		}
@@ -276,7 +277,7 @@ package com.twinoid.kube.quest.player.model {
 			if(_currentQuestGUID != null) {
 				var spool:SequentialCommand = new SequentialCommand();
 				if(Capabilities.playerType == "StandAlone") {
-					//Force login if testing locally as session are fucked up instandalone mode...
+					//Force login if testing locally as session are fucked up in standalone mode...
 					var login:LoginCmd = new LoginCmd();
 					login.populate("89", "f20b165d");
 					spool.addCommand(login);
