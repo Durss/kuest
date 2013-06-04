@@ -67,15 +67,11 @@
 				die;
 			}
 			
-			$friendsA = explode(",", $_GET["friends"]);
-			if ($_SESSION["uid"] != $res['uid']) $friendsA[] = "89";
-			//Remove empty items.
-			for ($i = 0; $i < count($friendsA); $i++) {
-				if (strlen($friendsA[$i]) == 0) {
-					array_splice($friendsA, $i, 1);
-					$i --;
-				}
-			}
+			$friendsSrc	= array_filter( explode(",", $res['friends']) );
+			$friendsA	= array_filter( explode(",", $_GET["friends"]) );
+			$friendsA	= array_merge( $friendsSrc, $friendsA );
+			if ($_SESSION["uid"] != $res['uid'])	$friendsA[] = $_SESSION["uid"];
+			$friendsA	= array_unique( $friendsA );
 			if (count($friendsA) == 0) $friends = "";
 			else $friends = ",".implode(",", $friendsA).",";
 			

@@ -3,6 +3,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.draw.createRect;
 	import com.nurun.utils.pos.PosUtils;
@@ -159,8 +160,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 					if(!amIIn && _friends[i].uid == "89") amIIn = true;
 					_friendsCB.addSkinnedItem(_friends[i].uname+" <span class='friendItemId'>(ID:"+_friends[i].uid+")</span>", _friends[i].uid);
 				}
-				//Add myself for debug eventual technical support on quests
-				if(!amIIn) {
+				//Add myself for eventual technical support on quests
+				if(!amIIn && Config.getVariable("uid") != "89") {
 					_friendsCB.addSkinnedItem("Durss <span class='friendItemId'>(ID:89)</span>", 89);
 				}
 			}

@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog63-content"><![CDATA[<ul>
-			<li>Ajout d'un menu d'aide pour revoir le tutorial et consulter des exemples \o/</li>
-			<li></li>
+		<label code="patchlog64-content"><![CDATA[<ul>
 			<li>Ajout d'un formulaire pour noter une quête lorsqu'on la termine.</li>
 			<li>Ajout d'une option pour définir qu'un événement est le point d'entrée d'une structure de dépendences.</li>
 			<li>Visualisation des structures de dépendences au survol d'un événement <i>(la structure "s'allume")</i>.</li>
@@ -13,6 +11,11 @@
 			<li>Ajout d'une confirmation sur la suppression des liens.</li>
 			<li>Amélioration <i>(encore)</i> de la logique des quêtes. Ca devrait bientôt être bon ce fichu bazar !</li>
 			<li>Léger debug de l'utilisation d'objet.</li>
+			<li></li>
+			<li>Ajout d'un menu d'aide pour revoir le tutorial et consulter des exemples \o/.</li>
+			<li></li>
+			<li>Debug de l'ajout de droits à nos amis.</li>
+			<li>Débloquage de la modification de la date lors du teste d'une quête. Suffit de changer la date et l'heure de votre ordi.</li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>

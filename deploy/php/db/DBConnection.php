@@ -20,7 +20,7 @@
 				array_walk_recursive($_REQUEST, 'stripslashes_gpc');
 			}
 			
-			define("SESSION_VERSION", 2);
+			define("SESSION_VERSION", 3);
 			session_start();
 			if (!isset($_SESSION["version"]) || $_SESSION["version"] != SESSION_VERSION) {
 				session_unset();

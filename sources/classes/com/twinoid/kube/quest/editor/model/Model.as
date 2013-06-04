@@ -360,8 +360,8 @@ package com.twinoid.kube.quest.editor.model {
 				return;
 			}
 			
-			var id:String = updateMode || optimise? _currentKuestGUID : "";
-			_saveCmd.populate(title, description, bytes, friends, callback, id, optimise);
+			var guid:String = updateMode || optimise? _currentKuestGUID : "";
+			_saveCmd.populate(title, description, bytes, friends, callback, guid, optimise);
 			if(optimise) {
 				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback);
 			}else{
@@ -524,14 +524,14 @@ package com.twinoid.kube.quest.editor.model {
 		private function saveCompleteHandler(event:CommandEvent):void {
 			_currentKuestGUID = event.data["guid"];
 			// If title and description are null, that's because we updated an existing kuest.
-			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, []);
-			if(isEmpty(_saveCmd.guid)) {
+			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, [], false);
+			if (isEmpty(_saveCmd.guid)) {
 				_kuests.unshift(vo);
 			}else{
 				var i:int, len:int;
 				len = _kuests.length;
 				for(i = 0; i < len; ++i) {
-					if(_kuests[i].guid == _currentKuestGUID) {
+					if(!_kuests[i].isSample && _kuests[i].guid == _currentKuestGUID) {
 						_kuests[i] = vo;
 					}
 				}

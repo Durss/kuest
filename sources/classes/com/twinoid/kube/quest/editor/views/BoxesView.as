@@ -560,15 +560,6 @@ package com.twinoid.kube.quest.editor.views {
 		 * Hide the scisors if necessary.
 		 */
 		private function outHandler(event:MouseEvent):void {
-			if(event.ctrlKey || _spacePressed) return;
-			
-			if(event.target is BoxLink) {
-				Mouse.show();
-				if(contains(_scisors)) removeChild(_scisors);
-				_scisors.stopDrag();
-				addChild(_boxesHolder);
-			}else
-			
 			if(DisplayObject(event.target).parent is Box) {
 				_lastOverEvent = null;
 				var i:int, len:int, b:Box;
@@ -577,6 +568,15 @@ package com.twinoid.kube.quest.editor.views {
 					b = _boxesHolder.getChildAt(i) as Box;
 					b.filters = [];
 				}
+			}
+			
+			if(event.ctrlKey || _spacePressed) return;
+			
+			if(event.target is BoxLink) {
+				Mouse.show();
+				if(contains(_scisors)) removeChild(_scisors);
+				_scisors.stopDrag();
+				addChild(_boxesHolder);
 			}
 		}
 
