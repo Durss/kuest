@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.player.model {
+	import com.nurun.core.lang.isEmpty;
+	import com.twinoid.kube.quest.editor.utils.logJS;
+	import flash.net.SharedObject;
 	import com.nurun.core.commands.SequentialCommand;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -96,6 +99,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _isObjectPut:Boolean;
 		private var _nodeToTreeID:Dictionary;
 		private var _loadingAlreadyFired:Boolean;
+		private var _so:SharedObject;
 		
 		
 		
@@ -143,6 +147,11 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets if the user's logged or not
 		 */
 		public function get logged():Boolean { return _logged; }
+		
+		/**
+		 * Gets if we are in test mode
+		 */
+		public function get testMode():Boolean { return _testMode; }
 		
 		/**
 		 * Gets the user's name
@@ -209,6 +218,7 @@ package com.twinoid.kube.quest.player.model {
 		public function initialize(progressCallback:Function):void {
 			_inGamePosition = new Point(int.MAX_VALUE, int.MAX_VALUE);
 			_progressCallback = progressCallback;
+			_so = SharedObject.getLocal("_kuestPlayer_", "/");
 			initSerializableClasses();
 			
 			_lcClientNames = [];
@@ -268,12 +278,23 @@ package com.twinoid.kube.quest.player.model {
 				//Test Lilith - 51a207ff98070
 				//Cristal Atlante - 5194100a4a94f
 				//Tubasa labyrinthe - 51aa7b6cbe1ef
-				Config.addVariable("kuestID", "51a272f115f96");
+				Config.addVariable("kuestID", "5194100a4a94f");
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
-			_testMode = Config.getBooleanVariable("testMode");
-			_currentQuestGUID = Config.getVariable("kuestID");
+			if(!isEmpty(Config.getVariable("kuestID"))) {
+				_testMode			= Config.getBooleanVariable("testMode");
+				_currentQuestGUID	= Config.getVariable("kuestID");
+				_so.data["test"]	= _testMode;
+				_so.data["guid"]	= _currentQuestGUID;
+			}else{
+				_testMode			= _so.data["test"];
+				_currentQuestGUID	= _so.data["guid"];
+			}
+			if(isEmpty(_currentQuestGUID)) {
+				if(ExternalInterface.available) ExternalInterface.call("noQuest");
+				return;
+			}
 			if(_currentQuestGUID != null) {
 				var spool:SequentialCommand = new SequentialCommand();
 				if(Capabilities.playerType == "StandAlone") {
@@ -823,6 +844,7 @@ package com.twinoid.kube.quest.player.model {
 			//Search for the active one.
 			//If an item has the priority, check if it's accessible and if it
 			//corresponds to the tree's priority.
+			trace('_save["priorities"]['+id+']: ' + (_save["priorities"][id]));
 			if (_save["priorities"][id] != undefined) {
 				var guid:int = _save["priorities"][id][0];
 				for(i = 0; i < len; ++i) {
@@ -838,7 +860,7 @@ package com.twinoid.kube.quest.player.model {
 				if(selectedEvent != null) {
 					len = 0;//Prevents from useless loop
 				}
-			}
+			}else
 			
 			//No matching priority has been found.
 			// Go through all the events to find an active one
@@ -847,8 +869,11 @@ package com.twinoid.kube.quest.player.model {
 				var offset:int = _save[id].index % len;
 				for(i = offset; i < offset + len; ++i) {
 					item = items[i%len];
+					treeID = _nodeToTreeID[ item ];
 					//Item complete, skip it
-					if(_save[item.guid].complete === true) {
+					trace('treeID: ' + (treeID));
+					trace('prio: ' + (_save["treePriority"][treeID]));
+					if (_save[item.guid].complete === true || (_save["treePriority"][treeID] != undefined && _save["treePriority"][treeID] != items[i].guid)) {
 						continue;
 					}
 					
@@ -1122,6 +1147,7 @@ package com.twinoid.kube.quest.player.model {
 			if(_save["priorities"][id] == undefined) {
 				_save["priorities"][id] = [];
 			}
+			trace("Add priority, treeID="+_nodeToTreeID[event], event.getTreeID(), "guid="+event.guid)
 			_save["treePriority"][ _nodeToTreeID[event] ] = event.guid;
 			if((_save["priorities"][id] as Array).indexOf(event.guid) == -1) {
 				(_save["priorities"][id] as Array).unshift( event.guid );

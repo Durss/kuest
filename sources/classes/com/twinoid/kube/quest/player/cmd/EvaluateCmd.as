@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.cmd {
+	import com.twinoid.kube.quest.player.model.DataManager;
 	import com.nurun.structure.environnement.label.Label;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -47,6 +48,14 @@ package com.twinoid.kube.quest.player.cmd {
 			_urlVariables["id"] = guid;
 			_urlVariables["key"] = pubkey;
 			_urlVariables["note"] = note;
+		}
+		
+		override public function execute():void {
+			if(DataManager.getInstance().testMode) {
+				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE));
+			}else{
+				super.execute();
+			}
 		}
 
 

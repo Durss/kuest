@@ -62,7 +62,7 @@
 		$res = $req->fetchAll();
 		$additionnals = "<kuests top='true'>\n";
 		for ($i = 0; $i < count($res); $i++) {
-			$sql2		= "SELECT kuests.id, kuests.lang, kuests.guid, kuests.uid as 'uid', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE kuests.id=:kid ORDER BY kuests.id DESC";
+			$sql2		= "SELECT kuests.id, kuests.lang, kuests.guid, kuests.uid as 'uid', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE kuests.published=1 AND kuestUsers.uid=kuests.uid AND kuests.id=:kid ORDER BY kuests.id DESC";
 			$params2	= array(':kid' => $res[$i]['kid']);
 			$req2		= DBConnection::getLink()->prepare($sql2);
 			$req2->execute($params2);

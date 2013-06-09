@@ -131,10 +131,10 @@ package com.twinoid.kube.quest.player {
 			
 			_spinning	= addChild(new LoaderSpinning()) as LoaderSpinning;
 			_spinning.open(Label.getLabel("loader-loading"));
-			_spinning.y	= stage.stageHeight * .5;
+			_spinning.y	= _spinning.height * .5;
 			_spinning.x	= stage.stageWidth * .5;
 			roundPos(_spinning);
-			resizeFlashTo(_spinning.height + 20);
+			resizeFlashTo(_spinning.height+ 20);
 			
 			DataManager.getInstance().addEventListener(DataManagerEvent.ON_LOGIN_STATE, loginStateHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.NO_KUEST_SELECTED, noKuestHandler);
