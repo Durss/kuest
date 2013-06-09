@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.utils {
+	import com.twinoid.kube.quest.editor.vo.Dependency;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 
 	import flash.utils.Dictionary;
@@ -11,62 +12,73 @@ package com.twinoid.kube.quest.player.utils {
 	 * @author Francois
 	 */
 	public function computeTreeGUIDs(nodes:Vector.<KuestEvent>, tree:Dictionary, completeCallback:Function, lowConsumption:Boolean = false, completeParams:Array = null):void {
-		var len:int, pointer:int, _guid:int, nodeToPointer:Dictionary, nodeToCallback:Dictionary;
+		var len:int, pointer:int, _guid:int, nodeToPointerChildren:Dictionary, nodeToPointerParents:Dictionary;
 		var durationMax:int = lowConsumption? 80 : 500;
+		var rootNode:KuestEvent;
 //		tree = new Dictionary();
-		nodeToPointer = new Dictionary();
-		nodeToCallback = new Dictionary();
+		nodeToPointerChildren = new Dictionary();
+		nodeToPointerParents = new Dictionary();
 		len = nodes.length;
 		
 		function nextEvent():void {
-			pointer++;
+			if(++pointer == len) {
+				onComplete();
+				return;
+			}
 			var callback:Function = (pointer == (len - 1))? onComplete : nextEvent;
-			nodeToCallback[nodes[pointer]] = callback;
 //			trace("next event "+nodes[pointer].guid)
-			setChildrenTo(nodes[pointer], _guid++, getTimer());
+			rootNode = nodes[pointer];
+			setChildrenTo(rootNode, _guid++, getTimer());
 		}
 		pointer = -1;
 		nextEvent();
 		
-		function setChildrenTo(node:KuestEvent, guid:int, safeTimer:int, parents:Vector.<KuestEvent> = null, isDelayed:Boolean = false):Boolean {
+		function setChildrenTo(node:KuestEvent, treeID:int, safeTimer:int, isDelayed:Boolean = false):Boolean {
 			if(getTimer() - safeTimer > durationMax && !isDelayed) {
 //				trace("                delay "+node.guid, parents.length, getTimer())
-				setTimeout(setChildrenTo, 40, node, guid, getTimer() + 40, parents, true);
+				setTimeout(setChildrenTo, 40, node, treeID, getTimer() + 40, true);
 				return false;
 			}
 			var pLoc:Vector.<KuestEvent>;
 			
+			//Parse children
 			var children:Vector.<KuestEvent> = node.getChildren();
 			var lenR:int = children.length;
-			if(nodeToPointer[node] == undefined) nodeToPointer[node] = 0;
-			if(tree[node] == undefined || nodeToPointer[node] < lenR-1) {
-				
-				tree[node] = guid;
-				
-				var i:int = nodeToPointer[node];
+			var isSet:Boolean = tree[node] != undefined;
+			if(nodeToPointerChildren[node] == undefined) nodeToPointerChildren[node] = 0;
+			
+			if(!isSet || nodeToPointerChildren[node] < lenR-1) {
+				tree[node] = treeID;
+				var i:int = nodeToPointerChildren[node];
 //				trace(node.guid+"="+guid+"	", i, lenR);
-				pLoc =  parents == null? new Vector.<KuestEvent>() : parents.concat();//Clone it
-				pLoc.push(node);
-				for(; i < lenR; i++) {
-					nodeToPointer[node] = i;
+				for(; i < lenR; ++i) {
+					nodeToPointerChildren[node] = i;
 					if(tree[children[i]] == undefined) {
 //						trace("      ch : "+children[i].guid)
-						if(!setChildrenTo(children[i], guid, safeTimer, pLoc)) return false;
+						if(!setChildrenTo(children[i], treeID, safeTimer)) return false;
 					}
 				}
 			}
 			
-			if(nodeToCallback[node] != undefined && (parents == null || parents.length == 0)) {
-//				trace("callback " + node.guid)
-				nodeToCallback[node]();
-				return false;
+			//Parse dependencies
+			var dependencies:Vector.<Dependency> = node.getDependencies();
+			var lenD:int = dependencies.length;
+			if(nodeToPointerParents[node] == undefined) nodeToPointerParents[node] = 0;
+			if(!isSet || nodeToPointerParents[node] < lenD-1) {
+				tree[node] = treeID;
+				i = nodeToPointerParents[node];
+//				trace(node.guid+"="+guid+"	", i, lenD);
+				for(; i < lenD; ++i) {
+					nodeToPointerParents[node] = i;
+					if(tree[dependencies[i].event] == undefined) {
+//						trace("      ch : "+dependencies[i].event.guid)
+						if(!setChildrenTo(dependencies[i].event, treeID, safeTimer)) return false;
+					}
+				}
 			}
-			if(isDelayed && parents != null && parents.length > 0){
-				pLoc =  parents.concat();//Clone it
-				var parent:KuestEvent = pLoc.pop();
-//				trace("relaunch : "+node.guid, guid, parent.guid);
-				setChildrenTo(parent, guid, safeTimer, pLoc);
-			}
+
+			if(node == rootNode) nextEvent();
+			
 			return true;
 		}
 		

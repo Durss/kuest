@@ -53,6 +53,7 @@ if(lang.length == 0) {//Get browser's language
 	lang = lang.split("-")[0];
 }
 if(lang != "fr" && lang != "en") lang = "en";//Restrict to defaults
+document._kuestLang = lang;
 
 //Rewrite spawn URls if on zone selection page.
 if(/zone\/choose/gi.test(window.location.href)) {
@@ -109,18 +110,8 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	app.style.overflow = "hidden";
 	app.style.transition = "all .35s ease-in-out";
 	app.style.webkitTransition = "all .35s ease-in-out";
-	if(!kuestID) {
-		var btLabel = [];
-		btLabel["fr"] = "Choisir une quête";
-		btLabel["en"] = "Choisir a quest";
-		btLabel["es"] = "Elegir una búsqueda";
-		btLabel["de"] = "Wählen eine quest";
-		var link = unsafeWindow.document.createElement('div');
-		link.style.position = "relative";
-		link.innerHTML = "<a href=\"http://muxxu.com/a/kuest/?act=browse\" target=\"_self\" class=\"button\">"+btLabel[lang]+"</a>";
-		gameDiv.parentNode.appendChild(link);
-	}
 
+	//Resizes the flash app to the size asked by it.
 	function resizeSWF(height) {
 		var app = document.getElementById("kuestSWF");
 		var h = parseInt(app.style.height);
@@ -134,6 +125,22 @@ if(/zone\/choose/gi.test(window.location.href)) {
 		//Resize the div holder smoothly instead of the flash directly which would be source of glitches.
 		document.getElementById("kuestApp").style.height = height+"px";
 	}
+	
+	//Called if no quest are loaded
+	function noQuest() {
+		var gameDiv = document.getElementsByClassName("game")[0];
+		var btLabel = [];
+		btLabel["fr"] = "Choisir une quête";
+		btLabel["en"] = "Choisir a quest";
+		btLabel["es"] = "Elegir una búsqueda";
+		btLabel["de"] = "Wählen eine quest";
+		var link = document.createElement('div');
+		link.style.position = "relative";
+		link.innerHTML = "<a href=\"http://muxxu.com/a/kuest/?act=browse\" target=\"_self\" class=\"button\">"+btLabel[document._kuestLang]+"</a>";
+		gameDiv.parentNode.appendChild(link);
+		resizeSWF(0);
+	}
 
+	inject(noQuest);
 	inject(resizeSWF);
 }
