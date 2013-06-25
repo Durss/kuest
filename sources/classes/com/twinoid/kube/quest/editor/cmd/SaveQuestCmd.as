@@ -29,6 +29,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		private var _description:String;
 		private var _publish:Boolean;
 		private var _guid:String;
+		private var _friends:Array;
 		
 		
 		
@@ -79,6 +80,11 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * Gets if we just published the quest
 		 */
 		public function get publish():Boolean { return _publish; }
+		
+		/**
+		 * Gets the friends
+		 */
+		public function get friends():Array { return _friends; }
 
 		/**
 		 * @inheritDoc
@@ -111,6 +117,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * @param publish		defines if the quest should be published
 		 */
 		public function populate(title:String, description:String, data:ByteArray, friends:Array, callback:Function, guid:String = "", publish:Boolean = false):void {
+			_friends = friends;
 			_publish = publish;
 			_description = description;
 			_title = title;
