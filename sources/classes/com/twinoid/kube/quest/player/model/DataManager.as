@@ -863,7 +863,7 @@ package com.twinoid.kube.quest.player.model {
 			}else
 			
 			//No matching priority has been found.
-			// Go through all the events to find an active one
+			//Go through all the events to find an active one
 			if(_save["priorities"][id] == undefined) {
 				if(_save[id] == undefined) _save[id] = {index:0};
 				var offset:int = _save[id].index % len;

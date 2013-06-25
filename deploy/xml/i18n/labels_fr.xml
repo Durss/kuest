@@ -2,20 +2,11 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog64-content"><![CDATA[<ul>
-			<li>Ajout d'un formulaire pour noter une quête lorsqu'on la termine.</li>
-			<li>Ajout d'une option pour définir qu'un événement est le point d'entrée d'une structure de dépendences.</li>
-			<li>Visualisation des structures de dépendences au survol d'un événement <i>(la structure "s'allume")</i>.</li>
-			<li>Ajout de l'affichage des coordonnées de l'événement à son survol.</li>
-			<li>Affichage d'une indication si on essaie d'utiliser un mauvais objet ou qu'aucun objet n'est utilisable.</li>
-			<li>Ajout d'une confirmation sur la suppression des liens.</li>
-			<li>Amélioration <i>(encore)</i> de la logique des quêtes. Ca devrait bientôt être bon ce fichu bazar !</li>
-			<li>Léger debug de l'utilisation d'objet.</li>
-			<li></li>
-			<li>Ajout d'un menu d'aide pour revoir le tutorial et consulter des exemples \o/.</li>
-			<li></li>
-			<li>Debug de l'ajout de droits à nos amis.</li>
-			<li>Débloquage de la modification de la date lors du teste d'une quête. Suffit de changer la date et l'heure de votre ordi.</li>
+		<label code="patchlog65-content"><![CDATA[<ul>
+			<li>Debug d'un gros soucis sur l'aglo de détection de structures pouvant casser la cohérence d'une quête.</li>
+			<li>Correction d'un petit souci sur la liste des quêtes. Les pseudos n'étaient pas toujours les bons.</li>
+			<li>L'évaluation d'une quête en mode test est maintenant factice.</li>
+			<li>Correction d'un petit souci au niveau de l'ajout de droit. Après sauvegarde les amis étaient tous décochés.</li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>

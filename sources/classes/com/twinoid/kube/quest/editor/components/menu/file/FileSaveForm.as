@@ -51,6 +51,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _friendsCB:ComboboxKube;
 		private var _friends:Vector.<UserInfo>;
 		private var _editMode:Boolean;
+		private var _prevQuest:KuestInfo;
 		
 		
 		
@@ -94,7 +95,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Gets the friends allowed to access this quest
 		 */
-		public function get friends():Array { return _friendsCB.list.scrollableList.selectedDatas; }
+		public function get friends():Array { return _friendsCB.list.scrollableList.selectedDatas.concat(); }
 
 
 
@@ -168,8 +169,10 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			
 			//Select users
 			if(_friends != null && info != null) {
-				_friendsCB.selectedDatas = info.users;
+				if(info != _prevQuest) _friendsCB.unSelectAll();
+				_friendsCB.selectedDatas = info.users.concat();
 			}
+			_prevQuest = info;
 			changeHandler();
 		}
 

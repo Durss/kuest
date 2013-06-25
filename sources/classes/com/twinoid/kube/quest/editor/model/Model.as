@@ -524,7 +524,7 @@ package com.twinoid.kube.quest.editor.model {
 		private function saveCompleteHandler(event:CommandEvent):void {
 			_currentKuestGUID = event.data["guid"];
 			// If title and description are null, that's because we updated an existing kuest.
-			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, [], false);
+			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, _saveCmd.friends, false);
 			if (isEmpty(_saveCmd.guid)) {
 				_kuests.unshift(vo);
 			}else{
