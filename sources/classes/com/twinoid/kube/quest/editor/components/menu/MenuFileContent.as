@@ -26,6 +26,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private var _formHolder:Sprite;
 		private var _loginForm:LoginForm;
 		private var _fileForm:FileForm;
+		private var _tabIndex:int;
 		
 		
 		
@@ -50,6 +51,12 @@ package com.twinoid.kube.quest.editor.components.menu {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			_tabIndex = value;
+		}
 
 
 
@@ -81,6 +88,9 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_spinning		= _holder.addChild(new LoaderSpinning()) as LoaderSpinning;
 			_loginForm		= new LoginForm(_width * .75);
 			_fileForm		= new FileForm(_width * .9);
+			
+			_loginForm.tabIndex = _tabIndex;
+			_fileForm.tabIndex = _tabIndex;
 			
 			_formHolder.addChild(_loginForm);
 			_fileForm.addEventListener(Event.RESIZE, computePositions);

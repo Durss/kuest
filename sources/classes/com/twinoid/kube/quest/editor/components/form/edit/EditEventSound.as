@@ -67,6 +67,13 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			super.tabIndex		= value;
+			_inputURL.tabIndex	= value + 10;
+		}
 
 
 

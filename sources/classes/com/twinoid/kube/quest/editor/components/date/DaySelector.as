@@ -75,6 +75,16 @@ package com.twinoid.kube.quest.editor.components.date {
 				for(i = 0; i < len; ++i) _items[ i ].selected = value[i] != undefined;
 			}
 		}
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			var i:int, len:int;
+			len = _items.length;
+			for(i = 0; i < len; ++i) {
+				_items[i].tabIndex = value + i;
+			}
+		}
 
 
 
