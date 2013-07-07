@@ -69,6 +69,15 @@ package com.twinoid.kube.quest.editor.components.date {
 			_endMinutes.text = value%60+"";
 			_endHour.text = Math.floor(value / 60)+"";
 		}
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			_startHour.tabIndex		= value;
+			_startMinutes.tabIndex	= value + 1;
+			_endHour.tabIndex		= value + 2;
+			_endMinutes.tabIndex	= value + 3;
+		}
 
 
 

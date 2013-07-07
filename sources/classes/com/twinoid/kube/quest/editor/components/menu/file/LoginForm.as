@@ -46,6 +46,14 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			_uid.tabIndex		= value;
+			_pubkey.tabIndex	= value + 1;
+			_submit.tabIndex	= value + 2;
+		}
 
 
 

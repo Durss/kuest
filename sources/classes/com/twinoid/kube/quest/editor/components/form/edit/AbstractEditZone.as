@@ -95,6 +95,17 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			}
 			changeSelectionHandler();
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			var i:int, len:int;
+			len = _buttons.length;
+			for(i = 0; i < len; ++i) {
+				_buttons[i].tabIndex = value++;
+			}
+		}
 
 
 
@@ -147,6 +158,30 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			if(_currentContent == null) _currentContent = content;
 		}
+		
+		/**
+		 * Opens the tab
+		 */
+		public function open():void { toggle(true); }
+		
+		/**
+		 * Closes the tab
+		 */
+		public function close():void { toggle(false); }
+		
+		/**
+		 * Toggles the tab opening
+		 */
+		public function toggle(open:Boolean):void {
+			_closed = !open;
+			if(!_closed) addChild(_contentsHolder);
+			TweenLite.killTweensOf(_contentsMask);
+			TweenLite.killTweensOf(_contentsHolder);
+			var e:Event = new Event(Event.RESIZE, true);
+			TweenLite.killTweensOf(_contentsMask);
+			TweenLite.to(_contentsMask, .25, {height:_closed? 0 : _currentContent.height, onUpdate:dispatchEvent, onUpdateParams:[e], onComplete:onOpenCloseComplete});
+		}
+
 
 
 		
@@ -165,9 +200,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			_title = addChild(new CssTextField("editWindow-zoneTitle")) as CssTextField;
 			_openCloseBt = addChild(new GraphicButton(createRect())) as GraphicButton;
-			_contentsHolder = addChild(new Sprite()) as Sprite;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
 			_contentsMask = addChild(createRect(0xffff0000, _width, 100)) as Shape;
+			_contentsHolder = new Sprite();
 			
 			_closed = true;
 			_title.text = _titleStr;
@@ -200,16 +235,22 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Toggles the open state of the tab.
 		 */
 		protected function openCloseHandler(event:MouseEvent):void {
-			_closed = !_closed;
-			var e:Event = new Event(Event.RESIZE, true);
-			TweenLite.killTweensOf(_contentsMask);
-			TweenLite.to(_contentsMask, .25, {height:_closed? 0 : _currentContent.height, onUpdate:dispatchEvent, onUpdateParams:[e]});
+			toggle(_closed);
+		}
+		
+		/**
+		 * Called when opening/closing completes
+		 */
+		protected function onOpenCloseComplete():void {
+			if(_closed && contains(_contentsHolder)) removeChild(_contentsHolder);
 		}
 		
 		/**
 		 * Called when a new item is selected
 		 */
 		protected function changeSelectionHandler(event:Event = null):void {
+//			if(_closed) return;
+			
 			var index:int = selectedIndex;
 //			_currentContent.cacheAsBitmap = true;
 			_currentContent = _contents[index];
@@ -217,12 +258,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			var e:Event = new Event(Event.RESIZE, true);
 			var endX:int = -index * _width + Math.round((_width - _currentContent.width) * .5);
 			
-			TweenLite.killTweensOf(_contentsMask);
-			TweenLite.killTweensOf(_contentsHolder);
-			
 			if(event != null) {
-				_closed = false;
-				TweenLite.to(_contentsMask, .25, {height:_contents[index].height, onUpdate:dispatchEvent, onUpdateParams:[e]});
+				open();
 				TweenLite.to(_contentsHolder, .25, {x:endX, onComplete:removeInvisibleItems, onCompleteParams:[index]});
 			}else{
 				//No transition if not called from a user input.

@@ -44,6 +44,14 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			super.tabIndex				= value;
+			_periodicDaySel.tabIndex	= value + 10;
+			_periodicTimeInterval.tabIndex = value + 17;
+		}
 
 
 

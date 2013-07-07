@@ -98,6 +98,19 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				_kubeZ.text = value.z.toString();
 			}
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			super.tabIndex		= value;
+			_zoneX.tabIndex		= value + 10;
+			_zoneY.tabIndex		= value + 11;
+			_captureBt.tabIndex	= value + 12;
+			_kubeX.tabIndex		= value + 13;
+			_kubeY.tabIndex		= value + 14;
+			_kubeZ.tabIndex		= value + 15;
+		}
 
 
 

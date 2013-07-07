@@ -87,6 +87,12 @@ package com.twinoid.kube.quest.editor.views {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+		
+		}
 
 
 

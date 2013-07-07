@@ -51,6 +51,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _opened:Boolean;
 		private var _selectedIndex:int;
 		private var _back:Shape;
+		private var _tabIndex:int;
 		
 		
 		
@@ -74,6 +75,13 @@ package com.twinoid.kube.quest.editor.views {
 		 * Gets the width of the component.
 		 */
 		override public function get width():Number { return _width; }
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			_tabIndex = value;
+		}
 
 
 
@@ -124,6 +132,8 @@ package com.twinoid.kube.quest.editor.views {
 				DisplayObject(icons[i]).filters = [ new DropShadowFilter(2,135,0,.3,3,3,1,2) ];
 				_buttons[i] = _buttonsHolder.addChild( new SideMenuButton(icons[i]) ) as SideMenuButton;
 				_contents[i] = contents[i];
+				_buttons[i].tabIndex = _tabIndex + i;
+				_contents[i].tabIndex = _tabIndex + i + len + i * 100;
 				_group.add( _buttons[i] );
 				_buttonToIndex[ _buttons[i] ] = i;
 				

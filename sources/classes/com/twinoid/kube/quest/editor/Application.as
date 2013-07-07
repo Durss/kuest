@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor {
-	import com.twinoid.kube.quest.editor.views.PatchLogView;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -12,6 +11,7 @@ package com.twinoid.kube.quest.editor {
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.spikything.utils.MouseWheelTrap;
+	import com.twinoid.kube.quest.editor.components.item.ItemPlaceholder;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.model.Model;
 	import com.twinoid.kube.quest.editor.views.BackgroundView;
@@ -20,6 +20,7 @@ package com.twinoid.kube.quest.editor {
 	import com.twinoid.kube.quest.editor.views.EditBoxView;
 	import com.twinoid.kube.quest.editor.views.ExceptionView;
 	import com.twinoid.kube.quest.editor.views.ItemSelectorView;
+	import com.twinoid.kube.quest.editor.views.PatchLogView;
 	import com.twinoid.kube.quest.editor.views.PromptWindowView;
 	import com.twinoid.kube.quest.editor.views.SideMenuView;
 	import com.twinoid.kube.quest.editor.views.ToolTipView;
@@ -27,6 +28,7 @@ package com.twinoid.kube.quest.editor {
 
 	import org.libspark.ui.SWFWheel;
 
+	import flash.display.InteractiveObject;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 
@@ -90,9 +92,9 @@ package com.twinoid.kube.quest.editor {
 			FrontControler.getInstance().initialize(_model);
 			
 			addChild(new BackgroundView());
-			addChild(new BoxesView());
-			addChild(new EditBoxView());
-			addChild(new SideMenuView());
+			InteractiveObject(addChild(new BoxesView())).tabIndex = 0;
+			InteractiveObject(addChild(new EditBoxView())).tabEnabled = false;
+			InteractiveObject(addChild(new SideMenuView())).tabIndex = 10000;
 			addChild(new ItemSelectorView());
 			addChild(new TutorialView());
 			addChild(new PatchLogView());
@@ -108,7 +110,7 @@ package com.twinoid.kube.quest.editor {
 		 * Called when stage is available
 		 */
 		private function addedToStageHandler(event:Event):void {
-			var types:Array = [AbstractNurunButton, CssTextField, Input];
+			var types:Array = [AbstractNurunButton, CssTextField, Input, ItemPlaceholder];
 			NurunButtonKeyFocusManager.getInstance().initialize(stage, new KeyFocusGraphics(), types);
 			addChild(NurunButtonKeyFocusManager.getInstance());
 			stage.stageFocusRect = false;

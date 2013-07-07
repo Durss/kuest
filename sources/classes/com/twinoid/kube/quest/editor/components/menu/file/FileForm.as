@@ -78,6 +78,17 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			_clearBt.tabIndex	= value;
+			_loadBt.tabIndex	= value + 1;
+			_saveBt.tabIndex	= value + 2;
+			_publishBt.tabIndex	= value + 3;
+			_testBt.tabIndex	= value + 4;
+			_helpBt.tabIndex	= value + 5;
+		}
 
 
 

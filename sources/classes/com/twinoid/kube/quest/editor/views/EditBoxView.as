@@ -60,6 +60,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _sound:EditEventSound;
 		private var _startTree:CheckBoxKube;
 		private var _group:FormComponentGroup;
+		private var _tabIndex:int;
 		
 		
 		
@@ -93,6 +94,13 @@ package com.twinoid.kube.quest.editor.views {
 		 * @inheritDoc
 		 */
 		public function get isClosed():Boolean { return _closed; }
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set tabIndex(value:int):void {
+			_tabIndex = value;
+		}
 
 
 
@@ -180,6 +188,16 @@ package com.twinoid.kube.quest.editor.views {
 			_disable.alpha = 0;
 			_disable.visible = false;
 			_window.visible = false;
+			
+			_place.tabIndex		= _tabIndex;
+			_type.tabIndex		= _tabIndex + 50;
+			_choices.tabIndex	= _tabIndex + 100;
+			_times.tabIndex		= _tabIndex + 150;
+			_sound.tabIndex		= _tabIndex + 200;
+			_startTree.tabIndex	= _tabIndex + 250;
+			_endsQuest.tabIndex	= _tabIndex + 300;
+			_submit.tabIndex	= _tabIndex + 350;
+			_cancel.tabIndex	= _tabIndex + 351;
 			
 			//Prevents from selecting both start and end boxes
 			_group = new FormComponentGroup();
