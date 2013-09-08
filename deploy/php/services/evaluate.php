@@ -2,6 +2,7 @@
 	require_once("../db/DBConnection.php");
 	require_once("../out/Out.php");
 	require_once("../log/Logger.php");
+	require_once("../utils/OAuth.php");
 	
 	//Connect to database
 	try {
@@ -11,13 +12,17 @@
 		die;
 	}
 	
+	OAuth::connect();
+	
 	//Not logged
-	if(!isset($_SESSION["uid"])) {
+	if(!isset($_SESSION["logged"]) || $_SESSION["logged"] === false) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
 	
+	//If query parameters are correct
 	if (isset($_POST["id"], $_POST["note"], $_POST["key"])) {
+		//Check if the quest key is valid
 		if ($_SESSION["pubkey"] != $_POST['key']) {
 			Out::printOut(false, '', 'Invalid key.', 'KUEST_EVALUATION_INVALID_KEY', false);
 			die;
@@ -42,29 +47,23 @@
 			die;
 			
 		}else {
+			//Grab the statistics
+			OAuth::call('siteUser/'.$_SESSION['uid'].'/18?fields=user,site,realId,link,stats.fields(id,score)');
 			
-			$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
-			$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
-			$url = "http://muxxu.com/app/xml?app=".$app."&xml=user&id=".$_SESSION['uid']."&key=".md5($key . $_POST["key"]);
-			if($xml = simplexml_load_file($url))
-			{
-				$node = $xml->xpath("/user/games/g[@game='kube']");
-				if(count($node) > 0) {
-					$points = $node[0]->xpath("i[@key='Score']");
-					$zones = $node[0]->xpath("i[@key='Carte']");
-					$points = intval(preg_replace("[\D]", "", $points[0]->asXML()));
-					$zones = intval(preg_replace("[\D]", "", $zones[0]->asXML()));
-				}else {
-					$points = 0;
-					$zones = 0;
-				}
+			$json = OAuth::call('siteUser/'.$_SESSION['uid'].'/18?fields=user,site,realId,link,stats.fields(id,score)');
+			$stats = $json->stats;
+			$points = 0;
+			$zones = 0;
+			for ($i = 0; $i < count($stats); $i++) {
+				if($stats[$i]->id == 'action') $points = (int) $stats[$i]->score;
+				if($stats[$i]->id == 'zones') $zones = (int) $stats[$i]->score;
 			}
 			
 			//Ponderate note
 			$noteBase = min(20, max(1, $_POST['note']));//Limit note input
 			$note = $noteBase;
-			$note += round($points * .03);
-			$note += round($zones * .0001);
+			$note += max(0, round($points * .03));
+			$note += max(0, round($zones * .0001));
 			
 			//Get the quest's ID
 			$sql = "SELECT * FROM kuests WHERE guid=:guid";

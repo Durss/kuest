@@ -1,9 +1,7 @@
 package com.twinoid.kube.quest.player.model {
-	import com.nurun.core.lang.isEmpty;
-	import com.twinoid.kube.quest.editor.utils.logJS;
-	import flash.net.SharedObject;
 	import com.nurun.core.commands.SequentialCommand;
 	import com.nurun.core.commands.events.CommandEvent;
+	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.crypto.XOR;
@@ -36,6 +34,7 @@ package com.twinoid.kube.quest.player.model {
 	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.net.LocalConnection;
+	import flash.net.SharedObject;
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
@@ -278,7 +277,8 @@ package com.twinoid.kube.quest.player.model {
 				//Test Lilith - 51a207ff98070
 				//Cristal Atlante - 5194100a4a94f
 				//Tubasa labyrinthe - 51aa7b6cbe1ef
-				Config.addVariable("kuestID", "5194100a4a94f");
+				//4) Exemple poser/prendre objets - 51ad12eca65b6
+				Config.addVariable("kuestID", "51ad12eca65b6");
 				Config.addVariable("currentUID", "89");
 				Config.addVariable("testMode", 'true');
 			}
@@ -829,7 +829,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Determines which event is the current one depending on the current user's action position
 		 */
 		private function selectEventFromPos(pos:*):void {
-			_lastPosData = pos;
+			_lastPosData = pos['clone']();//Dirty dynamic call.. can't put an interface on Point class, and too lazy to create a custom Point :(
 			if(_nodeToTreeID == null) return;
 			
 			var i:int, len:int, item:KuestEvent, selectedEvent:KuestEvent;

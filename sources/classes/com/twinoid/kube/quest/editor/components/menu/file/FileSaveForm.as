@@ -158,12 +158,12 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 				len = _friends.length;
 				var amIIn:Boolean = false;
 				for(i = 0; i < len; ++i) {
-					if(!amIIn && _friends[i].uid == "89") amIIn = true;
+					if(!amIIn && _friends[i].uid == "48") amIIn = true;
 					_friendsCB.addSkinnedItem(_friends[i].uname+" <span class='friendItemId'>(ID:"+_friends[i].uid+")</span>", _friends[i].uid);
 				}
 				//Add myself for eventual technical support on quests
-				if(!amIIn && Config.getVariable("uid") != "89") {
-					_friendsCB.addSkinnedItem("Durss <span class='friendItemId'>(ID:89)</span>", 89);
+				if(!amIIn && Config.getVariable("uid") != "48") {
+					_friendsCB.addSkinnedItem("Durss <span class='friendItemId'>(ID:48)</span>", 48);
 				}
 			}
 			
