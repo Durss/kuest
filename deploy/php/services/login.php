@@ -38,6 +38,7 @@
 	$additionnals = "";
 	$friends = array();
 	if (isset($_POST["pubkey"], $_POST["uid"], $_POST["samples"])) {
+	/*
 		if(!isset($_SESSION['uid']) || ($_SESSION["uid"] != $_POST["uid"]) || !isset($_SESSION['pubkey']) || $_SESSION["pubkey"] != $_POST["pubkey"]) {
 			$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
 			$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
@@ -71,6 +72,7 @@
 		}else if(isset($_SESSION["friends"])){
 			$friends = $_SESSION["friends"];
 		}
+	*/
 		
 		$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
 		$params = array(':uid' => $_SESSION["uid"]);
@@ -80,19 +82,7 @@
 		
 		//User doesn't exist
 		if ($tot == 0) {
-			$sql = "INSERT INTO kuestUsers (uid, name, pubkey) VALUES (:uid, :name, :pubkey)";
-			$params = array(':uid' => $_SESSION["uid"], ':name' => $_SESSION["name"], ':pubkey' => $_SESSION["pubkey"]);
-			$req = DBConnection::getLink()->prepare($sql);
-			$req->execute($params);
-			$id = DBConnection::getLink()->lastInsertId();
-			//$additionnals .= "\t<test>".print_r($req->errorInfo())."</test>\n";
-		
-		//User exists, update its nickname in case he changed it.
-		}else {
-			$sql = "UPDATE kuestUsers SET `pseudo`=:name WHERE `uid`=:uid";
-			$params = array(':name' => $_SESSION["name"], ':uid' => $_SESSION["uid"]);
-			$req = DBConnection::getLink()->prepare($sql);
-			$req->execute($params);
+			//TODO display error !
 		}
 		
 		$additionnals .= "<uid>".$_SESSION["uid"]."</uid>\n";
@@ -151,9 +141,10 @@
 		
 		//Adds friends
 		$additionnals .= "\t<friends>\n";
-		foreach ($friends as $row) {
+		/*foreach ($friends as $row) {
 			$additionnals .= "\t\t<f id='".$row['id']."'><![CDATA[".$row['name']."]]></f>\n";
-		}
+		}*/
+		$additionnals .= "\t\t<f id='49'><![CDATA[TODO : réparer cette liste :3]]></f>\n";
 		$additionnals .= "\t</friends>";
 		
 	}else if(!isset($_POST["logout"])){

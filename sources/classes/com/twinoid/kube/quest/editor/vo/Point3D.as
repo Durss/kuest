@@ -66,6 +66,10 @@ package com.twinoid.kube.quest.editor.vo {
 		public function equals(p:Point3D):Boolean {
 			return p.x == x && p.y == y && p.z == z;
 		}
+		
+		public function clone():Point3D {
+			return new Point3D(x,y,z);
+		}
 
 
 		

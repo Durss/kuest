@@ -37,7 +37,7 @@ window, body {
 	background-color:#82C0DB;
 }
 .item:before {
-	background-image:url(/kuest/img/open.png);
+	background-image:url(/kuest/img/play.png);
 	background-repeat:no-repeat;
 	background-position:top left;
 	padding-left:0px;

@@ -1,0 +1,105 @@
+
+(08-09-13 19:39:25) SQL_ERROR :: Unknown column 'kuest.title' in 'where clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [search] => test
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => lBX12JWzDtJ6KU4ttkJNgq9VP7dDinuU
+    [access_token_death] => 1378666750
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+)
+
+(08-09-13 19:39:26) SQL_ERROR :: Unknown column 'kuest.title' in 'where clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [search] => test
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => lBX12JWzDtJ6KU4ttkJNgq9VP7dDinuU
+    [access_token_death] => 1378666750
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+)
+
+(08-09-13 19:39:59) SQL_ERROR :: Unknown column 'kuest.title' in 'where clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [search] => test
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => lBX12JWzDtJ6KU4ttkJNgq9VP7dDinuU
+    [access_token_death] => 1378666750
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+)
+
+(08-09-13 19:40:22) SQL_ERROR :: Unknown column 'kuests.title' in 'where clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [search] => test
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => lBX12JWzDtJ6KU4ttkJNgq9VP7dDinuU
+    [access_token_death] => 1378666750
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+)
+
+(08-09-13 19:40:34) SQL_ERROR :: Unknown column 'title' in 'where clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [search] => test
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => lBX12JWzDtJ6KU4ttkJNgq9VP7dDinuU
+    [access_token_death] => 1378666750
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+)

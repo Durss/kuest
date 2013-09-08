@@ -2,5 +2,6 @@ Options +FollowSymlinks
 RewriteEngine On
 RewriteRule	^down$					down.php				[L]
 RewriteRule	^ids$					ids.php					[L]
-RewriteRule	^browe$					browse.php				[L]
-RewriteRule	^k/([A-Za-z0-9]+)$		syncer.php?id=$1		[L]
+RewriteRule	^browse$				index.php				[L]
+RewriteRule	^editor$				editor.php				[L]
+RewriteRule	^k/([A-Za-z0-9]{13})$		syncer.php?id=$1		[L]

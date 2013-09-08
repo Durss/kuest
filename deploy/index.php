@@ -1,5 +1,10 @@
 <?php
-	session_start();
+	require_once("php/db/DBConnection.php");
+	require_once("php/out/Out.php");
+	require_once("php/log/Logger.php");
+	require_once("php/utils/OAuth.php");
+	require_once("php/l10n/labels.php");
+	
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	
@@ -9,127 +14,106 @@
 		die;
 	}
 	
-	//Converts act var into multiple GET vars if necessary.
-	//If the following act var is past :
-	//act=value_var1=value1_var2=value2
-	//then $_GET["act"] value will only be "value" and two
-	//GET vars named "var1" and "var2" will be created with
-	//the corresponding value.
-	$rawAct = "";
-	if (isset($_GET["act"])) {
-		$rawAct = $_GET["act"];
-		$params = explode("_", $_GET["act"]);
-		$_GET["act"] = $params[0];
-		for ($i = 1; $i < count($params); $i++) {
-			if(strpos($params[$i], "=") > -1) {
-				list($var, $value) = explode("=", $params[$i]);
-			}else {
-				$var = $params[$i];
-				$value = 0;
-			}
-			$_GET[$var] = $value;
-		}
-	}
-	
-	if (isset($_GET["act"]) && $_GET["act"] == "ids") {
-		header("location:ids.php?uid=".$_GET['uid']."&pubkey=".$_GET['pubkey']);
+	//Connect to database
+	try {
+		DBConnection::connect();
+	}catch (Exception $loadingError) {
+		$loadingError = "Unable to connect DataBase...";
 		die;
 	}
 	
-	if (isset($_GET["act"]) && $_GET["act"] == "k") {
-		header("location:syncer.php?id=".$_GET['kid']);
-		die;
-	}
+	//session_destroy(); die;
+	OAuth::connect();
 	
-	if (isset($_GET["act"]) && $_GET["act"] != "editor") {
-		header("location:browse.php?uid=".$_GET['uid']."&pubkey=".$_GET['pubkey']);
-		die;
-	}
-	
-	$lang = "";
-	if(isset($_GET['uid'], $_GET['pubkey'])) {
-		$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
-		$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
-		$url = "http://muxxu.com/app/xml?app=".$app."&xml=user&id=".$_GET['uid']."&key=".md5($key . $_GET["pubkey"]);
-		$xml = @simplexml_load_file($url);
-		$xml = @simplexml_load_file($url);
-		if ($xml !== false) {
-			if ($xml->getName() != "error") {
-				$pseudo	= (string) $xml->attributes()->name;
-				$lang = (string)$xml->attributes()->lang;
-			}
-		}else {
-			header("location: /kuest/down");
-		}
-	}else {
-		if (isset($_SESSION['lang'])) $lang = $_SESSION['lang'];
-	}
-	
-	//Check if the application is localized in this lang or not. If not, use english.
-	if ($lang != "" && !file_exists("xml/i18n/labels_".$lang.".xml")) $lang = "en";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<title>Kuest</title>
-		<link rel="shortcut icon" href="favicon.ico" />
+		<title>Kuests</title>
+		<link rel="shortcut icon" href="/kuest/favicon.ico" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="language" content="en" />
 		<meta name="description" content="Tool to create quests for the game Kube." />
-		<meta name="keywords" content="kube, quest, durss" />
+		<meta name="keywords" content="kube, kuest, quest, durss" />
 		
-		<link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/stylesheet.css"/>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/browse.css"/>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/tooltip.css"/>
 		
-		<script type="text/javascript" src="js/swfobject.js"></script>
-		<script type="text/javascript" src="js/SWFAddress.js"></script>
-		<script type="text/javascript" src="js/swfwheel.js"></script>
-		<script type="text/javascript" src="js/swffit.js"></script>
-		<STYLE type="text/css">
-		  <!--
-		  body, html {
-			overflow:hidden;
-			height:100%;
-		  }
-		  -->
-		  </STYLE>
+		<script type="text/javascript" src="/kuest/js/sendRequest.js"></script>
+		<script type="text/javascript" src="/kuest/js/addRemoveEvent.js"></script>
+		<script type="text/javascript" src="/kuest/js/isEventSupported.js"></script>
+		<script type="text/javascript" src="/kuest/js/mouse.js"></script>
+		<script type="text/javascript" src="/kuest/js/utils.js"></script>
+		<script type="text/javascript" src="/kuest/js/search.js"></script>
+		<script type="text/javascript" src="/kuest/js/browse.js"></script>
+		<script type="text/javascript" src="/kuest/js/tooltip.js"></script>
 	</head>
 	<body>
-		<div id="content">
-			<p>In order to view this page you need JavaScript and Flash Player 11+ support!</p>
-			<a href="http://get.adobe.com/fr/flashplayer/">Install flash</a>
+		<div class="template item" onmouseover="tooltip.pop(this, '{DESCRIPTION}', {position:2, calloutPosition:.5})">
+			{TITLE} <i>(par <a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>)</i>
 		</div>
 		
-		<script type="text/javascript">
-			var lang = "<?php echo $lang ?>";
-			if(lang.length == 0) {//Get browser's language if we couldn't get the user's language from muxxu XML API because user isn't logged-in.
-				lang = (navigator.language) ? navigator.language : navigator.userLanguage;
-				lang = lang.split("-")[0];
-			}
-			//Compute this languages list via PHP depending on the folder's content.
-			if(lang != "fr" && lang != "en") lang = "en";
-			
-			var flashvars = {};
-			flashvars["version"] = "65";
-			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
-			flashvars["lang"] = lang;
-<?php
-	if (isset($_GET["uid"], $_GET["pubkey"])) {
-		echo "\t\t\tflashvars['uid'] = '".htmlentities($_GET["uid"])."';\r\n";
-		echo "\t\t\tflashvars['pubkey'] = '".htmlentities($_GET["pubkey"])."';\r\n";
-	}
-?>
-			
-			var attributes = {};
-			attributes["id"] = "externalDynamicContent";
-			attributes["name"] = "externalDynamicContent";
-			
-			var params = {};
-			params['allowFullScreen'] = 'true';
-			params['menu'] = 'false';
-			
-			swfobject.embedSWF("swf/application.swf?v="+flashvars["version"], "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
-			
-			swffit.fit("externalDynamicContent", 800, 600, 3000, 3000, true, true);
-		</script>
+		<div class="banner"></div>
+		
+		<div class="menu">
+			<button class="big twinoid" onclick="window.location='http://twinoid.com'" onmouseover="tooltip.pop(this, 'Twinoid.', {position:1, calloutPosition:.5})"><img src="/kuest/img/twinoid_logo.png"/></button>
+			<button class="big" onclick="window.location='editor'" onmouseover="tooltip.pop(this, '<?php echo $menu_createButtonTT; ?>', {position:2, calloutPosition:.5})"/><img src="/kuest/img/feather.png"> <?php echo $menu_createButton; ?></button>
+		</div>
+		
+		<div class="search">
+			<div class="window">
+				<div class="title"><?php echo $browse_search; ?></div>
+				<div class="content close">
+					<div class="inner">
+						<input type="text" id="searchInput" name="search" placeholder="<?php echo $browse_searchPlaceholder; ?>" /><br />
+						<button id="submitButton"><?php echo $browse_searchSubmit; ?></button>
+					</div>
+				</div>
+				<div class="bottom"></div>
+			</div>
+		</div>
+		
+		<div class="resultsHidden">
+			<div class="window">
+				<div class="title"><?php echo $browse_results; ?></div>
+				<div class="content">
+					<div class="inner">
+						<div class="loader"><?php echo $loading; ?></div>
+						<div class="serverError"><?php echo $loadingError; ?></div>
+						<div class="noResult"><?php echo $noResults; ?></div>
+						<div class="kuestsList"></div>
+					</div>
+				</div>
+				<div class="bottom"></div>
+			</div>
+		</div>
+		
+		<div class="browse">
+			<div class="window cell">
+				<div class="title"><?php echo $browse_titleLeft; ?></div>
+				<div class="content">
+					<div class="inner">
+						<div class="loader"><?php echo $loading; ?></div>
+						<div class="serverError"><?php echo $loadingError; ?></div>
+						<div class="noResult"><?php echo $noResults; ?></div>
+						<div class="kuestsList"></div>
+					</div>
+				</div>
+				<div class="bottom"></div>
+			</div>
+			<div class="window cell">
+				<div class="title"><?php echo $browse_titleRight; ?></div>
+				<div class="content">
+					<div class="inner">
+						<div class="loader"><?php echo $loading; ?></div>
+						<div class="serverError"><?php echo $loadingError; ?></div>
+						<div class="noResult"><?php echo $noResults; ?></div>
+						<div class="kuestsList"></div>
+					</div>
+				</div>
+				<div class="bottom"></div>
+			</div>
+		</div>
 	</body>
 </html>
