@@ -16,7 +16,7 @@
 	
 	//Get last kuests
 	if(!isset($_POST['top']) || $_POST['top'] == 'false') {
-		$sql = "SELECT kuests.id, kuests.guid, kuests.uid as 'uid', kuests.description as 'description', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE published=1 AND kuests.uid=kuestUsers.uid AND lang=:lang ORDER BY kuests.id DESC";
+		$sql = "SELECT kuests.id, kuests.guid, kuests.uid as 'uid', kuests.description as 'description', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE published=1 AND kuests.uid=kuestUsers.uid AND lang=:lang ORDER BY kuests.id DESC LIMIT 0,30";
 		$params = array(':lang' => $_SESSION["lang"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
@@ -48,7 +48,7 @@
 	
 	//Get best notted quests 
 	}else {
-		$sql = "SELECT kid, SUM(note) as 'total' FROM kuestEvaluations INNER JOIN kuests ON kuests.id = kuestEvaluations.kid WHERE kuests.lang = :lang GROUP BY kid ORDER BY SUM(note) DESC";
+		$sql = "SELECT kid, SUM(note) as 'total' FROM kuestEvaluations INNER JOIN kuests ON kuests.id = kuestEvaluations.kid WHERE kuests.lang = :lang GROUP BY kid ORDER BY SUM(note) DESC LIMIT 0,30";
 		$params = array(':lang' => $_SESSION["lang"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
