@@ -16,6 +16,13 @@
 				header('location: https://twinoid.com/oauth/auth?response_type=code&client_id='.urlencode(constant('CLIENT_ID')).'&redirect_uri='.urlencode(constant('REDIRECT_URI')).'&scope=contacts&state=login&access_type=online');
 				die;
 			}
+			
+			//User canceled the authorization rights
+			if (isset($_GET['error']) && $_GET['error'] == 'access_denied') {
+				header("location: /kuest/error?e=cancel&api=grant_access");
+				die;
+			}
+			
 			//Connects the user
 			if (isset($_GET['state'])) {
 				$ctx = array('http' =>

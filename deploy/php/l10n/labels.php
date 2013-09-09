@@ -25,6 +25,11 @@
 	$menu_kuests["en"] = "Quests list";
 	$menu_kuests = $menu_kuests[ $lang ];
 	
+	$menu_connect = array();
+	$menu_connect["fr"] = "Me connecter";
+	$menu_connect["en"] = "Connect";
+	$menu_connect = $menu_connect[ $lang ];
+	
 	$menu_kuestsTT = array();
 	$menu_kuestsTT["fr"] = "Retour à la liste des quêtes.";
 	$menu_kuestsTT["en"] = "Back to the quests list.";
@@ -122,8 +127,8 @@
 	$syncer_infoTitle = $syncer_infoTitle[ $lang ];
 	
 	$syncer_infoContent = array();
-	$syncer_infoContent["fr"] = "Voici les étapes à suivre pour pouvoir charger une quête dans le jeu.<br /><ul><li>Si vous utilisez Firefox, <a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>installez GreaseMonkey</a> et cliquez sur <a href='/kuest/js/kuest.user.js' target='_blank'>ce lien</a>.</li><li>Si vous utilisez Google Chrome, faites de même mais en installant d'abord <a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a>.<br />Ou bien rendez-vous à l'adresse <b>chrome://extensions</b> et glissez déposez le fichier <a href='/kuest/js/kuest.user.js' target='_blank'>Kuest.user.js</a> dans la page.</li><li>Le script n'a pas été testé sous Opéra</li><li>Sous Internet Explorer il n'est pas possible d'installer ce script.</li></ul>Une fois le script installé, il vous suffit de cliquer sur le bouton \"<b>".$syncer_load."</b>\" ci-dessous pour commencer la quête.";
-	$syncer_infoContent["en"] = "TODO";
+	$syncer_infoContent["fr"] = "Voici les étapes à suivre pour pouvoir charger une quête dans le jeu.<br /><ul><li>Si vous utilisez <b>Firefox</b>, installez <a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>GreaseMonkey</a> et cliquez sur <a href='/kuest/js/kuest.user.js' target='_blank'>ce lien</a>.</li><li>Si vous utilisez <b>Google Chrome</b>, installez <a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a> puis cliquez sur <a href='/kuest/js/kuest.user.js' target='_blank'>ce lien</a>.<br />Ou bien rendez-vous à l'adresse <b>chrome://extensions</b> et glissez déposez le fichier <a href='/kuest/js/kuest.user.js' target='_blank'>Kuest.user.js</a> dans la page.</li><li>Le script n'a pas été testé sous <b>Opéra</b></li><li>Sous <b>Internet Explorer</b> il n'est pas possible d'installer ce script.</li></ul>Une fois le script installé, il vous suffit de cliquer sur le bouton \"<b>".$syncer_load."</b>\" ci-dessous pour commencer la quête.";
+	$syncer_infoContent["en"] = "Here are the steps to be able to play a quest.<br /><ul><li>If you use <b>Firefox</b>, <a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>install GreaseMonkey</a> then click on <a href='/kuest/js/kuest.user.js' target='_blank'>that link</a>.</li><li>If you use <b>Google Chrome</b>, install <a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a> then click on <a href='/kuest/js/kuest.user.js' target='_blank'>that link</a>.<br />Or go to the page <b>chrome://extensions</b> then drag&drop the file <a href='/kuest/js/kuest.user.js' target='_blank'>Kuest.user.js</a> inside the page.</li><li>The script hasen't been tested on <b>Opera</b></li><li><b>Internet Explorer</b> doesn't support the script.</li></ul>Once installed, you only need to click on \"<b>".$syncer_load."</b>\" under to start the quest.";
 	$syncer_infoContent = $syncer_infoContent[ $lang ];
 	
 	$syncer_notFoundTitle = array();
@@ -138,16 +143,30 @@
 	
 	
 	
-	//SYNCER PAGE//
-	if(isset($_GET['e'])) {
-		$error_title = array();
-		$error_title["fr"] = "Erreur API";
-		$error_title["en"] = "API error";
-		$error_title = $error_title[ $lang ];
+	//ERROR PAGE//
+	if (isset($_GET['e'])) {
+		if ($_GET['e'] == 'cancel') {
+			$error_title = array();
+			$error_title["fr"] = "Connexion échouée";
+			$error_title["en"] = "Connection failed";
+			$error_title = $error_title[ $lang ];
+			
+			$error_content = array();
+			$error_content["fr"] = "Vous devez autoriser l'application à accéder à vos informations pour pouvoir l'utiliser.<br /><br />Vos informations sont utilisées pour :<ul><li>Vous authentifier</li><li>Pondérer vos évaluations selon vos statistiques Kube</li></ul><br />Cliquez sur le bouton de connexion ci-dessus pour vous connecter à nouveau.";
+			$error_content["en"] = "In order to use this application, you need to grant it authorization to access your personnal informations.<br /><br />Your informations will be used to :<ul><li>Authenticate</li><li>Weight your evaluations depending on your Kube's statistics</li></ul><br />Click on the button above to connect again.";
+			$error_content = $error_content[ $lang ];
 		
-		$error_content = array();
-		$error_content["fr"] = "Une erreur est survenue lors de votre connexion à l'application.<br /><br />L'API twinoid a répondu :<br /><div class='error'><i><b>".$_GET['e']."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
-		$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>".$_GET['e']."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
-		$error_content = $error_content[ $lang ];
+		}else {
+		
+			$error_title = array();
+			$error_title["fr"] = "Erreur API";
+			$error_title["en"] = "API error";
+			$error_title = $error_title[ $lang ];
+			
+			$error_content = array();
+			$error_content["fr"] = "Une erreur est survenue lors de votre connexion à l'application.<br /><br />L'API twinoid a répondu :<br /><div class='error'><i><b>".$_GET['e']."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
+			$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>".$_GET['e']."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
+			$error_content = $error_content[ $lang ];
+		}
 	}
 ?>

@@ -11,12 +11,12 @@ body {
 }
 
 a {
-	color: #cc0000;
+	color: #ffaaaa;
 	font-weight:bold;
 	text-decoration:none;
 }
 a:hover {
-	color: #cc0000;
+	color: #ff8888;
 	text-decoration:underline;
 }
 
@@ -81,7 +81,7 @@ button {
 	
 	font-size:16px;
 	font-weight:bold; 
-	color:#265367;
+	color:#ffffff;
 	cursor:pointer;
 	border-style:solid;
 	border-width:1px;
@@ -97,7 +97,7 @@ button {
 	padding-right:20px;
 }
 button:hover {
-	color:#36748D;
+	color:#C7DFE9;
 	background-color:#5BB3D7;
 }
 button:active {
@@ -105,16 +105,18 @@ button:active {
 	background-color:#3199C6;
 }
 
-button,img {
+button img {
 	vertical-align:middle;
+	margin:0px 5px 0px 5px !important;
 }
 
 button.big {
+	vertical-align:text-top;
 	height:50px;
 	margin:0px;
 	background:#3986A8;
 	border-color:#266884;
-	padding:2px 20px 2px 20px;
+	padding:2px 10px 2px 10px;
 	margin-bottom:10px;
 	color:#ffffff;
 	font-size:18px;
@@ -150,6 +152,23 @@ button.big:hover {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f708c', endColorstr='#45a5cc',GradientType=0 ); /* IE6-9 */
 }
 
+ul {
+	margin:0px;
+	padding:0px 0px 0px 30px;
+}
+li {
+	margin:0px;
+	padding:0px 0px 0px 0px;
+	font-style:italic;
+	font-size:12px;
+	font-weight:bold;
+	color:#DEEDF3;
+}
+
+li b {
+	color:#ffffff;
+	border-bottom:1px dashed;
+}
 
 input {
 	vertical-align:middle;

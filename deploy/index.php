@@ -50,8 +50,9 @@
 		<script type="text/javascript" src="/kuest/js/tooltip.js"></script>
 	</head>
 	<body>
-		<div class="template item" onmouseover="tooltip.pop(this, '{DESCRIPTION}', {position:2, calloutPosition:.5})">
-			{TITLE} <i>(par <a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>)</i>
+		<!-- Template used for items creation. Modify it to update all the items rendering -->
+		<div class="template item">
+			{TITLE} <i>(<a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>)</i>
 		</div>
 		
 		<div class="banner"></div>
