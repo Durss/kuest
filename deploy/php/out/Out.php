@@ -11,7 +11,7 @@
 			$str .= "</root>";
 			
 			//No logs for me on prod server 'coz i don't give shit about that :D (yeah, i'll probably regret that...)
-			if(!$success && $log && (!isset($_SESSION['uid']) || $_SESSION['uid'] != '89' || $_SERVER['HTTP_HOST'] != "localhost")) {
+			if(!$success && $log && (!isset($_SESSION['uid']) || $_SESSION['uid'] != '89')) {
 				Logger::getInstance()->log($errorID." :: ".$error."\r\n\t\tGET : ".print_r($_GET, true)."\r\n\t\tPOST : ".print_r($_POST, true)."\r\n\t\tSESSION : ".print_r($_SESSION, true));
 			}
 			

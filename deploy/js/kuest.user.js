@@ -73,7 +73,7 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	
 }else{
 	//Add SWF module
-	var server = local? "localhost" : "fevermap.org";
+	var server = local? "local.kuest" : "fevermap.org";
 	var gameDiv = unsafeWindow.document.getElementsByClassName("game")[0];
 	var url = "http://"+server+"/kuest/swf/player.swf?";
 	var kuestApp = unsafeWindow.document.createElement('div');

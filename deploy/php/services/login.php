@@ -38,42 +38,6 @@
 	$additionnals = "";
 	$friends = array();
 	if (isset($_POST["pubkey"], $_POST["uid"], $_POST["samples"])) {
-	/*
-		if(!isset($_SESSION['uid']) || ($_SESSION["uid"] != $_POST["uid"]) || !isset($_SESSION['pubkey']) || $_SESSION["pubkey"] != $_POST["pubkey"]) {
-			$key = ($_SERVER['HTTP_HOST'] == "localhost")? "f98dad718d97ee01a886fbd7f2dffcaa" : "34e2f927f72b024cd9d1cf0099b097ab";
-			$app = ($_SERVER['HTTP_HOST'] == "localhost")? "kuest-dev" : "kuest";
-			$url = "http://muxxu.com/app/xml?app=".$app."&xml=user&id=".$_POST['uid']."&key=".md5($key . $_POST["pubkey"]);
-			$xml = @simplexml_load_file($url);
-			
-			if ($xml === false) {
-				Out::printOut(false, '', 'Muxxu API unavailable', 'API_ERROR');
-				die;
-			}
-			
-			if ($xml->getName() != "error") {
-				$_SESSION["uid"]	= $_POST["uid"];
-				$_SESSION["pubkey"]	= $_POST["pubkey"];
-				$_SESSION["name"]	= (string) $xml->attributes()->name;
-				$_SESSION["lang"]	= (string)$xml->attributes()->lang;
-				$_SESSION["version"]= SESSION_VERSION;
-			}else {
-				Out::printOut(false, '', 'Invalid UID and/or PUBKEY', 'INVALID_IDS');
-				die;
-			}
-			
-			$dataKey = (string) $xml->attributes()->friends;
-			$url = "http://muxxu.com/app/xml?app=".$app."&xml=friends&id=".$_POST['uid']."&key=".md5($key . $dataKey);
-			$xml = @simplexml_load_file($url);
-			$children = $xml->children();
-			foreach ($children as $row) {
-				$friends[] = array( 'name' => (string) $row['name'], 'id' => (string) $row['id'] );
-			}
-			$_SESSION["friends"] = $friends;
-		}else if(isset($_SESSION["friends"])){
-			$friends = $_SESSION["friends"];
-		}
-	*/
-		
 		$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
 		$params = array(':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);

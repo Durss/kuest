@@ -18,7 +18,7 @@
 	try {
 		DBConnection::connect();
 	}catch (Exception $loadingError) {
-		header("location: /kuest/error?e=dbconnect");
+		$loadingError = "Unable to connect DataBase...";
 		die;
 	}
 	
@@ -45,8 +45,7 @@
 		<script type="text/javascript" src="/kuest/js/isEventSupported.js"></script>
 		<script type="text/javascript" src="/kuest/js/mouse.js"></script>
 		<script type="text/javascript" src="/kuest/js/utils.js"></script>
-		<script type="text/javascript" src="/kuest/js/search.js"></script>
-		<script type="text/javascript" src="/kuest/js/browse.js"></script>
+		<script type="text/javascript" src="/kuest/js/history.js"></script>
 		<script type="text/javascript" src="/kuest/js/opentip.js"></script>
 	</head>
 	<body>
@@ -58,60 +57,21 @@
 		<div class="banner"></div>
 		
 <?php include('menu.php'); ?>
-		
-		<div class="search">
-			<div class="window">
-				<div class="title"><?php echo $browse_search; ?></div>
-				<div class="content close">
-					<div class="inner">
-						<input type="text" id="searchInput" name="search" placeholder="<?php echo $browse_searchPlaceholder; ?>" /><br />
-						<button id="submitButton"><?php echo $browse_searchSubmit; ?></button>
-					</div>
-				</div>
-				<div class="bottom"></div>
-			</div>
-		</div>
-		
-		<div class="resultsHidden">
-			<div class="window">
-				<div class="title"><?php echo $browse_results; ?></div>
-				<div class="content">
-					<div class="inner">
-						<div class="loader"><?php echo $loading; ?></div>
-						<div class="serverError"><?php echo $loadingError; ?></div>
-						<div class="noResult"><?php echo $noResults; ?></div>
-						<div class="kuestsList"></div>
-					</div>
-				</div>
-				<div class="bottom"></div>
-			</div>
-		</div>
-		
+
 		<div class="browse">
-			<div class="window cell">
-				<div class="title"><?php echo $browse_titleLeft; ?></div>
+			<div class="window">
+				<div class="title"><?php echo $history_titleRight; ?></div>
 				<div class="content">
 					<div class="inner">
 						<div class="loader"><?php echo $loading; ?></div>
 						<div class="serverError"><?php echo $loadingError; ?></div>
-						<div class="noResult"><?php echo $noResults; ?></div>
-						<div class="kuestsList"></div>
-					</div>
-				</div>
-				<div class="bottom"></div>
-			</div>
-			<div class="window cell">
-				<div class="title"><?php echo $browse_titleRight; ?></div>
-				<div class="content">
-					<div class="inner">
-						<div class="loader"><?php echo $loading; ?></div>
-						<div class="serverError"><?php echo $loadingError; ?></div>
-						<div class="noResult"><?php echo $noResults; ?></div>
+						<div class="noResult"><?php echo $history_noResults; ?></div>
 						<div class="kuestsList"></div>
 					</div>
 				</div>
 				<div class="bottom"></div>
 			</div>
 		</div>
+		
 	</body>
 </html>

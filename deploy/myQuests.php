@@ -18,7 +18,7 @@
 	try {
 		DBConnection::connect();
 	}catch (Exception $loadingError) {
-		header("location: /kuest/error?e=dbconnect");
+		$loadingError = "Unable to connect DataBase...";
 		die;
 	}
 	
@@ -38,7 +38,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="/kuest/css/stylesheet.css"/>
 		<link rel="stylesheet" type="text/css" href="/kuest/css/browse.css"/>
-		<link rel="stylesheet" type="text/css" href="/kuest/css/opentip.css"/>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/tooltip.css"/>
 		
 		<script type="text/javascript" src="/kuest/js/sendRequest.js"></script>
 		<script type="text/javascript" src="/kuest/js/addRemoveEvent.js"></script>
@@ -47,7 +47,7 @@
 		<script type="text/javascript" src="/kuest/js/utils.js"></script>
 		<script type="text/javascript" src="/kuest/js/search.js"></script>
 		<script type="text/javascript" src="/kuest/js/browse.js"></script>
-		<script type="text/javascript" src="/kuest/js/opentip.js"></script>
+		<script type="text/javascript" src="/kuest/js/tooltip.js"></script>
 	</head>
 	<body>
 		<!-- Template used for items creation. Modify it to update all the items rendering -->
@@ -57,7 +57,10 @@
 		
 		<div class="banner"></div>
 		
-<?php include('menu.php'); ?>
+		<div class="menu">
+			<button class="big twinoid" onclick="window.location='http://twinoid.com'" onmouseover="tooltip.pop(this, 'Twinoid.', {position:1, calloutPosition:.5})"><img src="/kuest/img/twinoid_logo.png"/></button>
+			<button class="big" onclick="window.location='editor'" onmouseover="tooltip.pop(this, '<?php echo $menu_createButtonTT; ?>', {position:2, calloutPosition:.5})"/><img src="/kuest/img/feather.png"> <?php echo $menu_createButton; ?></button>
+		</div>
 		
 		<div class="search">
 			<div class="window">

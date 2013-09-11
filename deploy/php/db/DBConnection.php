@@ -3,7 +3,7 @@
 		private static $connection;
 		
 		public static function connect() {
-			if ($_SERVER['HTTP_HOST'] == "localhost") {
+			if ($_SERVER['HTTP_HOST'] != "fevermap.org") {
 				self::$connection = new PDO('mysql:host=localhost;dbname=kuest', 'root', '');
 			}else {
 				self::$connection = new PDO('mysql:host=mysql5-21.bdb;dbname=fevermapmysql', 'fevermapmysql', 'reyhPGwW');
@@ -20,7 +20,7 @@
 				array_walk_recursive($_REQUEST, 'stripslashes_gpc');
 			}
 			
-			define("SESSION_VERSION", 3);
+			define("SESSION_VERSION", 2);
 			session_start();
 			if (!isset($_SESSION["version"]) || $_SESSION["version"] != SESSION_VERSION) {
 				session_unset();
