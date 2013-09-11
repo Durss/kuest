@@ -33,8 +33,8 @@
 			$title = $syncer_notFoundTitle;
 			$syncer_description = $syncer_notFoundContent;
 		}else{
-			$title = utf8_encode($res["name"]);
-			$syncer_description = $syncer_description."<div class='description'>".utf8_encode($res["description"])."</div>";
+			$title = utf8_encode(htmlspecialchars($res["name"]));
+			$syncer_description = $syncer_description."<div class='description'>".utf8_encode(htmlspecialchars($res["description"]))."</div>";
 			$syncer_description .= "<br /><strong class='collapser'>".$syncer_infoTitle."</strong><div class='description collapsed'>".$syncer_infoContent."</div>";
 			$syncer_description .= "<br /><center><button class='button' onClick='window.location = \"/kuest/redirect?kuest=".htmlspecialchars($_GET['id'])."\";'><img src='/kuest/img/submit.png'/>".$syncer_load."</button></center>";
 		}
@@ -52,23 +52,19 @@
 		
 		<link rel="stylesheet" type="text/css" href="/kuest/css/stylesheet.css"/>
 		<link rel="stylesheet" type="text/css" href="/kuest/css/browse.css"/>
-		<link rel="stylesheet" type="text/css" href="/kuest/css/tooltip.css"/>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/opentip.css"/>
 		
 		<script type="text/javascript" src="/kuest/js/sendRequest.js"></script>
 		<script type="text/javascript" src="/kuest/js/addRemoveEvent.js"></script>
 		<script type="text/javascript" src="/kuest/js/isEventSupported.js"></script>
 		<script type="text/javascript" src="/kuest/js/mouse.js"></script>
 		<script type="text/javascript" src="/kuest/js/utils.js"></script>
-		<script type="text/javascript" src="/kuest/js/tooltip.js"></script>
+		<script type="text/javascript" src="/kuest/js/opentip.js"></script>
 	</head>
 	<body>
 		<div class="banner"></div>
 		
-		<div class="menu">
-			<button class="big twinoid" onclick="window.location='http://twinoid.com'" onmouseover="tooltip.pop(this, 'Twinoid.', {position:1, calloutPosition:.5})"><img src="/kuest/img/twinoid_logo.png"/></button>
-			<button class="big" onclick="window.location=(window.location.host=='localhost'? 'index.php' : '/kuest/browse' )" onmouseover="tooltip.pop(this, '<?php echo $menu_kuestsTT; ?>', {position:2, calloutPosition:.5})"/><img src="/kuest/img/list.png"> <?php echo $menu_kuests; ?></button>
-			<button class="big" onclick="window.location='editor'" onmouseover="tooltip.pop(this, '<?php echo $menu_createButtonTT; ?>', {position:2, calloutPosition:.5})"/><img src="/kuest/img/feather.png"> <?php echo $menu_createButton; ?></button>
-		</div>
+<?php include('menu.php'); ?>
 		
 		<div class="window">
 			<div class="title"><?php echo $title; ?></div>

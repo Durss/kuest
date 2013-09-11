@@ -16,7 +16,7 @@
 	$menu_createButton = $menu_createButton[ $lang ];
 	
 	$menu_createButtonTT = array();
-	$menu_createButtonTT["fr"] = "Découvrez l\'éditeur de quête qui vous permettra à vous aussi de créer une quête pour le jeu Kube !";
+	$menu_createButtonTT["fr"] = "Découvrez l'éditeur de quête qui vous permettra à vous aussi de créer une quête pour le jeu Kube !";
 	$menu_createButtonTT["en"] = "Discover the quest editor and create your own quest for the game Kube !";
 	$menu_createButtonTT = $menu_createButtonTT[ $lang ];
 	
@@ -29,6 +29,16 @@
 	$menu_connect["fr"] = "Me connecter";
 	$menu_connect["en"] = "Connect";
 	$menu_connect = $menu_connect[ $lang ];
+	
+	$menu_history = array();
+	$menu_history["fr"] = "Quêtes jouées";
+	$menu_history["en"] = "Played quests";
+	$menu_history = $menu_history[ $lang ];
+	
+	$menu_histoButtonTT = array();
+	$menu_histoButtonTT["fr"] = "Consultez toutes les quêtes auxquelles vous avez déjà joué jusque là.";
+	$menu_histoButtonTT["en"] = "browse the quest you played";
+	$menu_histoButtonTT = $menu_histoButtonTT[ $lang ];
 	
 	$menu_kuestsTT = array();
 	$menu_kuestsTT["fr"] = "Retour à la liste des quêtes.";
@@ -84,6 +94,20 @@
 	$loadingError["fr"] = "Oops... une erreur est survenue durant le chargement des quêtes.<br /><button class='button' onClick='loadQuests()'><img src='/kuest/img/submit.png'/>Ré-essayer</button>";
 	$loadingError["en"] = "Woops... an error has occurred while loading quests list.<br /><button class='button' onClick='loadQuests()'><img src='/kuest/img/submit.png'/>Try again</button>";
 	$loadingError = $loadingError[ $lang ];
+	
+	
+	
+	//HISTORY PAGE//
+	
+	$history_titleRight = array();
+	$history_titleRight["fr"] = "Quêtes auxquelles vous avez joué";
+	$history_titleRight["en"] = "Played quests";
+	$history_titleRight = $history_titleRight[ $lang ];
+	
+	$history_noResults = array();
+	$history_noResults["fr"] = "Vous n'avez joué à aucune quête<br/>pour le moment !<br /><br />Pourquoi ne pas essayer cette quête ?";
+	$history_noResults["fr"] = "You haven't played any quest for now !<br/><br/>Why don't you try this one ?";
+	$history_noResults = $history_noResults[ $lang ];
 	
 	
 	
@@ -156,7 +180,20 @@
 			$error_content["en"] = "In order to use this application, you need to grant it authorization to access your personnal informations.<br /><br />Your informations will be used to :<ul><li>Authenticate</li><li>Weight your evaluations depending on your Kube's statistics</li></ul><br />Click on the button above to connect again.";
 			$error_content = $error_content[ $lang ];
 		
-		}else {
+		}else 
+		if ($_GET['e'] == 'dbconnect') {
+		
+			$error_title = array();
+			$error_title["fr"] = "Erreur de connexion à la base de données";
+			$error_title["en"] = "Database connection error";
+			$error_title = $error_title[ $lang ];
+			
+			$error_content = array();
+			$error_content["fr"] = "<br/><br/>La connexion à la base de données<br/>a échoué.<br />Veuillez essayez à nouveau ultérieurement !";
+			$error_content["en"] = "<br/><br/><br/>Unable to connect database.<br />Please try again later !";
+			$error_content = $error_content[ $lang ];
+		
+		}else{
 		
 			$error_title = array();
 			$error_title["fr"] = "Erreur API";

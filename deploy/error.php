@@ -14,7 +14,6 @@
 		<meta name="keywords" content="" />
 		
 		<link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
-		<script type="text/javascript" src="js/ZeroClipboard.js"></script>
 	</head>
 	<body>
 		<div class="banner"></div>

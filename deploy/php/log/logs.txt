@@ -103,3 +103,204 @@
     [uid] => 48
     [name] => Durss
 )
+
+(10-09-13 22:01:24) SQL_ERROR :: Column 'uid' in where clause is ambiguous
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+)
+
+(10-09-13 22:01:41) SQL_ERROR :: Column 'uid' in where clause is ambiguous
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+)
+
+(10-09-13 22:01:48) SQL_ERROR :: Column 'uid' in where clause is ambiguous
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+)
+
+(10-09-13 22:01:57) SQL_ERROR :: Unknown column 'kuestsSave.kid' in 'on clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+)
+
+(10-09-13 23:23:00) SQL_ERROR :: Unknown column 'kuestUsers.id' in 'on clause'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+    [suggestionCache] => Array
+        (
+            [uid] => 490251
+            [0] => 490251
+            [total] => 32
+            [1] => 32
+            [kid] => 36
+            [2] => 36
+            [name] => Le labyrinthe de Tubasa
+            [3] => Le labyrinthe de Tubasa
+            [description] => Résoudre le labyrinthe de Tubasa en [10;-8]
+            [4] => Résoudre le labyrinthe de Tubasa en [10;-8]
+            [guid] => 51a8737f93644
+            [5] => 51a8737f93644
+        )
+
+)
+
+(10-09-13 23:23:23) SQL_ERROR :: Unknown column 'kuestUsers.pseudo' in 'field list'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+    [suggestionCache] => Array
+        (
+            [uid] => 274
+            [0] => 490251
+            [total] => 32
+            [1] => 32
+            [kid] => 36
+            [2] => 36
+            [name] => Le labyrinthe de Tubasa
+            [3] => Le labyrinthe de Tubasa
+            [description] => Résoudre le labyrinthe de Tubasa en [10;-8]
+            [4] => Résoudre le labyrinthe de Tubasa en [10;-8]
+            [guid] => 51a8737f93644
+            [5] => 51a8737f93644
+            [6] => 274
+        )
+
+)
+
+(10-09-13 23:49:30) SQL_ERROR :: Unknown column 'kuests.kid' in 'field list'
+		GET : Array
+(
+)
+
+		POST : Array
+(
+)
+
+		SESSION : Array
+(
+    [version] => 3
+    [access_token] => wHGyYkQakGkmFc53sfdqLOegkS6ZyhuN
+    [access_token_death] => 1378857011
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [pubkey] => bRD4AEP7vvajZ05KjiMTy4EsZlRGv5S4
+    [suggestionCache] => Array
+        (
+            [uid] => 12832
+            [0] => 12832
+            [total] => 70
+            [1] => 70
+            [kid] => 7
+            [2] => 7
+            [title] => Le Cristal Atlante.
+            [3] => Le Cristal Atlante.
+            [description] => Faites "une petite course pour le pêcheur qui désire posséder l'antique Cristal Atlante.
+Tout débute à <b>l'origine</b> en [0;0] !
+            [4] => Faites "une petite course pour le pêcheur qui désire posséder l'antique Cristal Atlante.
+Tout débute à <b>l'origine</b> en [0;0] !
+            [guid] => 5194100a4a94f
+            [5] => 5194100a4a94f
+            [pseudo] => Durss
+            [6] => Durss
+        )
+
+    [suggestionCacheExpirationTime] => 1378857326
+)

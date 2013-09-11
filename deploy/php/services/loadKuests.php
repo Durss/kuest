@@ -37,9 +37,9 @@
 				$note = $res2['note'];
 			}
 			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' note='".$note."'>\n";
-			$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".$res[$i]['pseudo']."]]></u>\n";
-			$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode($res[$i]['title'])."]]></title>\n";
-			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode($res[$i]['description'])."]]></description>\n";
+			$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['pseudo']))."]]></u>\n";
+			$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['title']))."]]></title>\n";
+			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description']))."]]></description>\n";
 			$additionnals .= "\t\t</k>\n";
 		}
 		$additionnals .= "\t</kuests>\n";
@@ -69,9 +69,9 @@
 				$res2 = $req2->fetch();
 				if($res2['lang'] == $_SESSION["lang"]) {
 					$additionnals .= "\t\t<k guid='".$res2['guid']."' note='".$res[$i]['total']."'>\n";
-					$additionnals .= "\t\t\t<u id='".$res2['uid']."'><![CDATA[".$res2['pseudo']."]]></u>\n";
-					$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode($res2['title'])."]]></title>\n";
-					$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode($res2['description'])."]]></description>\n";
+					$additionnals .= "\t\t\t<u id='".$res2['uid']."'><![CDATA[".htmlspecialchars($res2['pseudo'])."]]></u>\n";
+					$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res2['title']))."]]></title>\n";
+					$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res2['description']))."]]></description>\n";
 					$additionnals .= "\t\t</k>\n";
 				}
 			}

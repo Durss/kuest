@@ -34,7 +34,7 @@ function addItem(i, node, holder) {
 						return function (e) {
 							//If not in muxxu's context, just redirect
 							//if(window.parent == window) {
-								var details = window.location.host == 'localhost'? "/kuest/syncer.php?id="+id : "/kuest/k/"+id;
+								var details = window.location.host == 'local.kuest'? "/kuest/syncer.php?id="+id : "/kuest/k/"+id;
 								window.location = (e.layerX < 30)? "/kuest/redirect.php?kuest="+id : details;
 							/*}else{
 								//If in muxxu's contest, rewrite main URL if we watch details
@@ -46,7 +46,7 @@ function addItem(i, node, holder) {
 							}*/
 						}
 					})();
-	div.onmouseover = (function (div, description, options) { return function () { tooltip.pop(div, description, options); }; })(div, entry['description'], {position:0, calloutPosition:.5, offsetY:10});
+	new Opentip(div, entry['description'].replace('"', '\"'), { target: div, tipJoint: "bottom" });
 	div.className = i%2 == 0? "item" : "item mod";
 	div.innerHTML = template.replace(/\{GUID\}/gi, entry['guid']).replace(/\{PSEUDO\}/gi, entry['uname']).replace(/\{TITLE\}/gi, entry['title']).replace(/\{UID\}/gi, entry['uid']);
 	holder.appendChild(div);

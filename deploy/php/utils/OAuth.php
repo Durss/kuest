@@ -1,7 +1,7 @@
 <?php
-	define('CLIENT_ID', $_SERVER['SERVER_NAME'] == 'localhost'? '65' : '66');
-	define('CLIENT_SECRET', $_SERVER['SERVER_NAME'] == 'localhost'? 'Ekx40TWP8jagC3kBj3QBslZCjPlKMaAF' : 'HrGwVYWZLjScHvT3LjjRX9GPM7WqnBHt');
-	define('REDIRECT_URI', $_SERVER['SERVER_NAME'] == 'localhost'? 'http://localhost/kuest' : 'http://fevermap.org/kuest');
+	define('CLIENT_ID', $_SERVER['SERVER_NAME'] != 'fevermap.org'? '65' : '66');
+	define('CLIENT_SECRET', $_SERVER['SERVER_NAME'] != 'fevermap.org'? 'Ekx40TWP8jagC3kBj3QBslZCjPlKMaAF' : 'HrGwVYWZLjScHvT3LjjRX9GPM7WqnBHt');
+	define('REDIRECT_URI', $_SERVER['SERVER_NAME'] != 'fevermap.org'? 'http://local.kuest' : 'http://fevermap.org/kuest');
 	
 	class OAuth {
 
