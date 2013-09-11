@@ -1,0 +1,8 @@
+<cross-domain-policy>
+      <site-control permitted-cross-domain-policies="all"/>
+      <allow-http-request-headers-from domain="*" headers="*" secure="false"/>
+      <allow-access-from domain="*.fevermap.org" secure="false"/>
+      <allow-access-from domain="*.muxxu.com" secure="false"/>
+      <allow-access-from domain="*.muxxu.fr" secure="false"/>
+      <allow-access-from domain="local.kuest" secure="false"/>
+</cross-domain-policy>

@@ -157,6 +157,37 @@
   color: #ffffff;
   text-shadow: 0px 0px 0px rgba(0,0,0,0);
 }
+.opentip-container.style-kuest strong {
+	padding-top:10px;
+	display:block;
+	color:#B5EF65;
+	font-size:16px;
+	text-align:center;
+	width:100%;
+}
+.opentip-container.style-kuest strong:before {
+	background-image:url(/kuest/img/checkMark_small.png);
+	background-repeat:no-repeat;
+	background-position:left;
+	padding-left:20px;
+	content:'';
+}
+.opentip-container.style-kuest b {
+	padding-top:10px;
+	display:block;
+	color:#F08064;
+	font-size:16px;
+	text-align:center;
+	width:100%;
+}
+.opentip-container.style-kuest b:before {
+	background-image:url(/kuest/img/error_small.png);
+	background-repeat:no-repeat;
+	background-position:left;
+	padding-left:20px;
+	content:'';
+}
+
 .opentip-container.ot-hide-effect-fade {
   -webkit-transition: -webkit-transform 0.5s ease-in-out, opacity 1s ease-in-out;
   -moz-transition: -moz-transform 0.5s ease-in-out, opacity 1s ease-in-out;

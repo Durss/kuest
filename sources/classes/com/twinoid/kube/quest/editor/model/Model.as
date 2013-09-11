@@ -51,11 +51,9 @@ package com.twinoid.kube.quest.editor.model {
 		private var _kuestData:KuestData;
 		private var _currentBoxToEdit:KuestEvent;
 		private var _connectedToGame:Boolean;
-		private var _isConnected:Boolean;
 		private var _loginCmd:LoginCmd;
-		private var _uid:String;
+//		private var _uid:String;
 		private var _name:String;
-		private var _pubkey:String;
 		private var _lang:String;
 		private var _so:SharedObject;
 		private var _charactersUpdate:Boolean;
@@ -94,16 +92,7 @@ package com.twinoid.kube.quest.editor.model {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * Gets the user's ID
-		 */
-		public function get uid():String { return _uid; }
 
-		/**
-		 * Gets the user's pubkey
-		 */
-		public function get pubkey():String { return _pubkey; }
-		
 		/**
 		 * Gets the shared object's reference
 		 */
@@ -218,11 +207,7 @@ package com.twinoid.kube.quest.editor.model {
 			_charactersUpdate = _objectsUpdate = false;
 			
 			
-			if(_isConnected) {
-				_loginCmd.populate(Config.getVariable("uid"), Config.getVariable("pubkey"));
-				_loginCmd.execute();
-				ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
-			}
+			login();
 		}
 		
 		/**
@@ -299,8 +284,7 @@ package com.twinoid.kube.quest.editor.model {
 		/**
 		 * Logs the user in.
 		 */
-		public function login(uid:String, pubkey:String):void {
-			_loginCmd.populate(uid, pubkey);
+		public function login():void {
 			_loginCmd.execute();
 			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.LOGING_IN));
 		}
@@ -429,7 +413,6 @@ package com.twinoid.kube.quest.editor.model {
 			_so				= SharedObject.getLocal("kuest", "/");
 			_kuestData		= new KuestData(false);
 			_inGamePosition	= new Point(int.MAX_VALUE, int.MAX_VALUE);
-			_isConnected	= !isEmpty(Config.getVariable("uid")) && !isEmpty(Config.getVariable("pubkey"));
 			
 			_ksaCmd = new KeepSessionAliveCmd();//Don't care about succes/fail
 			
@@ -448,16 +431,7 @@ package com.twinoid.kube.quest.editor.model {
 			_loadCmd.addEventListener(ProgressEvent.PROGRESS, progessHandler);
 			
 			if(_so.data["lang"] != null) {
-				_uid = _so.data["uid"];
 				_lang = _so.data["lang"];
-				_pubkey = _so.data["pubkey"];
-				
-				if(!_isConnected) {
-					Config.addVariable("uid", _so.data["uid"]);
-					Config.addVariable("lang", _so.data["lang"]);
-					Config.addVariable("pubkey", _so.data["pubkey"]);
-					_isConnected = true;
-				}
 			}
 			
 			//================
@@ -570,16 +544,12 @@ package com.twinoid.kube.quest.editor.model {
 		 * Called when login operation completes
 		 */
 		private function loginCompleteHandler(event:CommandEvent):void {
-			_uid = event.data["uid"];
 			_name = event.data["name"];
-			_pubkey = event.data["pubkey"];
 			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
 			_samples = event.data["samples"] as Vector.<KuestInfo>;
 			_friends = event.data["friends"] as Vector.<UserInfo>;
 			
-			_so.data["uid"] = _uid;
 			_so.data["lang"] = event.data["lang"];
-			_so.data["pubkey"] = _pubkey;
 			_so.flush();
 			
 			//Keep the session alive

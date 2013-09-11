@@ -28,14 +28,14 @@ function addItem(i, node, holder) {
 	entry['title']			= node.getElementsByTagName("title")[0].childNodes[0].nodeValue;
 	entry['description']	= node.getElementsByTagName("description")[0].childNodes[0].nodeValue;
 	entry['description']	= entry['description'].replace("'", "\'");
+	entry['complete']		= node.attributes.getNamedItem("complete") != null && node.attributes.getNamedItem("complete").nodeValue == 'true';
 	var div = document.createElement('div');
 	div.onclick = (function () {
 						var id = entry['guid'];
 						return function (e) {
 							//If not in muxxu's context, just redirect
 							//if(window.parent == window) {
-								var details = window.location.host == 'local.kuest'? "/kuest/syncer.php?id="+id : "/kuest/k/"+id;
-								window.location = (e.layerX < 30)? "/kuest/redirect.php?kuest="+id : details;
+								window.location = (e.layerX < 30)? "/kuest/redirect.php?kuest="+id : "/kuest/k/"+id;
 							/*}else{
 								//If in muxxu's contest, rewrite main URL if we watch details
 								if(e.layerX > 30) {
@@ -48,7 +48,19 @@ function addItem(i, node, holder) {
 					})();
 	new Opentip(div, entry['description'].replace('"', '\"'), { target: div, tipJoint: "bottom" });
 	div.className = i%2 == 0? "item" : "item mod";
-	div.innerHTML = template.replace(/\{GUID\}/gi, entry['guid']).replace(/\{PSEUDO\}/gi, entry['uname']).replace(/\{TITLE\}/gi, entry['title']).replace(/\{UID\}/gi, entry['uid']);
+	if(entry['complete'] === true) addClass(div, 'complete');
+	else addClass(div, 'notcomplete');
+	var templateTmp	= template.replace(/\{GUID\}/gi, entry['guid']);
+	templateTmp		= templateTmp.replace(/\{PSEUDO\}/gi, entry['uname'])
+	templateTmp		= templateTmp.replace(/\{TITLE\}/gi, entry['title'])
+	templateTmp		= templateTmp.replace(/\{UID\}/gi, entry['uid']);
+	if(node.attributes.getNamedItem("complete") != null) {
+		templateTmp	= templateTmp.replace(/\{COMPLETE_ICON\}/gi, ((entry['complete'] === true)? '<img src="/kuest/img/checkMark.png" alt="OK"/>' : '<img src="/kuest/img/hourglass.png" alt="..."/>'));
+	}else{
+		templateTmp	= templateTmp.replace(/\{COMPLETE_ICON\}/gi, '');
+	}
+	
+	div.innerHTML = templateTmp;
 	holder.appendChild(div);
 }
 

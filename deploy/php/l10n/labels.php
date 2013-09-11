@@ -106,8 +106,18 @@
 	
 	$history_noResults = array();
 	$history_noResults["fr"] = "Vous n'avez joué à aucune quête<br/>pour le moment !<br /><br />Pourquoi ne pas essayer cette quête ?";
-	$history_noResults["fr"] = "You haven't played any quest for now !<br/><br/>Why don't you try this one ?";
+	$history_noResults["en"] = "You haven't played any quest for now !<br/><br/>Why don't you try this one ?";
 	$history_noResults = $history_noResults[ $lang ];
+	
+	$history_complete = array();
+	$history_complete["fr"] = "<strong>Vous avez terminé cette quête !</strong>";
+	$history_complete["en"] = "<strong>You have complete this quest !</strong>";
+	$history_complete = $history_complete[ $lang ];
+	
+	$history_inProgress = array();
+	$history_inProgress["fr"] = "<b>Vous n'avez pas encore terminé cette quête.</b>";
+	$history_inProgress["en"] = "<b>You haven't complete this quest yet.</b>";
+	$history_inProgress = $history_inProgress[ $lang ];
 	
 	
 	

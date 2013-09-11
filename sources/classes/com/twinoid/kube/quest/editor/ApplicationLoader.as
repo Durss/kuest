@@ -73,10 +73,13 @@ package com.twinoid.kube.quest.editor {
 			
 			_env			= new EnvironnementManager();
 			//Workaround for fonts execution security issue.
-			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://localhost") > -1) {
+			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://local.kuest") > -1) {
 				_env.addVariables({version:new Date().getTime()});
 				_env.addVariables({local:"1"});
-				_env.addVariables({root:"http://localhost/kuest"});
+				_env.addVariables({root:"http://local.kuest"});
+			}
+			if(Capabilities.playerType.toLowerCase() == "standalone") {
+				_env.addVariables({simulateSession:true});
 			}
 			_env.initialise(getFV("configXml", "xml/config.xml"));
 			_env.addVariables(loaderInfo.parameters);

@@ -10,7 +10,6 @@ package com.twinoid.kube.quest.editor {
 	import com.nurun.components.form.Input;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.mvc.views.ViewLocator;
-	import com.spikything.utils.MouseWheelTrap;
 	import com.twinoid.kube.quest.editor.components.item.ItemPlaceholder;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.model.Model;
@@ -116,7 +115,6 @@ package com.twinoid.kube.quest.editor {
 			stage.stageFocusRect = false;
 			
 			SWFWheel.initialize(stage);
-			MouseWheelTrap.setup(stage);
 			
 			_model.start();
 		}

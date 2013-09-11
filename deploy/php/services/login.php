@@ -31,13 +31,25 @@
 	//##########################################
 	//##########################################
 	//##########################################
-
-	if(isset($_POST["logout"])) {
-		session_destroy();
+	
+	if (isset($_POST['simulateSession'])) {
+		$_SESSION['logged'] = true;
+				
+		$_SESSION['logged']	= true;
+		$_SESSION['lang']	= $userInfos->locale;
+		$_SESSION['uid']	= $userInfos->id;
+		$_SESSION['name']	= $userInfos->name;
+		$_SESSION["pubkey"]	= 'nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5';
+		$_SESSION["friends"]= $userInfos->contacts;
 	}
+		
+	if(!isset($_SESSION["logged"]) || $_SESSION["logged"] === false) {
+		Out::printOut(false, '', 'Not connected', 'NOT_CONNECTED');
+		die;
+	}
+	
 	$additionnals = "";
-	$friends = array();
-	if (isset($_POST["pubkey"], $_POST["uid"], $_POST["samples"])) {
+	//if (isset($_POST["pubkey"], $_POST["uid"], $_POST["samples"])) {
 		$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
 		$params = array(':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
@@ -80,18 +92,22 @@
 		
 		
 		//Get the sample quests
-		$ids	= explode(",", $_POST["samples"]);
-		$plist	= ':id_'.implode(',:id_', array_keys($ids));
-		$sql	= "SELECT * FROM kuests WHERE GUID IN ($plist) ORDER BY id ASC";
-		$params = array_combine(explode(",", $plist), $ids);
-		$req = DBConnection::getLink()->prepare($sql);
-		if (!$req->execute($params)) {
-			$error = $req->errorInfo();
-			$error = $error[2];
-			Out::printOut(false, '', $error, 'SQL_ERROR');
-			die;
+		if(isset($_POST["samples"])) {
+			$ids	= explode(",", $_POST["samples"]);
+			$plist	= ':id_'.implode(',:id_', array_keys($ids));
+			$sql	= "SELECT * FROM kuests WHERE GUID IN ($plist) ORDER BY id ASC";
+			$params = array_combine(explode(",", $plist), $ids);
+			$req = DBConnection::getLink()->prepare($sql);
+			if (!$req->execute($params)) {
+				$error = $req->errorInfo();
+				$error = $error[2];
+				Out::printOut(false, '', $error, 'SQL_ERROR');
+				die;
+			}
+			$res = $req->fetchAll();
+		}else {
+			$res = array();
 		}
-		$res = $req->fetchAll();
 		$additionnals .= "\t<samples>\n";
 		for ($i = 0; $i < count($res); $i++) {
 			$additionnals .= "\t\t<s guid='".$res[$i]['guid']."' r=''>\n";
@@ -105,16 +121,14 @@
 		
 		//Adds friends
 		$additionnals .= "\t<friends>\n";
-		/*foreach ($friends as $row) {
-			$additionnals .= "\t\t<f id='".$row['id']."'><![CDATA[".$row['name']."]]></f>\n";
-		}*/
-		$additionnals .= "\t\t<f id='49'><![CDATA[TODO : réparer cette liste :3]]></f>\n";
+		//*
+		foreach ($_SESSION['friends'] as $row) {
+			$additionnals .= "\t\t<f id='".$row->user->id."'><![CDATA[".$row->user->name."]]></f>\n";
+		}
+		//*/
 		$additionnals .= "\t</friends>";
 		
-	}else if(!isset($_POST["logout"])){
-		Out::printOut(false, '', 'POST data missing', 'INCOMPLETE_FORM');
-		die;
-	}
+	//}
 	
 	Out::printOut(true, $additionnals);
 ?>

@@ -35,6 +35,7 @@
 		<label code="exception-CANNOT_WRITE_SAVE"><![CDATA[L'écriture de votre progression sur le serveur a échoue...]]></label>
 		<label code="exception-KUEST_EVALUATION_INVALID_KEY"><![CDATA[La clé de vérification fournie est invalide.]]></label>
 		<label code="exception-KUEST_ALREADY_EVALUATED"><![CDATA[Vous avez déjà évalué cette quête.]]></label>
+		<label code="exception-NOT_CONNECTED"><![CDATA[Vous devez être connecté pour utiliser l'éditeur.<br />Essayez de recharger la page.]]></label>
 		
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>

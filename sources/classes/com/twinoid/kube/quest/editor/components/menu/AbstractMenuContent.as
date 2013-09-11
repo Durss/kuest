@@ -25,8 +25,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		protected var _holder:ScrollableDisplayObject;
 		protected var _width:int;
 		protected var _title:CssTextField;
-		private var _swiper:SwipeManager;
-		private var _backTitle:Shape;
+		protected var _swiper:SwipeManager;
+		protected var _backTitle:Shape;
 		
 		
 		

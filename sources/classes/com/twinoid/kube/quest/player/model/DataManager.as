@@ -300,7 +300,6 @@ package com.twinoid.kube.quest.player.model {
 				if(Capabilities.playerType == "StandAlone") {
 					//Force login if testing locally as session are fucked up in standalone mode...
 					var login:LoginCmd = new LoginCmd();
-					login.populate("89", "f20b165d");
 					spool.addCommand(login);
 				}
 				_isLoggedCmd = new IsLoggedCmd();
