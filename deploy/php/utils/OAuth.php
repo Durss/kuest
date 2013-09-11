@@ -2,7 +2,7 @@
 	define('CLIENT_ID', $_SERVER['SERVER_NAME'] != 'fevermap.org'? '65' : '66');
 	define('CLIENT_SECRET', $_SERVER['SERVER_NAME'] != 'fevermap.org'? 'Ekx40TWP8jagC3kBj3QBslZCjPlKMaAF' : 'HrGwVYWZLjScHvT3LjjRX9GPM7WqnBHt');
 	define('REDIRECT_URI', $_SERVER['SERVER_NAME'] != 'fevermap.org'? 'http://local.kuest' : 'http://fevermap.org/kuest');
-	
+
 	class OAuth {
 
 		/**
@@ -13,7 +13,7 @@
 			
 			//If user isn't logged in, redirect to twinoid's auth
 			if ((!isset($_SESSION['logged']) || $_SESSION['logged'] === false) && !isset($_GET['state'])) {
-				header('location: https://twinoid.com/oauth/auth?response_type=code&client_id='.urlencode(constant('CLIENT_ID')).'&redirect_uri='.urlencode(constant('REDIRECT_URI')).'&scope=contacts&state=login&access_type=online');
+				header('location: https://twinoid.com/oauth/auth?response_type=code&client_id='.urlencode(constant('CLIENT_ID')).'&redirect_uri='.urlencode(constant('REDIRECT_URI')).'&scope=contacts&state='.urlencode($_SERVER["REQUEST_URI"]).'&access_type=online');
 				die;
 			}
 			
@@ -48,20 +48,35 @@
 				$_SESSION['access_token'] = $json->access_token;
 				$_SESSION['access_token_death'] = time() + $json->expires_in;
 				
-				$userInfos = OAuth::call('me?fields=id,name,contacts');
+				$userInfos = OAuth::call('me?fields=id,name,locale,contacts.fields(user.fields(id,name))');
 				
-				$sql = "INSERT INTO kuestUsers (uid, name, oAuthCode, friends) VALUES (:uid, :name, :code)";
-				$params = array(':uid' => $userInfos->id, ':name' => $userInfos->name, ':code' => $_GET["code"]);
+				$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
+				$params = array(':uid' => $userInfos->id);
 				$req = DBConnection::getLink()->prepare($sql);
 				$req->execute($params);
+				$tot = $req->rowCount();
+				if($tot === 0) {
+					$sql = "INSERT INTO kuestUsers (uid, name, oAuthCode) VALUES (:uid, :name, :code)";
+					$params = array(':uid' => $userInfos->id, ':name' => $userInfos->name, ':code' => sha1($_GET["code"]));
+					$req = DBConnection::getLink()->prepare($sql);
+					$req->execute($params);
+				}else {
+					$res = $req->fetch();
+					$_SESSION["pubkey"]	= $res['oAuthCode'];
+					$sql = "UPDATE kuestUsers SET name=:name".$add." WHERE uid=:uid";
+					$params = array(':uid' => $userInfos->id, ':name' => $userInfos->name);
+					$req = DBConnection::getLink()->prepare($sql);
+					$req->execute($params);
+				}
 				
 				$_SESSION['logged']	= true;
 				$_SESSION['lang']	= $userInfos->locale;
 				$_SESSION['uid']	= $userInfos->id;
 				$_SESSION['name']	= $userInfos->name;
-				$_SESSION["pubkey"]	= $_GET['code'];
+				$_SESSION["friends"]= $userInfos->contacts;
 				
-				header('location:'.constant('REDIRECT_URI'));
+				header('location:'.$_GET['state']);
+				die;
 			}
 		}
 		

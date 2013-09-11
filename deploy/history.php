@@ -40,6 +40,9 @@
 		<link rel="stylesheet" type="text/css" href="/kuest/css/browse.css"/>
 		<link rel="stylesheet" type="text/css" href="/kuest/css/opentip.css"/>
 		
+		<script type="text/javascript" src="/kuest/js/plugins/CSSPlugin.min.js"></script>
+		<script type="text/javascript" src="/kuest/js/easing/EasePack.min.js"></script>
+		<script type="text/javascript" src="/kuest/js/TweenLite.min.js"></script>
 		<script type="text/javascript" src="/kuest/js/sendRequest.js"></script>
 		<script type="text/javascript" src="/kuest/js/addRemoveEvent.js"></script>
 		<script type="text/javascript" src="/kuest/js/isEventSupported.js"></script>
@@ -47,31 +50,33 @@
 		<script type="text/javascript" src="/kuest/js/utils.js"></script>
 		<script type="text/javascript" src="/kuest/js/history.js"></script>
 		<script type="text/javascript" src="/kuest/js/opentip.js"></script>
+		<script type="text/javascript" src="/kuest/js/appear.js"></script>
 	</head>
 	<body>
 		<!-- Template used for items creation. Modify it to update all the items rendering -->
 		<div class="template item">
-			{TITLE} <i>(<a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>)</i>
+			{COMPLETE_ICON}{TITLE} <i>(<a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>)</i>
 		</div>
 		
 		<div class="banner"></div>
 		
+		<div id="content">
 <?php include('menu.php'); ?>
 
-		<div class="browse">
-			<div class="window">
-				<div class="title"><?php echo $history_titleRight; ?></div>
-				<div class="content">
-					<div class="inner">
-						<div class="loader"><?php echo $loading; ?></div>
-						<div class="serverError"><?php echo $loadingError; ?></div>
-						<div class="noResult"><?php echo $history_noResults; ?></div>
-						<div class="kuestsList"></div>
+			<div class="browse">
+				<div class="window">
+					<div class="title"><?php echo $history_titleRight; ?></div>
+					<div class="content">
+						<div class="inner">
+							<div class="loader"><?php echo $loading; ?></div>
+							<div class="serverError"><?php echo $loadingError; ?></div>
+							<div class="noResult"><?php echo $history_noResults; ?></div>
+							<div class="kuestsList"></div>
+						</div>
 					</div>
+					<div class="bottom"></div>
 				</div>
-				<div class="bottom"></div>
 			</div>
 		</div>
-		
 	</body>
 </html>

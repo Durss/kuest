@@ -11,7 +11,7 @@
 	define('XOR_KEY', "DataManagerEvent"); //Encryption key
 	$time = base64_encode(Xorer::bitxor(XOR_KEY, (string) time()));
 	
-	$isLogged = isset($_SESSION['uid']);
+	$isLogged = isset($_SESSION['logged']) && $_SESSION['logged'] === true;
 	$additionnals = "<logged>".($isLogged? 'true' : 'false')."</logged>";
 	if ($isLogged) {
 		$additionnals .= "<uid>".$_SESSION["uid"]."</uid>\n";

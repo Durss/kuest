@@ -29,6 +29,10 @@ package com.twinoid.kube.quest.editor.cmd {
 		public function LoginCmd() {
 			super(Config.getPath("loginWS"));
 			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);
+			_urlVariables['samples'] = Config.getVariable("samples");
+			if(Config.getBooleanVariable("simulateSession")) {
+				_urlVariables['simulateSession'] = true;
+			}
 		}
 
 		
@@ -42,14 +46,6 @@ package com.twinoid.kube.quest.editor.cmd {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
-		/**
-		 * Populates the command
-		 */
-		public function populate(uid:String, pubkey:String):void {
-			_urlVariables['uid'] = uid;
-			_urlVariables['pubkey'] = pubkey;
-			_urlVariables['samples'] = Config.getVariable("samples");
-		}
 
 
 		
@@ -58,6 +54,7 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * PRIVATE *
 		 * ******* */
 		override protected function loadCompleteHandler(event:Event = null):void {
+			trace('loader.data: ' + (loader.data));
 			try {
 				var xml:XML = new XML(loader.data);
 			}catch(error:Error) {
@@ -67,9 +64,7 @@ package com.twinoid.kube.quest.editor.cmd {
 			
 			if(parseBoolean(xml.child("result")[0].@success)) {
 				var ret:Object = {};
-				ret["uid"]		= xml.child("uid")[0];
 				ret["name"]		= xml.child("name")[0];
-				ret["pubkey"]	= xml.child("pubkey")[0];
 				ret["lang"]		= xml.child("lang")[0];
 				
 				//Get kuests

@@ -3,6 +3,7 @@
 	require_once("../out/Out.php");
 	require_once("../log/Logger.php");
 	require_once("../utils/OAuth.php");
+	require_once("../l10n/labels.php");
 	
 	//Connect to database
 	try {
@@ -16,7 +17,13 @@
 	
 	//Get last kuests
 	if(!isset($_POST['top']) || $_POST['top'] == 'false') {
-		$sql = "SELECT kuestUsers.uid, kuests.id, kuests.name as title, kuests.description, kuests.guid, kuestUsers.name as pseudo FROM kuestSaves INNER JOIN kuests ON kuestSaves.kid=kuests.id INNER JOIN kuestUsers ON kuests.uid=kuestUsers.uid WHERE kuestSaves.uid=:uid ORDER BY kuestSaves.id DESC";
+		$sql = "SELECT kuestUsers.uid, kuests.id, kuests.name as title, kuests.description, kuests.guid, kuestUsers.name as pseudo, kuestEvaluations.id as evalId
+		FROM kuestSaves
+		INNER JOIN kuests ON kuestSaves.kid = kuests.id
+		INNER JOIN kuestUsers ON kuests.uid = kuestUsers.uid
+		LEFT JOIN kuestEvaluations ON (kuestEvaluations.kid = kuestSaves.kid AND kuestEvaluations.uid = kuestSaves.uid)
+		WHERE kuestSaves.uid = :uid
+		ORDER BY kuestSaves.id DESC";
 		$params = array(':uid' => $_SESSION["uid"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
@@ -31,7 +38,12 @@
 		if (count($res) == 0) {
 			//That request is probably heavy.. Put it in cache to prevent from doing it multiple times
 			if(!isset($_SESSION['suggestionCache']) || !isset($_SESSION['suggestionCacheExpirationTime']) || time() > $_SESSION['suggestionCacheExpirationTime']) {
-				$sql = "SELECT kuestEvaluations.uid, SUM(kuestEvaluations.note) as total, kuestEvaluations.kid, kuests.name as title, kuests.description, kuests.guid, kuestUsers.name as pseudo FROM kuestEvaluations INNER JOIN kuests ON kuestEvaluations.kid=kuests.id INNER JOIN kuestUsers ON kuests.uid=kuestUsers.uid GROUP BY kuestEvaluations.kid ORDER BY total DESC LIMIT 0,5";
+				$sql = "SELECT kuestEvaluations.uid, SUM(kuestEvaluations.note) as total, kuestEvaluations.kid, kuests.name as title, kuests.description, kuests.guid, kuestUsers.name as pseudo
+				FROM kuestEvaluations
+				INNER JOIN kuests ON kuestEvaluations.kid = kuests.id
+				INNER JOIN kuestUsers ON kuests.uid = kuestUsers.uid
+				GROUP BY kuestEvaluations.kid
+				ORDER BY total DESC LIMIT 0,5";
 				$params = array(':uid' => $_SESSION["uid"]);
 				$req = DBConnection::getLink()->prepare($sql);
 				if (!$req->execute($params)) {
@@ -45,7 +57,6 @@
 				$entry = $res[$key];
 				$_SESSION['suggestionCache'] = $entry;
 				$_SESSION['suggestionCacheExpirationTime'] = time() + 60 * 30;//Suggestion lasts 30 mins
-				echo $_SESSION['suggestionCacheExpirationTime'];
 			}else {
 				$entry = $_SESSION['suggestionCache'];
 			}
@@ -57,14 +68,17 @@
 			$additionnals .= "\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($entry['description']))."]]></description>\n";
 			$additionnals .= "\t</suggestion>\n";
 		
-		}else{
+		}else {
+		
 			$additionnals = "<kuests>\n";
 			for ($i = 0; $i < count($res); $i++) {
-				$additionnals .= "\t\t<k guid='".$res[$i]['guid']."'>\n";
-				$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['pseudo']))."]]></u>\n";
-				$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['title']))."]]></title>\n";
-				$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description']))."]]></description>\n";
-				$additionnals .= "\t\t</k>\n";
+				$complete		= empty($res[$i]['evalId'])? 'false' : 'true';
+				$completeLabel	= empty($res[$i]['evalId'])? $history_inProgress : $history_complete;
+				$additionnals	.= "\t\t<k guid='".$res[$i]['guid']."' complete='".$complete."'>\n";
+				$additionnals	.= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['pseudo']))."]]></u>\n";
+				$additionnals	.= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['title']))."]]></title>\n";
+				$additionnals	.= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description'])).$completeLabel."]]></description>\n";
+				$additionnals	.= "\t\t</k>\n";
 			}
 			$additionnals .= "\t</kuests>\n";
 		}

@@ -54,29 +54,36 @@
 		<link rel="stylesheet" type="text/css" href="/kuest/css/browse.css"/>
 		<link rel="stylesheet" type="text/css" href="/kuest/css/opentip.css"/>
 		
+		<script type="text/javascript" src="/kuest/js/plugins/CSSPlugin.min.js"></script>
+		<script type="text/javascript" src="/kuest/js/easing/EasePack.min.js"></script>
+		<script type="text/javascript" src="/kuest/js/TweenLite.min.js"></script>
 		<script type="text/javascript" src="/kuest/js/sendRequest.js"></script>
 		<script type="text/javascript" src="/kuest/js/addRemoveEvent.js"></script>
 		<script type="text/javascript" src="/kuest/js/isEventSupported.js"></script>
 		<script type="text/javascript" src="/kuest/js/mouse.js"></script>
 		<script type="text/javascript" src="/kuest/js/utils.js"></script>
 		<script type="text/javascript" src="/kuest/js/opentip.js"></script>
+		<script type="text/javascript" src="/kuest/js/appear.js"></script>
 	</head>
 	<body>
 		<div class="banner"></div>
 		
+		<div id="content">
 <?php include('menu.php'); ?>
 		
-		<div class="window">
-			<div class="title"><?php echo $title; ?></div>
-			<div class="content">
-				<div class="inner">
-					<?php echo $syncer_description; ?>
+			<div class="window">
+				<div class="title"><?php echo $title; ?></div>
+				<div class="content">
+					<div class="inner">
+						<?php echo $syncer_description; ?>
+					</div>
 				</div>
+				<div class="bottom"></div>
 			</div>
-			<div class="bottom"></div>
 		</div>
 		
 		<script language="JavaScript">
+			//Move that shit on a .js
 			var elements = document.getElementsByClassName("collapser");
 			for(var i = 0; i < elements.length; i++) {
 				elements[i].style.cursor = "pointer";

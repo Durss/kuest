@@ -1,6 +1,7 @@
 <?php
 	class DBConnection {
 		private static $connection;
+		private static $SESSION_VERSION = 0;
 		
 		public static function connect() {
 			if ($_SERVER['HTTP_HOST'] != "fevermap.org") {
@@ -20,11 +21,14 @@
 				array_walk_recursive($_REQUEST, 'stripslashes_gpc');
 			}
 			
-			define("SESSION_VERSION", 2);
+			self::initSession();
+		}
+		
+		public static function initSession() {
 			session_start();
-			if (!isset($_SESSION["version"]) || $_SESSION["version"] != SESSION_VERSION) {
+			if (!isset($_SESSION["version"]) || $_SESSION["version"] != self::$SESSION_VERSION) {
 				session_unset();
-				$_SESSION["version"] = SESSION_VERSION;
+				$_SESSION["version"] = self::$SESSION_VERSION;
 			}
 		}
 		

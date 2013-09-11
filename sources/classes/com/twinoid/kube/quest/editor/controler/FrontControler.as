@@ -120,8 +120,8 @@ package com.twinoid.kube.quest.editor.controler {
 		/**
 		 * Logs the user in.
 		 */
-		public function login(uid:String, pubkey:String):void {
-			_model.login(uid, pubkey);
+		public function login():void {
+			_model.login();
 		}
 		
 		/**
