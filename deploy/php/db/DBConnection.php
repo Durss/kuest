@@ -1,7 +1,7 @@
 <?php
 	class DBConnection {
 		private static $connection;
-		private static $SESSION_VERSION = 0;
+		private static $SESSION_VERSION = 12;
 		
 		public static function connect() {
 			if ($_SERVER['HTTP_HOST'] != "fevermap.org") {

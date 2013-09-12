@@ -2794,3 +2794,3510 @@ Tout débute à <b>l'origine</b> en [0;0] !
 (
     [version] => 1
 )
+
+(12-09-13 19:58:17) QUEST_FILE_NOT_FOUND :: Quest file not found.
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [id] => 51b50eb07dcfb
+)
+
+		SESSION : Array
+(
+    [version] => 0
+    [pubkey] => nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [friends] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => 01101101
+                            [id] => 194333
+                        )
+
+                )
+
+            [1] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => AerynSun
+                            [id] => 12913
+                        )
+
+                )
+
+            [2] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => anaX
+                            [id] => 20153
+                        )
+
+                )
+
+            [3] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Architecteur
+                            [id] => 9544
+                        )
+
+                )
+
+            [4] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Aristocrate
+                            [id] => 27609
+                        )
+
+                )
+
+            [5] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Arma
+                            [id] => 21
+                        )
+
+                )
+
+            [6] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ArthurFanboy
+                            [id] => 147038
+                        )
+
+                )
+
+            [7] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ayalti
+                            [id] => 36044
+                        )
+
+                )
+
+            [8] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Braxer
+                            [id] => 16788
+                        )
+
+                )
+
+            [9] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Brisespoir
+                            [id] => 7519
+                        )
+
+                )
+
+            [10] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Bugzilla
+                            [id] => 148
+                        )
+
+                )
+
+            [11] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cabra_Sanguir
+                            [id] => 22295
+                        )
+
+                )
+
+            [12] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Caouane
+                            [id] => 41997
+                        )
+
+                )
+
+            [13] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cerulien
+                            [id] => 1329
+                        )
+
+                )
+
+            [14] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Charlotte
+                            [id] => 427608
+                        )
+
+                )
+
+            [15] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Choupy
+                            [id] => 13420
+                        )
+
+                )
+
+            [16] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Colapsydo
+                            [id] => 338
+                        )
+
+                )
+
+            [17] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Drikky
+                            [id] => 21825
+                        )
+
+                )
+
+            [18] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ElGuigo
+                            [id] => 6355
+                        )
+
+                )
+
+            [19] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Eole
+                            [id] => 12
+                        )
+
+                )
+
+            [20] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Etti
+                            [id] => 13191
+                        )
+
+                )
+
+            [21] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => excru
+                            [id] => 13833
+                        )
+
+                )
+
+            [22] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Fenryl
+                            [id] => 37104
+                        )
+
+                )
+
+            [23] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Flouk
+                            [id] => 56854
+                        )
+
+                )
+
+            [24] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => gghh
+                            [id] => 193749
+                        )
+
+                )
+
+            [25] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Gluttony
+                            [id] => 26261
+                        )
+
+                )
+
+            [26] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => GreenMachine
+                            [id] => 8131
+                        )
+
+                )
+
+            [27] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Halfman
+                            [id] => 607
+                        )
+
+                )
+
+            [28] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => hiko
+                            [id] => 15
+                        )
+
+                )
+
+            [29] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Keikyaku
+                            [id] => 5985
+                        )
+
+                )
+
+            [30] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => LeReveur
+                            [id] => 45643
+                        )
+
+                )
+
+            [31] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Le Gardien
+                            [id] => 3188352
+                        )
+
+                )
+
+            [32] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lilith
+                            [id] => 1875
+                        )
+
+                )
+
+            [33] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Louleke
+                            [id] => 164332
+                        )
+
+                )
+
+            [34] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => lwxtz2004
+                            [id] => 17226
+                        )
+
+                )
+
+            [35] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lykan
+                            [id] => 70505
+                        )
+
+                )
+
+            [36] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Maloups
+                            [id] => 1218
+                        )
+
+                )
+
+            [37] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mitnik
+                            [id] => 2585
+                        )
+
+                )
+
+            [38] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => MlleNolwenn
+                            [id] => 32215
+                        )
+
+                )
+
+            [39] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mogweed
+                            [id] => 18928
+                        )
+
+                )
+
+            [40] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => moulins
+                            [id] => 2009
+                        )
+
+                )
+
+            [41] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Musaran
+                            [id] => 4030
+                        )
+
+                )
+
+            [42] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => newSunshine
+                            [id] => 111586
+                        )
+
+                )
+
+            [43] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => niacoliv
+                            [id] => 20455
+                        )
+
+                )
+
+            [44] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nourbie
+                            [id] => 31
+                        )
+
+                )
+
+            [45] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nymac
+                            [id] => 11464
+                        )
+
+                )
+
+            [46] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => oshyso
+                            [id] => 8689
+                        )
+
+                )
+
+            [47] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Pafi
+                            [id] => 35909
+                        )
+
+                )
+
+            [48] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Peanutz
+                            [id] => 516
+                        )
+
+                )
+
+            [49] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Ponytaaa
+                            [id] => 3392
+                        )
+
+                )
+
+            [50] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Psycause007
+                            [id] => 6272
+                        )
+
+                )
+
+            [51] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Qosmos
+                            [id] => 1616
+                        )
+
+                )
+
+            [52] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Random3
+                            [id] => 27
+                        )
+
+                )
+
+            [53] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Sakuya
+                            [id] => 3296
+                        )
+
+                )
+
+            [54] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Selliato
+                            [id] => 20333
+                        )
+
+                )
+
+            [55] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Shusei
+                            [id] => 2615
+                        )
+
+                )
+
+            [56] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => skool
+                            [id] => 8
+                        )
+
+                )
+
+            [57] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Smoggstudio
+                            [id] => 103775
+                        )
+
+                )
+
+            [58] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Somberlord
+                            [id] => 102
+                        )
+
+                )
+
+            [59] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spirale
+                            [id] => 218
+                        )
+
+                )
+
+            [60] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spzr
+                            [id] => 40538
+                        )
+
+                )
+
+            [61] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Swiks
+                            [id] => 52
+                        )
+
+                )
+
+            [62] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tama
+                            [id] => 22343
+                        )
+
+                )
+
+            [63] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => TheFreeStyle
+                            [id] => 6082
+                        )
+
+                )
+
+            [64] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tom_
+                            [id] => 23166
+                        )
+
+                )
+
+            [65] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tubasa
+                            [id] => 22773
+                        )
+
+                )
+
+            [66] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ULTIMATOY
+                            [id] => 2284684
+                        )
+
+                )
+
+            [67] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Uncherry
+                            [id] => 215062
+                        )
+
+                )
+
+            [68] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => warp
+                            [id] => 1
+                        )
+
+                )
+
+            [69] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => yoshi
+                            [id] => 5
+                        )
+
+                )
+
+            [70] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => blackmagic
+                            [id] => 17
+                        )
+
+                )
+
+            [71] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => bumdum
+                            [id] => 6
+                        )
+
+                )
+
+            [72] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => deepnight
+                            [id] => 2
+                        )
+
+                )
+
+            [73] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mr_Hk_
+                            [id] => 9
+                        )
+
+                )
+
+            [74] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => rhumsteack
+                            [id] => 75526
+                        )
+
+                )
+
+        )
+
+)
+
+(12-09-13 19:58:37) QUEST_FILE_NOT_FOUND :: Quest file not found.
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [id] => 518c2438b9adf
+)
+
+		SESSION : Array
+(
+    [version] => 0
+    [pubkey] => nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [friends] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => 01101101
+                            [id] => 194333
+                        )
+
+                )
+
+            [1] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => AerynSun
+                            [id] => 12913
+                        )
+
+                )
+
+            [2] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => anaX
+                            [id] => 20153
+                        )
+
+                )
+
+            [3] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Architecteur
+                            [id] => 9544
+                        )
+
+                )
+
+            [4] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Aristocrate
+                            [id] => 27609
+                        )
+
+                )
+
+            [5] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Arma
+                            [id] => 21
+                        )
+
+                )
+
+            [6] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ArthurFanboy
+                            [id] => 147038
+                        )
+
+                )
+
+            [7] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ayalti
+                            [id] => 36044
+                        )
+
+                )
+
+            [8] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Braxer
+                            [id] => 16788
+                        )
+
+                )
+
+            [9] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Brisespoir
+                            [id] => 7519
+                        )
+
+                )
+
+            [10] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Bugzilla
+                            [id] => 148
+                        )
+
+                )
+
+            [11] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cabra_Sanguir
+                            [id] => 22295
+                        )
+
+                )
+
+            [12] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Caouane
+                            [id] => 41997
+                        )
+
+                )
+
+            [13] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cerulien
+                            [id] => 1329
+                        )
+
+                )
+
+            [14] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Charlotte
+                            [id] => 427608
+                        )
+
+                )
+
+            [15] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Choupy
+                            [id] => 13420
+                        )
+
+                )
+
+            [16] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Colapsydo
+                            [id] => 338
+                        )
+
+                )
+
+            [17] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Drikky
+                            [id] => 21825
+                        )
+
+                )
+
+            [18] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ElGuigo
+                            [id] => 6355
+                        )
+
+                )
+
+            [19] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Eole
+                            [id] => 12
+                        )
+
+                )
+
+            [20] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Etti
+                            [id] => 13191
+                        )
+
+                )
+
+            [21] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => excru
+                            [id] => 13833
+                        )
+
+                )
+
+            [22] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Fenryl
+                            [id] => 37104
+                        )
+
+                )
+
+            [23] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Flouk
+                            [id] => 56854
+                        )
+
+                )
+
+            [24] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => gghh
+                            [id] => 193749
+                        )
+
+                )
+
+            [25] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Gluttony
+                            [id] => 26261
+                        )
+
+                )
+
+            [26] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => GreenMachine
+                            [id] => 8131
+                        )
+
+                )
+
+            [27] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Halfman
+                            [id] => 607
+                        )
+
+                )
+
+            [28] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => hiko
+                            [id] => 15
+                        )
+
+                )
+
+            [29] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Keikyaku
+                            [id] => 5985
+                        )
+
+                )
+
+            [30] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => LeReveur
+                            [id] => 45643
+                        )
+
+                )
+
+            [31] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Le Gardien
+                            [id] => 3188352
+                        )
+
+                )
+
+            [32] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lilith
+                            [id] => 1875
+                        )
+
+                )
+
+            [33] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Louleke
+                            [id] => 164332
+                        )
+
+                )
+
+            [34] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => lwxtz2004
+                            [id] => 17226
+                        )
+
+                )
+
+            [35] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lykan
+                            [id] => 70505
+                        )
+
+                )
+
+            [36] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Maloups
+                            [id] => 1218
+                        )
+
+                )
+
+            [37] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mitnik
+                            [id] => 2585
+                        )
+
+                )
+
+            [38] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => MlleNolwenn
+                            [id] => 32215
+                        )
+
+                )
+
+            [39] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mogweed
+                            [id] => 18928
+                        )
+
+                )
+
+            [40] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => moulins
+                            [id] => 2009
+                        )
+
+                )
+
+            [41] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Musaran
+                            [id] => 4030
+                        )
+
+                )
+
+            [42] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => newSunshine
+                            [id] => 111586
+                        )
+
+                )
+
+            [43] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => niacoliv
+                            [id] => 20455
+                        )
+
+                )
+
+            [44] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nourbie
+                            [id] => 31
+                        )
+
+                )
+
+            [45] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nymac
+                            [id] => 11464
+                        )
+
+                )
+
+            [46] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => oshyso
+                            [id] => 8689
+                        )
+
+                )
+
+            [47] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Pafi
+                            [id] => 35909
+                        )
+
+                )
+
+            [48] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Peanutz
+                            [id] => 516
+                        )
+
+                )
+
+            [49] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Ponytaaa
+                            [id] => 3392
+                        )
+
+                )
+
+            [50] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Psycause007
+                            [id] => 6272
+                        )
+
+                )
+
+            [51] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Qosmos
+                            [id] => 1616
+                        )
+
+                )
+
+            [52] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Random3
+                            [id] => 27
+                        )
+
+                )
+
+            [53] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Sakuya
+                            [id] => 3296
+                        )
+
+                )
+
+            [54] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Selliato
+                            [id] => 20333
+                        )
+
+                )
+
+            [55] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Shusei
+                            [id] => 2615
+                        )
+
+                )
+
+            [56] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => skool
+                            [id] => 8
+                        )
+
+                )
+
+            [57] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Smoggstudio
+                            [id] => 103775
+                        )
+
+                )
+
+            [58] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Somberlord
+                            [id] => 102
+                        )
+
+                )
+
+            [59] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spirale
+                            [id] => 218
+                        )
+
+                )
+
+            [60] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spzr
+                            [id] => 40538
+                        )
+
+                )
+
+            [61] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Swiks
+                            [id] => 52
+                        )
+
+                )
+
+            [62] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tama
+                            [id] => 22343
+                        )
+
+                )
+
+            [63] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => TheFreeStyle
+                            [id] => 6082
+                        )
+
+                )
+
+            [64] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tom_
+                            [id] => 23166
+                        )
+
+                )
+
+            [65] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tubasa
+                            [id] => 22773
+                        )
+
+                )
+
+            [66] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ULTIMATOY
+                            [id] => 2284684
+                        )
+
+                )
+
+            [67] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Uncherry
+                            [id] => 215062
+                        )
+
+                )
+
+            [68] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => warp
+                            [id] => 1
+                        )
+
+                )
+
+            [69] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => yoshi
+                            [id] => 5
+                        )
+
+                )
+
+            [70] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => blackmagic
+                            [id] => 17
+                        )
+
+                )
+
+            [71] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => bumdum
+                            [id] => 6
+                        )
+
+                )
+
+            [72] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => deepnight
+                            [id] => 2
+                        )
+
+                )
+
+            [73] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mr_Hk_
+                            [id] => 9
+                        )
+
+                )
+
+            [74] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => rhumsteack
+                            [id] => 75526
+                        )
+
+                )
+
+        )
+
+)
+
+(12-09-13 20:52:58) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:53:03) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:53:44) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:55:08) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:56:38) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:56:52) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:57:22) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:57:33) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:57:56) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:58:34) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:58:43) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:59:01) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:59:39) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:59:44) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 20:59:49) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:00:03) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:00:17) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:03:16) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:05:08) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:05:31) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:07:52) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:07:56) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:08:53) NOT_LOGGED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:12:56) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:14:11) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:14:36) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:14:53) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 12
+)
+
+(12-09-13 21:57:31) QUEST_FILE_NOT_PUBLISHED :: Quest not published.
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [id] => 5194100a4a94f
+    [release] => 
+)
+
+		SESSION : Array
+(
+    [version] => 12
+    [access_token] => I8qJwewk8J2v1nauSczgaK89Wu2FFpJW
+    [access_token_death] => 1379025861
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [friends] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => 01101101
+                            [id] => 194333
+                        )
+
+                )
+
+            [1] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => AerynSun
+                            [id] => 12913
+                        )
+
+                )
+
+            [2] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => anaX
+                            [id] => 20153
+                        )
+
+                )
+
+            [3] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Architecteur
+                            [id] => 9544
+                        )
+
+                )
+
+            [4] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Aristocrate
+                            [id] => 27609
+                        )
+
+                )
+
+            [5] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Arma
+                            [id] => 21
+                        )
+
+                )
+
+            [6] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ArthurFanboy
+                            [id] => 147038
+                        )
+
+                )
+
+            [7] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ayalti
+                            [id] => 36044
+                        )
+
+                )
+
+            [8] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Braxer
+                            [id] => 16788
+                        )
+
+                )
+
+            [9] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Brisespoir
+                            [id] => 7519
+                        )
+
+                )
+
+            [10] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Bugzilla
+                            [id] => 148
+                        )
+
+                )
+
+            [11] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cabra_Sanguir
+                            [id] => 22295
+                        )
+
+                )
+
+            [12] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Caouane
+                            [id] => 41997
+                        )
+
+                )
+
+            [13] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cerulien
+                            [id] => 1329
+                        )
+
+                )
+
+            [14] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Charlotte
+                            [id] => 427608
+                        )
+
+                )
+
+            [15] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Choupy
+                            [id] => 13420
+                        )
+
+                )
+
+            [16] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Colapsydo
+                            [id] => 338
+                        )
+
+                )
+
+            [17] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Drikky
+                            [id] => 21825
+                        )
+
+                )
+
+            [18] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ElGuigo
+                            [id] => 6355
+                        )
+
+                )
+
+            [19] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Eole
+                            [id] => 12
+                        )
+
+                )
+
+            [20] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Etti
+                            [id] => 13191
+                        )
+
+                )
+
+            [21] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => excru
+                            [id] => 13833
+                        )
+
+                )
+
+            [22] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Fenryl
+                            [id] => 37104
+                        )
+
+                )
+
+            [23] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Flouk
+                            [id] => 56854
+                        )
+
+                )
+
+            [24] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => gghh
+                            [id] => 193749
+                        )
+
+                )
+
+            [25] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Gluttony
+                            [id] => 26261
+                        )
+
+                )
+
+            [26] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => GreenMachine
+                            [id] => 8131
+                        )
+
+                )
+
+            [27] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Halfman
+                            [id] => 607
+                        )
+
+                )
+
+            [28] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => hiko
+                            [id] => 15
+                        )
+
+                )
+
+            [29] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Keikyaku
+                            [id] => 5985
+                        )
+
+                )
+
+            [30] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => LeReveur
+                            [id] => 45643
+                        )
+
+                )
+
+            [31] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => LeÂ Gardien
+                            [id] => 3188352
+                        )
+
+                )
+
+            [32] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lilith
+                            [id] => 1875
+                        )
+
+                )
+
+            [33] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Louleke
+                            [id] => 164332
+                        )
+
+                )
+
+            [34] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => lwxtz2004
+                            [id] => 17226
+                        )
+
+                )
+
+            [35] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lykan
+                            [id] => 70505
+                        )
+
+                )
+
+            [36] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Maloups
+                            [id] => 1218
+                        )
+
+                )
+
+            [37] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mitnik
+                            [id] => 2585
+                        )
+
+                )
+
+            [38] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => MlleNolwenn
+                            [id] => 32215
+                        )
+
+                )
+
+            [39] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mogweed
+                            [id] => 18928
+                        )
+
+                )
+
+            [40] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => moulins
+                            [id] => 2009
+                        )
+
+                )
+
+            [41] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Musaran
+                            [id] => 4030
+                        )
+
+                )
+
+            [42] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => newSunshine
+                            [id] => 111586
+                        )
+
+                )
+
+            [43] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => niacoliv
+                            [id] => 20455
+                        )
+
+                )
+
+            [44] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nourbie
+                            [id] => 31
+                        )
+
+                )
+
+            [45] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nymac
+                            [id] => 11464
+                        )
+
+                )
+
+            [46] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => oshyso
+                            [id] => 8689
+                        )
+
+                )
+
+            [47] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Pafi
+                            [id] => 35909
+                        )
+
+                )
+
+            [48] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Peanutz
+                            [id] => 516
+                        )
+
+                )
+
+            [49] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Ponytaaa
+                            [id] => 3392
+                        )
+
+                )
+
+            [50] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Psycause007
+                            [id] => 6272
+                        )
+
+                )
+
+            [51] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Qosmos
+                            [id] => 1616
+                        )
+
+                )
+
+            [52] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Random3
+                            [id] => 27
+                        )
+
+                )
+
+            [53] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Sakuya
+                            [id] => 3296
+                        )
+
+                )
+
+            [54] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Selliato
+                            [id] => 20333
+                        )
+
+                )
+
+            [55] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Shusei
+                            [id] => 2615
+                        )
+
+                )
+
+            [56] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => skool
+                            [id] => 8
+                        )
+
+                )
+
+            [57] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Smoggstudio
+                            [id] => 103775
+                        )
+
+                )
+
+            [58] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Somberlord
+                            [id] => 102
+                        )
+
+                )
+
+            [59] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spirale
+                            [id] => 218
+                        )
+
+                )
+
+            [60] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spzr
+                            [id] => 40538
+                        )
+
+                )
+
+            [61] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Swiks
+                            [id] => 52
+                        )
+
+                )
+
+            [62] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tama
+                            [id] => 22343
+                        )
+
+                )
+
+            [63] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => TheFreeStyle
+                            [id] => 6082
+                        )
+
+                )
+
+            [64] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tom_
+                            [id] => 23166
+                        )
+
+                )
+
+            [65] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tubasa
+                            [id] => 22773
+                        )
+
+                )
+
+            [66] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ULTIMATOY
+                            [id] => 2284684
+                        )
+
+                )
+
+            [67] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Uncherry
+                            [id] => 215062
+                        )
+
+                )
+
+            [68] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => warp
+                            [id] => 1
+                        )
+
+                )
+
+            [69] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => yoshi
+                            [id] => 5
+                        )
+
+                )
+
+            [70] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => blackmagic
+                            [id] => 17
+                        )
+
+                )
+
+            [71] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => bumdum
+                            [id] => 6
+                        )
+
+                )
+
+            [72] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => deepnight
+                            [id] => 2
+                        )
+
+                )
+
+            [73] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mr_Hk_
+                            [id] => 9
+                        )
+
+                )
+
+            [74] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => rhumsteack
+                            [id] => 75526
+                        )
+
+                )
+
+        )
+
+    [pubkey] => nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5
+)
+
+(12-09-13 21:58:21) QUEST_FILE_NOT_PUBLISHED :: Quest not published.
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [release] => 
+    [id] => 5194100a4a94f
+)
+
+		SESSION : Array
+(
+    [version] => 12
+    [access_token] => I8qJwewk8J2v1nauSczgaK89Wu2FFpJW
+    [access_token_death] => 1379025861
+    [logged] => 1
+    [lang] => fr
+    [uid] => 48
+    [name] => Durss
+    [friends] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => 01101101
+                            [id] => 194333
+                        )
+
+                )
+
+            [1] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => AerynSun
+                            [id] => 12913
+                        )
+
+                )
+
+            [2] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => anaX
+                            [id] => 20153
+                        )
+
+                )
+
+            [3] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Architecteur
+                            [id] => 9544
+                        )
+
+                )
+
+            [4] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Aristocrate
+                            [id] => 27609
+                        )
+
+                )
+
+            [5] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Arma
+                            [id] => 21
+                        )
+
+                )
+
+            [6] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ArthurFanboy
+                            [id] => 147038
+                        )
+
+                )
+
+            [7] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ayalti
+                            [id] => 36044
+                        )
+
+                )
+
+            [8] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Braxer
+                            [id] => 16788
+                        )
+
+                )
+
+            [9] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Brisespoir
+                            [id] => 7519
+                        )
+
+                )
+
+            [10] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Bugzilla
+                            [id] => 148
+                        )
+
+                )
+
+            [11] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cabra_Sanguir
+                            [id] => 22295
+                        )
+
+                )
+
+            [12] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Caouane
+                            [id] => 41997
+                        )
+
+                )
+
+            [13] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Cerulien
+                            [id] => 1329
+                        )
+
+                )
+
+            [14] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Charlotte
+                            [id] => 427608
+                        )
+
+                )
+
+            [15] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Choupy
+                            [id] => 13420
+                        )
+
+                )
+
+            [16] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Colapsydo
+                            [id] => 338
+                        )
+
+                )
+
+            [17] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Drikky
+                            [id] => 21825
+                        )
+
+                )
+
+            [18] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ElGuigo
+                            [id] => 6355
+                        )
+
+                )
+
+            [19] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Eole
+                            [id] => 12
+                        )
+
+                )
+
+            [20] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Etti
+                            [id] => 13191
+                        )
+
+                )
+
+            [21] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => excru
+                            [id] => 13833
+                        )
+
+                )
+
+            [22] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Fenryl
+                            [id] => 37104
+                        )
+
+                )
+
+            [23] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Flouk
+                            [id] => 56854
+                        )
+
+                )
+
+            [24] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => gghh
+                            [id] => 193749
+                        )
+
+                )
+
+            [25] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Gluttony
+                            [id] => 26261
+                        )
+
+                )
+
+            [26] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => GreenMachine
+                            [id] => 8131
+                        )
+
+                )
+
+            [27] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Halfman
+                            [id] => 607
+                        )
+
+                )
+
+            [28] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => hiko
+                            [id] => 15
+                        )
+
+                )
+
+            [29] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Keikyaku
+                            [id] => 5985
+                        )
+
+                )
+
+            [30] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => LeReveur
+                            [id] => 45643
+                        )
+
+                )
+
+            [31] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => LeÂ Gardien
+                            [id] => 3188352
+                        )
+
+                )
+
+            [32] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lilith
+                            [id] => 1875
+                        )
+
+                )
+
+            [33] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Louleke
+                            [id] => 164332
+                        )
+
+                )
+
+            [34] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => lwxtz2004
+                            [id] => 17226
+                        )
+
+                )
+
+            [35] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Lykan
+                            [id] => 70505
+                        )
+
+                )
+
+            [36] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Maloups
+                            [id] => 1218
+                        )
+
+                )
+
+            [37] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mitnik
+                            [id] => 2585
+                        )
+
+                )
+
+            [38] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => MlleNolwenn
+                            [id] => 32215
+                        )
+
+                )
+
+            [39] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mogweed
+                            [id] => 18928
+                        )
+
+                )
+
+            [40] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => moulins
+                            [id] => 2009
+                        )
+
+                )
+
+            [41] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Musaran
+                            [id] => 4030
+                        )
+
+                )
+
+            [42] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => newSunshine
+                            [id] => 111586
+                        )
+
+                )
+
+            [43] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => niacoliv
+                            [id] => 20455
+                        )
+
+                )
+
+            [44] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nourbie
+                            [id] => 31
+                        )
+
+                )
+
+            [45] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Nymac
+                            [id] => 11464
+                        )
+
+                )
+
+            [46] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => oshyso
+                            [id] => 8689
+                        )
+
+                )
+
+            [47] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Pafi
+                            [id] => 35909
+                        )
+
+                )
+
+            [48] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Peanutz
+                            [id] => 516
+                        )
+
+                )
+
+            [49] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Ponytaaa
+                            [id] => 3392
+                        )
+
+                )
+
+            [50] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Psycause007
+                            [id] => 6272
+                        )
+
+                )
+
+            [51] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Qosmos
+                            [id] => 1616
+                        )
+
+                )
+
+            [52] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Random3
+                            [id] => 27
+                        )
+
+                )
+
+            [53] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Sakuya
+                            [id] => 3296
+                        )
+
+                )
+
+            [54] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Selliato
+                            [id] => 20333
+                        )
+
+                )
+
+            [55] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Shusei
+                            [id] => 2615
+                        )
+
+                )
+
+            [56] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => skool
+                            [id] => 8
+                        )
+
+                )
+
+            [57] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Smoggstudio
+                            [id] => 103775
+                        )
+
+                )
+
+            [58] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Somberlord
+                            [id] => 102
+                        )
+
+                )
+
+            [59] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spirale
+                            [id] => 218
+                        )
+
+                )
+
+            [60] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Spzr
+                            [id] => 40538
+                        )
+
+                )
+
+            [61] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Swiks
+                            [id] => 52
+                        )
+
+                )
+
+            [62] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tama
+                            [id] => 22343
+                        )
+
+                )
+
+            [63] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => TheFreeStyle
+                            [id] => 6082
+                        )
+
+                )
+
+            [64] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tom_
+                            [id] => 23166
+                        )
+
+                )
+
+            [65] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Tubasa
+                            [id] => 22773
+                        )
+
+                )
+
+            [66] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => ULTIMATOY
+                            [id] => 2284684
+                        )
+
+                )
+
+            [67] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Uncherry
+                            [id] => 215062
+                        )
+
+                )
+
+            [68] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => warp
+                            [id] => 1
+                        )
+
+                )
+
+            [69] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => yoshi
+                            [id] => 5
+                        )
+
+                )
+
+            [70] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => blackmagic
+                            [id] => 17
+                        )
+
+                )
+
+            [71] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => bumdum
+                            [id] => 6
+                        )
+
+                )
+
+            [72] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => deepnight
+                            [id] => 2
+                        )
+
+                )
+
+            [73] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => Mr_Hk_
+                            [id] => 9
+                        )
+
+                )
+
+            [74] => stdClass Object
+                (
+                    [user] => stdClass Object
+                        (
+                            [name] => rhumsteack
+                            [id] => 75526
+                        )
+
+                )
+
+        )
+
+    [pubkey] => nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5
+)

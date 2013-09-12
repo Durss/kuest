@@ -1,14 +1,16 @@
 package com.twinoid.kube.quest.editor.cmd {
-	import com.twinoid.kube.quest.editor.vo.UserInfo;
 	import com.nurun.core.commands.Command;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.boolean.parseBoolean;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.utils.commands.LoadFileCmd;
 	import com.twinoid.kube.quest.editor.vo.KuestInfo;
+	import com.twinoid.kube.quest.editor.vo.UserInfo;
+
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.system.Capabilities;
 
 	
 	/**
@@ -30,7 +32,7 @@ package com.twinoid.kube.quest.editor.cmd {
 			super(Config.getPath("loginWS"));
 			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);
 			_urlVariables['samples'] = Config.getVariable("samples");
-			if(Config.getBooleanVariable("simulateSession")) {
+			if(Capabilities.playerType.toLowerCase() == "standalone") {
 				_urlVariables['simulateSession'] = true;
 			}
 		}
@@ -54,7 +56,6 @@ package com.twinoid.kube.quest.editor.cmd {
 		 * PRIVATE *
 		 * ******* */
 		override protected function loadCompleteHandler(event:Event = null):void {
-			trace('loader.data: ' + (loader.data));
 			try {
 				var xml:XML = new XML(loader.data);
 			}catch(error:Error) {

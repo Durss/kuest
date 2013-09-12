@@ -73,43 +73,57 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	
 }else{
 	//Add SWF module
-	var server = local? "local.kuest" : "fevermap.org";
+	var server = local? "local.kuest" : "fevermap.org/kuest";
 	var gameDiv = unsafeWindow.document.getElementsByClassName("game")[0];
-	var url = "http://"+server+"/kuest/swf/player.swf?";
+	var url = "http://"+server+"/swf/player.swf?";
 	var kuestApp = unsafeWindow.document.createElement('div');
 	if(kuestID) url += "kuestID="+kuestID;
 	if(testMode) url += "&testMode=true";
 	url += "&version=" + Math.round( Math.round( new Date().getTime() / 1000 )  / 3600 ) * 3600;//bypass cache every hour
 	url += "&lang="+lang;
-	url += "&configXml=http://"+server+"/kuest/xml/config.xml";
+	url += "&configXml=http://"+server+"/xml/config.xml";
 
 	//Gets the current's session user's ID.
+	//Searches for UID inside page's source.
 	//If the fevermap server's UID isn't the same, the user will be disconnected.
-	var menu = unsafeWindow.document.getElementsByClassName("mxmainmenu")[0];
-	var links = menu.getElementsByTagName("a");
-	var reg = /\/user\/([0-9]+)/;
-	var currentUID = -1;
-	for(var i = 0; i < links.length; ++i) {
-		reg.lastIndex = 0;
-		if(reg.test(links[i].getAttribute("href"))) {
-			currentUID = links[i].getAttribute("href").match(reg)[1];
+	function getUIDAndInstanciateApp() {
+		var offset = 0;
+		var currentUID = -1;
+		var ctn = document.body.innerHTML;
+		do {
+			offset = ctn.indexOf('http://twinoid.com/user/', offset);
+			if(offset == -1) break;
+			var end = ctn.indexOf('"', offset);
+			if(end == -1) break;
+			var path = ctn.substring(offset, end);
+			offset ++;
+		}while( /.*user\/[0-9]+/i.test(path) === false);
+		if(/.*user\/[0-9]+/i.test(path) === true) {
+			offset = path.lastIndexOf('/');
+			currentUID = path.substring(offset + 1);
 		}
-	}
-	url += "&currentUID="+currentUID;
+		//UID not found, try again later.
+		if(currentUID == -1) {
+			setTimeout(getUIDAndInstanciateApp, 500);
+			return;
+		}
+		url += "&currentUID="+currentUID;
+		console.log(url);
 
-	kuestApp.innerHTML = '<embed type="application/x-shockwave-flash" src="'+url+'" width="812" height="1" allowScriptAccess="always" bgcolor="#4CA5CD" id="kuestSWF" />';
-	kuestApp.setAttribute("id", "kuestApp");
-	kuestApp.style.position = "relative";
-	kuestApp.style.left = "0px";
-	kuestApp.style.width = "812px";
-	kuestApp.style.marginTop = "25px";
-	kuestApp.style.marginLeft = "34px";
-	gameDiv.parentNode.appendChild(kuestApp);
-	
-	var app = document.getElementById("kuestApp");
-	app.style.overflow = "hidden";
-	app.style.transition = "all .35s ease-in-out";
-	app.style.webkitTransition = "all .35s ease-in-out";
+		kuestApp.innerHTML = '<embed type="application/x-shockwave-flash" src="'+url+'" width="812" height="1" allowScriptAccess="always" bgcolor="#4CA5CD" id="kuestSWF" />';
+		kuestApp.setAttribute("id", "kuestApp");
+		kuestApp.style.position = "relative";
+		kuestApp.style.left = "0px";
+		kuestApp.style.width = "812px";
+		kuestApp.style.marginTop = "25px";
+		kuestApp.style.marginLeft = "34px";
+		gameDiv.parentNode.appendChild(kuestApp);
+		
+		var app = document.getElementById("kuestApp");
+		app.style.overflow = "hidden";
+		app.style.transition = "all .35s ease-in-out";
+		app.style.webkitTransition = "all .35s ease-in-out";
+	}
 
 	//Resizes the flash app to the size asked by it.
 	function resizeSWF(height) {
@@ -136,11 +150,12 @@ if(/zone\/choose/gi.test(window.location.href)) {
 		btLabel["de"] = "Wählen eine quest";
 		var link = document.createElement('div');
 		link.style.position = "relative";
-		link.innerHTML = "<a href=\"http://muxxu.com/a/kuest/?act=browse\" target=\"_self\" class=\"button\">"+btLabel[document._kuestLang]+"</a>";
+		link.innerHTML = "<a href=\"http://fevermap.org/kuest/?act=browse\" target=\"_self\" class=\"button\">"+btLabel[document._kuestLang]+"</a>";
 		gameDiv.parentNode.appendChild(link);
 		resizeSWF(0);
 	}
 
 	inject(noQuest);
 	inject(resizeSWF);
+	getUIDAndInstanciateApp();
 }

@@ -1,5 +1,6 @@
 <?php
 	require_once("../db/DBConnection.php");
+	require_once("../utils/OAuth.php");
 	require_once("../out/Out.php");
 	require_once("../log/Logger.php");
 	
@@ -11,36 +12,16 @@
 		die;
 	}
 	
-	//##########################################
-	//##########################################
-	//##########################################
-	//################ REMOVE ##################
-	//##########################################
-	//##########################################
-	//##########################################
-	/*$additionnals = "";
-	$additionnals .= "<uid>89</uid>\n";
-	$additionnals .= "\t<name>Durss</name>\n";
-	$additionnals .= "\t<pubkey>xxxx</pubkey>\n";
-	Out::printOut(true, $additionnals);
-	die;*/
-	//##########################################
-	//##########################################
-	//##########################################
-	//################ REMOVE ##################
-	//##########################################
-	//##########################################
-	//##########################################
-	
-	if (isset($_POST['simulateSession'])) {
-		$_SESSION['logged'] = true;
-				
-		$_SESSION['logged']	= true;
-		$_SESSION['lang']	= $userInfos->locale;
-		$_SESSION['uid']	= $userInfos->id;
-		$_SESSION['name']	= $userInfos->name;
-		$_SESSION["pubkey"]	= 'nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5';
-		$_SESSION["friends"]= $userInfos->contacts;
+	//Used for standalone tests.
+	//Session system is probably linked to Internet Explorer but i'm too lazy to use
+	//it and log me in, so i simulate the login with a static JSON.
+	//Works only localy to prevent from a huge security issue !
+	//I don't want people to connect as me by just adding the simulateSession param !
+	if (isset($_POST['simulateSession'])
+	&& (!isset($_SESSION['logged']) || $_SESSION['logged'] === false)
+	&& $_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+		$json = '{"name":"Durss","locale":"fr","id":48,"contacts":[{"user":{"name":"01101101","id":194333}},{"user":{"name":"AerynSun","id":12913}},{"user":{"name":"anaX","id":20153}},{"user":{"name":"Architecteur","id":9544}},{"user":{"name":"Aristocrate","id":27609}},{"user":{"name":"Arma","id":21}},{"user":{"name":"ArthurFanboy","id":147038}},{"user":{"name":"ayalti","id":36044}},{"user":{"name":"Braxer","id":16788}},{"user":{"name":"Brisespoir","id":7519}},{"user":{"name":"Bugzilla","id":148}},{"user":{"name":"Cabra_Sanguir","id":22295}},{"user":{"name":"Caouane","id":41997}},{"user":{"name":"Cerulien","id":1329}},{"user":{"name":"Charlotte","id":427608}},{"user":{"name":"Choupy","id":13420}},{"user":{"name":"Colapsydo","id":338}},{"user":{"name":"Drikky","id":21825}},{"user":{"name":"ElGuigo","id":6355}},{"user":{"name":"Eole","id":12}},{"user":{"name":"Etti","id":13191}},{"user":{"name":"excru","id":13833}},{"user":{"name":"Fenryl","id":37104}},{"user":{"name":"Flouk","id":56854}},{"user":{"name":"gghh","id":193749}},{"user":{"name":"Gluttony","id":26261}},{"user":{"name":"GreenMachine","id":8131}},{"user":{"name":"Halfman","id":607}},{"user":{"name":"hiko","id":15}},{"user":{"name":"Keikyaku","id":5985}},{"user":{"name":"LeReveur","id":45643}},{"user":{"name":"Le Gardien","id":3188352}},{"user":{"name":"Lilith","id":1875}},{"user":{"name":"Louleke","id":164332}},{"user":{"name":"lwxtz2004","id":17226}},{"user":{"name":"Lykan","id":70505}},{"user":{"name":"Maloups","id":1218}},{"user":{"name":"Mitnik","id":2585}},{"user":{"name":"MlleNolwenn","id":32215}},{"user":{"name":"Mogweed","id":18928}},{"user":{"name":"moulins","id":2009}},{"user":{"name":"Musaran","id":4030}},{"user":{"name":"newSunshine","id":111586}},{"user":{"name":"niacoliv","id":20455}},{"user":{"name":"Nourbie","id":31}},{"user":{"name":"Nymac","id":11464}},{"user":{"name":"oshyso","id":8689}},{"user":{"name":"Pafi","id":35909}},{"user":{"name":"Peanutz","id":516}},{"user":{"name":"Ponytaaa","id":3392}},{"user":{"name":"Psycause007","id":6272}},{"user":{"name":"Qosmos","id":1616}},{"user":{"name":"Random3","id":27}},{"user":{"name":"Sakuya","id":3296}},{"user":{"name":"Selliato","id":20333}},{"user":{"name":"Shusei","id":2615}},{"user":{"name":"skool","id":8}},{"user":{"name":"Smoggstudio","id":103775}},{"user":{"name":"Somberlord","id":102}},{"user":{"name":"Spirale","id":218}},{"user":{"name":"Spzr","id":40538}},{"user":{"name":"Swiks","id":52}},{"user":{"name":"Tama","id":22343}},{"user":{"name":"TheFreeStyle","id":6082}},{"user":{"name":"Tom_","id":23166}},{"user":{"name":"Tubasa","id":22773}},{"user":{"name":"ULTIMATOY","id":2284684}},{"user":{"name":"Uncherry","id":215062}},{"user":{"name":"warp","id":1}},{"user":{"name":"yoshi","id":5}},{"user":{"name":"blackmagic","id":17}},{"user":{"name":"bumdum","id":6}},{"user":{"name":"deepnight","id":2}},{"user":{"name":"Mr_Hk_","id":9}},{"user":{"name":"rhumsteack","id":75526}}]}';
+		OAuth::logFromJSON(json_decode($json));
 	}
 		
 	if(!isset($_SESSION["logged"]) || $_SESSION["logged"] === false) {
@@ -129,6 +110,5 @@
 		$additionnals .= "\t</friends>";
 		
 	//}
-	
 	Out::printOut(true, $additionnals);
 ?>

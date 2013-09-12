@@ -75,9 +75,9 @@ package com.twinoid.kube.quest.player {
 			_env			= new EnvironnementManager();
 			_env.initialise(getFV("configXml", "xml/config.xml"));
 			//Workaround for fonts execution security issue.
-			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://localhost") > -1) {
+			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://local.kuest") > -1) {
 				if(!ExternalInterface.available) _env.addVariables({local:"1"});
-				_env.addVariables({version:new Date().getTime(), root:"http://localhost/kuest"});
+				_env.addVariables({version:new Date().getTime(), root:"http://local.kuest"});
 			}
 			_env.addVariables(loaderInfo.parameters);
 			_env.addEventListener(IOErrorEvent.IO_ERROR, initErrorHandler);

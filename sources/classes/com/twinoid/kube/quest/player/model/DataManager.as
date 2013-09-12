@@ -279,7 +279,7 @@ package com.twinoid.kube.quest.player.model {
 				//Tubasa labyrinthe - 51aa7b6cbe1ef
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
 				Config.addVariable("kuestID", "51ad12eca65b6");
-				Config.addVariable("currentUID", "89");
+				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
 			if(!isEmpty(Config.getVariable("kuestID"))) {
@@ -298,8 +298,9 @@ package com.twinoid.kube.quest.player.model {
 			if(_currentQuestGUID != null) {
 				var spool:SequentialCommand = new SequentialCommand();
 				if(Capabilities.playerType == "StandAlone") {
-					//Force login if testing locally as session are fucked up in standalone mode...
+					//Force login if testing locally as sessions are fucked up in standalone mode...
 					var login:LoginCmd = new LoginCmd();
+					login.addEventListener(CommandEvent.ERROR, loginErrorHandler);
 					spool.addCommand(login);
 				}
 				_isLoggedCmd = new IsLoggedCmd();

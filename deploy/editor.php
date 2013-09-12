@@ -12,7 +12,7 @@
 		die;
 	}
 	
-	DBConnection::initSession();
+	DBConnection::connect();
 	
 	//session_destroy(); die;
 	OAuth::connect();
@@ -59,7 +59,7 @@
 			if(lang != "fr" && lang != "en") lang = "en";
 			
 			var flashvars = {};
-			flashvars["version"] = "65";
+			flashvars["version"] = "66";
 			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
 			flashvars["lang"] = lang;
 			var attributes = {};
