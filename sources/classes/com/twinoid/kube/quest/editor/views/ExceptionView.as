@@ -82,7 +82,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * Initialize the class.
 		 */
 		private function initialize(event:Event):void {
-			addEventListener(Event.ADDED_TO_STAGE, initialize);
+			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
 			alpha = 0;
 			_closed = true;

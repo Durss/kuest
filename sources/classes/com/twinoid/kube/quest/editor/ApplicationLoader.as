@@ -78,9 +78,6 @@ package com.twinoid.kube.quest.editor {
 				_env.addVariables({local:"1"});
 				_env.addVariables({root:"http://local.kuest"});
 			}
-			if(Capabilities.playerType.toLowerCase() == "standalone") {
-				_env.addVariables({simulateSession:true});
-			}
 			_env.initialise(getFV("configXml", "xml/config.xml"));
 			_env.addVariables(loaderInfo.parameters);
 			_env.addEventListener(IOErrorEvent.IO_ERROR, initErrorHandler);

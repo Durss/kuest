@@ -133,6 +133,7 @@ package com.twinoid.kube.quest.player {
 			_spinning.open(Label.getLabel("loader-loading"));
 			_spinning.y	= _spinning.height * .5;
 			_spinning.x	= stage.stageWidth * .5;
+			_exception	= addChild(new ExceptionView(true)) as ExceptionView;
 			roundPos(_spinning);
 			resizeFlashTo(_spinning.height+ 20);
 			
@@ -178,7 +179,7 @@ package com.twinoid.kube.quest.player {
 				_mask		= addChild(createRect(0xffff0000)) as Shape;
 				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerDefaultView;
 				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerEventView;
-				_exception	= addChild(new ExceptionView(true)) as ExceptionView;
+				addChild(_exception);
 				
 				_mask.height = 0;
 				_holder.mask = _mask;
@@ -214,7 +215,10 @@ package com.twinoid.kube.quest.player {
 			_check.y = _splitter.y + _splitter.height + 10;
 			computePositions();
 		}
-
+		
+		/**
+		 * Called when "check" animation completes
+		 */
 		private function onCheck():void {
 			_check.stop();
 			TweenLite.to(_check, .25, {autoAlpha:0, onComplete:computePositions});
@@ -224,7 +228,7 @@ package com.twinoid.kube.quest.player {
 		 * Called when login button is clicked
 		 */
 		private function clickLoginHandler(event:MouseEvent):void {
-			navigateToURL(new URLRequest("http://muxxu.com/a/kuest"));
+			navigateToURL(new URLRequest("http://fevermap.org/kuest"));
 		}
 		
 		/**

@@ -50,35 +50,42 @@
 				
 				$userInfos = OAuth::call('me?fields=id,name,locale,contacts.fields(user.fields(id,name))');
 				
-				$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
-				$params = array(':uid' => $userInfos->id);
-				$req = DBConnection::getLink()->prepare($sql);
-				$req->execute($params);
-				$tot = $req->rowCount();
-				if($tot === 0) {
-					$sql = "INSERT INTO kuestUsers (uid, name, oAuthCode) VALUES (:uid, :name, :code)";
-					$params = array(':uid' => $userInfos->id, ':name' => $userInfos->name, ':code' => sha1($_GET["code"]));
-					$req = DBConnection::getLink()->prepare($sql);
-					$req->execute($params);
-				}else {
-					$res = $req->fetch();
-					$_SESSION["pubkey"]	= $res['oAuthCode'];
-					$sql = "UPDATE kuestUsers SET name=:name".$add." WHERE uid=:uid";
-					$params = array(':uid' => $userInfos->id, ':name' => $userInfos->name);
-					$req = DBConnection::getLink()->prepare($sql);
-					$req->execute($params);
-				}
-				
-				$_SESSION['logged']	= true;
-				$_SESSION['lang']	= $userInfos->locale;
-				$_SESSION['uid']	= $userInfos->id;
-				$_SESSION['name']	= $userInfos->name;
-				$_SESSION["friends"]= $userInfos->contacts;
+				self::logFromJSON($userInfos);
 				
 				header('location:'.$_GET['state']);
 				die;
 			}
 		}
+		
+		public static function logFromJSON($json) {
+			$sql = "SELECT * FROM kuestUsers WHERE uid=:uid";
+			$params = array(':uid' => $json->id);
+			$req = DBConnection::getLink()->prepare($sql);
+			$req->execute($params);
+			$tot = $req->rowCount();
+			if($tot === 0) {
+				$oAuthCode = sha1($_GET["code"]);
+				$sql = "INSERT INTO kuestUsers (uid, name, oAuthCode) VALUES (:uid, :name, :code)";
+				$params = array(':uid' => $json->id, ':name' => $json->name, ':code' => $oAuthCode);
+				$req = DBConnection::getLink()->prepare($sql);
+				$req->execute($params);
+			}else {
+				$res = $req->fetch();
+				$oAuthCode = $res['oAuthCode'];
+				$sql = "UPDATE kuestUsers SET name=:name WHERE uid=:uid";
+				$params = array(':uid' => $json->id, ':name' => $json->name);
+				$req = DBConnection::getLink()->prepare($sql);
+				$req->execute($params);
+			}
+			
+			$_SESSION['logged']	= true;
+			$_SESSION['lang']	= $json->locale;
+			$_SESSION['uid']	= $json->id;
+			$_SESSION['name']	= $json->name;
+			$_SESSION["friends"]= $json->contacts;
+			$_SESSION["pubkey"]	= $oAuthCode;
+		}
+		
 		
 		/**
 		 * Gets the user's information to finalise login
