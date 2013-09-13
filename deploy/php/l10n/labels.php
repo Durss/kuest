@@ -211,8 +211,8 @@
 			$error_title = $error_title[ $lang ];
 			
 			$error_content = array();
-			$error_content["fr"] = "Une erreur est survenue lors de votre connexion à l'application.<br /><br />L'API twinoid a répondu :<br /><div class='error'><i><b>".$_GET['e']."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
-			$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>".$_GET['e']."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
+			$error_content["fr"] = "Une erreur est survenue lors de votre connexion à l'application.<br /><br />L'API twinoid a répondu :<br /><div class='error'><i><b>".htmlentities($_GET['e'])."</b> for graph API request <b>".htmlentities($_GET['api'])."</b></i></div>";
+			$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>".htmlentities($_GET['e'])."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
 			$error_content = $error_content[ $lang ];
 		}
 	}
