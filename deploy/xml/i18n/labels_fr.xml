@@ -15,7 +15,7 @@
 		<label code="exception-title"><![CDATA[Erreur]]></label>
 		<label code="exception-INCOMPLETE_FORM"><![CDATA[Données manquantes dans la requête.]]></label>
 		<label code="exception-SQL_CONNECTION_FAIL"><![CDATA[Impossible de se connecter à la base de données.]]></label>
-		<label code="exception-API_ERROR"><![CDATA[Muxxu est actuellement indisponible.<br />Essayez à nouveau d'effectuer cette action dans quelques minutes.]]></label>
+		<label code="exception-API_ERROR"><![CDATA[Twinoid est actuellement indisponible.<br />Essayez à nouveau d'effectuer cette action dans quelques minutes.]]></label>
 		<label code="exception-INVALID_IDS"><![CDATA[Identifiants invalides.]]></label>
 		<label code="exception-NOT_LOGGED"><![CDATA[Vous devez être connecté pour effectuer cette action.]]></label>
 		<label code="exception-SQL_ERROR"><![CDATA[La requête SQL effectuée comportait des erreurs.]]></label>
@@ -54,12 +54,6 @@
 		<label code="prompt-window-submit"><![CDATA[Valider]]></label>
 		<label code="prompt-window-cancel"><![CDATA[Annuler]]></label>
 		<label code="prompt-window-ignore"><![CDATA[Ne plus me demander confirmation pour cette action.]]></label>
-		
-		<label code="login-title"><![CDATA[Vous devez être connecté pour enregistrer ou charger votre travail.<br /><a class="link" href="http://muxxu.com/a/kuest?act=ids" target="_blank">&gt; Connaître mes identifiants.</a>]]></label>
-		<label code="login-uid"><![CDATA[UID]]></label>
-		<label code="login-pubkey"><![CDATA[PUBKEY]]></label>
-		<label code="login-submit"><![CDATA[Log-in]]></label>
-		<label code="login-invalidIDS"><![CDATA[Identifiants invalides.]]></label>
 		
 		<label code="selector-char"><![CDATA[Choisir un personnage]]></label>
 		<label code="selector-object"><![CDATA[Choisir un objet]]></label>
@@ -100,7 +94,7 @@
 		<label code="menu-file-test"><![CDATA[Tester la quête]]></label>
 		<label code="menu-file-help"><![CDATA[Aide]]></label>
 		<label code="menu-file-help-tuto"><![CDATA[Voir le tutoriel]]></label>
-		<label code="menu-file-help-samples"><![CDATA[Examples de quêtes:]]></label>
+		<label code="menu-file-help-samples"><![CDATA[Exemples de quêtes:]]></label>
 		
 		<label code="menu-credits"><![CDATA[Credits]]></label>
 		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.
@@ -203,8 +197,8 @@
 		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
 		<label code="player-next"><![CDATA[Suite &gt;]]></label>
 		<label code="player-resetTT"><![CDATA[Effacer votre progression et recommencer la quête du début.<br /><b>Cette action est irréversible !</b>]]></label>
-		<label code="player-restTitle"><![CDATA[Effacer votre progression</b>]]></label>
-		<label code="player-restContent"><![CDATA[Êtes-vous sûr de vouloir effacer votre progression et recommencer la quête depuis le début ?<br /><b>Cette action est irréversible !</b>]]></label>
+		<label code="player-resetTitle"><![CDATA[Effacer votre progression</b>]]></label>
+		<label code="player-resetContent"><![CDATA[Êtes-vous sûr de vouloir effacer votre progression et recommencer la quête depuis le début ?<br /><b>Cette action est irréversible !</b>]]></label>
 		<label code="player-inventory"><![CDATA[Inventaire]]></label>
 		<label code="player-inventoryEmpty"><![CDATA[Vous n'avez trouvé aucun objet pour l'instant.]]></label>
 		<label code="player-evaluate"><![CDATA[Vous avez maintenant terminé la quête.<br />Comment l'avez-vous trouvée ?]]></label>

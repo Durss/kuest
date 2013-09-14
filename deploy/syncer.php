@@ -5,6 +5,7 @@
 	require_once("php/db/DBConnection.php");
 	require_once("php/out/Out.php");
 	require_once("php/log/Logger.php");
+	require_once("php/utils/OAuth.php");
 	require_once("php/l10n/labels.php");
 	
 	//Connect to database
@@ -16,7 +17,7 @@
 	}
 	
 	if (!isset($_SESSION['uid'])) {
-		header("location: http://muxxu.com/a/kuest/?act=k_kid=".$_GET["id"]);
+		OAuth::connect();
 	}
 	
 	//Loading kuest details
@@ -36,7 +37,20 @@
 			$title = utf8_encode(htmlspecialchars($res["name"]));
 			$syncer_description = $syncer_description."<div class='description'>".utf8_encode(htmlspecialchars($res["description"]))."</div>";
 			$syncer_description .= "<br /><strong class='collapser'>".$syncer_infoTitle."</strong><div class='description collapsed'>".$syncer_infoContent."</div>";
-			$syncer_description .= "<br /><center><button class='button' onClick='window.location = \"/kuest/redirect?kuest=".htmlspecialchars($_GET['id'])."\";'><img src='/kuest/img/submit.png'/>".$syncer_load."</button></center>";
+			$syncer_description .= "<div class='instructions-holder'>";
+			$syncer_description .= "	<div class='syncer-buttons-holder'>";
+			$syncer_description .= "		<div id='playButton'>";
+			$syncer_description .= "			<button class='button syncer' onClick='window.location = \"/kuest/redirect?kuest=".htmlspecialchars($_GET['id'])."\";'><img src='/kuest/img/submit.png'/>".$syncer_load."</button>";
+			$syncer_description .= "		</div>";
+			$syncer_description .= "		<div id='installInstructions'>";
+			$syncer_description .= "			<div class='installInstructions'>".$syncer_installInstructions."<br /></div>";
+			$syncer_description .= "			<a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'><button id='install_gm_ff' class='button syncer'><img src='/kuest/img/icon-greasemonkey-16.png'/>".$syncer_installGM."</button></a>";
+			$syncer_description .= "			<a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'><button id='install_gm_chrome' class='button syncer'><img src='/kuest/img/icon-tampermonkey.png'/>".$syncer_installTM."</button></a>";
+			$syncer_description .= "			<a href='/kuest/js/kuest.user.js' target='_blank'><button id='install_script' class='button syncer'><img src='/kuest/img/app_logo_icon.jpg'/>".$syncer_installScript."</button></a>";
+			$syncer_description .= "		</div>";
+			$syncer_description .= "	</div>";
+			$syncer_description .= "	<img id='syncer-loader' src='/kuest/img/loader.gif'/>";
+			$syncer_description .= "</div>";
 		}
 	}
 ?>
@@ -52,6 +66,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="/kuest/css/stylesheet.css"/>
 		<link rel="stylesheet" type="text/css" href="/kuest/css/browse.css"/>
+		<link rel="stylesheet" type="text/css" href="/kuest/css/syncer.css"/>
 		<link rel="stylesheet" type="text/css" href="/kuest/css/opentip.css"/>
 		
 		<script type="text/javascript" src="/kuest/js/plugins/CSSPlugin.min.js"></script>
@@ -64,6 +79,7 @@
 		<script type="text/javascript" src="/kuest/js/utils.js"></script>
 		<script type="text/javascript" src="/kuest/js/opentip.js"></script>
 		<script type="text/javascript" src="/kuest/js/appear.js"></script>
+		<script type="text/javascript" src="/kuest/js/syncer.js"></script>
 	</head>
 	<body>
 		<div class="banner"></div>
@@ -81,28 +97,5 @@
 				<div class="bottom"></div>
 			</div>
 		</div>
-		
-		<script language="JavaScript">
-			//Move that shit on a .js
-			var elements = document.getElementsByClassName("collapser");
-			for(var i = 0; i < elements.length; i++) {
-				elements[i].style.cursor = "pointer";
-				elements[i].onclick = function() {
-					var target = this.nextSibling;
-					var secureLoop = 0;
-					while(target.nodeName != "DIV" && secureLoop < 100) {
-						target = target.nextSibling;
-						secureLoop ++;
-					}
-					if(hasClass(target, "collapsed")) {
-						addClass(this, "collapserOpen");
-						removeClass(target, "collapsed");
-					}else{
-						removeClass(this, "collapserOpen");
-						addClass(target, "collapsed");
-					}
-				}
-			}
-		</script>
 	</body>
 </html>

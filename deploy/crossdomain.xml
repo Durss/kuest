@@ -4,5 +4,7 @@
       <allow-access-from domain="*.fevermap.org" secure="false"/>
       <allow-access-from domain="*.muxxu.com" secure="false"/>
       <allow-access-from domain="*.muxxu.fr" secure="false"/>
+      <allow-access-from domain="*.twinoid.com" secure="false"/>
+      <allow-access-from domain="*.twinoid.fr" secure="false"/>
       <allow-access-from domain="local.kuest" secure="false"/>
 </cross-domain-policy>

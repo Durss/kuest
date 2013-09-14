@@ -6,7 +6,7 @@
 		<label code="exception-title"><![CDATA[Error]]></label>
 		<label code="exception-INCOMPLETE_FORM"><![CDATA[Missing request data.]]></label>
 		<label code="exception-SQL_CONNECTION_FAIL"><![CDATA[Cannot connect to database.]]></label>
-		<label code="exception-API_ERROR"><![CDATA[Muxxu is down at the moment.<br />Try again in a few minutes.]]></label>
+		<label code="exception-API_ERROR"><![CDATA[Twinoid is down at the moment.<br />Try again in a few minutes.]]></label>
 		<label code="exception-INVALID_IDS"><![CDATA[Invalid IDs.]]></label>
 		<label code="exception-NOT_LOGGED"><![CDATA[You must be logged in to perform this action.]]></label>
 		<label code="exception-SQL_ERROR"><![CDATA[Invalid SQL request.]]></label>
@@ -33,7 +33,7 @@
 		<label code="prompt-window-cancel"><![CDATA[Cancel]]></label>
 		<label code="prompt-window-ignore"><![CDATA[Do not ask confirmation for this action in the futur.]]></label>
 		
-		<label code="login-title"><![CDATA[You must be logged in to save or load yor work.<br /><a class="link" href="http://muxxu.com/a/kuest?act=ids" target="_blank">&gt; Get my IDs.</a>]]></label>
+		<label code="login-title"><![CDATA[You must be logged in to save or load yor work.<br /><a class="link" href="http://fevermap.org/" target="_blank">&gt; Get my IDs.</a>]]></label>
 		<label code="login-uid"><![CDATA[UID]]></label>
 		<label code="login-pubkey"><![CDATA[PUBKEY]]></label>
 		<label code="login-submit"><![CDATA[Log-in]]></label>

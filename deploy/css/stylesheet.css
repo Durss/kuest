@@ -17,7 +17,6 @@ a {
 }
 a:hover {
 	color: #ff8888;
-	text-decoration:underline;
 }
 
 #content {
@@ -81,8 +80,6 @@ float:left;
 }
 
 button {
-	height:25px;
-	
 	font-size:16px;
 	font-weight:bold; 
 	color:#ffffff;
