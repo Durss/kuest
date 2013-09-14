@@ -33,17 +33,7 @@ function addItem(i, node, holder) {
 	div.onclick = (function () {
 						var id = entry['guid'];
 						return function (e) {
-							//If not in muxxu's context, just redirect
-							//if(window.parent == window) {
-								window.location = (e.layerX < 30)? "/kuest/redirect.php?kuest="+id : "/kuest/k/"+id;
-							/*}else{
-								//If in muxxu's contest, rewrite main URL if we watch details
-								if(e.layerX > 30) {
-									window.location = "/kuest/redirect.php?kuest="+id;
-								} else {
-									window.parent.location = "http://muxxu.com/a/kuest/?act=k_kid="+id;
-								}
-							}*/
+							window.location = (e.layerX < 30)? "/kuest/redirect.php?kuest="+id : "/kuest/k/"+id;
 						}
 					})();
 	new Opentip(div, entry['description'].replace('"', '\"'), { target: div, tipJoint: "bottom" });
@@ -66,6 +56,7 @@ function addItem(i, node, holder) {
 
 var template;
 var onload = function () {
+	parseExpandableBlocks();
 	if(document.getElementsByClassName("template").length == 0) return;
 	template = document.getElementsByClassName("template")[0].innerHTML;
 }
@@ -83,4 +74,26 @@ function removeClass(el, name) {
    if (hasClass(el, name)) {
 	  el.className=el.className.replace(new RegExp('(\\s|^)'+name+'(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
    }
+}
+
+function parseExpandableBlocks() {
+	var elements = document.getElementsByClassName("collapser");
+	for(var i = 0; i < elements.length; i++) {
+		elements[i].style.cursor = "pointer";
+		elements[i].onclick = function() {
+			var target = this.nextSibling;
+			var secureLoop = 0;
+			while(target.nodeName != "DIV" && secureLoop < 100) {
+				target = target.nextSibling;
+				secureLoop ++;
+			}
+			if(hasClass(target, "collapsed")) {
+				addClass(this, "collapserOpen");
+				removeClass(target, "collapsed");
+			}else{
+				removeClass(this, "collapserOpen");
+				addClass(target, "collapsed");
+			}
+		}
+	}
 }

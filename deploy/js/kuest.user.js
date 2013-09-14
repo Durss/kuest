@@ -6,7 +6,11 @@
 // @include	            http://kube.muxxu.com/zone/choose
 // @include	            http://kube.muxxu.com/?z=*
 // @include	            http://kube.muxxu.com/?kuest=*
+// @include	            http://fevermap.org/kuest/*
+// @include	            http://local.kuest/*
 // ==/UserScript==
+
+unsafeWindow.KuestExtensionInstalled = true;
 
 //Gets the query's parameters as an anonymous object
 function getQueryString(target) {
@@ -90,17 +94,11 @@ if(/zone\/choose/gi.test(window.location.href)) {
 		var offset = 0;
 		var currentUID = -1;
 		var ctn = document.body.innerHTML;
-		do {
-			offset = ctn.indexOf('http://twinoid.com/user/', offset);
-			if(offset == -1) break;
-			var end = ctn.indexOf('"', offset);
-			if(end == -1) break;
-			var path = ctn.substring(offset, end);
-			offset ++;
-		}while( /.*user\/[0-9]+/i.test(path) === false);
-		if(/.*user\/[0-9]+/i.test(path) === true) {
-			offset = path.lastIndexOf('/');
-			currentUID = path.substring(offset + 1);
+		var reg = /twinoid\..+\/user\/[0-9]+/i;
+		if(reg.test(ctn) === true) {
+			reg.index = 0;
+			currentUID = ctn.match(reg)[0];
+			currentUID = currentUID.substr(currentUID.lastIndexOf('/')+1);
 		}
 		//UID not found, try again later.
 		if(currentUID == -1) {
@@ -108,7 +106,6 @@ if(/zone\/choose/gi.test(window.location.href)) {
 			return;
 		}
 		url += "&currentUID="+currentUID;
-		console.log(url);
 
 		kuestApp.innerHTML = '<embed type="application/x-shockwave-flash" src="'+url+'" width="812" height="1" allowScriptAccess="always" bgcolor="#4CA5CD" id="kuestSWF" />';
 		kuestApp.setAttribute("id", "kuestApp");

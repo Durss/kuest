@@ -155,6 +155,26 @@
 	$syncer_load["en"] = "Launch this quest";
 	$syncer_load = $syncer_load[ $lang ];
 	
+	$syncer_installScript = array();
+	$syncer_installScript["fr"] = "Installer le script Kuest";
+	$syncer_installScript["en"] = "Install script Kuest";
+	$syncer_installScript = $syncer_installScript[ $lang ];
+	
+	$syncer_installGM = array();
+	$syncer_installGM["fr"] = "Installer GreaseMonkey";
+	$syncer_installGM["en"] = "Install GreaseMonkey";
+	$syncer_installGM = $syncer_installGM[ $lang ];
+	
+	$syncer_installTM = array();
+	$syncer_installTM["fr"] = "Installer TamperMonkey";
+	$syncer_installTM["en"] = "Install TamperMonkey ";
+	$syncer_installTM = $syncer_installTM[ $lang ];
+	
+	$syncer_installInstructions = array();
+	$syncer_installInstructions["fr"] = "<img src='/kuest/img/warning.png' alt='warning' />Pour jouer à cette quête, installer l'extension <span id='extension-GM'><a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>GreaseMonkey</a></span><span id='extension-TM'><a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a></span> ainsi que le script <b>Kuest</b> :";
+	$syncer_installInstructions["en"] = "<img src='/kuest/img/warning.png' alt='warning' />To play this quest, install <span id='extension-GM'><a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>GreaseMonkey</a></span><span id='extension-TM'><a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a></span> as well as the script <b>Kuest</b> :";
+	$syncer_installInstructions = $syncer_installInstructions[ $lang ];
+	
 	$syncer_infoTitle = array();
 	$syncer_infoTitle["fr"] = "Aide :";
 	$syncer_infoTitle["en"] = "Help :";
