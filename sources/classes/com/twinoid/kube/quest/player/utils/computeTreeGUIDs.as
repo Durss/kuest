@@ -7,22 +7,30 @@ package com.twinoid.kube.quest.player.utils {
 	import flash.utils.setTimeout;
 	
 	/**
-	 * Searches for trees and assigns tree IDs to every KuestEvent entry
+	 * Searches for trees and assigns tree IDs to every KuestEvent entry.
+	 * 
+	 * The callback method is passed at least 1 argument that is the Dictionary
+	 * instance that takes a KuestEvent as key and returns its corresponding tree ID.
+	 * 
+	 * Tree IDs are used to prevent from entering a logic tree from anywhere.
+	 * When parsing a tree, its start point is defined. Then, if the user enters
+	 * a zone with an event of the same tree, this event won't be accessible unless
+	 * it's the tree's priority.
 	 * 
 	 * @author Francois
 	 */
-	public function computeTreeGUIDs(nodes:Vector.<KuestEvent>, tree:Dictionary, completeCallback:Function, lowConsumption:Boolean = false, completeParams:Array = null):void {
+	public function computeTreeGUIDs(nodes:Vector.<KuestEvent>, completeCallback:Function, lowConsumption:Boolean = false, completeParams:Array = null):void {
+		var tree:Dictionary = new Dictionary(); 
 		var len:int, pointer:int, _guid:int, nodeToPointerChildren:Dictionary, nodeToPointerParents:Dictionary;
 		var durationMax:int = lowConsumption? 80 : 500;
 		var rootNode:KuestEvent;
-//		tree = new Dictionary();
 		nodeToPointerChildren = new Dictionary();
 		nodeToPointerParents = new Dictionary();
 		len = nodes.length;
 		
 		function nextEvent():void {
 			if(++pointer == len) {
-				onComplete();
+				onComplete(tree);
 				return;
 			}
 			var callback:Function = (pointer == (len - 1))? onComplete : nextEvent;
@@ -82,8 +90,13 @@ package com.twinoid.kube.quest.player.utils {
 			return true;
 		}
 		
-		function onComplete():void {
+		/**
+		 * Called when parsing completes.
+		 */
+		function onComplete(tree:Dictionary):void {
 //			trace("COMPLETE !")
+			if(completeParams == null) completeParams = [];
+			completeParams.push(tree);
 			completeCallback.apply(this, completeParams);
 		}
 	}

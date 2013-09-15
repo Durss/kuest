@@ -277,8 +277,9 @@ package com.twinoid.kube.quest.player.model {
 				//Test Lilith - 51a207ff98070
 				//Cristal Atlante - 5194100a4a94f
 				//Tubasa labyrinthe - 51aa7b6cbe1ef
+				//MlleGray _Tom - 51ec728f16b49
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
-				Config.addVariable("kuestID", "51ad12eca65b6");
+				Config.addVariable("kuestID", "51ec728f16b49");
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
@@ -359,7 +360,7 @@ package com.twinoid.kube.quest.player.model {
 			if(_testMode) {
 				_clearProgression.execute();
 			}else{
-				prompt("player-restTitle", "player-restContent", _clearProgression.execute, "resetQuest");
+				prompt("player-resetTitle", "player-resetContent", _clearProgression.execute, "resetQuest");
 			}
 		}
 		
@@ -543,7 +544,8 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function loginCompleteHandler(event:CommandEvent):void {
 			//currentUID contains the currently playing user ID.
-			//It's grabbed from the HTML page.
+			//It's grabbed from the HTML page. If it doesn't match the server's
+			//ID, the user is considered as disconnected.
 			_logged = event.data["logged"] && event.data["uid"] == Config.getVariable("currentUID");
 			if(_logged) {
 				_uid	= event.data["uid"];
@@ -789,21 +791,25 @@ package com.twinoid.kube.quest.player.model {
 			if(_save["priorities"] == undefined) _save["priorities"] = {};
 			if(_save["treePriority"] == undefined) _save["treePriority"] = {};
 			
-			_nodeToTreeID = new Dictionary();
-			computeTreeGUIDs(_kuest.nodes, _nodeToTreeID, onTreeComputeComplete);
+//			_nodeToTreeID = new Dictionary();
+			computeTreeGUIDs(_kuest.nodes, onTreeComputeComplete, false);
 		}
 		
 		/**
 		 * Called when tree IDs are computed
 		 */
-		private function onTreeComputeComplete():void {
+		private function onTreeComputeComplete(tree:Dictionary):void {
+			_nodeToTreeID = tree;
 			var id:int, k:KuestEvent;
+			var c:int = 0;
 			for(var j:* in _nodeToTreeID) {
 				k = j as KuestEvent;
+				c++;
 				id = _nodeToTreeID[k];
 				k.setTreeID(id);
 				if(k.startsTree) addPriorityTo(k);
 			}
+				trace('ok ' +c);
 			if(_lastPosData != null) selectEventFromPos(_lastPosData);
 			
 			if(!_loadingAlreadyFired) {

@@ -3,6 +3,7 @@
 	require_once("../out/Out.php");
 	require_once("../log/Logger.php");
 	require_once("../utils/OAuth.php");
+	require_once("../l10n/labels.php");
 	
 	//Connect to database
 	try {
@@ -16,7 +17,11 @@
 	
 	//Search for quests
 	if(isset($_POST['search'])) {
-		$sql = "SELECT kuests.id, kuests.guid, kuests.uid as 'uid', kuests.description as 'description', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE published=1 AND kuests.uid=kuestUsers.uid AND lang=:lang AND (kuests.name LIKE :search OR kuestUsers.name LIKE :search) ORDER BY kuests.id DESC";
+		$sql = "SELECT kuests.id, kuests.guid, kuests.uid as 'uid', kuests.description as 'description', kuests.name as 'title', kuestUsers.name as 'pseudo', (SELECT COUNT(kuestSaves.id) FROM kuestSaves WHERE kid=kuests.id) as 'totalPlays'
+		FROM kuests
+		INNER JOIN kuestUsers ON kuestUsers.uid = kuests.uid
+		WHERE published = 1 AND lang = :lang AND (kuests.name LIKE :search OR kuestUsers.name LIKE :search)
+		ORDER BY kuests.id DESC";
 		$params = array(':lang' => $_SESSION["lang"], ':search' => '%'.$_POST["search"].'%');
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
@@ -36,10 +41,10 @@
 				$res2 = $req2->fetch();
 				$note = $res2['note'];
 			}
-			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' note='".$note."'>\n";
+			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' note='".$note."' plays='".$res[$i]['totalPlays']."'>\n";
 			$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".$res[$i]['pseudo']."]]></u>\n";
 			$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode($res[$i]['title'])."]]></title>\n";
-			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode($res[$i]['description'])."]]></description>\n";
+			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode($res[$i]['description']).$browse_players."]]></description>\n";
 			$additionnals .= "\t\t</k>\n";
 		}
 		$additionnals .= "\t</kuests>\n";

@@ -3,6 +3,7 @@
 	require_once("../out/Out.php");
 	require_once("../log/Logger.php");
 	require_once("../utils/OAuth.php");
+	require_once("../l10n/labels.php");
 	
 	//Connect to database
 	try {
@@ -16,7 +17,13 @@
 	
 	//Get last kuests
 	if(!isset($_POST['top']) || $_POST['top'] == 'false') {
-		$sql = "SELECT kuests.id, kuests.guid, kuests.uid as 'uid', kuests.description as 'description', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE published=1 AND kuests.uid=kuestUsers.uid AND lang=:lang ORDER BY kuests.id DESC LIMIT 0,30";
+		$sql = "SELECT kuests.id, kuests.guid, kuests.uid as 'uid', kuests.description as 'description', kuests.name as 'title', kuestUsers.name as 'pseudo', (SELECT COUNT(kuestSaves.id) FROM kuestSaves WHERE kid=kuests.id) as 'totalPlays'
+		FROM kuests
+		INNER JOIN kuestUsers ON kuestUsers.uid = kuests.uid
+		WHERE published = 1 AND lang = :lang
+		ORDER BY kuests.id DESC
+		LIMIT 0, 30";
+		
 		$params = array(':lang' => $_SESSION["lang"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
@@ -36,10 +43,10 @@
 				$res2 = $req2->fetch();
 				$note = $res2['note'];
 			}
-			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' note='".$note."'>\n";
+			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' note='".$note."' plays='".$res[$i]['totalPlays']."'>\n";
 			$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['pseudo']))."]]></u>\n";
 			$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['title']))."]]></title>\n";
-			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description']))."]]></description>\n";
+			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description'])).$browse_players."]]></description>\n";
 			$additionnals .= "\t\t</k>\n";
 		}
 		$additionnals .= "\t</kuests>\n";
@@ -48,7 +55,12 @@
 	
 	//Get best notted quests 
 	}else {
-		$sql = "SELECT kid, SUM(note) as 'total' FROM kuestEvaluations INNER JOIN kuests ON kuests.id = kuestEvaluations.kid WHERE kuests.lang = :lang GROUP BY kid ORDER BY SUM(note) DESC LIMIT 0,30";
+		$sql = "SELECT kid, SUM(note) as 'total'
+		FROM kuestEvaluations
+		INNER JOIN kuests ON kuests.id = kuestEvaluations.kid
+		WHERE kuests.lang = :lang
+		GROUP BY kid ORDER BY SUM(note)
+		DESC LIMIT 0,30";
 		$params = array(':lang' => $_SESSION["lang"]);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
@@ -61,17 +73,22 @@
 		$res = $req->fetchAll();
 		$additionnals = "<kuests top='true'>\n";
 		for ($i = 0; $i < count($res); $i++) {
-			$sql2		= "SELECT kuests.id, kuests.lang, kuests.description as 'description', kuests.guid, kuests.uid as 'uid', kuests.name as 'title', kuestUsers.name as 'pseudo' FROM kuests, kuestUsers WHERE kuests.published=1 AND kuestUsers.uid=kuests.uid AND kuests.id=:kid ORDER BY kuests.id DESC";
+			$sql2		= "SELECT kuests.id, kuests.lang, kuests.description as 'description', kuests.guid, kuests.uid as 'uid', kuests.name as 'title', kuestUsers.name as 'pseudo', (SELECT COUNT(kuestSaves.id) FROM kuestSaves WHERE kid=:kid) as 'totalPlays'
+			FROM kuests
+			INNER JOIN kuestUsers ON kuestUsers.uid = kuests.uid
+			WHERE kuests.published = 1 AND kuests.id = :kid
+			ORDER BY kuests.id DESC";
+			
 			$params2	= array(':kid' => $res[$i]['kid']);
 			$req2		= DBConnection::getLink()->prepare($sql2);
 			$req2->execute($params2);
 			if ($req2->rowCount() > 0) {
 				$res2 = $req2->fetch();
-				if($res2['lang'] == $_SESSION["lang"]) {
-					$additionnals .= "\t\t<k guid='".$res2['guid']."' note='".$res[$i]['total']."'>\n";
+				if ($res2['lang'] == $_SESSION["lang"]) {
+					$additionnals .= "\t\t<k guid='".$res2['guid']."' note='".$res[$i]['total']."' plays='".$res2['totalPlays']."'>\n";
 					$additionnals .= "\t\t\t<u id='".$res2['uid']."'><![CDATA[".htmlspecialchars($res2['pseudo'])."]]></u>\n";
 					$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res2['title']))."]]></title>\n";
-					$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res2['description']))."]]></description>\n";
+					$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res2['description'])).$browse_players."]]></description>\n";
 					$additionnals .= "\t\t</k>\n";
 				}
 			}

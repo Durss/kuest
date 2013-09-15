@@ -60,16 +60,19 @@ package com.twinoid.kube.quest.player.cmd {
 				return;
 			}
 			
-			if(parseBoolean(xml.child("result")[0].@success)) {
-				var ba:ByteArray = Base64.decode(xml.child("time")[0]);
-				XOR(ba, "DataManagerEvent");//Decode time
+			if (parseBoolean(xml.child("result")[0].@success)) {
+				var logged:Boolean = parseBoolean(xml.child("logged")[0]);
 				var ret:Object = {};
-				ret["logged"]	= parseBoolean(xml.child("logged")[0]);
+				ret["logged"]	= logged;
 				ret["uid"]		= xml.child("uid")[0];
 				ret["name"]		= xml.child("name")[0];
 				ret["pubkey"]	= xml.child("pubkey")[0];
 				ret["lang"]		= xml.child("lang")[0];
-				ret["time"]		= parseFloat(ba.readUTFBytes(ba.length)) * 1000;
+				if(logged) {
+					var ba:ByteArray = Base64.decode(xml.child("time")[0]);
+					XOR(ba, "DataManagerEvent");//Decode time
+					ret["time"]		= parseFloat(ba.readUTFBytes(ba.length)) * 1000;
+				}
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, ret));
 			}else{
 				dispatchEvent(new CommandEvent(CommandEvent.ERROR, xml.child("error")[0].@id));

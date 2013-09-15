@@ -401,8 +401,7 @@ package com.twinoid.kube.quest.editor.views {
 			}
 			if(event.keyCode == Keyboard.ESCAPE) {
 				if(event.shiftKey) {
-					_tree = new Dictionary();
-					computeTreeGUIDs(_nodes, _tree, onComputeTreeComplete);
+					computeTreeGUIDs(_nodes, onComputeTreeComplete);
 				}else {
 					_boxesHolder.graphics.clear();
 				}
@@ -412,7 +411,8 @@ package com.twinoid.kube.quest.editor.views {
 		/**
 		 * Called when tree GUIDs computation completes
 		 */
-		private function onComputeTreeComplete():void {
+		private function onComputeTreeComplete(tree:Dictionary):void {
+			_tree = tree;
 			var idToMinX:Array = [];
 			var idToMaxX:Array = [];
 			var idToMinY:Array = [];
@@ -604,15 +604,15 @@ package com.twinoid.kube.quest.editor.views {
 			
 			if(DisplayObject(event.target).parent is Box) {
 				_lastOverEvent = (DisplayObject(event.target).parent as Box).data;
-				_tree = new Dictionary();
-				computeTreeGUIDs(_nodes, _tree, onComputeTreeOverComplete, true);
+				computeTreeGUIDs(_nodes, onComputeTreeOverComplete, true);
 			}
 		}
 		
 		/**
 		 * Called when trees are computed on roll over.
 		 */
-		private function onComputeTreeOverComplete():void {
+		private function onComputeTreeOverComplete(tree:Dictionary):void {
+			_tree = tree;
 			if(_lastOverEvent == null) return;
 			var id:int, k:KuestEvent;
 			for(var j:* in _tree) {

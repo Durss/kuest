@@ -72,7 +72,7 @@
 		<label code="menu-file-new-edit"><![CDATA[Mettre à jour]]></label>
 		<label code="menu-file-load"><![CDATA[Mes quêtes]]></label>
 		<label code="menu-file-load-title"><![CDATA[Quêtes que vous avez créées :]]></label>
-		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrer une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
+		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrez une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-load-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir charger cette quête ?]]></label>
 		<label code="menu-file-delete-buttonTT"><![CDATA[Supprimer cette quête]]></label>

@@ -56,7 +56,7 @@
 	<body>
 		<!-- Template used for items creation. Modify it to update all the items rendering -->
 		<div class="template item">
-			{TITLE} <i>(<a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>)</i>
+			{TITLE} <i>(<a href="http://twinoid.com/user/{UID}" onclick="openUserSheet()" target="_blank">{PSEUDO}</a>) (<span id="test">►x{PLAYS}</span>)</i>
 		</div>
 		
 		<div class="banner"></div>
