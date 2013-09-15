@@ -117,7 +117,7 @@ package com.twinoid.kube.quest.player.views {
 			_engine.lockToLimits	= true;
 			_swiper.roundXValue		= _engine.itemWidth + _engine.hMargin;
 			_scrollpane.width		= w;
-			_scrollpane.height		= h + 15;//15 = scrollbar's height;
+			_scrollpane.height		= h + 15;//15 = scrollbar's height
 			_swiper.viewport.width	= w;
 			_swiper.viewport.height	= h;
 			_labelTf.filters		= [new DropShadowFilter(0,0,0,.4,5,5,1,2)];

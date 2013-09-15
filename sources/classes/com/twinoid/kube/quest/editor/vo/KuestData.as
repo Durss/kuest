@@ -277,16 +277,17 @@ package com.twinoid.kube.quest.editor.vo {
 			if (e.startsTree) {
 				_lastUpdatedEvent = e;
 				_lastTreeComputationKey = new Date().getTime();
-				_tree = new Dictionary();
-				computeTreeGUIDs(nodes, _tree, completeTreeCallback, true, [_lastTreeComputationKey]);
+				computeTreeGUIDs(nodes, completeTreeCallback, true, [_lastTreeComputationKey]);
 			}
 		}
 		
 		/**
 		 * Called when dependency trees are computed
 		 */
-		private function completeTreeCallback(key:Number):void {
+		private function completeTreeCallback(key:Number, tree:Dictionary):void {
 			if (key != _lastTreeComputationKey) return;
+			
+			_tree = tree;
 			
 			var id:int, k:KuestEvent;
 			for(var j:* in _tree) {

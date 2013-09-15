@@ -386,6 +386,9 @@ package com.twinoid.kube.quest.editor.vo {
 		 * DO NOT ACCESS THIS IN THE EDITOR !!!
 		 * This is only available in the player module.
 		 * The children are defined only at deserialization when loading a quest.
+		 * 
+		 * This method isn't set as a normal getter to prevent it from being
+		 * serialized on save and serialized on loading
 		 */
 		public function getChildren():Vector.<KuestEvent> {
 			return _children;

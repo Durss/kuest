@@ -18,6 +18,7 @@ package com.twinoid.kube.quest.player.components {
 	import flash.filters.DropShadowFilter;
 	
 	/**
+	 * Used for TileEngine2D !
 	 * 
 	 * @author Francois
 	 * @date 25 mai 2013;

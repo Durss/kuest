@@ -39,6 +39,10 @@ package com.twinoid.kube.quest.player.vo {
 			return _total;
 		}
 
+		public function set total(value:int):void {
+			_total = value;
+		}
+
 
 
 		/* ****** *

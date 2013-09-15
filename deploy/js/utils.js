@@ -23,6 +23,7 @@ function openUserSheet(event) {
 function addItem(i, node, holder) {
 	entry = {};
 	entry['guid']			= node.attributes.getNamedItem("guid").nodeValue;
+	entry['plays']			= (node.attributes.getNamedItem("plays") != null)? node.attributes.getNamedItem("plays").nodeValue : 0;
 	entry['uid']			= node.getElementsByTagName("u")[0].attributes.getNamedItem("id").nodeValue;
 	entry['uname']			= node.getElementsByTagName("u")[0].childNodes[0].nodeValue;
 	entry['title']			= node.getElementsByTagName("title")[0].childNodes[0].nodeValue;
@@ -36,7 +37,7 @@ function addItem(i, node, holder) {
 							window.location = (e.layerX < 30)? "/kuest/redirect.php?kuest="+id : "/kuest/k/"+id;
 						}
 					})();
-	new Opentip(div, entry['description'].replace('"', '\"'), { target: div, tipJoint: "bottom" });
+	new Opentip(div, entry['description'].replace('"', '\"').replace(/\{TOTAL\}/i, entry['plays']), { target: div, tipJoint: "bottom" });
 	div.className = i%2 == 0? "item" : "item mod";
 	if(entry['complete'] === true) addClass(div, 'complete');
 	else addClass(div, 'notcomplete');
@@ -44,6 +45,7 @@ function addItem(i, node, holder) {
 	templateTmp		= templateTmp.replace(/\{PSEUDO\}/gi, entry['uname'])
 	templateTmp		= templateTmp.replace(/\{TITLE\}/gi, entry['title'])
 	templateTmp		= templateTmp.replace(/\{UID\}/gi, entry['uid']);
+	templateTmp		= templateTmp.replace(/\{PLAYS\}/gi, entry['plays']);
 	if(node.attributes.getNamedItem("complete") != null) {
 		templateTmp	= templateTmp.replace(/\{COMPLETE_ICON\}/gi, ((entry['complete'] === true)? '<img src="/kuest/img/checkMark.png" alt="OK"/>' : '<img src="/kuest/img/hourglass.png" alt="..."/>'));
 	}else{

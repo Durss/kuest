@@ -426,6 +426,12 @@ input:-moz-placeholder { color:#3094BE; }
 	background-color:#226A88;
 }
 
+.totalPlays {
+	display:block;
+	font-weight:bold;
+	margin-top:10px;
+}
+
 
 /* SCROLLBAR SKIN FOR WEBKIT BROWSERS */
 ::-webkit-scrollbar {

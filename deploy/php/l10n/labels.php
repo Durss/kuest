@@ -8,7 +8,7 @@
 	$availableLanguages = array('fr', 'en');
 	if (!in_array($lang, $availableLanguages)) $lang = "en";
 	
-	//BROWSE PAGE//
+	//MENU
 	
 	$menu_createButton = array();
 	$menu_createButton["fr"] = "Créer une quête";
@@ -45,6 +45,12 @@
 	$menu_kuestsTT["en"] = "Back to the quests list.";
 	$menu_kuestsTT = $menu_kuestsTT[ $lang ];
 	
+	
+	
+	
+	
+	//BROWSE PAGE//
+	
 	$browse_search = array();
 	$browse_search["fr"] = "Rechercher une quête";
 	$browse_search["en"] = "Search for a quest";
@@ -80,6 +86,11 @@
 	$browse_titleRight["en"] = "Last created quests";
 	$browse_titleRight = $browse_titleRight[ $lang ];
 	
+	$browse_players = array();
+	$browse_players["fr"] = "<span class='totalPlays'>Cette quête a été jouée par {TOTAL} personnes.</span>";
+	$browse_players["en"] = "<span class='totalPlays'>This quest has been played by {TOTAL} players.</span>";
+	$browse_players = $browse_players[ $lang ];
+	
 	$loading = array();
 	$loading["fr"] = "Chargement...";
 	$loading["en"] = "Loading...";
@@ -91,8 +102,8 @@
 	$noResults = $noResults[ $lang ];
 	
 	$loadingError = array();
-	$loadingError["fr"] = "Oops... une erreur est survenue durant le chargement des quêtes.<br /><button class='button' onClick='loadQuests()'><img src='/kuest/img/submit.png'/>Ré-essayer</button>";
-	$loadingError["en"] = "Woops... an error has occurred while loading quests list.<br /><button class='button' onClick='loadQuests()'><img src='/kuest/img/submit.png'/>Try again</button>";
+	$loadingError["fr"] = "Oops... une erreur est survenue durant le chargement des quêtes.";
+	$loadingError["en"] = "Woops... an error has occurred while loading quests list.";
 	$loadingError = $loadingError[ $lang ];
 	
 	

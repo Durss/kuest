@@ -1,0 +1,41 @@
+#syncer-loader {
+	margin:20px 0 10px 0;
+}
+
+.instructions-holder img {
+	float:none;
+}
+
+.syncer-buttons-holder {
+	display:none;
+}
+
+#installInstructions button {
+	margin: 10px 20px 0px 20px;
+}
+
+.instructions-holder {
+	text-align:center;
+	width:100%;
+	margin-top:15px;
+}
+
+.syncer-buttons-holder .installInstructions {
+	text-align:left;
+	width:100%;
+	display:block;
+	color:#cc0000;
+}
+
+.installInstructions img {
+	float:left;
+	margin-right:10px;
+}
+
+#extension-TM {
+	display:none;
+}
+
+#extension-GM {
+	display:none;
+}

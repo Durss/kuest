@@ -1787,6 +1787,7 @@ Adapter = (function() {
   Adapter.prototype.remove = function(element) {
     var parentNode;
     element = this.unwrap(element);
+	if(element == undefined) return;
     parentNode = element.parentNode;
     if (parentNode != null) {
       return parentNode.removeChild(element);
