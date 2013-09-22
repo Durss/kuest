@@ -57,6 +57,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _choices:EditEventChoices;
 		private var _disable:Sprite;
 		private var _endsQuest:CheckBoxKube;
+		private var _loosesQuest:CheckBoxKube;
 		private var _sound:EditEventSound;
 		private var _startTree:CheckBoxKube;
 		private var _group:FormComponentGroup;
@@ -128,6 +129,7 @@ package com.twinoid.kube.quest.editor.views {
 					_choices.load( _data );
 					_sound.load( _data );
 					_endsQuest.selected = _data.endsQuest;
+					_loosesQuest.selected = _data.loosesQuest;
 					_startTree.selected = _data.startsTree;
 					
 					computePositions();
@@ -178,6 +180,7 @@ package com.twinoid.kube.quest.editor.views {
 			_sound	= _holder.addChild(new EditEventSound(_WIDTH)) as EditEventSound;
 			_startTree	= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-startTree"))) as CheckBoxKube;
 			_endsQuest	= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-endEvent"))) as CheckBoxKube;
+			_loosesQuest= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-looseEvent"))) as CheckBoxKube;
 			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
 			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
@@ -189,23 +192,27 @@ package com.twinoid.kube.quest.editor.views {
 			_disable.visible = false;
 			_window.visible = false;
 			
-			_place.tabIndex		= _tabIndex;
-			_type.tabIndex		= _tabIndex + 50;
-			_choices.tabIndex	= _tabIndex + 100;
-			_times.tabIndex		= _tabIndex + 150;
-			_sound.tabIndex		= _tabIndex + 200;
-			_startTree.tabIndex	= _tabIndex + 250;
-			_endsQuest.tabIndex	= _tabIndex + 300;
-			_submit.tabIndex	= _tabIndex + 350;
-			_cancel.tabIndex	= _tabIndex + 351;
+			_place.tabIndex			= _tabIndex;
+			_type.tabIndex			= _tabIndex + 50;
+			_choices.tabIndex		= _tabIndex + 100;
+			_times.tabIndex			= _tabIndex + 150;
+			_sound.tabIndex			= _tabIndex + 200;
+			_startTree.tabIndex		= _tabIndex + 250;
+			_endsQuest.tabIndex		= _tabIndex + 300;
+			_loosesQuest.tabIndex	= _tabIndex + 301;
+			_submit.tabIndex		= _tabIndex + 350;
+			_cancel.tabIndex		= _tabIndex + 351;
 			
 			//Prevents from selecting both start and end boxes
 			_group = new FormComponentGroup();
 			_group.allowNoSelection = true;
 			_group.add(_startTree);
 			_group.add(_endsQuest);
+			_group.add(_loosesQuest);
 			
 			setToolTip(_startTree, Label.getLabel("editWindow-startTreeTT"));
+			setToolTip(_endsQuest, Label.getLabel("editWindow-endEventTT"));
+			setToolTip(_loosesQuest, Label.getLabel("editWindow-looseEventTT"));
 			
 			makeEscapeClosable(this);
 			computePositions();
@@ -288,8 +295,9 @@ package com.twinoid.kube.quest.editor.views {
 			_times.save( _data );
 			_choices.save( _data );
 			_sound.save( _data );
-			_data.startsTree = _startTree.selected;
-			_data.endsQuest = _endsQuest.selected;
+			_data.startsTree	= _startTree.selected;
+			_data.endsQuest		= _endsQuest.selected;
+			_data.loosesQuest	= _loosesQuest.selected;
 			_data.submit();
 			close();
 		}

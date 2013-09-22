@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.events {
+	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import flash.events.Event;
 	
 	/**
@@ -14,6 +15,7 @@ package com.twinoid.kube.quest.player.events {
 		public static const INVENTORY_UPDATE:String = "questManagerInventoryUpdate";
 		public static const HISTORY_UPDATE:String = "questManagerHistoryUpdate";
 		
+		private var _kuestEvent:KuestEvent;
 		
 		
 		/* *********** *
@@ -22,7 +24,8 @@ package com.twinoid.kube.quest.player.events {
 		/**
 		 * Creates an instance of <code>QuestManager</code>.
 		 */
-		public function QuestManagerEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
+		public function QuestManagerEvent(type:String, kuestEvent:KuestEvent = null, bubbles:Boolean = false, cancelable:Boolean = false) {
+			_kuestEvent = kuestEvent;
 			super(type, bubbles, cancelable);
 		}
 
@@ -31,6 +34,10 @@ package com.twinoid.kube.quest.player.events {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the kuest event related to this event.
+		 */
+		public function get kuestEvent():KuestEvent { return _kuestEvent; }
 
 
 
@@ -41,7 +48,7 @@ package com.twinoid.kube.quest.player.events {
 		 * Makes a clone of the event object.
 		 */
 		override public function clone():Event {
-			return new QuestManagerEvent(type, bubbles, cancelable);
+			return new QuestManagerEvent(type, kuestEvent, bubbles, cancelable);
 		}
 
 

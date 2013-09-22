@@ -65,8 +65,10 @@ package com.twinoid.kube.quest.editor.cmd {
 			
 			if(parseBoolean(xml.child("result")[0].@success)) {
 				var ret:Object = {};
+				ret["uid"]		= xml.child("uid")[0];
 				ret["name"]		= xml.child("name")[0];
 				ret["lang"]		= xml.child("lang")[0];
+				ret["pubkey"]	= xml.child("pubkey")[0];
 				
 				//Get kuests
 				var nodes:XMLList = XML(xml.child("kuests")[0]).child("k");
@@ -77,8 +79,10 @@ package com.twinoid.kube.quest.editor.cmd {
 					kuests[i] = new KuestInfo(	XML(nodes[i]).child("t")[0],
 												XML(nodes[i]).child("d")[0],
 												nodes[i].@guid,
+												nodes[i].@uid,
 												String(nodes[i].@r).split(","),
-												XML(nodes[i]).child("isSample").length() > 0
+												XML(nodes[i]).child("isSample").length() > 0,
+												ret["uid"]
 											);
 				}
 				ret["kuests"] = kuests;
@@ -91,8 +95,10 @@ package com.twinoid.kube.quest.editor.cmd {
 					kuests[i] = new KuestInfo(	XML(nodes[i]).child("t")[0],
 												XML(nodes[i]).child("d")[0],
 												nodes[i].@guid,
+												nodes[i].@uid,
 												String(nodes[i].@r).split(","),
-												true);
+												true,
+												'-1');
 				}
 				ret["samples"] = kuests;
 				

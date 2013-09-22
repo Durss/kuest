@@ -6,6 +6,8 @@ package com.twinoid.kube.quest.editor.components.date {
 	import flash.display.Sprite;
 	
 	/**
+	 * Displays the time interval form.
+	 * Allows the user to select a start time (H:M) and an end time (H:M)
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;

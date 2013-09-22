@@ -4,6 +4,7 @@ package com.twinoid.kube.quest.editor.controler {
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import com.twinoid.kube.quest.editor.vo.ObjectItemData;
+
 	import flash.display.GraphicsPath;
 	import flash.errors.IllegalOperationError;
 	import flash.geom.Rectangle;
@@ -159,6 +160,20 @@ package com.twinoid.kube.quest.editor.controler {
 		 */
 		public function deleteSave(data:KuestInfo):void {
 			_model.deleteSave(data);
+		}
+		
+		/**
+		 * Sets the debug mode state
+		 */
+		public function setDebugMode(state:Boolean):void {
+			_model.setDebugMode(state);
+		}
+		
+		/**
+		 * Sets the debug start point
+		 */
+		public function setDebugStart(data:KuestEvent):void {
+			_model.setDebugStart(data);
 		}
 
 

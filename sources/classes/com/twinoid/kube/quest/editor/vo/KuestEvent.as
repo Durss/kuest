@@ -30,6 +30,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _actionChoices:ActionChoices;
 		private var _actionSound:ActionSound;
 		private var _endsQuest:Boolean;
+		private var _loosesQuest:Boolean;
 		private var _guid:int;
 		private var _children:Vector.<KuestEvent>;
 		private var _treeID:int;
@@ -154,6 +155,16 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Sets if this event validates the quest.
 		 */
 		public function set endsQuest(value:Boolean):void { _endsQuest = value; }
+		
+		/**
+		 * Gets if this event looses the quest.
+		 */
+		public function get loosesQuest():Boolean { return _loosesQuest; }
+
+		/**
+		 * Sets if this event looses the quest.
+		 */
+		public function set loosesQuest(value:Boolean):void { _loosesQuest = value; }
 		
 		/**
 		 * Gets if this event is the entry point of its dependency tree.
@@ -337,7 +348,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Gets a string representation of the value object.
 		 */
 		override public function toString():String {
-			return "[KuestEvent :: guid="+guid+" \n\tboxPosition="+boxPosition+" \n\tactionPlace="+actionPlace+" \n\tactionDate="+actionDate+" \n\tactionType="+actionType+", \n\tdependencies=["+dependencies+"]]";
+			return "[KuestEvent :: guid="+guid+" startsTree="+startsTree+" endsQuest="+endsQuest+" loosesQuest="+loosesQuest+" \n\tboxPosition="+boxPosition+" \n\tactionPlace="+actionPlace+" \n\tactionDate="+actionDate+" \n\tactionType="+actionType+", \n\tdependencies=["+dependencies+"]]";
 		}
 
 

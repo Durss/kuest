@@ -220,7 +220,6 @@ package com.twinoid.kube.quest.editor.components.box {
 			
 			removeEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 			removeEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
-			removeEventListener(MouseEvent.CLICK, clickHandler);
 			removeEventListener(Event.ENTER_FRAME, update);
 		}
 
@@ -241,15 +240,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				mouseChildren = false;
 				addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 				addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
-				addEventListener(MouseEvent.CLICK, clickHandler);
 			}
-		}
-		
-		/**
-		 * Called when link is clicked to cut it
-		 */
-		private function clickHandler(event:MouseEvent):void {
-			prompt("editor-linkDelPromptTitle", "editor-linkDelPromptContent", deleteLink, "deleteLink");
 		}
 		
 		/**

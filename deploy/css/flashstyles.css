@@ -9,6 +9,8 @@
 
 .menu-title { font-family:Verdana; font-weight:bold; font-size:25; color:#ffffff; text-align:center; flash-charcase:upper; }
 .menu-label { font-family:Verdana; font-size:14; color:#ffffff; }
+.menu-label-bold { font-family:Verdana; font-size:14; color:#ffffff; font-weight:bold; }
+.menu-debug-selectStart { font-family:Verdana; font-size:30; font-weight:bold; color:#ffffff; text-align:center; }
 .loader-label { font-family:Verdana; font-size:8; color:#ffffff; text-align:center; flash-charcase:upper; }
 
 .input { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#265367; }

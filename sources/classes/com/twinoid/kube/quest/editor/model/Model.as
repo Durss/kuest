@@ -1,6 +1,4 @@
 package com.twinoid.kube.quest.editor.model {
-	import com.twinoid.kube.quest.editor.vo.UserInfo;
-	import com.twinoid.kube.quest.editor.cmd.DeleteQuestCmd;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -9,6 +7,7 @@ package com.twinoid.kube.quest.editor.model {
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.crypto.XOR;
+	import com.twinoid.kube.quest.editor.cmd.DeleteQuestCmd;
 	import com.twinoid.kube.quest.editor.cmd.KeepSessionAliveCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoadQuestCmd;
 	import com.twinoid.kube.quest.editor.cmd.LoginCmd;
@@ -25,6 +24,7 @@ package com.twinoid.kube.quest.editor.model {
 	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import com.twinoid.kube.quest.editor.vo.ObjectItemData;
 	import com.twinoid.kube.quest.editor.vo.Point3D;
+	import com.twinoid.kube.quest.editor.vo.UserInfo;
 	import com.twinoid.kube.quest.editor.vo.Version;
 
 	import flash.display.GraphicsPath;
@@ -52,8 +52,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _currentBoxToEdit:KuestEvent;
 		private var _connectedToGame:Boolean;
 		private var _loginCmd:LoginCmd;
-//		private var _uid:String;
-		private var _name:String;
+		private var _uid:String;
 		private var _lang:String;
 		private var _so:SharedObject;
 		private var _charactersUpdate:Boolean;
@@ -72,6 +71,7 @@ package com.twinoid.kube.quest.editor.model {
 		private var _cmdDelete:DeleteQuestCmd;
 		private var _friends:Vector.<UserInfo>;
 		private var _samples:Vector.<KuestInfo>;
+		private var _debugMode:Boolean;
 		
 		
 		
@@ -189,6 +189,11 @@ package com.twinoid.kube.quest.editor.model {
 		 * Gets the friends list
 		 */
 		public function get friends():Vector.<UserInfo> { return _friends; }
+		
+		/**
+		 * Gets the debug mode state
+		 */
+		public function get debugMode():Boolean { return _debugMode; }
 		
 
 
@@ -399,6 +404,21 @@ package com.twinoid.kube.quest.editor.model {
 			_cmdDelete.populate(data.guid);
 			prompt("menu-file-delete-prompt-title", "menu-file-delete-prompt-content", onDelete, "deleteKuest");
 		}
+		
+		/**
+		 * Sets the debug mode state
+		 */
+		public function setDebugMode(state:Boolean):void {
+			_debugMode = state;
+			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.DEBUG_MODE_CHANGE, state));
+		}
+		
+		/**
+		 * Sets the debug start point
+		 */
+		public function setDebugStart(data:KuestEvent):void {
+			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.DEBUG_START_POINT, data));
+		}
 
 
 		
@@ -497,8 +517,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function saveCompleteHandler(event:CommandEvent):void {
 			_currentKuestGUID = event.data["guid"];
-			// If title and description are null, that's because we updated an existing kuest.
-			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, _saveCmd.friends, false);
+			var vo:KuestInfo = new KuestInfo(_saveCmd.title, _saveCmd.description, _currentKuestGUID, event.data["owner"], _saveCmd.friends, false, _uid);
 			if (isEmpty(_saveCmd.guid)) {
 				_kuests.unshift(vo);
 			}else{
@@ -544,7 +563,7 @@ package com.twinoid.kube.quest.editor.model {
 		 * Called when login operation completes
 		 */
 		private function loginCompleteHandler(event:CommandEvent):void {
-			_name = event.data["name"];
+			_uid = event.data["uid"];
 			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
 			_samples = event.data["samples"] as Vector.<KuestInfo>;
 			_friends = event.data["friends"] as Vector.<UserInfo>;

@@ -65,6 +65,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called on model's update
 		 */
 		override public function update(model:Model):void {
+			super.update(model);
+			if(_fileForm == null) return;
 			_fileForm.update(model);
 		}
 

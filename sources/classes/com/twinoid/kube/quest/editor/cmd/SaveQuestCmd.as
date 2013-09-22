@@ -166,6 +166,7 @@ package com.twinoid.kube.quest.editor.cmd {
 			
 			if(parseBoolean(xml.child("result")[0].@success)) {
 				var ret:Object = {};
+				ret["owner"] = xml.child("guid")[0].@owner;
 				ret["guid"] = xml.child("guid")[0];
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, ret));
 			}else{

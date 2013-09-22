@@ -1,6 +1,6 @@
 package com.twinoid.kube.quest.player.vo {
-	import com.twinoid.kube.quest.player.utils.sortByPosition;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+	import com.twinoid.kube.quest.player.utils.sortByPosition;
 
 	import flash.utils.Dictionary;
 	
@@ -51,7 +51,16 @@ package com.twinoid.kube.quest.player.vo {
 		 */
 		public function isEventAccessible(event:KuestEvent):Boolean {
 			var treeID:String = _nodeToTreeID[event];
-			return _treeIDToPriorities[ treeID ] == event;
+			var i:int, len:int, isAccessible:Boolean, priorities:Vector.<KuestEvent>;
+			priorities = _treeIDToPriorities[ treeID ];
+			len = priorities.length;
+			for(i = 0; i < len; ++i) {
+				if(priorities[i].guid == event.guid) {
+					isAccessible = true;
+					break;
+				}
+			}
+			return isAccessible;
 		}
 		
 		/**
@@ -69,10 +78,10 @@ package com.twinoid.kube.quest.player.vo {
 			//by position to the new event. If the new event is more at left nor top than
 			//all the current priorities, it will override them and be the new priority.
 			if(events.length == 1 && comparePositionWithCurrent) {
-				var event:KuestEvent = event[0];
+				var event:KuestEvent = events[0];
 				treeID = _nodeToTreeID[ event ];
 				var priorities:Vector.<KuestEvent> = _treeIDToPriorities[ treeID ] as Vector.<KuestEvent>;
-				len = priorities.length;
+				len = priorities == null?  0 : priorities.length;
 				var isPriority:Boolean = true;
 				for(i = 0; i < len; ++i) {
 					//If the event has been specified as the start of the tree by the user
@@ -90,8 +99,8 @@ package com.twinoid.kube.quest.player.vo {
 				}
 				if(isPriority) {
 					_treeIDToPriorities[ treeID ] = events;
-					return;
 				}
+				return;
 			}
 			
 			

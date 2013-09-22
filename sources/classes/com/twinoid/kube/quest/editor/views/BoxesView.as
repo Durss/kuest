@@ -1,6 +1,4 @@
 package com.twinoid.kube.quest.editor.views {
-	import flash.filters.ColorMatrixFilter;
-	import com.twinoid.kube.quest.player.utils.computeTreeGUIDs;
 	import gs.TweenLite;
 	import gs.easing.Back;
 
@@ -15,9 +13,12 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.events.BoxEvent;
 	import com.twinoid.kube.quest.editor.events.BoxesCommentsEvent;
+	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.model.Model;
+	import com.twinoid.kube.quest.editor.utils.prompt;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.ScissorsGraphic;
+	import com.twinoid.kube.quest.player.utils.computeTreeGUIDs;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -25,6 +26,7 @@ package com.twinoid.kube.quest.editor.views {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.filters.ColorMatrixFilter;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
@@ -68,6 +70,8 @@ package com.twinoid.kube.quest.editor.views {
 		private var _nodes:Vector.<KuestEvent>;
 		private var _tree:Dictionary;
 		private var _lastOverEvent:KuestEvent;
+		private var _debugMode:Boolean;
+		private var _debugFilter:ColorMatrixFilter;
 		
 		
 		
@@ -154,10 +158,12 @@ package com.twinoid.kube.quest.editor.views {
 			_scisors.filters = [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 			_scisors.mouseChildren = false;
 			_scisors.mouseEnabled = false;
+			_debugFilter = new ColorMatrixFilter([0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0,0,0,1,0]);
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			_comments.addEventListener(BoxesCommentsEvent.ENTER_EDIT_MODE, editCommentsStateChangeHandler);
 			_comments.addEventListener(BoxesCommentsEvent.LEAVE_EDIT_MODE, editCommentsStateChangeHandler);
+			ViewLocator.getInstance().addEventListener(ViewEvent.DEBUG_MODE_CHANGE, debugModeStateChangeHandler);
 		}
 		
 		/**
@@ -174,6 +180,7 @@ package com.twinoid.kube.quest.editor.views {
 			addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
 			addEventListener(MouseEvent.MOUSE_OVER, overHandler);
 			addEventListener(MouseEvent.MOUSE_OUT, outHandler);
+			addEventListener(MouseEvent.CLICK, clickHandler);
 		}
 		
 		/**
@@ -407,43 +414,6 @@ package com.twinoid.kube.quest.editor.views {
 				}
 			}
 		}
-		
-		/**
-		 * Called when tree GUIDs computation completes
-		 */
-		private function onComputeTreeComplete(tree:Dictionary):void {
-			_tree = tree;
-			var idToMinX:Array = [];
-			var idToMaxX:Array = [];
-			var idToMinY:Array = [];
-			var idToMaxY:Array = [];
-			var id:int, k:KuestEvent;
-			for(var j:* in _tree) {
-				k = j as KuestEvent;
-				id = _tree[k];
-				k.setTreeID(id);
-				if(idToMinX[ id ] == undefined) {
-					idToMinX[ id ] = k.boxPosition.x;
-					idToMaxX[ id ] = k.boxPosition.x + BackgroundView.CELL_SIZE * 8;
-					idToMinY[ id ] = k.boxPosition.y;
-					idToMaxY[ id ] = k.boxPosition.y + BackgroundView.CELL_SIZE * 3;
-				}else{
-					idToMinX[ id ] = Math.min(idToMinX[ id ], k.boxPosition.x);
-					idToMaxX[ id ] = Math.max(idToMaxX[ id ], k.boxPosition.x + BackgroundView.CELL_SIZE * 8);
-					idToMinY[ id ] = Math.min(idToMinY[ id ], k.boxPosition.y);
-					idToMaxY[ id ] = Math.max(idToMaxY[ id ], k.boxPosition.y + BackgroundView.CELL_SIZE * 3);
-				}
-			}
-			_boxesHolder.graphics.clear();
-			_boxesHolder.graphics.lineStyle(.5, 0xff0000, 1);
-			var i:int, len:int, margin:int = 20;
-			len = idToMaxX.length;
-			for(j in idToMaxX) {
-				i = j as int;
-				_boxesHolder.graphics.beginFill(0x55555 + Math.random() * 0xAAAAAA, .2);
-				_boxesHolder.graphics.drawRect(idToMinX[i] - margin, idToMinY[i] - margin, idToMaxX[i] - idToMinX[i] + margin * 2, idToMaxY[i] - idToMinY[i] + margin * 2);
-			}
-		}
 
 		
 		/**
@@ -517,8 +487,8 @@ package com.twinoid.kube.quest.editor.views {
 				_endY += (stage.mouseY - _prevMousePos.y) * 5;
 				_draggingBoard = false;
 			
-			}else if(_draggedItem == null && Point.distance(_mouseOffset, _prevMousePos) < 2 && !event.ctrlKey && !_spacePressed){
-				//If we weren't dragging the board, create a new item
+			//If we weren't dragging the board, create a new item
+			}else if(_draggedItem == null && Point.distance(_mouseOffset, _prevMousePos) < 2 && !event.ctrlKey && !_spacePressed && !_debugMode){
 				var size:int = BackgroundView.CELL_SIZE;
 				var px:Number = Math.round((_boxesHolder.mouseX - _tempBox.width * .5) / size) * size;
 				var py:Number = Math.round((_boxesHolder.mouseY - _tempBox.height * .5) / size) * size;
@@ -562,11 +532,29 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		/**
+		 * Called when an element is clicked
+		 */
+		private function clickHandler(event:MouseEvent):void {
+			//If a link has been clicked delete it
+			if(event.target is BoxLink && !_debugMode) {
+				prompt("editor-linkDelPromptTitle", "editor-linkDelPromptContent", BoxLink(event.target).deleteLink, "deleteLink");
+			}
+			
+			if(_debugMode) {
+				if (event.target is Box) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+					FrontControler.getInstance().setDebugStart(Box(event.target).data);
+				}
+			}
+		}
+		
+		/**
 		 * Called when a component is rolled out.
 		 * Hide the scisors if necessary.
 		 */
 		private function outHandler(event:MouseEvent):void {
-			if(DisplayObject(event.target).parent is Box) {
+			if(DisplayObject(event.target).parent is Box && !_debugMode) {
 				_lastOverEvent = null;
 				var i:int, len:int, b:Box;
 				len = _boxesHolder.numChildren;
@@ -593,7 +581,7 @@ package com.twinoid.kube.quest.editor.views {
 		private function overHandler(event:MouseEvent):void {
 			if(event.ctrlKey || _spacePressed) return;
 			
-			if (event.target is BoxLink && event.target != _tempLink) {
+			if (event.target is BoxLink && event.target != _tempLink && !_debugMode) {
 				Mouse.hide();
 				_scisors.x = mouseX;
 				_scisors.y = mouseY;
@@ -602,11 +590,17 @@ package com.twinoid.kube.quest.editor.views {
 				addChild(_scisors);
 			}else 
 			
-			if(DisplayObject(event.target).parent is Box) {
+			if(DisplayObject(event.target).parent is Box && !_debugMode) {
 				_lastOverEvent = (DisplayObject(event.target).parent as Box).data;
 				computeTreeGUIDs(_nodes, onComputeTreeOverComplete, true);
 			}
 		}
+		
+		
+		
+		
+		
+		//__________________________________________________________ OTHER EVENTS...
 		
 		/**
 		 * Called when trees are computed on roll over.
@@ -630,6 +624,43 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		/**
+		 * Called when tree GUIDs computation completes
+		 */
+		private function onComputeTreeComplete(tree:Dictionary):void {
+			_tree = tree;
+			var idToMinX:Array = [];
+			var idToMaxX:Array = [];
+			var idToMinY:Array = [];
+			var idToMaxY:Array = [];
+			var id:int, k:KuestEvent;
+			for(var j:* in _tree) {
+				k = j as KuestEvent;
+				id = _tree[k];
+				k.setTreeID(id);
+				if(idToMinX[ id ] == undefined) {
+					idToMinX[ id ] = k.boxPosition.x;
+					idToMaxX[ id ] = k.boxPosition.x + BackgroundView.CELL_SIZE * 8;
+					idToMinY[ id ] = k.boxPosition.y;
+					idToMaxY[ id ] = k.boxPosition.y + BackgroundView.CELL_SIZE * 3;
+				}else{
+					idToMinX[ id ] = Math.min(idToMinX[ id ], k.boxPosition.x);
+					idToMaxX[ id ] = Math.max(idToMaxX[ id ], k.boxPosition.x + BackgroundView.CELL_SIZE * 8);
+					idToMinY[ id ] = Math.min(idToMinY[ id ], k.boxPosition.y);
+					idToMaxY[ id ] = Math.max(idToMaxY[ id ], k.boxPosition.y + BackgroundView.CELL_SIZE * 3);
+				}
+			}
+			_boxesHolder.graphics.clear();
+			_boxesHolder.graphics.lineStyle(.5, 0xff0000, 1);
+			var i:int, len:int, margin:int = 20;
+			len = idToMaxX.length;
+			for(j in idToMaxX) {
+				i = j as int;
+				_boxesHolder.graphics.beginFill(0x55555 + Math.random() * 0xAAAAAA, .2);
+				_boxesHolder.graphics.drawRect(idToMinX[i] - margin, idToMinY[i] - margin, idToMaxX[i] - idToMinX[i] + margin * 2, idToMaxY[i] - idToMinY[i] + margin * 2);
+			}
+		}
+		
+		/**
 		 * Called when user starts/ends to edit comments.
 		 */
 		private function editCommentsStateChangeHandler(event:BoxesCommentsEvent):void {
@@ -637,6 +668,23 @@ package com.twinoid.kube.quest.editor.views {
 				addChild(_comments);
 			}else{
 				addChildAt(_comments, 0);
+			}
+		}
+		
+		/**
+		 * Called when debug mode state changes
+		 */
+		private function debugModeStateChangeHandler(event:ViewEvent):void {
+			_debugMode = event.data as Boolean;
+			var i:int, len:int;
+			len = _boxesHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				_boxesHolder.getChildAt(i).filters = _debugMode? [_debugFilter] : [];
+				Box(_boxesHolder.getChildAt(i)).debugMode = _debugMode;
+			}
+			len = _linksHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				_linksHolder.getChildAt(i).filters = _debugMode? [_debugFilter] : [];
 			}
 		}
 	}
