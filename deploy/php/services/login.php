@@ -60,7 +60,7 @@
 		$res = $req->fetchAll();
 		$additionnals .= "\t<kuests>\n";
 		for ($i = 0; $i < count($res); $i++) {
-			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' r='".substr($res[$i]["friends"], 1, strlen($res[$i]["friends"])-2 )."'>\n";
+			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' uid='".$res[$i]['uid']."' r='".substr($res[$i]["friends"], 1, strlen($res[$i]["friends"])-2 )."'>\n";
 			$additionnals .= "\t\t\t<t><![CDATA[".utf8_encode($res[$i]['name'])."]]></t>\n";
 			$additionnals .= "\t\t\t<d><![CDATA[".utf8_encode($res[$i]['description'])."]]></d>\n";
 			if ($res[$i]['uid'] == "0") {
@@ -91,7 +91,7 @@
 		}
 		$additionnals .= "\t<samples>\n";
 		for ($i = 0; $i < count($res); $i++) {
-			$additionnals .= "\t\t<s guid='".$res[$i]['guid']."' r=''>\n";
+			$additionnals .= "\t\t<s guid='".$res[$i]['guid']."' uid='' r=''>\n";
 			$additionnals .= "\t\t\t<t><![CDATA[".utf8_encode($res[$i]['name'])."]]></t>\n";
 			$additionnals .= "\t\t\t<d><![CDATA[".utf8_encode($res[$i]['description'])."]]></d>\n";
 			$additionnals .= "\t\t</s>\n";

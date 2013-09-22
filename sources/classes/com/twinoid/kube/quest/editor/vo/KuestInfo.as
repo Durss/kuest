@@ -12,6 +12,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _users:Array;
 		private var _isSample:Boolean;
 		private var _description:String;
+		private var _owner:Boolean;
 		
 		
 		
@@ -22,12 +23,13 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Creates an instance of <code>KuestInfo</code>.
 		 */
 
-		public function KuestInfo(title:String, description:String, guid:String, users:Array, isSample:Boolean) {
+		public function KuestInfo(title:String, description:String, guid:String, uid:String, users:Array, isSample:Boolean, selfUID:String) {
 			_guid = guid;
 			_users = users;
 			_title = title;
 			_isSample = isSample;
 			_description = description;
+			_owner = uid == selfUID;
 		}
 
 		
@@ -45,6 +47,8 @@ package com.twinoid.kube.quest.editor.vo {
 		public function get isSample():Boolean { return _isSample; }
 
 		public function get description():String { return _description; }
+
+		public function get amITheOwner():Boolean { return _owner; }
 
 
 

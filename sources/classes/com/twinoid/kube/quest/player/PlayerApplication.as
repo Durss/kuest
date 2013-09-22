@@ -355,7 +355,7 @@ package com.twinoid.kube.quest.player {
 		 * Updates the date/time.
 		 */
 		private function updateTime():void {
-			var date:String = DateUtils.format(DataManager.getInstance().currentDate, Config.getVariable("dateFormat"));
+			var date:String = DateUtils.format(DataManager.getInstance().currentDate, Config.getVariable("dateTimeFormat"));
 			_title.text = DataManager.getInstance().title + "<p class='kuest-date'><font size='5'><br /><br /></font>" + date + "</p>";
 		}
 		

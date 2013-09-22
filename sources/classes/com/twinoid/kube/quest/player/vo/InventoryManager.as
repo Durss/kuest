@@ -8,7 +8,9 @@ package com.twinoid.kube.quest.player.vo {
 	 * @date 15 sept. 2013;
 	 */
 	public class InventoryManager {
+		
 		private var _guidToObject:Object;
+		private var _objects:Vector.<InventoryObject>;
 		
 		
 		
@@ -27,6 +29,10 @@ package com.twinoid.kube.quest.player.vo {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the objects.
+		 */
+		public function get objects():Vector.<InventoryObject> { return _objects; }
 
 
 
@@ -37,12 +43,14 @@ package com.twinoid.kube.quest.player.vo {
 		 * Initializes the class.
 		 */
 		public function initialize(objects:Vector.<ObjectItemData>):void {
+			_objects = new Vector.<InventoryObject>();
 			_guidToObject = {};
 			
 			var i:int, len:int;
 			len = objects.length;
 			for(i = 0; i < len; ++i) {
-				_guidToObject[ objects[i].guid ] = objects[i];
+				_objects.push(new InventoryObject(objects[i], 0));
+				_guidToObject[ objects[i].guid ] = _objects[i];
 			}
 		}
 		
@@ -66,7 +74,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * Adds an object to the inventory
 		 */
 		public function getObject(itemGUID:int):void {
-			InventoryObject(_guidToObject[ itemGUID ]).total ++;
+			InventoryObject(_guidToObject[ itemGUID ]).total++;
 		}
 
 

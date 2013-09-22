@@ -27,6 +27,8 @@ package com.twinoid.kube.quest.editor.components.item {
 	 * Displays an item's image.
 	 * If in browseMode, provides a way to select an image file on the
 	 * user's hard drive by clicking on the component.
+	 * If in selectMode, allows the user to select a char or an object on
+	 * the libraries.
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;
@@ -53,7 +55,6 @@ package com.twinoid.kube.quest.editor.components.item {
 		/**
 		 * Creates an instance of <code>ItemPlaceholder</code>.
 		 */
-
 		public function ItemPlaceholder(browseMode:Boolean = false, selectMode:Boolean = false, selectType:String = ItemSelectorEvent.ITEM_TYPE_CHAR) {
 			_selectType = selectType;
 			_selectMode = selectMode;
@@ -140,6 +141,15 @@ package com.twinoid.kube.quest.editor.components.item {
 				removeEventListener(MouseEvent.CLICK, clickHandler);
 			}
 		}
+		
+		/**
+		 * Clears the content.
+		 */
+		public function clear():void {
+			_img.clear();
+			_img.visible = false;
+		}
+
 
 
 		
@@ -220,6 +230,7 @@ package com.twinoid.kube.quest.editor.components.item {
 				if(data.image == null) {
 					_img.clear();
 				}else{
+					_img.visible = true;
 					_img.setBitmapData(data.image.getConcreteBitmapData());
 				}
 				if(_icon != null && contains(_icon)) removeChild(_icon);

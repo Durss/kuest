@@ -27,6 +27,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		protected var _title:CssTextField;
 		protected var _swiper:SwipeManager;
 		protected var _backTitle:Shape;
+		private var _hasAlreadyUpdated:Boolean;
+		private var _modelSave:Model;
 		
 		
 		
@@ -39,7 +41,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		public function AbstractMenuContent(width:int) {
 			_width = width;
-			addEventListener(Event.ADDED_TO_STAGE, initialize);
+			addEventListener(Event.ADDED_TO_STAGE, initialize, false, 1);//Priority to be sure it's called before the update's rerooting.
 		}
 
 		
@@ -57,7 +59,11 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called on model's update
 		 */
 		public function update(model:Model):void {
-			
+			if(!_hasAlreadyUpdated) {
+				_hasAlreadyUpdated = true;
+				_modelSave = model;
+				addEventListener(Event.ADDED_TO_STAGE, firstAddedToStageHandler);
+			}
 		}
 
 
@@ -71,10 +77,10 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		protected function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
-			_holder = new ScrollableDisplayObject();
-			_backTitle = addChild(new Shape()) as Shape;
-			_scrollpane = addChild(new ScrollPane(_holder, new ScrollbarKube())) as ScrollPane;
-			_title = addChild(new CssTextField("menu-title")) as CssTextField;
+			_holder		= new ScrollableDisplayObject();
+			_backTitle	= addChild(new Shape()) as Shape;
+			_scrollpane	= addChild(new ScrollPane(_holder, new ScrollbarKube())) as ScrollPane;
+			_title		= addChild(new CssTextField("menu-title")) as CssTextField;
 			
 			_swiper = new SwipeManager(_holder.content, new Rectangle(0,0,_width, 500));
 			_swiper.start();
@@ -87,10 +93,21 @@ package com.twinoid.kube.quest.editor.components.menu {
 			
 			_scrollpane.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler);
 			_scrollpane.vScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);
-			stage.addEventListener(Event.RESIZE, computePositions);
-			addEventListener(Event.ADDED_TO_STAGE, computePositions);
 			addEventListener(MouseEvent.CLICK, catchEvent, true);
 			addEventListener(MouseEvent.MOUSE_UP, catchEvent, true);
+			stage.addEventListener(Event.RESIZE, computePositions);
+			addEventListener(Event.ADDED_TO_STAGE, computePositions);
+		}
+		
+		/**
+		 * Called only if the view wasn't on stage and missed the update.
+		 * We send it back the update when the stage is available and so when
+		 * the view is initialized.
+		 */
+		private function firstAddedToStageHandler(event:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, firstAddedToStageHandler);
+			update(_modelSave);
+			_modelSave = null;
 		}
 
 		private function scrollHandler(event:Event):void {

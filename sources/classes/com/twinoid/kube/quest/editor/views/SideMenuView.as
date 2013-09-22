@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.twinoid.kube.quest.editor.components.menu.MenuDebuggerContent;
+	import com.twinoid.kube.quest.graphics.MenuDebuggerIconGraphic;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -118,8 +120,16 @@ package com.twinoid.kube.quest.editor.views {
 			_back = addChild(new Shape()) as Shape;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
 			
-			var icons:Array = [new MenuFileIconGraphic(), new MenuCharactersIconGraphic(), new MenuObjectIconGraphic(), new MenuCreditsIconGraphic()];
-			var contents:Array = [new MenuFileContent(_width), new MenuCharsContent(_width), new MenuObjectContent(_width), new MenuCreditsContent(_width)];
+			var icons:Array = [new MenuFileIconGraphic(),
+								new MenuCharactersIconGraphic(),
+								new MenuObjectIconGraphic(),
+								new MenuDebuggerIconGraphic(),
+								new MenuCreditsIconGraphic()];
+			var contents:Array = [new MenuFileContent(_width),
+								new MenuCharsContent(_width),
+								new MenuObjectContent(_width),
+								new MenuDebuggerContent(_width),
+								new MenuCreditsContent(_width)];
 			
 			var i:int, len:int;
 			len = icons.length;
@@ -143,8 +153,8 @@ package com.twinoid.kube.quest.editor.views {
 				//Without that the ItemSelectorView would be empty.
 				//Yup, I actually should initialize those default items in
 				//the model not in the views...
-				addChild(_contents[i]);
-				removeChild(_contents[i]);
+//				addChild(_contents[i]);
+//				removeChild(_contents[i]);
 			}
 			
 			_back.filters = [new DropShadowFilter(4, 0, 0, .35, 5, 0, 1, 2)];
@@ -206,7 +216,7 @@ package com.twinoid.kube.quest.editor.views {
 			
 			var i:int, len:int;
 			len = _contents.length;
-			//Removes the contents from the stage and add the selected one.
+			//Removes the contents from the stage and add the new one.
 			for(i = 0; i < len; ++i) {
 				_contents[i].visible = i == index;
 				if(i == index) addChild( _contents[i] );

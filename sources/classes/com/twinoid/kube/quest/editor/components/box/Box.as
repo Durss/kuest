@@ -64,6 +64,8 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _deleteBt:GraphicButton;
 		private var _outBoxes:Vector.<GraphicButton>;
 		private var _outBoxToIndex:Dictionary;
+		private var _debugMode:Boolean;
+		private var _debugFilterBackup:Array;
 		
 		
 		
@@ -99,6 +101,19 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Gets the height of the component.
 		 */
 		override public function get height():Number { return _inBox.height; }
+		
+		/**
+		 * Sets the debug mode state.
+		 */
+		public function get debugMode():Boolean { return _debugMode; }
+
+		/**
+		 * Gets the debug mode state.
+		 */
+		public function set debugMode(value:Boolean):void {
+			_debugMode = value;
+			mouseChildren = !_debugMode;
+		}
 
 
 
@@ -262,7 +277,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				_outBoxes[i].contentMargin = new Margin(10, 0, 0, 0);
 				_outBoxes[i].background.filters = [new ColorMatrixFilter(hexToMatrix( colors[i] ))];
 				_outBoxes[i].addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-				_outBoxes[i].addEventListener(MouseEvent.ROLL_OVER, overOutHBoxandler);
+				_outBoxes[i].addEventListener(MouseEvent.ROLL_OVER, overOutBoxandler);
 				applyDefaultFrameVisitorNoTween(_outBoxes[i], _outBoxes[i].background);
 				_outBoxToIndex[ _outBoxes[i] ] = i;
 				if(i == 0) addChild(_outBoxes[i]);
@@ -387,11 +402,16 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
 			cacheAsBitmap = false;
-			addChildAt(_deleteBt, 0);
-			TweenLite.killTweensOf(_deleteBt);
-			TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
-			if(event.shiftKey && event.altKey) {
-				_label.text = _data.guid.toString();
+			if(_debugMode) {
+				_debugFilterBackup = filters;
+				filters = [];
+			}else{
+				addChildAt(_deleteBt, 0);
+				TweenLite.killTweensOf(_deleteBt);
+				TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
+				if(event.shiftKey && event.altKey) {
+					_label.text = _data.guid.toString();
+				}
 			}
 		}
 		
@@ -399,7 +419,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when an out box is rolled over.
 		 * Display the related choice.
 		 */
-		private function overOutHBoxandler(event:MouseEvent):void {
+		private function overOutBoxandler(event:MouseEvent):void {
 			if(_data.actionChoices != null && _data.actionChoices.choices.length > 0) {
 				var label:String;
 				label = _data.actionChoices.choices[ _outBoxToIndex[event.currentTarget] ];
@@ -412,14 +432,20 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
 			cacheAsBitmap = true;//TODO check if that's a sufficient optimization. If not, remove everything from holder and replace it by a bitmap snapshot
-			TweenLite.killTweensOf(_deleteBt);
-			TweenLite.to(_deleteBt, .15, {y:0, removeChild:true});
+			if(_debugMode) {
+				filters = _debugFilterBackup;
+			}else{
+				TweenLite.killTweensOf(_deleteBt);
+				TweenLite.to(_deleteBt, .15, {y:0, removeChild:true});
+			}
 		}
 		
 		/**
 		 * Called when the component is clicked to open the edition view
 		 */
 		private function clickHandler(event:MouseEvent):void {
+			if(_debugMode) return;
+			
 			if(event.target == _deleteBt || _outBoxToIndex[event.target] != undefined) {
 				event.stopPropagation();
 				if(event.target == _deleteBt) {
@@ -431,7 +457,8 @@ package com.twinoid.kube.quest.editor.components.box {
 				}
 				return;
 			}
-			if(Math.abs(stage.mouseX-_dragOffset.x) < 2 && Math.abs(stage.mouseY-_dragOffset.y) < 2) {
+			//If the box haven't been dragged
+			if(Math.abs(stage.mouseX-_dragOffset.x) < 5 && Math.abs(stage.mouseY-_dragOffset.y) < 5) {
 				FrontControler.getInstance().edit(_data);
 			}
 		}
@@ -447,6 +474,8 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when mouse is pressed over the in/out box
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
+			if(_debugMode) return;
+			
 			event.stopPropagation();
 			if (event.currentTarget != _deleteBt) {
 				var index:int = _outBoxToIndex[event.currentTarget];

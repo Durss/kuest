@@ -57,7 +57,7 @@ package com.twinoid.kube.quest.editor.components.date {
 			ret = [];
 			for(i = 0; i < len; ++i) {
 				if(_items[i].selected) {
-					ret.push(i);
+					ret.push( (i+1) % 7);//+1 and %7 are here to compensate the fact that day 0 is sunday, not monday
 				}
 			}
 			return ret;
@@ -68,11 +68,16 @@ package com.twinoid.kube.quest.editor.components.date {
 		 */
 		public function set days(value:Array):void {
 			var i:int, len:int;
-			len = _items.length;
 			if(value == null) {
+				len = _items.length;
 				for(i = 0; i < len; ++i) _items[ i ].selected = true;
 			}else{
-				for(i = 0; i < len; ++i) _items[ i ].selected = value[i] != undefined;
+				//Unselect all
+				len = _items.length;
+				for(i = 0; i < len; ++i) _items[ i ].selected = false;
+				//Select enabled ones
+				len = value.length;
+				for(i = 0; i < len; ++i) _items[ value[i] ].selected = true;
 			}
 		}
 		/**

@@ -12,6 +12,7 @@ package com.twinoid.kube.quest.editor.components.form {
 	[Event(name="change", type="flash.events.Event")]
 	
 	/**
+	 * Allow to select an axis (X Y or Z)
 	 * 
 	 * @author Francois
 	 * @date 5 nov. 2011;

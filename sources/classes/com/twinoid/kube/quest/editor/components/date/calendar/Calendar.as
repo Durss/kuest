@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.date.calendar {
+	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.components.button.BaseButton;
 	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
@@ -15,6 +16,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 	import flash.events.MouseEvent;
 	
 	/**
+	 * Displays a calendar instance.
 	 * 
 	 * @author Francois
 	 * @date 4 févr. 2013;
@@ -39,6 +41,8 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		private var _dateToState:Object;
 		private var _pressed:Boolean;
 		private var _pressedItem:ToggleButton;
+		private var _allowMultipleSelection:Boolean;
+		private var _group:FormComponentGroup;
 		
 		
 		
@@ -49,7 +53,8 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		/**
 		 * Creates an instance of <code>Calendar</code>.
 		 */
-		public function Calendar() {
+		public function Calendar(allowMultipleSelection:Boolean = true) {
+			_allowMultipleSelection = allowMultipleSelection;
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
 		}
 
@@ -109,6 +114,10 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			_daysItems = new Vector.<CalendarItem>();
 			_dateToState = {};
 			
+			if(!_allowMultipleSelection) {
+				_group = new FormComponentGroup();
+			}
+			
 			_todayDate = new Date();
 			_monthsOffset = 0;
 			_monthLabel.text = Label.getLabel("month1");
@@ -118,15 +127,21 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 				d = addChild(new BaseButton("", "calendarDay")) as BaseButton;
 				d.text = Label.getLabel("day"+(i+1));
 				d.width = CELL_SIZE;
-				d.addEventListener(MouseEvent.MOUSE_DOWN, clickDayHandler);
-				d.addEventListener(MouseEvent.MOUSE_OVER, overDayHandler);
+				if(_allowMultipleSelection) {
+					d.addEventListener(MouseEvent.MOUSE_DOWN, clickDayHandler);
+					d.addEventListener(MouseEvent.MOUSE_OVER, overDayHandler);
+				}
 				_daysLabels.push(d);
 			}
 			
 			for(i = 0; i < COLS*ROWS; ++i) {
 				item = addChild(new CalendarItem((i+1).toString())) as CalendarItem;
 				item.addEventListener(Event.CHANGE, toggleItemHandler);
-				item.addEventListener(MouseEvent.ROLL_OVER, overItemHandler);
+				if(_allowMultipleSelection) {
+					item.addEventListener(MouseEvent.ROLL_OVER, overItemHandler);
+				}else{
+					_group.add(item);
+				}
 				_daysItems.push(item);
 			}
 			
@@ -135,12 +150,14 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			_nextMonthBt.iconAlign = _prevMonthBt.iconAlign = IconAlign.CENTER;
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
-			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-			_monthLabel.addEventListener(MouseEvent.CLICK, clickMonthHandler);
+			if(_allowMultipleSelection) {
+				addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+				stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+				_monthLabel.addEventListener(MouseEvent.CLICK, clickMonthHandler);
+			}
 			
+			addEventListener(Event.ADDED_TO_STAGE, render);
 			computePositions();
-			render();
 		}
 		
 		/**
@@ -218,10 +235,14 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			var item:CalendarItem = event.currentTarget as CalendarItem;
 			var d:Date = dateFromItem(item);
 			var id:String = d.toString();
-			if(item.selected) {
+			if(!_allowMultipleSelection) _dateToState = {};
+			if(item.selected || !_allowMultipleSelection) {
 				_dateToState[id] = d;
 			}else{
 				delete _dateToState[id];
+			}
+			if(!_allowMultipleSelection) {
+				dispatchEvent(new Event(Event.CHANGE));
 			}
 		}
 		
@@ -288,7 +309,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		/**
 		 * Updates the cells rendering.
 		 */
-		private function render():void {
+		private function render(event:Event = null):void {
 			_currentDate = new Date(_todayDate.getFullYear(), _todayDate.getMonth() + _monthsOffset, 1);
 			_monthLabel.text = Label.getLabel("month"+(_currentDate.getMonth()+1)) + " " + _currentDate.getFullYear();
 
@@ -301,7 +322,11 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			for(i = 0; i < len; ++i) {
 				_daysItems[i].enabled = (i >= firstDay && i < lastDay);
 				_daysItems[i].label = (i-firstDay+1).toString();
-				_daysItems[i].selected = _dateToState[dateFromItem(_daysItems[i])] !== undefined;
+				if(_dateToState[dateFromItem(_daysItems[i])] !== undefined) {
+					_daysItems[i].select();
+				}else{
+					_daysItems[i].unSelect();
+				}
 			}
 		}
 		

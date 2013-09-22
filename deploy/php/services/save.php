@@ -67,6 +67,7 @@
 				die;
 			}
 			
+			$owner		= $res['uid'];
 			$friendsSrc	= array_filter( explode(",", $res['friends']) );
 			$friendsA	= array_filter( explode(",", $_GET["friends"]) );
 			$friendsA	= array_merge( $friendsSrc, $friendsA );
@@ -106,7 +107,10 @@
 			}
 			
 		}else {
-		
+			// New quest !
+			
+			$owner = $_SESSION["uid"];
+			
 			//Create index file
 			$filepath = $dir."index.txt";
 			if (!file_exists($filepath)) {
@@ -141,7 +145,7 @@
 			}
 		}
 	
-		$additionnals .= "<guid>".$guid."</guid>\n";
+		$additionnals .= "<guid uid='".$owner."'>".$guid."</guid>\n";
 		Out::printOut(true, $additionnals);
 	
 	}else {

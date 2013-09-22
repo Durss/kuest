@@ -14,6 +14,7 @@ package com.twinoid.kube.quest.player.vo {
 		private var _time:int;
 		private var _testMode:Boolean;
 		private var _date:Date;
+		private var _debugMode:Boolean;
 		
 		
 		
@@ -36,9 +37,18 @@ package com.twinoid.kube.quest.player.vo {
 		 * Gets the current date
 		 */
 		public function get currentDate():Date {
+			if(_debugMode) return _date;
 			if(_testMode) return new Date();
 			_date.time = _time + getTimer();
 			return _date;
+		}
+		
+		/**
+		 * Sets the current date.
+		 * ONLY FOR DEBUG MODE !
+		 */
+		public function set currentDate(value:Date):void {
+			_date = value;
 		}
 
 
@@ -49,7 +59,8 @@ package com.twinoid.kube.quest.player.vo {
 		/**
 		 * Initializes the manager
 		 */
-		public function initialize(time:int, testMode:Boolean):void {
+		public function initialize(time:int, testMode:Boolean, debugMode:Boolean):void {
+			_debugMode	= debugMode;
 			_time		= time;
 			_date		= new Date();
 			_testMode	= testMode;
@@ -100,9 +111,10 @@ package com.twinoid.kube.quest.player.vo {
 						}
 					}
 				}
-				//Day and hours not found, skip this loop turn
 				if(!allowed) return false;
 			}
+			
+			return true;//No restruction found, event is allowed
 		}
 
 

@@ -57,7 +57,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called on model's update
 		 */
 		override public function update(model:Model):void {
-			if(model.objectsUpdate) {
+			super.update(model);
+			if(_items != null && (model.objectsUpdate || _items.length == 0)) {
 				refreshList(model.objects);
 			}
 		}

@@ -50,6 +50,8 @@
 		<label code="loader-loadingOK"><![CDATA[Chargement OK]]></label>
 		<label code="loader-loadingKO"><![CDATA[Erreur...]]></label>
 		<label code="loader-loadingKORead"><![CDATA[Erreur de décompression]]></label>
+		<label code="loader-parsingDebug"><![CDATA[Analyse de la quête...]]></label>
+		<label code="loader-parsingDebugOK"><![CDATA[Analyse OK]]></label>
 		
 		<label code="prompt-window-submit"><![CDATA[Valider]]></label>
 		<label code="prompt-window-cancel"><![CDATA[Annuler]]></label>
@@ -76,6 +78,7 @@
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-load-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir charger cette quête ?]]></label>
 		<label code="menu-file-delete-buttonTT"><![CDATA[Supprimer cette quête]]></label>
+		<label code="menu-file-delete-self-buttonTT"><![CDATA[Me retirer les droits sur cette quête]]></label>
 		<label code="menu-file-delete-prompt-title"><![CDATA[Suppression]]></label>
 		<label code="menu-file-delete-prompt-content"><![CDATA[Êtes-vous sûr de vouloir supprimer cette quête?<br /><b>Attention</b>, cette opération est irréversible !]]></label>
 		<label code="menu-file-new-prompt-title"><![CDATA[Attention]]></label>
@@ -117,6 +120,13 @@
 		<label code="menu-chars-delete-title"><![CDATA[Suppression]]></label>
 		<label code="menu-chars-delete-content"><![CDATA[La suppression de ce personnage est irréversible.<br />Si des évènements y sont associés, ils se retrouveront vides.]]></label>
 		
+		<label code="menu-debug-title"><![CDATA[Debugger]]></label>
+		<label code="menu-debug-header"><![CDATA[Testez ici la logique de votre quête !<br />Sélectionnez un point de départ dans l'éditeur puis vérifiez que les événements s'enchaînent bien comme vous l'aviez prévu.]]></label>
+		<label code="menu-debug-selectStart"><![CDATA[Cliquez sur le<br />point de départ<br />de votre debug]]></label>
+		<label code="menu-debug-simulateZone"><![CDATA[Coordonnées :]]></label>
+		<label code="menu-debug-simulateDate"><![CDATA[Date :]]></label>
+		<label code="menu-debug-switchClockTT"><![CDATA[Si activé, l'heure de votre ordinateur sera utilisée à la place des valeurs indiquées dans les champs.]]></label>
+		
 		<label code="editor-linkDelPromptTitle"><![CDATA[Supprimer la liaison?]]></label>
 		<label code="editor-linkDelPromptContent"><![CDATA[Souhaitez-vous vraiment supprimer cette liaison ?<br /><span class="window-content-small"><i>Cette boite de dialogue a pour but d'éviter une suppression malencontreuse de lien.</i></span>]]></label>
 		
@@ -124,8 +134,11 @@
 		<label code="editWindow-submit"><![CDATA[Valider]]></label>
 		<label code="editWindow-cancel"><![CDATA[Annuler]]></label>
 		<label code="editWindow-endEvent"><![CDATA[Cet événement valide la complétion de la quête.]]></label>
+		<label code="editWindow-looseEvent"><![CDATA[Cet événement fait échouer le joueur.]]></label>
 		<label code="editWindow-startTree"><![CDATA[Point de départ de la structure.]]></label>
 		<label code="editWindow-startTreeTT"><![CDATA[La structure correspond aux événements s'éclaircissant au survol d'un événement.<br />Par défaut le point d'entrée d'une structure sera son événement le plus en haut à gauche, sauf si un événement est explicitement défini comme point de départ via cette option.]]></label>
+		<label code="editWindow-endEventTT"><![CDATA[Si le joueur arrive sur cet événement la quête sera considérée comme réussie et il sera invité à lui donner une note.]]></label>
+		<label code="editWindow-looseEventTT"><![CDATA[Si le joueur arrive sur cet événement il échouera la quête et devra la recommencer depuis le début.]]></label>
 		
 		<label code="editWindow-place-title"><![CDATA[Lieu de l'évènement]]></label>
 		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>

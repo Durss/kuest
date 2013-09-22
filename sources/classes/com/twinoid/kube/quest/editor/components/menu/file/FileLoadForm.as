@@ -165,8 +165,9 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Called when an item is rolled over
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
-			if(_itemToData[event.target] != null) {
-				var label:String = (event.target is GraphicButtonKube)? Label.getLabel("menu-file-delete-buttonTT") : KuestInfo(_itemToData[event.target]).description;
+			if (_itemToData[event.target] != null) {
+				var deleteLabel:String  = (KuestInfo(_itemToData[event.target]).amITheOwner)? 'menu-file-delete-buttonTT' : 'menu-file-delete-self-buttonTT';
+				var label:String = (event.target is GraphicButtonKube)? Label.getLabel(deleteLabel) : KuestInfo(_itemToData[event.target]).description;
 				InteractiveObject(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.RIGHT));
 			}
 		}

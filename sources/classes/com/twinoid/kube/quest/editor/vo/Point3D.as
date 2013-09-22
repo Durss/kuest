@@ -67,8 +67,18 @@ package com.twinoid.kube.quest.editor.vo {
 			return p.x == x && p.y == y && p.z == z;
 		}
 		
+		/**
+		 * Gets a clone of the object
+		 */
 		public function clone():Point3D {
 			return new Point3D(x,y,z);
+		}
+		
+		/**
+		 * Gets a string representation of the value object.
+		 */
+		public function toString():String {
+			return '(x='+x+', y='+y+', z='+z+')';
 		}
 
 
