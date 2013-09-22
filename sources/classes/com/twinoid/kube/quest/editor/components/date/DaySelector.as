@@ -77,7 +77,7 @@ package com.twinoid.kube.quest.editor.components.date {
 				for(i = 0; i < len; ++i) _items[ i ].selected = false;
 				//Select enabled ones
 				len = value.length;
-				for(i = 0; i < len; ++i) _items[ value[i] ].selected = true;
+				for(i = 0; i < len; ++i) _items[ (value[i]+6)%7 ].selected = true;//+6 and %7 are here to compensate the fact that day 0 is sunday, not monday
 			}
 		}
 		/**
