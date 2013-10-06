@@ -113,6 +113,8 @@ package com.twinoid.kube.quest.player.model {
 		 * This is used for debug purpose only !
 		 */
 		public function forceEvent(event:KuestEvent):void {
+			if(event.isEmpty()) return;//Ignore empty events
+			
 			_lastPosData = event.actionPlace.clone().getAsPoint();
 			var pos:* = event.actionPlace == null? new Point() : event.actionPlace.clone();
 			_positionToIndex[getPositionId(pos)] = 0;
@@ -148,9 +150,9 @@ package com.twinoid.kube.quest.player.model {
 			loopsLen = len + i;
 			for(i; i < loopsLen; ++i) {
 				if(_timeAcessManager.isEventAccessible(items[i%len])//If it's the right periode or if there are no periode limitation
-					&& _treeManager.isEventAccessible(items[i%len])) {//If the event is the actual priority of its tree
-						setCurrentEvent(items[i%len]);
-						return;
+					&& _treeManager.isEventAccessible(items[i%len])) {//If the event is part of the current priority of its tree
+						if(setCurrentEvent(items[i%len])) 
+							return;//If the event has been selected, stop for searching one.
 					}
 			}
 		}
@@ -175,12 +177,8 @@ package com.twinoid.kube.quest.player.model {
 			children = _currentEvent.getChildren();
 			len = children.length;
 			//The current event has 1 or no choices, go for a simpler solution
-			//were all the children will get the priority.
+			//where all the children will get the priority.
 			if(_currentEvent.actionChoices.choices.length < 2) {
-//				for(i = 0; i < len; ++i) {
-//					child = children[i];
-//					_treeManager.givePriorityTo( new <KuestEvent>[ child ] );
-//				}
 				_treeManager.givePriorityTo( children );
 			}else{
 				//The event has two or more choices
@@ -218,15 +216,26 @@ package com.twinoid.kube.quest.player.model {
 		 * @return if the object has been used or not.
 		 */
 		public function useObject(object:InventoryObject):void {
-			if(_currentEvent.actionType.type == ActionType.TYPE_OBJECT) {
-				if(!_currentEvent.actionType.takeMode) {//If an object has to be put here
-					if(_currentEvent.actionType.getItem().guid == object.vo.guid) {//If we put the good object
-						if(_inventoryManager.useObject(object.vo.guid)) {//Object has been used
-							dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
-							setCurrentPosition(_lastPosData);//Get the next event at this place
+			var events:Vector.<KuestEvent> = _positionManager.getEventsFromPos(_lastPosData);
+			var i:int, len:int, event:KuestEvent;
+			len = events.length;
+			//Search for an event asking for this object
+			for(i = 0; i < len; ++i) {
+				event = events[i];
+				if(event.actionType.type == ActionType.TYPE_OBJECT) {
+					if(_timeAcessManager.isEventAccessible(event)//If it's the right periode or if there are no periode limitation
+					&& _treeManager.isEventAccessible(event)) {//If the event is part of the current priority of its tree
+						if(!event.actionType.takeMode) {//If an object has to be put here
+							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
+								if(_inventoryManager.useObject(object.vo.guid)) {//Use the object
+									dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
+									setCurrentEvent(event, true);//Unlock the object's event
+								}
+							}
 						}
 					}
 				}
+				
 			}
 		}
 
@@ -281,20 +290,32 @@ package com.twinoid.kube.quest.player.model {
 		
 		/**
 		 * Sets the current event.
+		 * 
+		 * @return true if the event have been selected
 		 */
-		private function setCurrentEvent(event:KuestEvent):void {
-			_currentEvent = event;
-			//If this new event is an object take.
-			//Store it to the inventory.
-			if(event.actionType.type == ActionType.TYPE_OBJECT && event.actionType.takeMode) {
-				_inventoryManager.getObject(event.actionType.itemGUID);
-				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
+		private function setCurrentEvent(event:KuestEvent, objectUsed:Boolean = false):Boolean {
+			//If this new event is an object related event.
+			if(event.actionType.type == ActionType.TYPE_OBJECT && !objectUsed) {
+				//If its a "take mode", put it in the inventory
+				if(event.actionType.takeMode) {
+					_inventoryManager.getObject(event.actionType.itemGUID);
+					dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
+				}else{
+					//If an object has to be put, ignore it.
+					//When the user will put the object, this event will be
+					//checked and the object used.
+					return false;
+				}
 			}
-			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.NEW_EVENT, _currentEvent));
 			
+			_currentEvent = event;
+			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.NEW_EVENT, _currentEvent));
+			//If the event has no custom answer, automatically flag it as complete
 			if(_currentEvent.actionChoices.choices.length == 0) {
 				completeEvent(0, false);
 			}
+			
+			return true;
 		}
 		
 	}

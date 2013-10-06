@@ -23,7 +23,7 @@ package com.twinoid.kube.quest.player.components {
 	 * @author Francois
 	 * @date 25 mai 2013;
 	 */
-	public class InventoryItem extends Sprite implements ITileEngineItem2D {
+	public class InventoryTileItem extends Sprite implements ITileEngineItem2D {
 		private var _image:ImageResizer;
 		private var _label:CssTextField;
 		private var _maxX:Number;
@@ -40,7 +40,7 @@ package com.twinoid.kube.quest.player.components {
 		/**
 		 * Creates an instance of <code>InventoryItem</code>.
 		 */
-		public function InventoryItem() {
+		public function InventoryTileItem() {
 			initialize();
 		}
 
@@ -88,18 +88,21 @@ package com.twinoid.kube.quest.player.components {
 			_data.vo.image.addEventListener(Event.CHANGE, imageUpdateHandler);
 			
 			_label.text		= "x"+_data.total;
-			_label.y		= 100 - _label.height;
-			_label.width	= 100;
+			_label.y		= _engineRef.itemHeight - _label.height;
+			_label.width	= _engineRef.itemWidth;
 			mouseEnabled	= _data.total > 0;
 			
 			if(_data.total == 0) {
-				//Bug if the filter is set on the holder.. doesn't works without a second refresh :/
+				//Bug if the filter is set on the holder.. doesn't work without a second refresh :/
 				_image.filters = [new ColorMatrixFilter([ .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,.5,0 ])];
 			}else{
 				_image.filters = [];
 			}
 			
 			imageUpdateHandler();
+			
+			_image.width = _engineRef.itemWidth;
+			_image.height = _engineRef.itemHeight;
 			
 //			graphics.clear();
 //			var margin:int = 5;
@@ -139,14 +142,7 @@ package com.twinoid.kube.quest.player.components {
 			_image.defaultTweenEnabled = false;
 			_label.filters = [new DropShadowFilter(0,0,0,1,2,2,10,2)];
 			
-			var size:int = 5;
 			_frame.alpha = 0;
-			_frame.graphics.clear();
-			_frame.graphics.beginFill(0x55b7ff, 1);
-			_frame.graphics.drawRect(0, 0, 100, size);
-			_frame.graphics.drawRect(100 - size, size, size, 100 - size);
-			_frame.graphics.drawRect(0, 100 - size, 100 - size, size);
-			_frame.graphics.drawRect(0, size, size, 100 - size * 2);
 			
 			buttonMode = true;
 			mouseChildren = false;
@@ -162,6 +158,14 @@ package com.twinoid.kube.quest.player.components {
 		}
 
 		private function rollOverHandler(event:MouseEvent):void {
+			var size:int = 5;
+			_frame.graphics.clear();
+			_frame.graphics.beginFill(0x55b7ff, 1);
+			_frame.graphics.drawRect(0, 0, _engineRef.itemWidth, size);
+			_frame.graphics.drawRect(_engineRef.itemWidth - size, size, size, _engineRef.itemHeight - size);
+			_frame.graphics.drawRect(0, _engineRef.itemHeight - size, _engineRef.itemWidth - size, size);
+			_frame.graphics.drawRect(0, size, size, _engineRef.itemWidth - size * 2);
+			
 			TweenLite.to(_frame, .25, {autoAlpha:1});
 			TweenLite.to(this, .25, {colorMatrixFilter:{brightness:1.25}});
 			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.vo.name, ToolTipAlign.TOP));

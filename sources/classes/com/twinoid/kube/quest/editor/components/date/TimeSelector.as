@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.date {
+	import flash.filters.DropShadowFilter;
 	import com.nurun.components.form.ToggleButton;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.components.invalidator.Validable;
@@ -116,6 +117,8 @@ package com.twinoid.kube.quest.editor.components.date {
 			_clockSwitch.activateDefaultVisitor();
 			setToolTip(_clockSwitch, Label.getLabel('menu-debug-switchClockTT'));
 			
+			_clockSwitch.filters = [new DropShadowFilter(0,0,0,.4,4,4,2,2)];
+			
 			computePositions();
 			_hour.addEventListener(FormComponentEvent.SUBMIT, submitHandler);
 			_minute.addEventListener(FormComponentEvent.SUBMIT, submitHandler);
@@ -157,6 +160,8 @@ package com.twinoid.kube.quest.editor.components.date {
 		 */
 		private function changeSwitchHandler(event:Event):void {
 			_hour.enabled = _minute.enabled = _calendarBt.enabled = !_clockSwitch.selected;
+			_label.alpha = _hoursLabel.alpha = _minutesLabel.alpha = _clockSwitch.selected? .4 : 1;
+			_clockSwitch.alpha = _clockSwitch.selected? 1 : .4;
 		}
 		
 		/**

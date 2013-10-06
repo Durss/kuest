@@ -18,7 +18,7 @@ package com.twinoid.kube.quest.player.views {
 	import com.twinoid.kube.quest.editor.components.form.ScrollbarKube;
 	import com.twinoid.kube.quest.editor.vo.SplitterType;
 	import com.twinoid.kube.quest.graphics.MenuObjectIconGraphic;
-	import com.twinoid.kube.quest.player.components.InventoryItem;
+	import com.twinoid.kube.quest.player.components.InventoryTileItem;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
 	import com.twinoid.kube.quest.player.vo.InventoryObject;
@@ -102,7 +102,7 @@ package com.twinoid.kube.quest.player.views {
 		 */
 		private function initialize():void {
 			_splitter		= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
-			_engine			= new TileEngine2DSwipeWrapper(InventoryItem, _width, 100, 100, 100, 5, 0);
+			_engine			= new TileEngine2DSwipeWrapper(InventoryTileItem, _width, 100, 100, 100, 5, 0);
 			var w:int		= _engine.visibleWidth;
 			var h:int		= _engine.visibleHeight;
 			_scrollpane		= addChild(new ScrollPane(_engine, null, new ScrollbarKube())) as ScrollPane;
@@ -200,8 +200,8 @@ package com.twinoid.kube.quest.player.views {
 		private function clickButtonHandler(event:MouseEvent):void {
 			if(event.target == _inventoryBt) {
 				toggle();
-			} else if (event.target is InventoryItem) {
-				var item:InventoryItem = InventoryItem(event.target);
+			} else if (event.target is InventoryTileItem) {
+				var item:InventoryTileItem = InventoryTileItem(event.target);
 				DataManager.getInstance().useObject(item.data);
 			}
 		}

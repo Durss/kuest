@@ -66,9 +66,21 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		 * Populates the component with an event's data
 		 */
 		public function populate(event:KuestEvent):void {
+			if(event.isEmpty()) {
+				_image.visible = false;
+				_label.text = Label.getLabel('menu-debug-emptyEvent');
+				visible = true;
+				return;
+			}
 			visible = true;
 			_currentEvent = event;
-			_image.data = event.actionType.getItem();
+			if(event.actionType.getItem() != null) {
+				_image.visible = true;
+				_image.data = event.actionType.getItem();
+			}else{
+				_image.visible = false;
+				_image.clear();
+			}
 			_label.text = event.actionType.text;
 			buildChoices();
 		}
@@ -110,7 +122,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private function computePositions():void {
 			PosUtils.hCenterIn(_image, _width);
 			_label.width = _width;
-			_label.y = _image.height + 5;
+			_label.y = _image.visible? _image.height + 5 : _image.y;
 			
 			var i:int, len:int, py:int;
 			len = _answersSpool.length;

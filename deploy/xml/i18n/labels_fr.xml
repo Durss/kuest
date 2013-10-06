@@ -2,11 +2,10 @@
 <root>
 	<labels>
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog65-content"><![CDATA[<ul>
-			<li>Debug d'un gros soucis sur l'aglo de détection de structures pouvant casser la cohérence d'une quête.</li>
-			<li>Correction d'un petit souci sur la liste des quêtes. Les pseudos n'étaient pas toujours les bons.</li>
-			<li>L'évaluation d'une quête en mode test est maintenant factice.</li>
-			<li>Correction d'un petit souci au niveau de l'ajout de droit. Après sauvegarde les amis étaient tous décochés.</li>
+		<label code="patchlog69-content"><![CDATA[<ul>
+			<li>Ajout d'un panneau de debug de quêtes utilisant le nouvel algo refait de zéro \o/. J'ai pas encore ajouté la gestion des objets ni beaucoup testé l'algo... :3</li>
+			<li>Debug de la limitation par jour de semaine qui ne fonctionnait pas.</li>
+			<li>Ajout d'un option d'événement "Fait perdre le quête". <i>(pas encore implémenté dans le script GM)</i></li>
 		</ul>]]></label>
 		
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
@@ -126,6 +125,8 @@
 		<label code="menu-debug-simulateZone"><![CDATA[Coordonnées :]]></label>
 		<label code="menu-debug-simulateDate"><![CDATA[Date :]]></label>
 		<label code="menu-debug-switchClockTT"><![CDATA[Si activé, l'heure de votre ordinateur sera utilisée à la place des valeurs indiquées dans les champs.]]></label>
+		<label code="menu-debug-emptyEvent"><![CDATA[Cet événement est vide.]]></label>
+		<label code="menu-debug-inventory"><![CDATA[Inventaire :]]></label>
 		
 		<label code="editor-linkDelPromptTitle"><![CDATA[Supprimer la liaison?]]></label>
 		<label code="editor-linkDelPromptContent"><![CDATA[Souhaitez-vous vraiment supprimer cette liaison ?<br /><span class="window-content-small"><i>Cette boite de dialogue a pour but d'éviter une suppression malencontreuse de lien.</i></span>]]></label>
