@@ -21,8 +21,8 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 	 */
 	public class GameContextSimulatorForm extends Sprite {
 
-		private var _time:TimeSelector;
 		private var _width:int;
+		private var _time:TimeSelector;
 		private var _submit:ButtonKube;
 		private var _place:CoordinatesSelector;
 		
@@ -96,7 +96,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions():void {
-			_place.y		= _time.height + 5;
+			_place.y		= _time.y + _time.height + 5;
 			_submit.height	= Math.round(_place.y + _place.height);
 			_submit.x		= Math.max(_place.width, _time.width) + 10;
 			roundPos(_place, _submit);

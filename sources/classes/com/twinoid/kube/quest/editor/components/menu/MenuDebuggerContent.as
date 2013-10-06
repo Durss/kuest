@@ -7,6 +7,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.menu.debugger.GameContextSimulatorForm;
+	import com.twinoid.kube.quest.editor.components.menu.debugger.GameInventorySimulatorForm;
 	import com.twinoid.kube.quest.editor.components.menu.debugger.KuestEventDisplay;
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
@@ -34,6 +35,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private var _splitter:DisplayObject;
 		private var _simulator:GameContextSimulatorForm;
 		private var _tabIndex:int;
+		private var _inventory:GameInventorySimulatorForm;
 		
 		
 		
@@ -92,6 +94,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_splitter		= _holder.addChild(createRect(0xff2D89B0, _width, 1));
 			_header			= _holder.addChild(new CssTextField('menu-label')) as CssTextField;
 			_spin			= _holder.addChild(new LoaderSpinning()) as LoaderSpinning;
+			_inventory		= new GameInventorySimulatorForm(_width - 10);
 			_simulator		= new GameContextSimulatorForm(_width - 10);
 			_eventDisplay	= new KuestEventDisplay(_width - 10);
 			
@@ -104,6 +107,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_questManager.addEventListener(QuestManagerEvent.READY, questTestReadyHandler);
 			_questManager.addEventListener(QuestManagerEvent.NEW_EVENT, questTestNewEventHandler);
 			_simulator.addEventListener(FormComponentEvent.SUBMIT, submitSimulatorHandler);
+			_inventory.addEventListener(Event.SELECT, selectObjectHandler);
 			addEventListener(Event.ADDED_TO_STAGE, openHandler);
 			addEventListener(Event.REMOVED_FROM_STAGE, closeHandler);
 			ViewLocator.getInstance().addEventListener(ViewEvent.DEBUG_START_POINT, debugStartHandler);
@@ -117,6 +121,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_selectStart.width = _width - 15;
 			_eventDisplay.x = 5;
 			_simulator.x = 5;
+			_inventory.x = 5;
 			
 			var offsetY:int = _title.height + _header.height + 15;
 			_selectStart.y = (stage.stageHeight - offsetY - _selectStart.height) * .5 + offsetY;
@@ -128,9 +133,10 @@ package com.twinoid.kube.quest.editor.components.menu {
 			
 			_splitter.y = Math.round(_header.y + _header.height) + 5;
 			_simulator.y = Math.round(_splitter.y + _splitter.height) + 5;
-			_eventDisplay.y = Math.round(_simulator.y + _simulator.height) + 10;
+			_inventory.y = Math.round(_simulator.y + _simulator.height) + 5;
+			_eventDisplay.y = Math.round(_inventory.y + _inventory.height) + 10;
 			
-			roundPos(_selectStart, _spin, _eventDisplay, _splitter, _simulator);
+			roundPos(_selectStart, _spin, _eventDisplay, _splitter, _inventory, _simulator);
 			
 			super.computePositions(event);
 			if(event == null) dispatchEvent(new Event(Event.RESIZE, true));
@@ -150,6 +156,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_selectStart.visible = true;
 			if(_holder.contains(_eventDisplay))	_holder.removeChild(_eventDisplay);
 			if(_holder.contains(_simulator))	_holder.removeChild(_simulator);
+			if(_holder.contains(_inventory))	_holder.removeChild(_inventory);
 			_eventDisplay.clear();
 			FrontControler.getInstance().setDebugMode(false);
 		}
@@ -158,7 +165,6 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called when simulation form is submitted
 		 */
 		private function submitSimulatorHandler(event:FormComponentEvent):void {
-			trace('_simulator.date: ' + (_simulator.date));
 			_questManager.setCurrentPosition(_simulator.coordinates, _simulator.date);
 		}
 		
@@ -175,6 +181,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private function debugStartHandler(event:ViewEvent):void {
 			_selectStart.visible = false;
 			_holder.addChild(_eventDisplay);
+			_holder.addChild(_inventory);
 			_holder.addChild(_simulator);
 			computePositions();
 			_questManager.forceEvent(event.data as KuestEvent);
@@ -185,6 +192,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		private function questTestNewEventHandler(event:QuestManagerEvent):void {
 			_eventDisplay.populate(_questManager.currentEvent);
+			_inventory.populate(_questManager.inventory);
 			_eventDisplay.visible = true;
 			computePositions();
 		}
@@ -194,6 +202,13 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		private function answerHandler(event:Event):void {
 			_questManager.completeEvent(_eventDisplay.selectedAnswerIndex);
+		}
+		
+		/**
+		 * Called when an object is selected
+		 */
+		private function selectObjectHandler(event:Event):void {
+			_questManager.useObject(_inventory.objectUsed);
 		}
 		
 	}

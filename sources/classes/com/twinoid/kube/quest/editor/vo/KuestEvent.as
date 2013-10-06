@@ -294,16 +294,6 @@ package com.twinoid.kube.quest.editor.vo {
 		public function getLabel():String { return _actionType == null? "" : _actionType.text.substr(0, 60).replace(/\r|\n/gi, " "); }
 		
 		/**
-		 * Gets if the item is the first one of a loop
-		 */
-//		public function isFirstOfLoop():Boolean { return _firstOfLoop; }
-
-		/**
-		 * Sets if the item is the first one of a loop
-		 */
-//		public function setFirstOfLoop(value:Boolean):void { _firstOfLoop = value; }
-		
-		/**
 		 * Checks if the current items loops to the one in paramters.
 		 * The test goes upward.
 		 * It takes all the dependencies recursively. So, the "from" parameter
