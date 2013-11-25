@@ -46,6 +46,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _ignore:CheckBoxKube;
 		private var _so:SharedObject;
 		private var _resizeFlash:Boolean;
+		private var _keyPressedWhenClosed:Boolean;
 		
 		
 		
@@ -134,6 +135,7 @@ package com.twinoid.kube.quest.editor.views {
 			
 			ViewLocator.getInstance().addEventListener(ViewEvent.PROMPT, promptHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
 		}
@@ -209,10 +211,17 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		/**
+		 * Called when a key is pressed
+		 */
+		private function keyDownHandler(event:KeyboardEvent):void {
+			_keyPressedWhenClosed = _closed;
+		}
+		
+		/**
 		 * Submits the form when SPACE or ENTER key is released.
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
-			if(_data == null) return;
+			if(_data == null || _keyPressedWhenClosed) return;
 			if(event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.SPACE) {
 				submit();
 			}

@@ -15,8 +15,8 @@
 	//Used for standalone tests.
 	//Session system is probably linked to Internet Explorer but i'm too lazy to use
 	//it and log me in, so i simulate the login with a static JSON.
-	//Works only localy to prevent from a huge security issue !
-	//I don't want people to connect as me by just adding the simulateSession param !
+	//Works only localy (127.0.0.1) to prevent from a huge security issue !
+	//I don't want people to connect as me by just adding the simulateSession param ^^ !
 	if (isset($_POST['simulateSession'])
 	&& (!isset($_SESSION['logged']) || $_SESSION['logged'] === false)
 	&& $_SERVER['SERVER_ADDR'] == '127.0.0.1') {

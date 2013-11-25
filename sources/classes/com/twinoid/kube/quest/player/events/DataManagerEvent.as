@@ -9,15 +9,16 @@ package com.twinoid.kube.quest.player.events {
 	 */
 	public class DataManagerEvent extends Event {
 		
-		public static const LOAD_COMPLETE:String = "loadComplete";
-		public static const LOAD_ERROR:String = "loadError";
-		public static const ON_LOGIN_STATE:String = "longinState";
-		public static const NO_KUEST_SELECTED:String = "noKuest";
-		public static const NEW_EVENT:String = "newEvent";
-		public static const WRONG_OBJECT:String = "wrongObject";
-		public static const NO_NEED_FOR_OBJECT:String = "noNeedForObject";
-		public static const CLEAR_PROGRESSION_COMPLETE:String = "clearProgressComplete";
-		public static const QUEST_COMPLETE:String = "questComplete";
+		public static const LOAD_COMPLETE:String				= "loadComplete";
+		public static const LOAD_ERROR:String					= "loadError";
+		public static const ON_LOGIN_STATE:String				= "longinState";
+		public static const NO_KUEST_SELECTED:String			= "noKuest";
+		public static const NEW_EVENT:String					= "newEvent";
+		public static const WRONG_OBJECT:String					= "wrongObject";
+		public static const NO_NEED_FOR_OBJECT:String			= "noNeedForObject";
+		public static const CLEAR_PROGRESSION_COMPLETE:String	= "clearProgressComplete";
+		public static const QUEST_COMPLETE:String				= "questComplete";
+		public static const QUEST_FAILED:String					= "questFailed";
 		
 		
 		

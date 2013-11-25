@@ -52,7 +52,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventPlace</code>.
 		 */
 		public function EditEventPlace(width:int) {
-			super(Label.getLabel("editWindow-place-title"), width);
+			super(Label.getLabel("editWindow-place-title"), width, false);
 		}
 
 		

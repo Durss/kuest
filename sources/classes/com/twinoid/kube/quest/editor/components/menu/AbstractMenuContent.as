@@ -49,6 +49,11 @@ package com.twinoid.kube.quest.editor.components.menu {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		
+		/**
+		 * Prevents from outbounds masked elements to interfer with the holder's size.
+		 */
+		override public function get width():Number { return _width; }
 
 
 

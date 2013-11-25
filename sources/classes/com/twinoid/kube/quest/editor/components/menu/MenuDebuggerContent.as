@@ -75,7 +75,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			if(_questManager == null) return;
 			_spin.open(Label.getLabel('loader-parsingDebug'));
 			_questManager.loadData(model.kuestData.nodes, model.kuestData.objects, null, new Date().getTime(), false, true);
-			_eventDisplay.visible = false;
+			_eventDisplay.clear();
 		}
 
 
@@ -117,6 +117,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Resizes and replaces the elements.
 		 */
 		override protected function computePositions(event:Event = null):void {
+			if(stage == null) return;
+			
 			_header.width = _width - 15;
 			_selectStart.width = _width - 15;
 			_eventDisplay.x = 5;
@@ -147,6 +149,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		private function openHandler(event:Event):void {
 			FrontControler.getInstance().setDebugMode(true);
+			_questManager.clearProgression();
 		}
 
 		/**
@@ -185,6 +188,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_holder.addChild(_simulator);
 			computePositions();
 			_questManager.forceEvent(event.data as KuestEvent);
+			_inventory.populate(_questManager.inventory);
 		}
 		
 		/**
@@ -193,7 +197,6 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private function questTestNewEventHandler(event:QuestManagerEvent):void {
 			_eventDisplay.populate(_questManager.currentEvent);
 			_inventory.populate(_questManager.inventory);
-			_eventDisplay.visible = true;
 			computePositions();
 		}
 		
@@ -208,7 +211,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called when an object is selected
 		 */
 		private function selectObjectHandler(event:Event):void {
-			_questManager.useObject(_inventory.objectUsed);
+			_questManager.useObject(_inventory.objectUsed, false);
 		}
 		
 	}

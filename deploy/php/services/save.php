@@ -32,12 +32,17 @@
 	if (isset($_GET["publish"])) {
 		$dir = "../../kuests/published/";
 	}else {
-		$dir = "../../kuests/saves/";
+		$dir = "../../kuests/editing/";
 	}
 	$additionnals = "";
 	if (isset($_GET["title"], $_GET["description"], $_GET["size"], $_GET["friends"], $GLOBALS['HTTP_RAW_POST_DATA'])) {
 		if (strlen($GLOBALS['HTTP_RAW_POST_DATA']) != $_GET["size"]) {
 			Out::printOut(false, '', 'Server didn\'t received all the data. Received ' .strlen($GLOBALS['HTTP_RAW_POST_DATA'])."bytes instead of ".$_GET["size"]." bytes.", 'MISSING_DATA_PART');
+			die;
+		}
+		
+		if (!file_exists($dir)) {
+			Out::printOut(false, '', '"'.$dir.'" directory does not exist.', 'SAVE_DIRECTORY_MISSING');
 			die;
 		}
 		

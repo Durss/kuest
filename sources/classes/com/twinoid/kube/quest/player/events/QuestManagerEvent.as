@@ -11,9 +11,12 @@ package com.twinoid.kube.quest.player.events {
 	public class QuestManagerEvent extends Event {
 		
 		public static const READY:String = "questManagerReady";
+		public static const WRONG_SAVE_FILE_FORMAT:String = "wrongSaveFileFormat";
 		public static const NEW_EVENT:String = "questManagerNewEvent";
 		public static const INVENTORY_UPDATE:String = "questManagerInventoryUpdate";
 		public static const HISTORY_UPDATE:String = "questManagerHistoryUpdate";
+		public static const QUEST_COMPLETE:String = "questManagerQuestComplete";
+		public static const QUEST_FAILED:String = "questManagerQuestFailed";
 		
 		private var _kuestEvent:KuestEvent;
 		

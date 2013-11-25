@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor.components.box {
-	import com.twinoid.kube.quest.editor.utils.prompt;
 	import gs.TweenLite;
 
 	import com.nurun.core.lang.Disposable;

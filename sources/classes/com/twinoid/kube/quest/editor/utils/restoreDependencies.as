@@ -5,7 +5,7 @@ package com.twinoid.kube.quest.editor.utils {
 	import com.twinoid.kube.quest.editor.vo.ObjectItemData;
 	
 	/**
-	 * When data are deserialized from the ByteArray events dependencies are broken.
+	 * When data are deserialized from the ByteArray, events dependencies are broken.
 	 * Every object is actually cloned instead of having a pointer to the real one.
 	 * 
 	 * This method restores all the dependencies by looking at the GUIDs stored

@@ -70,6 +70,8 @@ package com.twinoid.kube.quest.player.vo {
 		 * Checks if an event is accessible or not.
 		 */
 		public function isEventAccessible(event:KuestEvent):Boolean {
+			if(event.isEmpty()) return true;
+			
 			var i:int, len:int, allowed:Boolean;
 			var today:Date = currentDate;
 			var timestamp:int = today.hours * 60 + today.minutes;

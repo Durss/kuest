@@ -119,8 +119,8 @@ package com.twinoid.kube.quest.editor.views {
 					_data = model.currentBoxToEdit;
 					_window.visible = true;
 					//Do not put this AFTER the populate or textfields will be
-					//totally fucked up. The getLineMetrics will return
-					//shitty values.
+					//totally fucked up. The getLineMetrics used by some components
+					//will return shitty values.
 					_window.scaleX = _window.scaleY = 1;
 					
 					_place.load( _data );
@@ -135,8 +135,10 @@ package com.twinoid.kube.quest.editor.views {
 					computePositions();
 					stage.focus = _window;
 					TweenLite.killTweensOf(_window);
+					TweenLite.killTweensOf(_disable);
+					
 					setTimeout(flagOpened, 0);//Flag as opened a frame later. See method for more infos
-					TweenLite.from(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:0, scaleY:0, delay:0, ease:Back.easeInOut});
+					TweenLite.from(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:.1, scaleY:.1, ease:Back.easeInOut});
 					TweenLite.to(_disable, .25, {autoAlpha:1});
 				}
 				_place.connectedToGame		= model.connectedToGame;
@@ -172,25 +174,25 @@ package com.twinoid.kube.quest.editor.views {
 		private function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_holder	= addChild(new Sprite()) as Sprite;
-			_place	= _holder.addChild(new EditEventPlace(_WIDTH)) as EditEventPlace;
-			_type	= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
-			_choices= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
-			_times	= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
-			_sound	= _holder.addChild(new EditEventSound(_WIDTH)) as EditEventSound;
+			_holder		= addChild(new Sprite()) as Sprite;
+			_place		= _holder.addChild(new EditEventPlace(_WIDTH)) as EditEventPlace;
+			_type		= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
+			_choices	= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
+			_times		= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
+			_sound		= _holder.addChild(new EditEventSound(_WIDTH)) as EditEventSound;
 			_startTree	= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-startTree"))) as CheckBoxKube;
 			_endsQuest	= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-endEvent"))) as CheckBoxKube;
 			_loosesQuest= _holder.addChild(new CheckBoxKube(Label.getLabel("editWindow-looseEvent"))) as CheckBoxKube;
-			_submit	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
-			_cancel	= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
+			_submit		= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-submit"), new SubmitIcon())) as ButtonKube;
+			_cancel		= _holder.addChild(new ButtonKube(Label.getLabel("editWindow-cancel"), new CancelIcon())) as ButtonKube;
 			
-			_disable= addChild(new Sprite()) as Sprite;
-			_window = addChild(new TitledWindow(Label.getLabel("editWindow-title"), _holder)) as TitledWindow;
+			_disable	= addChild(new Sprite()) as Sprite;
+			_window		= addChild(new TitledWindow(Label.getLabel("editWindow-title"), _holder)) as TitledWindow;
 			
-			_closed = true;
-			_disable.alpha = 0;
-			_disable.visible = false;
-			_window.visible = false;
+			_closed				= true;
+			_disable.alpha		= 0;
+			_disable.visible	= false;
+			_window.visible		= false;
 			
 			_place.tabIndex			= _tabIndex;
 			_type.tabIndex			= _tabIndex + 50;
@@ -214,6 +216,9 @@ package com.twinoid.kube.quest.editor.views {
 			setToolTip(_endsQuest, Label.getLabel("editWindow-endEventTT"));
 			setToolTip(_loosesQuest, Label.getLabel("editWindow-looseEventTT"));
 			
+			_place.open();
+			_type.open();
+			
 			makeEscapeClosable(this);
 			computePositions();
 			
@@ -228,10 +233,11 @@ package com.twinoid.kube.quest.editor.views {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions(event:Event = null):void {
+			if(event != null && _disable.alpha < 1) return;
+			
 			//Prevent from firing a RESIZE event to the stage that would be
 			//captured on every views listening for it.
 			if(event != null && event.currentTarget == _holder) event.stopPropagation();
-			
 			
 			_window.width = _WIDTH;
 			var i:int, len:int, item:DisplayObject, py:int;
@@ -265,8 +271,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Flags the content as opened when opening transition completes.
 		 * This prevents the view to close right after opening.
 		 * When clicking a box it tells the model to open this view which opens
-		 * synchronously. But right after, the stage click is detected which
-		 * makes it close.
+		 * synchronously. But right after, the stage click is detected by this
+		 * view, which makes it close if this trick isn't done.
 		 */
 		private function flagOpened():void { _closed = false; }
 

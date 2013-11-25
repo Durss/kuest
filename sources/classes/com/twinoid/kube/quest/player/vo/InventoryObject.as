@@ -10,6 +10,7 @@ package com.twinoid.kube.quest.player.vo {
 		
 		private var _vo:ObjectItemData;
 		private var _total:int;
+		private var _unlocked:Boolean;
 		
 		
 		
@@ -20,9 +21,10 @@ package com.twinoid.kube.quest.player.vo {
 		/**
 		 * Creates an instance of <code>InventoryObject</code>.
 		 */
-		public function InventoryObject(vo:ObjectItemData, total:int) {
+		public function InventoryObject(vo:ObjectItemData, total:int, unlocked:Boolean = false) {
 			_total = total;
 			_vo = vo;
+			_unlocked = unlocked;
 		}
 
 		
@@ -43,6 +45,14 @@ package com.twinoid.kube.quest.player.vo {
 			_total = value;
 		}
 
+		public function get unlocked():Boolean {
+			return _unlocked;
+		}
+
+		public function set unlocked(unlocked:Boolean):void {
+			_unlocked = unlocked;
+		}
+
 
 
 		/* ****** *
@@ -52,7 +62,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * Gets a string representation of the value object.
 		 */
 		public function toString():String {
-			return "[InventoryObject :: total="+total+", vo="+vo+"]";
+			return "[InventoryObject :: total=" + total + ", vo=" + vo + ", unlocked=" + unlocked + "]";
 		}
 
 

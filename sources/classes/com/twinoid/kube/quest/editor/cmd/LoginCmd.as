@@ -33,7 +33,7 @@ package com.twinoid.kube.quest.editor.cmd {
 			_loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadErrorHandler);
 			_urlVariables['samples'] = Config.getVariable("samples");
 			if(Capabilities.playerType.toLowerCase() == "standalone") {
-				_urlVariables['simulateSession'] = true;
+				_urlVariables['simulateSession'] = true;//Secured server-side by checking if server's IP is 127.0.0.1
 			}
 		}
 

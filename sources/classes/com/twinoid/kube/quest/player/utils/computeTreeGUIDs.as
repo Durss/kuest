@@ -7,7 +7,7 @@ package com.twinoid.kube.quest.player.utils {
 	import flash.utils.setTimeout;
 	
 	/**
-	 * Searches for trees and assigns tree IDs to every KuestEvent entry.
+	 * Searches for trees and assigns tree IDs to every related KuestEvent entry.
 	 * 
 	 * The callback method is passed at least 1 argument that is the Dictionary
 	 * instance that takes a KuestEvent as key and returns its corresponding tree ID.

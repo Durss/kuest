@@ -95,7 +95,7 @@ package com.twinoid.kube.quest.editor.vo {
 		public function getDaysMode():Boolean { return dates == null; }
 		
 		/**
-		 * Gets if the action is alays enabled or not.
+		 * Gets if the action is always enabled or not.
 		 * If not, then the action is enabled only at specific dates, or only
 		 * specific days of the week during a specific time range (daysMode=true).
 		 */

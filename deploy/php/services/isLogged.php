@@ -18,7 +18,7 @@
 		$additionnals .= "\t<name>".$_SESSION["name"]."</name>\n";
 		$additionnals .= "\t<pubkey>".$_SESSION["pubkey"]."</pubkey>\n";
 		$additionnals .= "\t<lang>".$_SESSION["lang"]."</lang>\n";
-		$additionnals .= "\t<time><![CDATA[".$time."]]></time>\n";//Time is sent to prevent from time hacking by changing the desktop's time.
+		$additionnals .= "\t<time><![CDATA[".$time."]]></time>\n";//encrypted time is sent to prevent from time hacking by simply changing the desktop's time.
 	}
 	//session_destroy();
 	Out::printOut(true, $additionnals);

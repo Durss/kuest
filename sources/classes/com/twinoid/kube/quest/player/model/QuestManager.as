@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.model {
+	import com.twinoid.kube.quest.player.vo.SaveVersion;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
 	import com.twinoid.kube.quest.editor.vo.ActionType;
@@ -41,7 +42,7 @@ package com.twinoid.kube.quest.player.model {
 	 */
 	public class QuestManager extends EventDispatcher {
 		
-		private var _lastPosData:*;//Contains a Point or Point3D or ActionPlace in debug mode
+		private var _lastPosData:*;//Contains a Point or Point3D or ActionPlace (in debug mode)
 		private var _positionManager:PositionManager;
 		private var _nodeToTreeID:Dictionary;
 		private var _timeAcessManager:TimeAccessManager;
@@ -51,6 +52,9 @@ package com.twinoid.kube.quest.player.model {
 		private var _positionToIndex:Object;
 		private var _eventsHistory:Vector.<String>;
 		private var _guidToEvent:Object;
+		private var _save:ByteArray;
+		private var _questComplete:Boolean;
+		private var _questLost:Boolean;
 		
 		
 		
@@ -79,6 +83,16 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets the inventory content.
 		 */
 		public function get inventory():Vector.<InventoryObject> { return _inventoryManager.objects; }
+		
+		/**
+		 * Gets if the quest has been completed
+		 */
+		public function get questComplete():Boolean { return _questComplete; }
+		
+		/**
+		 * Gets if the quest has been lost
+		 */
+		public function get questLost():Boolean { return _questLost; }
 
 
 
@@ -89,12 +103,11 @@ package com.twinoid.kube.quest.player.model {
 		 * Sets the quest's data loaded from the server
 		 */
 		public function loadData(nodes:Vector.<KuestEvent>, objects:Vector.<ObjectItemData>, save:ByteArray, timeOffset:uint, testMode:Boolean, debugMode:Boolean):void {
-			
-			save;//TODO parse save file
+			_save = save;//Save is parsed when tree computation completes
 			
 			//Builds fast accesses to the events to grab them from a specific position.
 			_nodeToTreeID = new Dictionary();
-			_positionManager.populate(nodes);
+			_positionManager.populate(nodes, debugMode);
 			_inventoryManager.initialize(objects);
 			_timeAcessManager.initialize(timeOffset, testMode, debugMode);
 			
@@ -104,8 +117,17 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Gets the quest's data to be saved to the server
 		 */
-		public function downloadData():void {
-			//TODO
+		public function exportSave():ByteArray {
+			var version:uint = SaveVersion.V1;
+			var ba:ByteArray = new ByteArray();
+			ba.writeUnsignedInt( version );
+			ba.writeObject( _treeManager.exportData(version) );
+			ba.writeObject( _inventoryManager.exportData(version) );
+			ba.writeUTF( _eventsHistory.join(',') );
+			ba.writeBoolean( _questComplete );
+			ba.writeBoolean( _questLost );
+			ba.deflate();
+			return ba;
 		}
 		
 		/**
@@ -134,6 +156,13 @@ package com.twinoid.kube.quest.player.model {
 				_timeAcessManager.currentDate = debugDate;
 			}
 			
+			//If the previous event has no custom answer and is still accessible, automatically flag it as complete
+			if(_currentEvent != null
+			&& (_currentEvent.actionChoices == null || _currentEvent.actionChoices.choices.length == 0)
+			&& _treeManager.isEventAccessible(_currentEvent)) {
+				completeEvent(0, false);
+			}
+			
 			//Define the loop's index.
 			//This allows to fo through multiple events on a same position.
 			if(_positionToIndex[getPositionId(pos)] == undefined) {
@@ -155,6 +184,10 @@ package com.twinoid.kube.quest.player.model {
 							return;//If the event has been selected, stop for searching one.
 					}
 			}
+			
+			//No event selected, clear the current one
+			_currentEvent = null;
+			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.NEW_EVENT));
 		}
 		
 		/**
@@ -171,6 +204,8 @@ package com.twinoid.kube.quest.player.model {
 			if(_currentEvent != null) {
 				_eventsHistory.push(_currentEvent.guid);
 				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.HISTORY_UPDATE));
+			}else{
+				return;
 			}
 			
 			var i:int, len:int, children:Vector.<KuestEvent>, child:KuestEvent;
@@ -178,8 +213,9 @@ package com.twinoid.kube.quest.player.model {
 			len = children.length;
 			//The current event has 1 or no choices, go for a simpler solution
 			//where all the children will get the priority.
-			if(_currentEvent.actionChoices.choices.length < 2) {
-				_treeManager.givePriorityTo( children );
+			if(_currentEvent.actionChoices == null
+			|| _currentEvent.actionChoices.choices.length < 2) {
+				_treeManager.givePriorityTo( children, _currentEvent );
 			}else{
 				//The event has two or more choices
 				var priorities:Vector.<KuestEvent> = new Vector.<KuestEvent>();
@@ -215,8 +251,9 @@ package com.twinoid.kube.quest.player.model {
 		 * 
 		 * @return if the object has been used or not.
 		 */
-		public function useObject(object:InventoryObject):void {
+		public function useObject(object:InventoryObject, verifyNumber:Boolean = true):Boolean {
 			var events:Vector.<KuestEvent> = _positionManager.getEventsFromPos(_lastPosData);
+			if(events == null) return false;
 			var i:int, len:int, event:KuestEvent;
 			len = events.length;
 			//Search for an event asking for this object
@@ -227,16 +264,27 @@ package com.twinoid.kube.quest.player.model {
 					&& _treeManager.isEventAccessible(event)) {//If the event is part of the current priority of its tree
 						if(!event.actionType.takeMode) {//If an object has to be put here
 							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
-								if(_inventoryManager.useObject(object.vo.guid)) {//Use the object
+								if(!verifyNumber || _inventoryManager.useObject(object.vo.guid)) {//Use the object
 									dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
 									setCurrentEvent(event, true);//Unlock the object's event
+									return true;
 								}
 							}
 						}
 					}
 				}
-				
 			}
+			
+			return false;
+		}
+		
+		/**
+		 * Clears the player's progression
+		 */
+		public function clearProgression():void {
+			_eventsHistory = new Vector.<String>();
+			_treeManager.reset();
+			_inventoryManager.reset();
 		}
 
 
@@ -280,8 +328,29 @@ package com.twinoid.kube.quest.player.model {
 					//The tree manager will actually look if there is a higher priority by position
 					//or by user input (editor) before setting it as the priority.
 //					if(k.dependencies.length == 0) {
-						_treeManager.givePriorityTo( new <KuestEvent>[ k ], true );
+						_treeManager.givePriorityTo( new <KuestEvent>[ k ], null, true );
 //					}
+				}
+			}
+			
+			_treeManager.guidToEvent = _guidToEvent;
+			//Load save data if necessary
+			if(_save != null) {
+				_save.inflate();
+				var version:uint = _save.readUnsignedInt();
+				switch(version){
+					case SaveVersion.V1:
+						_treeManager.importData( _save.readObject(), version );
+						_inventoryManager.importData( _save.readObject(), version );
+						
+						_eventsHistory = new Vector.<String>();
+						var tmp:Array = _save.readUTF().split('');
+						var i:int, len:int;
+						len = tmp.length;
+						for(i = 0; i < len; ++i) _eventsHistory[i] = tmp[i];
+						break;
+					default:
+						dispatchEvent(new QuestManagerEvent(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT));
 				}
 			}
 			
@@ -295,10 +364,10 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function setCurrentEvent(event:KuestEvent, objectUsed:Boolean = false):Boolean {
 			//If this new event is an object related event.
-			if(event.actionType.type == ActionType.TYPE_OBJECT && !objectUsed) {
+			if(event.actionType != null && event.actionType.type == ActionType.TYPE_OBJECT && !objectUsed) {
 				//If its a "take mode", put it in the inventory
 				if(event.actionType.takeMode) {
-					_inventoryManager.getObject(event.actionType.itemGUID);
+					_inventoryManager.takeObject(event.actionType.itemGUID);
 					dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
 				}else{
 					//If an object has to be put, ignore it.
@@ -310,9 +379,15 @@ package com.twinoid.kube.quest.player.model {
 			
 			_currentEvent = event;
 			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.NEW_EVENT, _currentEvent));
-			//If the event has no custom answer, automatically flag it as complete
-			if(_currentEvent.actionChoices.choices.length == 0) {
-				completeEvent(0, false);
+			
+			if(_currentEvent.endsQuest) {
+				_questComplete = true;
+				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.QUEST_COMPLETE, _currentEvent));
+			}
+			
+			if(_currentEvent.loosesQuest) {
+				_questLost = true;
+				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.QUEST_FAILED, _currentEvent));
 			}
 			
 			return true;

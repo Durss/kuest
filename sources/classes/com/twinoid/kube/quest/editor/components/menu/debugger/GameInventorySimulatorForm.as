@@ -66,10 +66,12 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		 * Populates the component
 		 */
 		public function populate(objs:Vector.<InventoryObject>):void {
+			var prevHScroll:Number = _engine.hPercent;
 			_engine.clear();
 			if(objs.length > 0) {
 				_engine.addLine(VectorUtils.toArray(objs));
 			}
+			_engine.hPercent = prevHScroll;
 			_engine.validate();
 			_scrollpane.update();
 		}

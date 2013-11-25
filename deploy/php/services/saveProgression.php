@@ -17,6 +17,8 @@
 		die;
 	}
 	
+	
+	$path = '../../kuests/progressions/';
 	$additionnals = "";
 	if (isset($_GET["id"], $_GET["size"], $GLOBALS['HTTP_RAW_POST_DATA'])) {
 	
@@ -25,22 +27,20 @@
 			die;
 		}
 		
-		$dataFile = $_GET["id"]."_".$_SESSION['uid'];
-		//Check if file is already registered
-		$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
-		$params = array(':guid' => $_GET["id"], ':uid' => $_SESSION["uid"]);
-		$req = DBConnection::getLink()->prepare($sql);
-		if (!$req->execute($params)) {
-			$error = $req->errorInfo();
-			$error = $error[2];
-			Out::printOut(false, '', $error, 'SQL_ERROR');
+		if (!file_exists($dir)) {
+			Out::printOut(false, '', '"'.$dir.'" directory does not exist.', 'PROGRESSION_DIRECTORY_MISSING');
 			die;
 		}
-		$tot = $req->rowCount();
-		if ($tot == 0) {
-			//No save yet, add DB entry
-			$sql = "INSERT INTO `kuestSaves` (uid, kid, dataFile) VALUES (:uid, (SELECT id FROM kuests WHERE guid=:guid), :file)";
-			$params = array(':uid' => $_SESSION["uid"], ':guid' => $_GET["id"], ':file' => $dataFile);
+		
+		$dataFile = $_GET["id"]."_".$_SESSION['uid'];
+		//Save file
+		if($fp = @fopen($path.$dataFile.".sav", 'wb')) {
+			fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
+			fclose($fp);
+			
+			//Check if file is already registered
+			$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
+			$params = array(':guid' => $_GET["id"], ':uid' => $_SESSION["uid"]);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();
@@ -48,12 +48,20 @@
 				Out::printOut(false, '', $error, 'SQL_ERROR');
 				die;
 			}
-		}
-		
-		//Save file
-		if($fp = @fopen("../../saves/".$dataFile.".sav", 'wb')) {
-			fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
-			fclose($fp);
+			$tot = $req->rowCount();
+			if ($tot == 0) {
+				//No save yet, add DB entry
+				$sql = "INSERT INTO `kuestSaves` (uid, kid, dataFile) VALUES (:uid, (SELECT id FROM kuests WHERE guid=:guid), :file)";
+				$params = array(':uid' => $_SESSION["uid"], ':guid' => $_GET["id"], ':file' => $dataFile);
+				$req = DBConnection::getLink()->prepare($sql);
+				if (!$req->execute($params)) {
+					$error = $req->errorInfo();
+					$error = $error[2];
+					Out::printOut(false, '', $error, 'SQL_ERROR');
+					die;
+				}
+			}
+			
 			Out::printOut(true, "");
 		}else {
 			Out::printOut(false, '', 'Unable to open file '.$dataFile, 'CANNOT_WRITE_SAVE');
