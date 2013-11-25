@@ -66,6 +66,10 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		 * Populates the component with an event's data
 		 */
 		public function populate(event:KuestEvent):void {
+			if(event == null) {
+				clear();
+				return;
+			}
 			if(event.isEmpty()) {
 				_image.visible = false;
 				_label.text = Label.getLabel('menu-debug-emptyEvent');

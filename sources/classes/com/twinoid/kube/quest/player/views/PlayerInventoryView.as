@@ -120,6 +120,8 @@ package com.twinoid.kube.quest.player.views {
 			_scrollpane.height		= h + 15;//15 = scrollbar's height
 			_swiper.viewport.width	= w;
 			_swiper.viewport.height	= h;
+			_labelTf.background		= true;
+			_labelTf.backgroundColor= 0x4CA5CD;
 			_labelTf.filters		= [new DropShadowFilter(0,0,0,.4,5,5,1,2)];
 			_engine.addLine([]);
 			
@@ -202,7 +204,7 @@ package com.twinoid.kube.quest.player.views {
 				toggle();
 			} else if (event.target is InventoryTileItem) {
 				var item:InventoryTileItem = InventoryTileItem(event.target);
-				DataManager.getInstance().useObject(item.data);
+				if(item.data.total > 0) DataManager.getInstance().useObject(item.data);
 			}
 		}
 		

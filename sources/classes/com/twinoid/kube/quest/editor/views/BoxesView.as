@@ -200,7 +200,7 @@ package com.twinoid.kube.quest.editor.views {
 		private function enterFrameHandler(event:Event):void {
 			//Manage board's drag if mouse isn't over anything else
 			var hasMoved:Boolean = Math.abs(_dragOffset.x - _boxesHolder.x) > 2 || Math.abs(_dragOffset.x - _boxesHolder.x) > 2;
-			if(_spacePressed) {
+			if(!_spacePressed) {
 				if(_stagePressed && _draggedItem == null) {
 					if(hasMoved) _draggingBoard = true;
 					_endX = _dragOffset.x + stage.mouseX - _mouseOffset.x;
@@ -388,11 +388,20 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
 			if(!_stagePressed && !_spacePressed && event.keyCode == Keyboard.SPACE) {
+				//check if a box or link is between the stage and the mouse.
 				var objs:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
 				var top:DisplayObject = objs[objs.length - 1];
-				if(top != null && contains(top)) {
-					_spacePressed = top == this || _comments.contains(top);
-					if(_spacePressed) Mouse.cursor = MouseCursor.HAND;
+				if (top == this || _linksHolder.contains(top) || _scisors.contains(top)) {
+					_spacePressed = true;
+					Mouse.cursor = MouseCursor.ARROW;
+					addChild(_comments);
+					
+					//Remove scisors just in case we were over a link
+					if(contains(_scisors)) {
+						Mouse.show();
+						removeChild(_scisors);
+						_scisors.stopDrag();
+					}
 				}
 			}
 		}
@@ -403,7 +412,14 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
 			if(event.keyCode == Keyboard.SPACE) {
-				if (_spacePressed) Mouse.cursor = MouseCursor.AUTO;
+				if (_spacePressed) {
+					addChildAt(_comments, 0);
+					var objs:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
+					var top:DisplayObject = objs[objs.length - 1];
+					if(top == this) {
+						Mouse.cursor = MouseCursor.HAND;
+					}
+				}
 				_spacePressed = false;
 			}
 			if(event.keyCode == Keyboard.ESCAPE) {
@@ -471,15 +487,18 @@ package com.twinoid.kube.quest.editor.views {
 			_stagePressed = true;
 			_draggingBoard = false;
 			
-			if(!_spacePressed) _comments.startDraw();
+			if(_spacePressed) _comments.startDraw();
 		}
 		
 		/**
 		 * Called when mouse is released
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
-			_stagePressed = false;
 			_comments.stopDraw();
+			
+			_stagePressed = false;
+			
+			if(_spacePressed) return;
 			
 			//If we were dragging the board, throw it.
 			if(_draggingBoard) {
@@ -535,6 +554,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when an element is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
+			if(_spacePressed) return;
+			
 			//If a link has been clicked delete it
 			if(event.target is BoxLink && !_debugMode) {
 				prompt("editor-linkDelPromptTitle", "editor-linkDelPromptContent", BoxLink(event.target).deleteLink, "deleteLink");
@@ -546,31 +567,6 @@ package com.twinoid.kube.quest.editor.views {
 					event.stopPropagation();
 					FrontControler.getInstance().setDebugStart(Box(event.target).data);
 				}
-			}
-		}
-		
-		/**
-		 * Called when a component is rolled out.
-		 * Hide the scisors if necessary.
-		 */
-		private function outHandler(event:MouseEvent):void {
-			if(DisplayObject(event.target).parent is Box && !_debugMode) {
-				_lastOverEvent = null;
-				var i:int, len:int, b:Box;
-				len = _boxesHolder.numChildren;
-				for(i = 0; i < len; ++i) {
-					b = _boxesHolder.getChildAt(i) as Box;
-					b.filters = [];
-				}
-			}
-			
-			if(event.ctrlKey || _spacePressed) return;
-			
-			if(event.target is BoxLink) {
-				Mouse.show();
-				if(contains(_scisors)) removeChild(_scisors);
-				_scisors.stopDrag();
-				addChild(_boxesHolder);
 			}
 		}
 
@@ -593,6 +589,35 @@ package com.twinoid.kube.quest.editor.views {
 			if(DisplayObject(event.target).parent is Box && !_debugMode) {
 				_lastOverEvent = (DisplayObject(event.target).parent as Box).data;
 				computeTreeGUIDs(_nodes, onComputeTreeOverComplete, true);
+			}else if(!_debugMode){
+				Mouse.cursor = MouseCursor.HAND;
+			}
+		}
+		
+		/**
+		 * Called when a component is rolled out.
+		 * Hide the scisors if necessary.
+		 */
+		private function outHandler(event:MouseEvent):void {
+			if(DisplayObject(event.target).parent is Box && !_debugMode) {
+				_lastOverEvent = null;
+				var i:int, len:int, b:Box;
+				len = _boxesHolder.numChildren;
+				for(i = 0; i < len; ++i) {
+					b = _boxesHolder.getChildAt(i) as Box;
+					b.filters = [];
+				}
+			}
+			
+			if(event.target is BoxLink) {
+				Mouse.show();
+				if(contains(_scisors)) {
+					removeChild(_scisors);
+					_scisors.stopDrag();
+					addChild(_boxesHolder);
+				}
+			}else{
+				Mouse.cursor = MouseCursor.AUTO;
 			}
 		}
 		

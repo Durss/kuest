@@ -6,14 +6,16 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.twinoid.kube.quest.editor.vo.ActionDate;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.EventTimeCalendarIcon;
-	import com.twinoid.kube.quest.graphics.EventTimeNoneIcon;
 	import com.twinoid.kube.quest.graphics.EventTimeStartIcon;
+
 	import flash.display.Sprite;
 
 
 	
 	/**
-	 * DIsplays the time management panel.
+	 * Displays the time management panel.
+	 * 
+	 * FIXME contents positioning are fucked up the first time most probably due to the calendar
 	 * 
 	 * @author Francois
 	 * @date 4 févr. 2013;
@@ -36,7 +38,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventTime</code>.
 		 */
 		public function EditEventTime(width:int) {
-			super(Label.getLabel("editWindow-time-title"), width);
+			super(Label.getLabel("editWindow-time-title"), width, true);
 		}
 
 		
@@ -62,15 +64,16 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Saves the configurations to the value object
 		 */
 		public function save(data:KuestEvent):void {
+			if(!enabled) {
+				data.actionDate = new ActionDate();
+				return;
+			}
 			switch(selectedIndex){
 				case 0:
 					data.actionDate = new ActionDate();
-					break;
-				case 1:
-					data.actionDate = new ActionDate();
 					data.actionDate.dates = _calendar.selectedDates;
 					break;
-				case 2:
+				case 1:
 					data.actionDate = new ActionDate();
 					data.actionDate.days = _periodicDaySel.days;
 					data.actionDate.startTime = _periodicTimeInterval.startTime;
@@ -84,6 +87,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Loads the configuration to the value object
 		 */
 		public function load(data:KuestEvent):void {
+			enabled = false;
 			if(data.actionDate == null) {
 				selectedIndex = 0;
 				_calendar.selectedDates = null;
@@ -93,9 +97,14 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				return;
 			}
 			
-			if(data.actionDate.dates == null && data.actionDate.days == null) selectedIndex = 0;
-			if(data.actionDate.dates != null && data.actionDate.days == null) selectedIndex = 1;
-			if(data.actionDate.dates == null && data.actionDate.days != null) selectedIndex = 2;
+			if(data.actionDate.dates != null && data.actionDate.days == null) {
+				enabled = true;
+				selectedIndex = 0;
+			}
+			if(data.actionDate.dates == null && data.actionDate.days != null){
+				enabled = true;
+				selectedIndex = 1;			
+			}
 			
 			_calendar.selectedDates = data.actionDate.dates;
 			
@@ -119,7 +128,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			buildCalendar();
 			buildPeriodic();
 			
-			addEntry(new EventTimeNoneIcon(), new Sprite(), Label.getLabel("editWindow-time-noneTT"));
+//			addEntry(new EventTimeNoneIcon(), new Sprite(), Label.getLabel("editWindow-time-noneTT"));
 			addEntry(new EventTimeCalendarIcon(), _calendarHolder, Label.getLabel("editWindow-time-calendarTT"));
 			addEntry(new EventTimeStartIcon(), _periodicHolder, Label.getLabel("editWindow-time-periodicTT"));
 		}

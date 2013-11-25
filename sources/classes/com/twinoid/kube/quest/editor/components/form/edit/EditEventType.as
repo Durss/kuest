@@ -44,7 +44,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventType</code>.
 		 */
 		public function EditEventType(width:int) {
-			super(Label.getLabel("editWindow-type-title"), width);
+			super(Label.getLabel("editWindow-type-title"), width, false);
 		}
 
 		

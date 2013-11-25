@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.vo {
+	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.player.utils.sortByPosition;
 
@@ -13,6 +14,7 @@ package com.twinoid.kube.quest.player.vo {
 		
 		private var _nodeToTreeID:Dictionary;
 		private var _treeIDToPriorities:Dictionary;
+		private var _guidToEvent:Object;
 		
 		
 		
@@ -30,6 +32,10 @@ package com.twinoid.kube.quest.player.vo {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Sets the a fast GUID to KuestEvent accessor.
+		 */
+		public function set guidToEvent(value:Object):void { _guidToEvent = value; }
 
 
 
@@ -71,7 +77,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * @param events						events to be given priority
 		 * @param comparePositionWithCurrent	if true and only 1 event is given, it will compare the current priorities and set the new one as prioritary only if its box is placed at a higher left/top position.
 		 */
-		public function givePriorityTo(events:Vector.<KuestEvent>, comparePositionWithCurrent:Boolean = false):void {
+		public function givePriorityTo(events:Vector.<KuestEvent>, reference:KuestEvent = null, comparePositionWithCurrent:Boolean = false):void {
 			var i:int, len:int, treeID:String;
 			
 			//If compare mode is enabled, the current priorities of the tree will be compared
@@ -113,18 +119,90 @@ package com.twinoid.kube.quest.player.vo {
 			//corresponding priorities. 
 			var treeIDsToEvents:Object = {};
 			len = events.length;
-			for(i = 0; i < len; ++i) {
-				treeID = _nodeToTreeID[ events[i] ];
-				if(treeIDsToEvents[treeID] == undefined) {
-					treeIDsToEvents[treeID] = new Vector.<KuestEvent>();
+			if(len == 0 && reference != null) {
+				//No children, clear the tree to end it.
+				treeID = _nodeToTreeID[ reference ];
+				treeIDsToEvents[treeID] = new Vector.<KuestEvent>();
+			}else{
+				for(i = 0; i < len; ++i) {
+					treeID = _nodeToTreeID[ events[i] ];
+					if(treeIDsToEvents[treeID] == undefined) {
+						treeIDsToEvents[treeID] = new Vector.<KuestEvent>();
+					}
+					Vector.<KuestEvent>(treeIDsToEvents[treeID]).push( events[i] );
 				}
-				Vector.<KuestEvent>(treeIDsToEvents[treeID]).push( events[i] );
 			}
+			
 			
 			//Store the priorities
 			for (treeID in treeIDsToEvents) {
 				_treeIDToPriorities[ treeID ] = treeIDsToEvents[ treeID ];
 			}
+		}
+		
+		/**
+		 * Exports the data as anonymous object ready to be stored to a ByteArray.
+		 * These data will then be imported back with importData().
+		 * It basically keeps the same structur but in anonymous arrays instead of
+		 * dictionary and vectors. And it replaces the KuestEvent instances by
+		 * their GUID.
+		 * In the end we'll have something like this :
+		 * 	[
+		 * 		treeID : [guid1, guid2, guid3, ...]
+		 * 		treeID : [guid1, guid2, guid3, ...]
+		 * 		treeID : [guid1, guid2, guid3, ...]
+		 * 	]
+		 * 	
+		 * 	Where guids are the KuesEvent's GUIDs.
+		 */
+		public function exportData(version:uint):Array {
+			version;
+			var data:Array = [];
+			for (var treeID:* in _treeIDToPriorities) {
+				var events:Vector.<KuestEvent> = _treeIDToPriorities[treeID];
+				var i:int, len:int;
+				len = events.length;
+				data[treeID] = [];
+				for(i = 0; i < len; ++i) {
+					data[treeID][i] = events[i].guid;
+				}
+			}
+			return data;
+		}
+		
+		/**
+		 * Imports data that have been previously exported by exportData() .
+		 */
+		public function importData(data:Array, version:uint):void {
+			if(_guidToEvent == null) {
+				throw new KuestException('TreeManager.initialize method must be called before importData !', 'TreeManager');
+			}
+			
+			switch(version){
+				case SaveVersion.V1:
+					_treeIDToPriorities = new Dictionary();
+					for (var treeID:* in data) {
+						var vector:Vector.<KuestEvent> = new Vector.<KuestEvent>();
+						var events:Array = data[treeID];
+						var i:int, len:int;
+						len = events.length;
+						
+						for(i = 0; i < len; ++i) {
+							vector.push( _guidToEvent[data[treeID][i]] );
+						}
+						
+						_treeIDToPriorities[treeID] = vector;
+					}
+					break;
+				default:
+			}
+		}
+		
+		/**
+		 * Resets the pointers to the defaults to restart the quest from scratch
+		 */
+		public function reset():void {
+			_treeIDToPriorities = new Dictionary();
 		}
 
 

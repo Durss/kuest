@@ -1,13 +1,12 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
-	import com.twinoid.kube.quest.editor.components.box.BoxLink;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.editor.components.box.Box;
+	import com.twinoid.kube.quest.editor.components.box.BoxLink;
 	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
 	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
-	import com.twinoid.kube.quest.graphics.EventChoiceNoneIcon;
 	import com.twinoid.kube.quest.graphics.EventChoiceYupIcon;
 
 	import flash.display.Sprite;
@@ -34,7 +33,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventChoices</code>.
 		 */
 		public function EditEventChoices(width:int) {
-			super(Label.getLabel("editWindow-choice-title"), width);
+			super(Label.getLabel("editWindow-choice-title"), width, true);
 		}
 
 		
@@ -63,19 +62,15 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Saves the configurations to the value object
 		 */
 		public function save(data:KuestEvent):void {
-			switch(selectedIndex){
-				case 0:
-					data.actionChoices = new ActionChoices();
-					break;
-				case 1:
-					data.actionChoices = new ActionChoices();
-					var i:int, len:int;
-					len = _choices.length;
-					for(i = 0; i < len; ++i) {
-						if(StringUtils.trim(_choices[i].value as String).length > 0) data.actionChoices.addChoice(_choices[i].text);
-					}
-					break;
-				default:
+			if(!enabled) {
+				data.actionChoices = new ActionChoices();
+			}else{
+				data.actionChoices = new ActionChoices();
+				var i:int, len:int;
+				len = _choices.length;
+				for(i = 0; i < len; ++i) {
+					if(StringUtils.trim(_choices[i].value as String).length > 0) data.actionChoices.addChoice(_choices[i].text);
+				}
 			}
 		}
 		
@@ -88,13 +83,15 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			for(i = 0; i < len; ++i) {
 				_choices[i].text = _choices[i].defaultLabel;
 			}
+			enabled = false;
 			selectedIndex = 0;
 			
 			if(data.actionChoices != null) {
 				for(i = 0; i < len; ++i) {
 					if (data.actionChoices.choices.length > i && data.actionChoices.choices[i].length > 0) {
 						_choices[i].text = data.actionChoices.choices[i];
-						selectedIndex = 1;
+						selectedIndex = 0;
+						enabled = true;
 					}
 				}
 			}
@@ -114,7 +111,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			buildForm();
 			
-			addEntry(new EventChoiceNoneIcon(), new Sprite(), Label.getLabel("editWindow-choice-noneTT"));
+//			addEntry(new EventChoiceNoneIcon(), new Sprite(), Label.getLabel("editWindow-choice-noneTT"));
 			addEntry(new EventChoiceYupIcon(), _form, Label.getLabel("editWindow-choice-yupTT"));
 		}
 		

@@ -1,16 +1,23 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog69-content"><![CDATA[<ul>
-			<li>Ajout d'un panneau de debug de quêtes utilisant le nouvel algo refait de zéro \o/. J'ai pas encore ajouté la gestion des objets ni beaucoup testé l'algo... :3</li>
+		<label code="patchlog70-content"><![CDATA[<ul>
+			<li>Refonte complète du moteur de quête et implémentation dans le module de lecture in-game.</li>
+			<li>Ajout d'un panneau de debug de quêtes utilisant le nouveau moteur.</li>
+			<li>Inversion du drag&drop du plateau et du dessin</li>
+			<li>Changement de la manière d'activer/désactiver les onglets de choix, date et son dans l'édition d'événement.</li>
+			<li>Ajout d'une option d'événement "Fait perdre le quête". <i>(pas encore implémenté dans le script GM)</i></li>
 			<li>Debug de la limitation par jour de semaine qui ne fonctionnait pas.</li>
-			<li>Ajout d'un option d'événement "Fait perdre le quête". <i>(pas encore implémenté dans le script GM)</i></li>
+			<li>Ajout d'un indicateur prise/pose sur les boites d'évènements d'objets.</li>
 		</ul>]]></label>
 		
+		<!-- !Tutorial -->
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
 		<label code="tutorial-close"><![CDATA[J'ai vu merci !]]></label>
 		
+		<!-- !Errors -->
 		<label code="exception-title"><![CDATA[Erreur]]></label>
 		<label code="exception-INCOMPLETE_FORM"><![CDATA[Données manquantes dans la requête.]]></label>
 		<label code="exception-SQL_CONNECTION_FAIL"><![CDATA[Impossible de se connecter à la base de données.]]></label>
@@ -23,6 +30,8 @@
 		<label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[La quête demandée n'existe pas.]]></label>
 		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[Vous n'avez pas le droit de charger cette quête.]]></label>
 		<label code="exception-MISSING_DATA_PART"><![CDATA[Le serveur n'a pas reçu toutes les données à sauvegarder.]]></label>
+		<!-- Be carefull to keep {SIZE} and {MAX} tags !
+		They are replaced dynamically. -->
 		<label code="exception-MAX_SAVE_SIZE"><![CDATA[Votre quête est trop lourde pour être envoyée au serveur <i>({SIZE}Mo sur {MAX}Mo maximum)</i>.<br />Supprimez les personnages et objets inutiles et enlevez des commentaies pour réduire le poids de votre quête.]]></label>
 		<label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[Le fichier de la quête demandée n'a pu être trouvé sur le serveur.]]></label>
 		<label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[Le fichier optimisé de la quête demandée n'a pu être trouvé sur le serveur.]]></label>
@@ -35,7 +44,11 @@
 		<label code="exception-KUEST_EVALUATION_INVALID_KEY"><![CDATA[La clé de vérification fournie est invalide.]]></label>
 		<label code="exception-KUEST_ALREADY_EVALUATED"><![CDATA[Vous avez déjà évalué cette quête.]]></label>
 		<label code="exception-NOT_CONNECTED"><![CDATA[Vous n'avez pas été authentifié ou votre session a expiré.<br />Rendez-vous à l'addresse suivante pour vous authentifier à nouveau :<br /><a href="http://fevermap.org.com/kuest" class="link" target="_self">http://fevermap.org.com/kuest</a>]]></label>
+		<label code="exception-SAVE_FILE_FORMAT"><![CDATA[Le format du fichier de sauvegarde de votre progression est invalide.<br />Son chargement a été annulé et votre progression remise à zéro.]]></label>
+		<label code="exception-SAVE_DIRECTORY_MISSING"><![CDATA[Le dossier de destination des sauvegardes n'a pas été trouvé sur le serveur.]]></label>
+		<label code="exception-PROGRESSION_DIRECTORY_MISSING"><![CDATA[Le dossier de destination des sauvegardes de progression n'a pas été trouvé sur le serveur.]]></label>
 		
+		<!-- !Loader spinning states -->
 		<label code="loader-login"><![CDATA[Login...]]></label>
 		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
 		<label code="loader-loginKO"><![CDATA[Erreur...]]></label>
@@ -52,19 +65,31 @@
 		<label code="loader-parsingDebug"><![CDATA[Analyse de la quête...]]></label>
 		<label code="loader-parsingDebugOK"><![CDATA[Analyse OK]]></label>
 		
+		<!-- !Prompt window -->
 		<label code="prompt-window-submit"><![CDATA[Valider]]></label>
 		<label code="prompt-window-cancel"><![CDATA[Annuler]]></label>
 		<label code="prompt-window-ignore"><![CDATA[Ne plus me demander confirmation pour cette action.]]></label>
 		
+		<!-- !Char/objects selectors -->
 		<label code="selector-char"><![CDATA[Choisir un personnage]]></label>
 		<label code="selector-object"><![CDATA[Choisir un objet]]></label>
+		<!-- Corresponds to the "empty" item at the beggining of the selectors. -->
 		<label code="selector-none"><![CDATA[<i>(aucun)</i>]]></label>
 		
+		<!-- !Boxes -->
 		<label code="box-empty"><![CDATA[<p align="center">Cliquez pour éditer...</p>]]></label>
+		<!-- Title of the prompt window displayed when deleting an event -->
 		<label code="box-delete-promptTitle"><![CDATA[Suppression]]></label>
+		<!-- Content of the prompt window displayed when deleting an event -->
 		<label code="box-delete-promptContent"><![CDATA[Êtes-vous certain de vouloir supprimer cet évènement?<br />Toutes les liaisons associées seront détruites.]]></label>
+		<!-- Tootltip displayed on time icon's roll when the event time access is limited -->
 		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible<br />qu'à certains moments précis.]]></label>
 		
+		<!-- !Boxes links -->
+		<label code="editor-linkDelPromptTitle"><![CDATA[Supprimer la liaison?]]></label>
+		<label code="editor-linkDelPromptContent"><![CDATA[Souhaitez-vous vraiment supprimer cette liaison ?<br /><span class="window-content-small"><i>Cette boite de dialogue a pour but d'éviter une suppression malencontreuse de lien.</i></span>]]></label>
+		
+		<!-- !Quest menu -->
 		<label code="menu-file"><![CDATA[Menu principal]]></label>
 		<label code="menu-file-new"><![CDATA[Remise à zéro]]></label>
 		<label code="menu-file-new-name"><![CDATA[Nom de votre quête :]]></label>
@@ -76,7 +101,9 @@
 		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrez une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-load-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir charger cette quête ?]]></label>
+		<!-- tooltip -->
 		<label code="menu-file-delete-buttonTT"><![CDATA[Supprimer cette quête]]></label>
+		<!-- tooltip -->
 		<label code="menu-file-delete-self-buttonTT"><![CDATA[Me retirer les droits sur cette quête]]></label>
 		<label code="menu-file-delete-prompt-title"><![CDATA[Suppression]]></label>
 		<label code="menu-file-delete-prompt-content"><![CDATA[Êtes-vous sûr de vouloir supprimer cette quête?<br /><b>Attention</b>, cette opération est irréversible !]]></label>
@@ -84,12 +111,16 @@
 		<label code="menu-file-new-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir remettre à zéro la quête en cours ?]]></label>
 		<label code="menu-file-save"><![CDATA[Enregistrer]]></label>
 		<label code="menu-file-publish"><![CDATA[Publier]]></label>
+		<!-- Be carefull to keep {ROOT} and {ID} tags !
+		They are replaced dynamically. -->
 		<label code="menu-file-publish-label"><![CDATA[Retrouvez votre quête à cette adresse :<br /><a href="{ROOT}/k/{ID}" target="_blank" class="link">{ROOT}/k/{ID}</a>]]></label>
 		<label code="menu-file-publish-promptTitle"><![CDATA[Confirmation de publication]]></label>
 		<label code="menu-file-publish-promptContent"><![CDATA[<b>Êtes-vous sûr de vouloir publier votre quête?</b><br /><b>Attention</b>, toute modification de la structure de la quête après publication <span class="window-content-big">risque de corrompre</span> la sauvegarde des utilisateurs et de les obliger reccommencer votre quête depuis le début.<br />Il est ainsi vivement conseillé de publier votre quête dans son état final.]]></label>
-		<label code="menu-file-params"><![CDATA[Paramètres]]></label>
+		<!-- tooltip -->
 		<label code="menu-file-saveNewTT"><![CDATA[Enregistrer en tant<br />que nouvelle quête.]]></label>
+		<!-- tooltip -->
 		<label code="menu-file-publishTT"><![CDATA[Publie votre quête afin de la<br />rendre jouable par n'importe qui.]]></label>
+		<!-- tooltip -->
 		<label code="menu-file-clearTT"><![CDATA[Efface toutes les données de la quête courrante.]]></label>
 		<label code="menu-file-rights"><![CDATA[Donnez les droits d'édition à vos amis.]]></label>
 		<label code="menu-file-rightsCB"><![CDATA[Sélectionnez des amis]]></label>
@@ -98,13 +129,7 @@
 		<label code="menu-file-help-tuto"><![CDATA[Voir le tutoriel]]></label>
 		<label code="menu-file-help-samples"><![CDATA[Exemples de quêtes:]]></label>
 		
-		<label code="menu-credits"><![CDATA[Credits]]></label>
-		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.
-
-<img src="./img/mt.png" width="77" height="100" />Merci à <b>Motion-Twin</b> pour le financement du serveur hébergeant cette application.<br/>Les images par défaut des objets sont tirés de leur jeu <a href="http://www.skywar.net/" target="_blank" class="link">Skywar</a>, sont leur propriété et seront retirés sur demande.
-
-<img src="./img/durss.jpg" width="77" height="100" />Cette application a été développée par <b>Durss</b> pour le jeu <a href="http://kube.muxxu.com/" target="_blank" class="link">Kube</a>.<br />Pour me signaler un bug ou une suggestion vous pouvez <a href="http://twinoid.com/user/48" target="_blank" class="link">me contacter</a> via la messagerie privée de Twinoid.]]></label>
-		
+		<!-- !Objects manager -->
 		<label code="menu-objects"><![CDATA[Objets]]></label>
 		<label code="menu-objects-details"><![CDATA[Gérez ici les objets utilisables par la suite dans les évènements.]]></label>
 		<label code="menu-objects-names"><![CDATA[Burrin,Pierre antique,Toile,Graine,Golem,Corne d'abondance,Lentille,Pilon,Bouclier,Lance,Treuil,Cristal,Minerais]]></label>
@@ -112,6 +137,7 @@
 		<label code="menu-objects-delete-title"><![CDATA[Suppression]]></label>
 		<label code="menu-objects-delete-content"><![CDATA[La suppression de cet objet est irréversible.<br />Si des évènements y sont associés, ils se retrouveront vides.]]></label>
 		
+		<!-- !Characters manager -->
 		<label code="menu-chars"><![CDATA[Personnages]]></label>
 		<label code="menu-chars-details"><![CDATA[Gérez ici les personnages utilisables par la suite dans les évènements.]]></label>
 		<label code="menu-chars-names"><![CDATA[Florence,Carole,Louis,Richard,Rahema,Le pêcheur,Vincent,Florent,Arthur,Win,Adana,Marion,Marya]]></label>
@@ -119,72 +145,97 @@
 		<label code="menu-chars-delete-title"><![CDATA[Suppression]]></label>
 		<label code="menu-chars-delete-content"><![CDATA[La suppression de ce personnage est irréversible.<br />Si des évènements y sont associés, ils se retrouveront vides.]]></label>
 		
+		<!-- !Debugger -->
 		<label code="menu-debug-title"><![CDATA[Debugger]]></label>
 		<label code="menu-debug-header"><![CDATA[Testez ici la logique de votre quête !<br />Sélectionnez un point de départ dans l'éditeur puis vérifiez que les événements s'enchaînent bien comme vous l'aviez prévu.]]></label>
 		<label code="menu-debug-selectStart"><![CDATA[Cliquez sur le<br />point de départ<br />de votre debug]]></label>
 		<label code="menu-debug-simulateZone"><![CDATA[Coordonnées :]]></label>
 		<label code="menu-debug-simulateDate"><![CDATA[Date :]]></label>
-		<label code="menu-debug-switchClockTT"><![CDATA[Si activé, l'heure de votre ordinateur sera utilisée à la place des valeurs indiquées dans les champs.]]></label>
-		<label code="menu-debug-emptyEvent"><![CDATA[Cet événement est vide.]]></label>
+		<!-- tooltip -->
+		<label code="menu-debug-switchClockTT"><![CDATA[Si actif, l'heure de votre ordinateur sera utilisée à la place des valeurs indiquées dans les champs.]]></label>
+		<label code="menu-debug-emptyEvent"><![CDATA[Cet événement est vide et bloquera le déroulement de la quête en conditions réelles !]]></label>
 		<label code="menu-debug-inventory"><![CDATA[Inventaire :]]></label>
 		
-		<label code="editor-linkDelPromptTitle"><![CDATA[Supprimer la liaison?]]></label>
-		<label code="editor-linkDelPromptContent"><![CDATA[Souhaitez-vous vraiment supprimer cette liaison ?<br /><span class="window-content-small"><i>Cette boite de dialogue a pour but d'éviter une suppression malencontreuse de lien.</i></span>]]></label>
+		<!-- !Credits -->
+		<label code="menu-credits"><![CDATA[Credits]]></label>
+		<!-- Be careful to keep style formating ! -->
+		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Merci à <b>Sparrow-Chan</b> de m'avoir gentiment autorisé à utiliser ses portraits tirés de son projet <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />N'hésitez pas à visiter son <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> et son <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.
+
+<img src="./img/mt.png" width="77" height="100" />Merci à <b>Motion-Twin</b> pour le financement du serveur hébergeant cette application.<br/>Les images par défaut des objets sont tirés de leur jeu <a href="http://www.skywar.net/" target="_blank" class="link">Skywar</a>, sont leur propriété et seront retirées sur demande.
+
+<img src="./img/durss.jpg" width="77" height="100" />Cette application a été développée par <b>Durss</b> pour le jeu <a href="http://kube.muxxu.com/" target="_blank" class="link">Kube</a>.<br />Pour me signaler un bug ou une suggestion vous pouvez <a href="http://twinoid.com/user/48" target="_blank" class="link">me contacter</a> via la messagerie privée de Twinoid.]]></label>
 		
+		<!-- !Event's edition window -->
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
 		<label code="editWindow-submit"><![CDATA[Valider]]></label>
 		<label code="editWindow-cancel"><![CDATA[Annuler]]></label>
 		<label code="editWindow-endEvent"><![CDATA[Cet événement valide la complétion de la quête.]]></label>
 		<label code="editWindow-looseEvent"><![CDATA[Cet événement fait échouer le joueur.]]></label>
 		<label code="editWindow-startTree"><![CDATA[Point de départ de la structure.]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-startTreeTT"><![CDATA[La structure correspond aux événements s'éclaircissant au survol d'un événement.<br />Par défaut le point d'entrée d'une structure sera son événement le plus en haut à gauche, sauf si un événement est explicitement défini comme point de départ via cette option.]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-endEventTT"><![CDATA[Si le joueur arrive sur cet événement la quête sera considérée comme réussie et il sera invité à lui donner une note.]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-looseEventTT"><![CDATA[Si le joueur arrive sur cet événement il échouera la quête et devra la recommencer depuis le début.]]></label>
 		
+		<!-- !Event's place edition -->
 		<label code="editWindow-place-title"><![CDATA[Lieu de l'évènement]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-place-kubeTT"><![CDATA[Kube]]></label>
 		<label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
 		<label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
 		<label code="editWindow-place-kubeHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.<br /><i>Attention, ceci ne fonctionne que si le forum est en zone publique !</i>]]></label>
 		<label code="editWindow-place-kubeConnectHelp"><![CDATA[Touchez un kube forum en jeu pour définir l'emplacement exact de l'évènement automatiquement.<br />Pour fonctionner, cette option nécessite l'installation du script GreaseMonkey <a href="js/kuest.user.js" class="link">Kuest</a>.<br />Si vous l'avez déjà installé alors lancez simplement le jeu puis touchez un kube forum.]]></label>
 		<label code="editWindow-place-capture"><![CDATA[Capturer]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-place-captureTT"><![CDATA[Lancez le jeu Kube et cliquez sur<br />ce bouton pour remplir les champs<br />avec votre position actuelle.]]></label>
 		
+		<!-- !Event's type edition -->
 		<label code="editWindow-type-title"><![CDATA[Type de l'évènement]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
 		<label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-type-objectTT"><![CDATA[Prise/pose d'objet]]></label>
 		<label code="editWindow-type-objectDefault"><![CDATA[Texte à afficher lors de la prise/pose...]]></label>
 		<label code="editWindow-type-take"><![CDATA[Prendre]]></label>
 		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-type-placeHolderObjectTT"><![CDATA[Sélectionner un objet.]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-type-placeHolderCharacterTT"><![CDATA[Sélectionner un personnage.]]></label>
 		
+		<!-- !Event's choices edition -->
 		<label code="editWindow-choice-title"><![CDATA[Liste de choix]]></label>
-		<label code="editWindow-choice-noneTT"><![CDATA[Aucun]]></label>
-		<label code="editWindow-choice-yupTT"><![CDATA[Oui]]></label>
 		<label code="editWindow-choice-help"><![CDATA[Définissez ici une liste de choix posée au joueur en fin d'action.<br />Un évènement pourra ensuite dépendre du choix effectué.]]></label>
+		<!-- Be carefull to keep {I} tag !
+		It's replaced dynamically. -->
 		<label code="editWindow-choice-defaultText"><![CDATA[Choix {I}...]]></label>
 		
+		<!-- !Event's time edition -->
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
-		<label code="editWindow-time-noneTT"><![CDATA[Toujours]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-time-calendarTT"><![CDATA[Certains jours précis]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-time-periodicTT"><![CDATA[Certaines tranches horaires]]></label>
 		<label code="editWindow-time-hourIntervalStart"><![CDATA[Heure de début : ]]></label>
 		<label code="editWindow-time-hourIntervalEnd"><![CDATA[Heure de fin : ]]></label>
 		<label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
 		<label code="editWindow-time-hourInterval-miutesLabel"><![CDATA[m]]></label>
 		
+		<!-- !Event's sound edition -->
 		<label code="editWindow-sound-title"><![CDATA[Fond sonore]]></label>
-		<label code="editWindow-sound-noneTT"><![CDATA[Aucun]]></label>
-		<label code="editWindow-sound-urlTT"><![CDATA[Oui]]></label>
 		<label code="editWindow-sound-urlTitle"><![CDATA[Entrez ici l'URL d'un fichier son à jouer lorsque cet événement est déclenché :]]></label>
+		<!-- tooltip -->
 		<label code="editWindow-sound-testTT"><![CDATA[Tester si le son se lit correctement.]]></label>
 		<label code="editWindow-sound-loop"><![CDATA[Jouer le son en boucle.]]></label>
 		<label code="editWindow-sound-testSuccess"><![CDATA[<font color="#006600">Son valide.</font>]]></label>
 		<label code="editWindow-sound-testError"><![CDATA[<font color="#cc0000">Son invalide.</font>]]></label>
 		
+		<!-- !Calendar's months -->
 		<label code="month1"><![CDATA[Janvier]]></label>
 		<label code="month2"><![CDATA[Février]]></label>
 		<label code="month3"><![CDATA[Mars]]></label>
@@ -198,6 +249,7 @@
 		<label code="month11"><![CDATA[Novembre]]></label>
 		<label code="month12"><![CDATA[Décembre]]></label>
 		
+		<!-- !Calandar's days -->
 		<label code="day1"><![CDATA[Lun]]></label>
 		<label code="day2"><![CDATA[Mar]]></label>
 		<label code="day3"><![CDATA[Mer]]></label>
@@ -206,10 +258,12 @@
 		<label code="day6"><![CDATA[Sam]]></label>
 		<label code="day7"><![CDATA[Dim]]></label>
 		
+		<!-- !GM module -->
 		<label code="player-loginTitle"><![CDATA[Rendez-vous sur l'application Kuest pour vous y connecter et ainsi être en mesure de l'utiliser.<br />Rafraîchissez ensuite simplement cette page.]]></label>
 		<label code="player-login"><![CDATA[Aller sur l'application.]]></label>
 		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
 		<label code="player-next"><![CDATA[Suite &gt;]]></label>
+		<!-- tooltip -->
 		<label code="player-resetTT"><![CDATA[Effacer votre progression et recommencer la quête du début.<br /><b>Cette action est irréversible !</b>]]></label>
 		<label code="player-resetTitle"><![CDATA[Effacer votre progression</b>]]></label>
 		<label code="player-resetContent"><![CDATA[Êtes-vous sûr de vouloir effacer votre progression et recommencer la quête depuis le début ?<br /><b>Cette action est irréversible !</b>]]></label>

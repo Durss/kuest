@@ -17,8 +17,15 @@
 		die;
 	}
 	
+	$path = '../../kuests/progressions/';
 	$additionnals = "";
 	if (isset($_POST["id"])) {
+		
+		if (!file_exists($dir)) {
+			Out::printOut(false, '', '"'.$dir.'" directory does not exist.', 'PROGRESSION_DIRECTORY_MISSING');
+			die;
+		}
+		
 		//Get the save
 		$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
 		$params = array(':guid' => $_POST["id"], ':uid' => $_SESSION["uid"]);
@@ -35,7 +42,7 @@
 			die;
 		}else {
 			$res = $req->fetch();
-			$url = "../../saves/".$res['dataFile'].".sav";
+			$url = $path.$res['dataFile'].".sav";
 			DBConnection::close();
 			//If don't send the content-length header, flash cannot get the bytesLoaded and bytesTotal during loading
 			header('Content-type: application/octet-stream');

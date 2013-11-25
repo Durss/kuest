@@ -21,9 +21,15 @@
 	if($releaseMode) {
 		$dir = "../../kuests/published/";
 	}else {
-		$dir = "../../kuests/saves/";
+		$dir = "../../kuests/editing/";
 	}
 	if (isset($_POST["id"])) {
+		
+		if (!file_exists($dir)) {
+			Out::printOut(false, '', '"'.$dir.'" directory does not exist.', 'SAVE_DIRECTORY_MISSING');
+			die;
+		}
+		
 		//Check for loading rights
 		$sql = "SELECT uid, dataFile, friends, published FROM kuests WHERE guid=:guid";
 		$params = array(':guid' => $_POST["id"]);

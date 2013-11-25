@@ -17,7 +17,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
 	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
-	import com.twinoid.kube.quest.graphics.EventChoiceNoneIcon;
 	import com.twinoid.kube.quest.graphics.EventChoiceYupIcon;
 	import com.twinoid.kube.quest.graphics.PlaySoundIcon;
 	import com.twinoid.kube.quest.graphics.StopSoundIcon;
@@ -59,7 +58,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Creates an instance of <code>EditEventSound</code>.
 		 */
 		public function EditEventSound(width:int) {
-			super(Label.getLabel("editWindow-sound-title"), width);
+			super(Label.getLabel("editWindow-sound-title"), width, true);
 		}
 
 		
@@ -84,18 +83,14 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Saves the configurations to the value object
 		 */
 		public function save(data:KuestEvent):void {
-			switch(selectedIndex){
-				case 0:
-					data.actionSound = new ActionSound();
-					break;
-				case 1:
-					data.actionSound = new ActionSound();
-					if(_testBt.enabled) {
-						data.actionSound.url = _inputURL.text;
-						data.actionSound.loop = _loop.selected;
-					}
-					break;
-				default:
+			if(!enabled) {
+				data.actionSound = new ActionSound();
+			}else{
+				data.actionSound = new ActionSound();
+				if(_testBt.enabled) {
+					data.actionSound.url = _inputURL.text;
+					data.actionSound.loop = _loop.selected;
+				}
 			}
 			SoundAS.stopAll();
 		}
@@ -108,10 +103,13 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				if (data.actionSound.url != null && StringUtils.trim(data.actionSound.url).length > 0) {
 					_inputURL.text = data.actionSound.url;
 					_loop.selected = data.actionSound.loop;
-					selectedIndex = 1;
+					selectedIndex = 0;
+					enabled = true;
 					return;
 				}
 			}
+			
+			enabled = false;
 			selectedIndex = 0;
 			SoundAS.stopAll();
 			_inputURL.text = "";
@@ -137,7 +135,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			buildUrlForm();
 			
-			addEntry(new EventChoiceNoneIcon(), new Sprite(), Label.getLabel("editWindow-sound-noneTT"));
+//			addEntry(new EventChoiceNoneIcon(), new Sprite(), Label.getLabel("editWindow-sound-noneTT"));
 			addEntry(new EventChoiceYupIcon(), _formUrlHolder, Label.getLabel("editWindow-sound-urlTT"));
 		}
 

@@ -90,7 +90,6 @@ package com.twinoid.kube.quest.player.components {
 			_label.text		= "x"+_data.total;
 			_label.y		= _engineRef.itemHeight - _label.height;
 			_label.width	= _engineRef.itemWidth;
-			mouseEnabled	= _data.total > 0;
 			
 			if(_data.total == 0) {
 				//Bug if the filter is set on the holder.. doesn't work without a second refresh :/
@@ -103,6 +102,7 @@ package com.twinoid.kube.quest.player.components {
 			
 			_image.width = _engineRef.itemWidth;
 			_image.height = _engineRef.itemHeight;
+			_image.validate();
 			
 //			graphics.clear();
 //			var margin:int = 5;

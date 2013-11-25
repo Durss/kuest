@@ -1,7 +1,12 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
+	import com.nurun.utils.math.MathUtils;
+	import gs.TweenLite;
+
 	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
+	import com.nurun.components.button.visitors.applyDefaultFrameVisitorNoTween;
 	import com.nurun.components.form.FormComponentGroup;
+	import com.nurun.components.form.ToggleButton;
 	import com.nurun.components.form.events.FormComponentGroupEvent;
 	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
@@ -12,14 +17,15 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.twinoid.kube.quest.editor.components.buttons.ToggleButtonKube;
 	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
+	import com.twinoid.kube.quest.graphics.ToggleSwitchGraphic;
+	import com.twinoid.kube.quest.graphics.ToggleSwitchSelectedGraphic;
+
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
-	import flash.utils.setTimeout;
-	import gs.TweenLite;
 
 
 	
@@ -49,6 +55,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		protected var _openCloseBt:GraphicButton;
 		protected var _closed:Boolean;
 		protected var _currentContent:Sprite;
+		private var _toggle:ToggleButton;
+		private var _toggleAble:Boolean;
 
 		
 		
@@ -60,8 +68,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		/**
 		 * Creates an instance of <code>AbstracctEditZone</code>.
 		 */
-
-		public function AbstractEditZone(title:String, width:int) {
+		public function AbstractEditZone(title:String, width:int, toggleAble:Boolean) {
+			_toggleAble = toggleAble;
 			_width = width;
 			_titleStr = title;
 			initialize();
@@ -93,6 +101,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				}
 				else _buttons[i].unSelect();
 			}
+			
 			changeSelectionHandler();
 		}
 		
@@ -105,6 +114,21 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			for(i = 0; i < len; ++i) {
 				_buttons[i].tabIndex = value++;
 			}
+		}
+		
+		/**
+		 * Gets if the etry is enabled
+		 */
+		public function get enabled():Boolean {
+			return _toggleAble? _toggle.selected : true;
+		}
+		
+		/**
+		 * Sets if the etry is enabled
+		 */
+		public function set enabled(value:Boolean):void {
+			_toggle.selected = value;
+			toggleHandler();
 		}
 
 
@@ -137,6 +161,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_group.add(bt);
 			
 			_buttonsHolder.addChild(bt);
+			_buttonsHolder.visible = _buttons.length > 1;
 			if(_contents.length == 1) {
 				_contentsHolder.addChild(content);
 			}else{
@@ -144,8 +169,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				//way to force the rendering of the contents before they are
 				//displayed. This prevent from lags for complex contents when
 				//they are displayed the first time. Like the calendar.
-				addChild(content);
-				setTimeout(removeChild, 0, content);//Wait one frame to be sure rendering is done.
+//				addChild(content);
+//				setTimeout(removeChild, 0, content);//Wait one frame to be sure rendering is done.
 			}
 			
 			_buttons[0].x = _width - bt.width * _buttons.length;
@@ -193,31 +218,47 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Initialize the class.
 		 */
 		protected function initialize():void {
-			_buttons = new Vector.<ToggleButtonKube>();
-			_contents = new Vector.<Sprite>();
-			_group = new FormComponentGroup();
-			_itemToIndex = new Dictionary();
+			_buttons		= new Vector.<ToggleButtonKube>();
+			_contents		= new Vector.<Sprite>();
+			_group			= new FormComponentGroup();
+			_itemToIndex	= new Dictionary();
 			
-			_title = addChild(new CssTextField("editWindow-zoneTitle")) as CssTextField;
-			_openCloseBt = addChild(new GraphicButton(createRect())) as GraphicButton;
-			_buttonsHolder = addChild(new Sprite()) as Sprite;
-			_contentsMask = addChild(createRect(0xffff0000, _width, 100)) as Shape;
-			_contentsHolder = new Sprite();
+			_title			= addChild(new CssTextField("editWindow-zoneTitle")) as CssTextField;
+			_openCloseBt	= addChild(new GraphicButton(createRect(0x00ff0000))) as GraphicButton;
+			_buttonsHolder	= addChild(new Sprite()) as Sprite;
+			_contentsMask	= addChild(createRect(0xffff0000, _width, 100)) as Shape;
+			_contentsHolder	= new Sprite();
+			if(_toggleAble) {
+				_toggle		= addChild(new ToggleButton('', '', '', new ToggleSwitchGraphic(), new ToggleSwitchSelectedGraphic())) as ToggleButton;
+				applyDefaultFrameVisitorNoTween(_toggle, _toggle.defaultBackground, _toggle.selectedBackground);
+				_toggle.addEventListener(Event.CHANGE, toggleHandler);
+				toggleHandler();
+			}
 			
-			_closed = true;
-			_title.text = _titleStr;
-			_title.background = true;
-			_title.backgroundColor = 0x8BC9E2;
-			_openCloseBt.buttonMode = true;
+			_closed					= true;
+			_title.text				= _titleStr;
+			_title.background		= true;
+			_title.backgroundColor	= 0x8BC9E2;
+			_openCloseBt.buttonMode	= true;
 			
 			_contentsMask.height = 0;
 			_contentsHolder.mask = _contentsMask;
 			
+			_openCloseBt.addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
 			_openCloseBt.addEventListener(MouseEvent.CLICK, openCloseHandler);
 			_buttonsHolder.addEventListener(MouseEvent.CLICK, changeSelectionHandler);
 			_group.addEventListener(FormComponentGroupEvent.CHANGE, changeSelectionHandler);
 			
 			computePositions();
+		}
+
+		private function wheelHandler(event:MouseEvent):void {
+			if (_buttons.length > 1) {
+				var index:Number = selectedIndex;
+				index += event.delta > 0? -1 : 1;
+				index = MathUtils.restrict(index, 0, _buttons.length - 1);
+				_buttons[index].selected = true;
+			}
 		}
 		
 		/**
@@ -226,6 +267,11 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		protected function computePositions():void {
 			_title.width = _width;
 			_contentsHolder.y = _contentsMask.y = Math.round(_title.height) + 5;
+			if(_toggleAble) {
+				_toggle.width = _toggle.height = _title.height;
+				_title.width -= _toggle.width;
+				_title.x = Math.round(_toggle.width);
+			}
 			
 			_openCloseBt.width = _width;
 			_openCloseBt.height = _title.height;
@@ -254,7 +300,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			var index:int = selectedIndex;
 //			_currentContent.cacheAsBitmap = true;
 			_currentContent = _contents[index];
-			_contentsHolder.addChild(_contents[index]);
+			_contentsHolder.addChild(_currentContent);
 			var e:Event = new Event(Event.RESIZE, true);
 			var endX:int = -index * _width + Math.round((_width - _currentContent.width) * .5);
 			
@@ -264,7 +310,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			}else{
 				//No transition if not called from a user input.
 				if(!_closed) {
-					_contentsMask.height = _contents[index].height;
+					_contentsMask.height = _currentContent.height;
 					dispatchEvent(e);
 				}
 				_contentsHolder.x = endX;
@@ -282,6 +328,19 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				if(i != indexToKeep && _contentsHolder.contains(_contents[i])) _contentsHolder.removeChild(_contents[i]);
 			}
 			dispatchEvent(new Event(Event.RESIZE, true));
+		}
+		
+		/**
+		 * Called when checkbox state changes
+		 */
+		protected function toggleHandler(event:Event = null):void {
+			_openCloseBt.enabled = 
+			_buttonsHolder.mouseEnabled =
+			_buttonsHolder.mouseChildren = _toggle.selected;
+			_title.alpha =
+			_buttonsHolder.alpha = _toggle.selected? 1 : .4;
+			if(!_toggle.selected) close();
+			else open();
 		}
 		
 	}

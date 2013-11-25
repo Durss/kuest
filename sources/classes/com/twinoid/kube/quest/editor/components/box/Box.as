@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import com.twinoid.kube.quest.editor.vo.ActionType;
+	import com.twinoid.kube.quest.graphics.TakePutIconGraphic;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
@@ -66,6 +68,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _outBoxToIndex:Dictionary;
 		private var _debugMode:Boolean;
 		private var _debugFilterBackup:Array;
+		private var _takePut:TakePutIconGraphic;
 		
 		
 		
@@ -175,35 +178,38 @@ package com.twinoid.kube.quest.editor.components.box {
 		public function render(event:Event = null):void {
 			if(_data == null || _data.isEmpty()) {
 				_label.text = Label.getLabel("box-empty");
+				_takePut.visible = false;
 //				if(_data != null) _label.text += _data.guid;
 			}else{
+				//Image
 				if(_data.getImage() != null) {
 					_image.setBitmapData(_data.getImage());
 					_image.validate();
 				}else{
 					_image.clear();
 				}
+				//Labels
 				if(StringUtils.trim(_data.getLabel()).length == 0) {
 					_label.text = Label.getLabel("box-empty");
 				}else{
 					_label.text = _data.getLabel();
 				}
-//				_label.text += _data.guid;
+				
+				//Time display 
 				if(!_data.actionDate.getAlwaysEnabled()) {
 					addChild(_timeIcon);
 				}else {
 					if(contains(_timeIcon)) removeChild(_timeIcon);
 				}
 				
+				//Colorize box
 				if(_data.endsQuest) {
-					_background.filters = [new ColorMatrixFilter([-0.5002703666687012,1.5227876901626587,0.15748271346092224,0,-3.1700010299682617,0.47912952303886414,0.5433875918388367,0.1574828177690506,0,-3.1700010299682617,0.4791295826435089,1.52278733253479,-0.8219171166419983,0,-3.1700007915496826,0,0,0,1,0])];
-				
+					_background.filters = _takePut.filters = [new ColorMatrixFilter([-0.5002703666687012,1.5227876901626587,0.15748271346092224,0,-3.1700010299682617,0.47912952303886414,0.5433875918388367,0.1574828177690506,0,-3.1700010299682617,0.4791295826435089,1.52278733253479,-0.8219171166419983,0,-3.1700007915496826,0,0,0,1,0])];
 				}else
 				if(_data.startsTree) {
-					_background.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
-					
+					_background.filters = _takePut.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
 				}else{
-					_background.filters = [];
+					_background.filters = _takePut.filters = [];
 				}
 				
 				//============ LINKS MANAGEMNT ============
@@ -234,6 +240,10 @@ package com.twinoid.kube.quest.editor.components.box {
 						}
 					}
 				}
+				
+				//Object indicator
+				_takePut.visible = _data.actionType.type == ActionType.TYPE_OBJECT;
+				_takePut.gotoAndStop(_data.actionType.takeMode? 2 : 1);
 			}
 				
 			//Render the box.
@@ -286,6 +296,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			_inBox		= addChild(new GraphicButton(new BoxInGraphic(), new BoxLinkIconGraphic())) as GraphicButton;
 			_image		= addChild(new ImageResizer()) as ImageResizer;
 			_label		= addChild(new CssTextField("box-label")) as CssTextField;
+			_takePut	= addChild(new TakePutIconGraphic()) as TakePutIconGraphic;
 			_deleteBt	= new GraphicButton(new ClearBoxGraphic(), new CancelIcon());
 			_timeIcon	= new BoxTimerEventGraphic();
 			
@@ -367,6 +378,9 @@ package com.twinoid.kube.quest.editor.components.box {
 				_label.x = _background.x + 5 + margin;
 				_label.width = _background.width - 5 - margin * 2;
 			}
+			
+			_takePut.x = _image.x + _image.width - _takePut.width;
+			_takePut.y = _image.y + _image.height - _takePut.height;
 			
 			_timeIcon.x = _background.x + (_background.width - _timeIcon.width) * .5;
 			_timeIcon.y = -_timeIcon.height;

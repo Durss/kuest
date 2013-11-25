@@ -43,6 +43,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		private var _pressedItem:ToggleButton;
 		private var _allowMultipleSelection:Boolean;
 		private var _group:FormComponentGroup;
+		private var _postponedRender:Boolean;
 		
 		
 		
@@ -55,7 +56,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		 */
 		public function Calendar(allowMultipleSelection:Boolean = true) {
 			_allowMultipleSelection = allowMultipleSelection;
-			addEventListener(Event.ADDED_TO_STAGE, initialize);
+			initialize();
 		}
 
 		
@@ -86,6 +87,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			}
 			
 			if(stage != null) render();
+			else _postponedRender = true;
 		}
 
 
@@ -103,9 +105,7 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize(event:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, initialize);
-			
+		private function initialize():void {
 			_monthLabel = addChild(new BaseButton("", "calendarMonth")) as BaseButton;
 			_prevMonthBt = addChild(new GraphicButton(createRect(), new CalendarPrevMonthIcon())) as GraphicButton;
 			_nextMonthBt = addChild(new GraphicButton(createRect(), new CalendarNextMonthIcon())) as GraphicButton;
@@ -150,11 +150,6 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			_nextMonthBt.iconAlign = _prevMonthBt.iconAlign = IconAlign.CENTER;
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
-			if(_allowMultipleSelection) {
-				addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-				stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-				_monthLabel.addEventListener(MouseEvent.CLICK, clickMonthHandler);
-			}
 			
 			addEventListener(Event.ADDED_TO_STAGE, render);
 			computePositions();
@@ -310,6 +305,14 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		 * Updates the cells rendering.
 		 */
 		private function render(event:Event = null):void {
+			if(_allowMultipleSelection && !hasEventListener(MouseEvent.MOUSE_DOWN)) {
+				addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+				stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+				_monthLabel.addEventListener(MouseEvent.CLICK, clickMonthHandler);
+			}
+			
+			if(event != null && !_postponedRender) return;
+			_postponedRender = false;
 			_currentDate = new Date(_todayDate.getFullYear(), _todayDate.getMonth() + _monthsOffset, 1);
 			_monthLabel.text = Label.getLabel("month"+(_currentDate.getMonth()+1)) + " " + _currentDate.getFullYear();
 
