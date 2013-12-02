@@ -11,6 +11,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * 		ba.writeUnsignedInt( version number );
 		 * 		ba.writeObject( tree data );
 		 * 		ba.writeObject( inventory data );
+		 * 		ba.writeObject( tree positions );
 		 * 		ba.writeUTF( events history );
 		 * 		ba.writeBoolean( quest complete );
 		 * 		ba.writeBoolean( quest lost );
@@ -28,6 +29,9 @@ package com.twinoid.kube.quest.player.vo {
 		 * 		{total:x, guid:guid}
 		 * 		{total:x, guid:guid}
 		 * 	]
+		 * 	
+		 * 	tree positions is an object whose keys are position IDs (like "x_y")
+		 * 	and values the event loop indexes. 
 		 * 
 		 * events history is a comma separated string containing the events GUIDs :
 		 * 		guid1,guid2,guid3,...,guidN

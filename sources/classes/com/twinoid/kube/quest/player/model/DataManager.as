@@ -223,8 +223,9 @@ package com.twinoid.kube.quest.player.model {
 				//Cristal Atlante - 5194100a4a94f
 				//Tubasa labyrinthe - 51aa7b6cbe1ef
 				//MlleGray _Tom - 51ec728f16b49
+				//1) Messages uniques indépendants - 51ad0d08dc8c8
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
-				Config.addVariable("kuestID", "51ec728f16b49");
+				Config.addVariable("kuestID", "51ad0d08dc8c8");
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
@@ -237,6 +238,10 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function newEventHandler(event:QuestManagerEvent):void {
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
+			
+			//Send to server after a short delay to prevent from save spamming
+			clearTimeout(_timeoutSave);
+			_timeoutSave = setTimeout(onSaveProgression, 3000);
 		}
 		
 		/**
@@ -332,10 +337,6 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		public function answer(index:int):void {
 			_questManager.completeEvent(index);
-			
-			//Send to server after a short delay to prevent from save spamming
-			clearTimeout(_timeoutSave);
-			_timeoutSave = setTimeout(onSaveProgression, 3000);
 		}
 		
 		/**
@@ -343,10 +344,6 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		public function next():void {
 			_questManager.completeEvent();
-			
-			//Send to server after a short delay to prevent from save spamming
-			clearTimeout(_timeoutSave);
-			_timeoutSave = setTimeout(onSaveProgression, 3000);
 		}
 		
 		/**

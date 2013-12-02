@@ -74,7 +74,7 @@ package com.twinoid.kube.quest.player.components {
 			x = x;//Refresh visible state
 			if(!visible) return;
 			
-			if(_data != null) {
+			if(_data != null && _data.vo != null && _data.vo.image != null) {
 				_data.vo.image.removeEventListener(Event.CHANGE, imageUpdateHandler);
 			}
 			
@@ -85,7 +85,7 @@ package com.twinoid.kube.quest.player.components {
 				return;
 			}
 			//Images are loaded asynchronously at the quest init, wait for it just in case
-			_data.vo.image.addEventListener(Event.CHANGE, imageUpdateHandler);
+			_data.vo.image.addEventListener(Event.CHANGE, imageUpdateHandler, false, 0, true);
 			
 			_label.text		= "x"+_data.total;
 			_label.y		= _engineRef.itemHeight - _label.height;

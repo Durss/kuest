@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.components.menu.debugger {
+	import com.twinoid.kube.quest.editor.utils.setToolTip;
+	import com.twinoid.kube.quest.graphics.HelpSmallIcon;
+	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.components.scroll.ScrollPane;
 	import com.nurun.components.scroll.events.ScrollerEvent;
@@ -32,6 +35,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private var _scrollpane:ScrollPane;
 		private var _swiper:SwipeManager;
 		private var _objectUsed:InventoryObject;
+		private var _helpBt:GraphicButtonKube;
 		
 		
 
@@ -68,12 +72,13 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		public function populate(objs:Vector.<InventoryObject>):void {
 			var prevHScroll:Number = _engine.hPercent;
 			_engine.clear();
-			if(objs.length > 0) {
+			if (objs.length > 0) {
 				_engine.addLine(VectorUtils.toArray(objs));
 			}
 			_engine.hPercent = prevHScroll;
 			_engine.validate();
 			_scrollpane.update();
+			_swiper.syncWithContent();
 		}
 
 
@@ -91,6 +96,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 			var w:int		= _engine.visibleWidth;
 			var h:int		= _engine.visibleHeight;
 			_scrollpane		= addChild(new ScrollPane(_engine, null, new ScrollbarKube())) as ScrollPane;
+			_helpBt			= addChild(new GraphicButtonKube(new HelpSmallIcon(), false)) as GraphicButtonKube;
 			_swiper			= new SwipeManager(_engine, new Rectangle());
 			
 			_label.text				= Label.getLabel('menu-debug-inventory');
@@ -100,6 +106,10 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 			_scrollpane.height		= h + 15;//15 = scrollbar's height
 			_swiper.viewport.width	= w;
 			_swiper.viewport.height	= h;
+			_helpBt.x				= Math.round(_label.width);
+			_helpBt.buttonMode		= false;
+			
+			setToolTip(_helpBt, Label.getLabel('menu-debug-inventoryTT'));
 			
 			addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_scrollpane.hScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);

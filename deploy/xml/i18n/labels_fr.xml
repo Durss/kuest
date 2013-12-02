@@ -6,7 +6,8 @@
 		<label code="patchlog70-content"><![CDATA[<ul>
 			<li>Refonte complète du moteur de quête et implémentation dans le module de lecture in-game.</li>
 			<li>Ajout d'un panneau de debug de quêtes utilisant le nouveau moteur.</li>
-			<li>Inversion du drag&drop du plateau et du dessin</li>
+			<li>Possibilité de sélectionner des groupes d'événement via click droit.</li>
+			<li>Inversion du drag&drop du plateau et de la prise de notes <i>("espace" pour les notes au lieu de dragger)</i>.</li>
 			<li>Changement de la manière d'activer/désactiver les onglets de choix, date et son dans l'édition d'événement.</li>
 			<li>Ajout d'une option d'événement "Fait perdre le quête". <i>(pas encore implémenté dans le script GM)</i></li>
 			<li>Debug de la limitation par jour de semaine qui ne fonctionnait pas.</li>
@@ -155,6 +156,7 @@
 		<label code="menu-debug-switchClockTT"><![CDATA[Si actif, l'heure de votre ordinateur sera utilisée à la place des valeurs indiquées dans les champs.]]></label>
 		<label code="menu-debug-emptyEvent"><![CDATA[Cet événement est vide et bloquera le déroulement de la quête en conditions réelles !]]></label>
 		<label code="menu-debug-inventory"><![CDATA[Inventaire :]]></label>
+		<label code="menu-debug-inventoryTT"><![CDATA[En mode debug il est possible d'utiliser un objet<br />même s'il n'en reste aucun dans l'inventaire.]]></label>
 		
 		<!-- !Credits -->
 		<label code="menu-credits"><![CDATA[Credits]]></label>
@@ -272,8 +274,8 @@
 		<label code="player-evaluate"><![CDATA[Vous avez maintenant terminé la quête.<br />Comment l'avez-vous trouvée ?]]></label>
 		<label code="player-evaluateSubmit"><![CDATA[Valider]]></label>
 		<label code="player-evaluateComplete"><![CDATA[Merci !]]></label>
-		<label code="player-wrongObject"><![CDATA[Cet objet ne servira à rien ici.]]></label>
-		<label code="player-noNeedObject"><![CDATA[Aucun objet n'a besoin d'être utilisé ici pour le moment.]]></label>
+		<label code="player-wrongObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
+		<label code="player-noNeedObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 	</labels>
 	
 </root>

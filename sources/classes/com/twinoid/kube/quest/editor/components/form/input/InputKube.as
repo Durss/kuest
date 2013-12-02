@@ -184,7 +184,7 @@ package com.twinoid.kube.quest.editor.components.form.input {
 			var dist:Number = (mouseX - _dragOffset.x) + (mouseY - _dragOffset.y);//Math.sqrt(Math.pow(mouseX - _dragOffset.x, 2) + Math.pow(mouseY - _dragOffset.y, 2));
 			if(Math.abs(dist) < 2) return;
 			
-			var v:int = parseInt(textfield.text) + Math.round(dist);
+			var v:int = parseInt(textfield.text) + Math.round(dist * .25);
 			v = MathUtils.restrict(v, _minNumValue, _maxNumValue);
 			text = v.toString();
 			

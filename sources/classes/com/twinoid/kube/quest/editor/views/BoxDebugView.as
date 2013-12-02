@@ -1,16 +1,16 @@
 package com.twinoid.kube.quest.editor.views {
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.input.keyboard.KeyboardSequenceDetector;
 	import com.nurun.utils.input.keyboard.events.KeyboardSequenceEvent;
-	import com.nurun.utils.pos.PosUtils;
 	import com.twinoid.kube.quest.editor.model.Model;
 	import com.twinoid.kube.quest.editor.vo.KuestData;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+
 	import flash.display.CapsStyle;
 	import flash.events.Event;
 	import flash.filters.GlowFilter;
-	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 
 
@@ -23,6 +23,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _data:KuestData;
 		private var _ks:KeyboardSequenceDetector;
 		private var _enabled:Boolean;
+		private const _scale:Number = .1;
 		
 		
 		
@@ -75,6 +76,7 @@ package com.twinoid.kube.quest.editor.views {
 			_ks.addSequence("f5", [Keyboard.F5]);
 			_ks.addSequence("clear", "clear");
 			_ks.addEventListener(KeyboardSequenceEvent.SEQUENCE, sequenceHandler);
+			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 		
 		/**
@@ -84,38 +86,48 @@ package com.twinoid.kube.quest.editor.views {
 			if(event.sequenceId == "f5" && !_enabled) return;
 			
 			if(event.sequenceId == "clear") {
+				_enabled = false;
 				graphics.clear();
 				return;
 			}
 			
 			_enabled = true;
+			var i:int, len:int, d:KuestEvent, w:int, h:int;
 			var nodes:Vector.<KuestEvent> = _data.nodes;
-			var i:int, len:int, d:KuestEvent, scale:Number, w:int, h:int;
+			
 			len = nodes.length;
-			scale = .2;
-			w = BackgroundView.CELL_SIZE * 8 * scale;
-			h = BackgroundView.CELL_SIZE * 3 * scale;
+			w = BackgroundView.CELL_SIZE * 8 * _scale;
+			h = BackgroundView.CELL_SIZE * 3 * _scale;
 			
 			graphics.clear();
 			graphics.beginFill(0xff0000, 1);
 			for(i = 0; i < len; ++i) {
 				d = nodes[i];
-				graphics.moveTo(d.boxPosition.x * scale, d.boxPosition.y * scale);
-				graphics.drawRect(d.boxPosition.x * scale, d.boxPosition.y * scale, w, h);
+				graphics.moveTo(d.boxPosition.x * _scale, d.boxPosition.y * _scale);
+				graphics.drawRect(d.boxPosition.x * _scale, d.boxPosition.y * _scale, w, h);
 				var j:int, lenJ:int;
 				lenJ = d.getDependencies().length;
 				for(j = 0; j < lenJ; ++j) {
 					graphics.lineStyle(2, 0x0000ff, 1, false, "normal", CapsStyle.NONE);
-					graphics.moveTo(d.boxPosition.x * scale, d.boxPosition.y * scale + h * .5);
-					graphics.lineTo(d.getDependencies()[j].event.boxPosition.x * scale + w, d.getDependencies()[j].event.boxPosition.y * scale + h * .5);
+					graphics.moveTo(d.boxPosition.x * _scale, d.boxPosition.y * _scale + h * .5);
+					graphics.lineTo(d.getDependencies()[j].event.boxPosition.x * _scale + w, d.getDependencies()[j].event.boxPosition.y * _scale + h * .5);
 					graphics.lineStyle(0, 0, 0);
 				}
 			}
 
-			var bounds:Rectangle = getBounds(this);
-			PosUtils.centerInStage(this);
-			x -= bounds.x;
-			y -= bounds.y;
+			enterFrameHandler();
+		}
+		
+		/**
+		 * Called on enter frame event to move the holder relatively to the grid
+		 */
+		private function enterFrameHandler(event:Event = null):void {
+			if (!_enabled) return;
+			var view:BoxesView = ViewLocator.getInstance().locateViewByType(BoxesView) as BoxesView;
+			
+			x = view.offsetX * _scale + stage.stageWidth * .5;
+			y = view.offsetY * _scale + stage.stageHeight * .5;
+			
 		}
 	}
 }

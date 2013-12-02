@@ -54,6 +54,8 @@ package com.twinoid.kube.quest.editor.components.box {
 	public class Box extends Sprite {
 		
 		public static const NUM_CHOICES:int = 6;
+		public static const COLS:int = 8;
+		public static const ROWS:int = 3;
 		
 		private var _data:KuestEvent;
 		private var _label:CssTextField;
@@ -340,8 +342,8 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			_background.width = BackgroundView.CELL_SIZE * 8 - _inBox.width - _outBoxes[0].width + 4;
-			_background.height = _inBox.height = BackgroundView.CELL_SIZE * 3;
+			_background.width = BackgroundView.CELL_SIZE * COLS - _inBox.width - _outBoxes[0].width + 4;
+			_background.height = _inBox.height = BackgroundView.CELL_SIZE * ROWS;
 			_background.x = _inBox.width - 2;
 			var t:int = 0;
 			var h:int = _inBox.height;
@@ -424,7 +426,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				TweenLite.killTweensOf(_deleteBt);
 				TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
 				if(event.shiftKey && event.altKey) {
-					_label.text = _data.guid.toString();
+					_label.text = 'GUID : '+_data.guid.toString()+'<br />TREE : '+_data.getTreeID();
 				}
 			}
 		}

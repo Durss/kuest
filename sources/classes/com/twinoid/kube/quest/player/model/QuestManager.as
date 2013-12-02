@@ -123,6 +123,7 @@ package com.twinoid.kube.quest.player.model {
 			ba.writeUnsignedInt( version );
 			ba.writeObject( _treeManager.exportData(version) );
 			ba.writeObject( _inventoryManager.exportData(version) );
+			ba.writeObject( _positionToIndex );
 			ba.writeUTF( _eventsHistory.join(',') );
 			ba.writeBoolean( _questComplete );
 			ba.writeBoolean( _questLost );
@@ -180,8 +181,9 @@ package com.twinoid.kube.quest.player.model {
 			for(i; i < loopsLen; ++i) {
 				if(_timeAcessManager.isEventAccessible(items[i%len])//If it's the right periode or if there are no periode limitation
 					&& _treeManager.isEventAccessible(items[i%len])) {//If the event is part of the current priority of its tree
-						if(setCurrentEvent(items[i%len])) 
+						if(setCurrentEvent(items[i%len])) { 
 							return;//If the event has been selected, stop for searching one.
+						}
 					}
 			}
 			
@@ -211,6 +213,7 @@ package com.twinoid.kube.quest.player.model {
 			var i:int, len:int, children:Vector.<KuestEvent>, child:KuestEvent;
 			children = _currentEvent.getChildren();
 			len = children.length;
+			
 			//The current event has 1 or no choices, go for a simpler solution
 			//where all the children will get the priority.
 			if(_currentEvent.actionChoices == null
@@ -264,7 +267,7 @@ package com.twinoid.kube.quest.player.model {
 					&& _treeManager.isEventAccessible(event)) {//If the event is part of the current priority of its tree
 						if(!event.actionType.takeMode) {//If an object has to be put here
 							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
-								if(!verifyNumber || _inventoryManager.useObject(object.vo.guid)) {//Use the object
+								if(_inventoryManager.useObject(object.vo.guid) || !verifyNumber) {//Use the object
 									dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
 									setCurrentEvent(event, true);//Unlock the object's event
 									return true;
@@ -342,6 +345,7 @@ package com.twinoid.kube.quest.player.model {
 					case SaveVersion.V1:
 						_treeManager.importData( _save.readObject(), version );
 						_inventoryManager.importData( _save.readObject(), version );
+						_positionToIndex = _save.readObject();
 						
 						_eventsHistory = new Vector.<String>();
 						var tmp:Array = _save.readUTF().split('');
@@ -363,6 +367,10 @@ package com.twinoid.kube.quest.player.model {
 		 * @return true if the event have been selected
 		 */
 		private function setCurrentEvent(event:KuestEvent, objectUsed:Boolean = false):Boolean {
+			//In case of unique event on a zone, we loop to it as soon as we
+			//complete it. This prevents from displaying the same event twice.
+			if(event == _currentEvent) return false;
+			
 			//If this new event is an object related event.
 			if(event.actionType != null && event.actionType.type == ActionType.TYPE_OBJECT && !objectUsed) {
 				//If its a "take mode", put it in the inventory

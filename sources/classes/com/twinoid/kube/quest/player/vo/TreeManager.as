@@ -15,6 +15,7 @@ package com.twinoid.kube.quest.player.vo {
 		private var _nodeToTreeID:Dictionary;
 		private var _treeIDToPriorities:Dictionary;
 		private var _guidToEvent:Object;
+		private var _treeIDToPriorities_backup:Dictionary;
 		
 		
 		
@@ -35,7 +36,10 @@ package com.twinoid.kube.quest.player.vo {
 		/**
 		 * Sets the a fast GUID to KuestEvent accessor.
 		 */
-		public function set guidToEvent(value:Object):void { _guidToEvent = value; }
+		public function set guidToEvent(value:Object):void {
+			_guidToEvent = value;
+			_guidToEvent[-1] = new KuestEvent(true);
+		}
 
 
 
@@ -48,6 +52,7 @@ package com.twinoid.kube.quest.player.vo {
 		public function initialize(nodeToTreeID:Dictionary):void {
 			_nodeToTreeID = nodeToTreeID;
 			_treeIDToPriorities = new Dictionary();
+			_treeIDToPriorities_backup = new Dictionary();
 		}
 		
 		/**
@@ -105,6 +110,7 @@ package com.twinoid.kube.quest.player.vo {
 				}
 				if(isPriority) {
 					_treeIDToPriorities[ treeID ] = events;
+					_treeIDToPriorities_backup[ treeID ] = events.concat();
 				}
 				return;
 			}
@@ -119,10 +125,13 @@ package com.twinoid.kube.quest.player.vo {
 			//corresponding priorities. 
 			var treeIDsToEvents:Object = {};
 			len = events.length;
-			if(len == 0 && reference != null) {
+			if (len == 0 && reference != null && reference.dependencies.length > 0) {
 				//No children, clear the tree to end it.
 				treeID = _nodeToTreeID[ reference ];
-				treeIDsToEvents[treeID] = new Vector.<KuestEvent>();
+				//Sets an empty event as the next priority so that it can
+				//never be reached and the tree never started again.
+				_treeIDToPriorities[ treeID ] = new <KuestEvent>[_guidToEvent[-1]];
+				return;
 			}else{
 				for(i = 0; i < len; ++i) {
 					treeID = _nodeToTreeID[ events[i] ];
@@ -132,7 +141,6 @@ package com.twinoid.kube.quest.player.vo {
 					Vector.<KuestEvent>(treeIDsToEvents[treeID]).push( events[i] );
 				}
 			}
-			
 			
 			//Store the priorities
 			for (treeID in treeIDsToEvents) {
@@ -203,6 +211,11 @@ package com.twinoid.kube.quest.player.vo {
 		 */
 		public function reset():void {
 			_treeIDToPriorities = new Dictionary();
+			//resets the trees priorities from backup or the quest logic would
+			//be quite fucked up.
+			for (var i:* in _treeIDToPriorities_backup) {
+				_treeIDToPriorities[ i ] = Vector.<KuestEvent>(_treeIDToPriorities_backup[ i ]).concat();
+			}
 		}
 
 
