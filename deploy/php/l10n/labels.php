@@ -1,9 +1,19 @@
 <?php
+	/**
+	 * Open this script to the browser to download a CSV file containing all
+	 * the labels ready to be imported in a google spreadsheet.
+	 */
+	$files = get_included_files();
+	$isIncluded = $files[0] != __FILE__;
+	
+	$lang = '';
 	if(isset($_SESSION["lang"])) 
 		$lang = $_SESSION["lang"];
 	else
 		$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	
+	if(!$isIncluded && isset($_GET['lang'])) $lang = $_GET['lang'];
+		
 	//Check if the application is localized in this lang or not. If not, force english.
 	$availableLanguages = array('fr', 'en');
 	if (!in_array($lang, $availableLanguages)) $lang = "en";
@@ -148,9 +158,10 @@
 	
 	//REDIRECT PAGE//
 	$redirect_title = array();
-	$redirect_title["fr"] = "Si vous n'êtes pas redirigé, <a href=\"http://kube.muxxu.com/?".$_SERVER['QUERY_STRING']."\" target=\"_blank\">cliquez ici</a>.";
-	$redirect_title["en"] = "If you are not automatically redirected, <a href=\"http://kube.muxxu.com/?".$_SERVER['QUERY_STRING']."\" target=\"_blank\">click here</a>.";
+	$redirect_title["fr"] = "Si vous n'êtes pas redirigé, <a href=\"{URL}\" target=\"_blank\">cliquez ici</a>.";
+	$redirect_title["en"] = "If you are not automatically redirected, <a href=\"{URL}\" target=\"_blank\">click here</a>.";
 	$redirect_title = $redirect_title[ $lang ];
+	$redirect_title = str_replace('{URL}', 'http://kube.muxxu.com/?'.$_SERVER['QUERY_STRING'], $redirect_title);
 	
 	
 	
@@ -209,20 +220,24 @@
 	
 	
 	//ERROR PAGE//
-	if (isset($_GET['e'])) {
-		if ($_GET['e'] == 'cancel') {
+	if (isset($_GET['e']) || !$isIncluded) {
+		if (!$isIncluded || $_GET['e'] == 'cancel') {
 			$error_title = array();
 			$error_title["fr"] = "Connexion échouée";
 			$error_title["en"] = "Connection failed";
 			$error_title = $error_title[ $lang ];
 			
 			$error_content = array();
-			$error_content["fr"] = "Vous devez autoriser l'application à accéder à vos informations pour pouvoir l'utiliser.<br /><br />Vos informations sont utilisées pour :<ul><li>Vous authentifier</li><li>Pondérer vos évaluations selon vos statistiques Kube</li></ul><br />Cliquez sur le bouton de connexion ci-dessus pour vous connecter à nouveau.";
+			$error_content["fr"] = "Vous devez autoriser l'application à accéder à vos informations pour pouvoir l'utiliser.<br /><br />Vos informations sont utilisées pour :<ul><li>Vous authentifier</li><li>Sauvegarder votre progression</li><li>Vous permettre de créer des quêtes</li><li>Pondérer vos évaluations selon vos statistiques Kube</li></ul><br />Cliquez sur le bouton de connexion ci-dessus pour vous connecter à nouveau.";
 			$error_content["en"] = "In order to use this application, you need to grant it authorization to access your personnal informations.<br /><br />Your informations will be used to :<ul><li>Authenticate</li><li>Weight your evaluations depending on your Kube's statistics</li></ul><br />Click on the button above to connect again.";
 			$error_content = $error_content[ $lang ];
+			
+			$error_auth_title = $error_title;
+			$error_auth_content = $error_content;
 		
-		}else 
-		if ($_GET['e'] == 'dbconnect') {
+		} 
+		
+		if (!$isIncluded || $_GET['e'] == 'dbconnect') {
 		
 			$error_title = array();
 			$error_title["fr"] = "Erreur de connexion à la base de données";
@@ -233,18 +248,52 @@
 			$error_content["fr"] = "<br/><br/>La connexion à la base de données<br/>a échoué.<br />Veuillez essayez à nouveau ultérieurement !";
 			$error_content["en"] = "<br/><br/><br/>Unable to connect database.<br />Please try again later !";
 			$error_content = $error_content[ $lang ];
+			
+			$error_db_title = $error_title;
+			$error_db_content = $error_content;
 		
-		}else{
+		}
 		
+		if(!$isIncluded || ($_GET['e'] != 'dbconnect' && $_GET['e'] != 'cancel')){
+			if (!isset($_GET['e'])) {
+				$_GET['e'] = '{CODE}';
+				$_GET['api'] = '{API}';
+			}
 			$error_title = array();
 			$error_title["fr"] = "Erreur API";
 			$error_title["en"] = "API error";
 			$error_title = $error_title[ $lang ];
 			
 			$error_content = array();
-			$error_content["fr"] = "Une erreur est survenue lors de votre connexion à l'application.<br /><br />L'API twinoid a répondu :<br /><div class='error'><i><b>".htmlentities($_GET['e'])."</b> for graph API request <b>".htmlentities($_GET['api'])."</b></i></div>";
-			$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>".htmlentities($_GET['e'])."</b> for graph API request <b>".$_GET['api']."</b></i></div>";
+			$error_content["fr"] = "Une erreur est survenue lors de votre connexion à l'application.<br /><br />L'API twinoid a répondu :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>";
+			$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's API has answered :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>";
 			$error_content = $error_content[ $lang ];
+			
+			$error_content = str_replace('{CODE}', $_GET['e'], $error_content);
+			$error_content = str_replace('{API}', $_GET['api'], $error_content);
+			
+			$error_api_title = $error_title;
+			$error_api_content = $error_content;
+		}
+	}
+	
+	//Allow CSV export of the labels
+	if(!$isIncluded) {
+		header('Content-Type: text/html; charset=utf-8');
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private",false);
+		header("Content-Type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=\"serverLabels.csv\";" );
+		header("Content-Transfer-Encoding: binary");
+
+		$vars = get_defined_vars();
+		$ignoredVars = array('GLOBALS', 'vars', 'ignoredVars', 'key', 'value', 'files', 'isIncluded', 'lang', 'availableLanguages');
+		foreach($vars as $key => $value) {
+			if(substr($key, 0 , 1) == '_') continue;//ignore vars starting by "_"
+			if(in_array($key, $ignoredVars)) continue;
+			
+			echo '"'.str_replace('"', '""', $key).'","","'.str_replace('"', '""', $value).'"'."\n";
 		}
 	}
 ?>

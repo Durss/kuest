@@ -27,8 +27,8 @@
 			die;
 		}
 		
-		if (!file_exists($dir)) {
-			Out::printOut(false, '', '"'.$dir.'" directory does not exist.', 'PROGRESSION_DIRECTORY_MISSING');
+		if (!file_exists($path)) {
+			Out::printOut(false, '', '"'.$path.'" directory does not exist.', 'PROGRESSION_DIRECTORY_MISSING');
 			die;
 		}
 		

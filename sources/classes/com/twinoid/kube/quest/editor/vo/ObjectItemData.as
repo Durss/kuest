@@ -1,5 +1,5 @@
 package com.twinoid.kube.quest.editor.vo {
-	import mx.utils.StringUtil;
+	import com.nurun.utils.string.StringUtils;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -78,7 +78,7 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Gets if the value object is full filled
 		 */
-		public function isValid():Boolean { return StringUtil.trim(name).length > 0 && image != null; }
+		public function isValid():Boolean { return StringUtils.trim(name).length > 0 && image != null; }
 		
 		/**
 		 * @inheritDoc
