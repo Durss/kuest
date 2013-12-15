@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.components {
+	import com.twinoid.kube.quest.player.model.DataManager;
 	import gs.TweenLite;
 
 	import com.nurun.components.bitmap.ImageResizer;
@@ -7,14 +8,13 @@ package com.twinoid.kube.quest.player.components {
 	import com.nurun.components.tile.TileEngine2D;
 	import com.nurun.core.lang.Disposable;
 	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
+	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
-	import com.twinoid.kube.quest.player.vo.InventoryObject;
 
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.ColorMatrixFilter;
 	import flash.filters.DropShadowFilter;
 	
 	/**
@@ -23,14 +23,13 @@ package com.twinoid.kube.quest.player.components {
 	 * @author Francois
 	 * @date 25 mai 2013;
 	 */
-	public class InventoryTileItem extends Sprite implements ITileEngineItem2D {
+	public class HistoryTileItem extends Sprite implements ITileEngineItem2D {
 		private var _image:ImageResizer;
 		private var _label:CssTextField;
 		private var _maxX:Number;
 		private var _engineRef:TileEngine2D;
-		private var _data:InventoryObject;
+		private var _data:KuestEvent;
 		private var _frame:Shape;
-		private var _borderFilter:DropShadowFilter;
 		
 		
 		
@@ -39,9 +38,9 @@ package com.twinoid.kube.quest.player.components {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>InventoryItem</code>.
+		 * Creates an instance of <code>HistoryTileItem</code>.
 		 */
-		public function InventoryTileItem() {
+		public function HistoryTileItem() {
 			initialize();
 		}
 
@@ -57,7 +56,7 @@ package com.twinoid.kube.quest.player.components {
 			}
 		}
 
-		public function get data():InventoryObject {
+		public function get data():KuestEvent {
 			return _data;
 		}
 
@@ -75,29 +74,22 @@ package com.twinoid.kube.quest.player.components {
 			x = x;//Refresh visible state
 			if(!visible) return;
 			
-			if(_data != null && _data.vo != null && _data.vo.image != null) {
-				_data.vo.image.removeEventListener(Event.CHANGE, imageUpdateHandler);
+			if(_data != null && _data.actionType.getItem() != null && _data.actionType.getItem().image != null) {
+				_data.actionType.getItem().image.removeEventListener(Event.CHANGE, imageUpdateHandler);
 			}
 			
-			_data = data as InventoryObject;
+			_data = data as KuestEvent;
 			
 			if(_data == null) {
 				visible = false;
 				return;
 			}
 			//Images are loaded asynchronously at the quest init, wait for it just in case
-			_data.vo.image.addEventListener(Event.CHANGE, imageUpdateHandler, false, 0, true);
+			_data.actionType.getItem().image.addEventListener(Event.CHANGE, imageUpdateHandler, false, 0, true);
 			
-			_label.text		= "x"+_data.total;
+			_label.text		= _data.actionPlace.getAsLabel();
 			_label.y		= _engineRef.itemHeight - _label.height;
 			_label.width	= _engineRef.itemWidth;
-			
-			if(_data.total == 0) {
-				//Bug if the filter is set on the holder.. doesn't work without a second refresh :/
-				_image.filters = [_borderFilter, new ColorMatrixFilter([ .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,0,0, .5,.5,.5,.5,0 ])];
-			}else{
-				_image.filters = [_borderFilter];
-			}
 			
 			imageUpdateHandler();
 			
@@ -136,13 +128,13 @@ package com.twinoid.kube.quest.player.components {
 		private function initialize():void {
 			visible = false;
 			
-			_image = addChild(new ImageResizer(null, true, false, 100, 100)) as ImageResizer;
-			_label = addChild(new CssTextField("kuest-objectCount")) as CssTextField;
+			_image = addChild(new ImageResizer(null, true, false, 50, 50)) as ImageResizer;
+			_label = addChild(new CssTextField("kuest-historyLabel")) as CssTextField;
 			_frame = addChild(new Shape()) as Shape;
 			
 			_image.defaultTweenEnabled = false;
-			_label.filters = [new DropShadowFilter(0,0,0,1,2,2,10,2)];
-			_borderFilter = new DropShadowFilter(0,0,0x265367,1,1.25,1.25,100,1,true);
+			_label.filters = [new DropShadowFilter(0,0,0,1,1.25,1.25,100,2)];
+			_image.filters = [new DropShadowFilter(0,0,0x265367,1,1.1,1.1,100,1,true)];
 			
 			_frame.alpha = 0;
 			
@@ -153,6 +145,11 @@ package com.twinoid.kube.quest.player.components {
 			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			addEventListener(MouseEvent.MOUSE_UP, rollOverHandler);
+			addEventListener(MouseEvent.CLICK, clickHandler);
+		}
+
+		private function clickHandler(event:MouseEvent):void {
+			DataManager.getInstance().simulateEvent(_data);
 		}
 
 		private function mouseDownHandler(event:MouseEvent):void {
@@ -170,7 +167,7 @@ package com.twinoid.kube.quest.player.components {
 			
 			TweenLite.to(_frame, .25, {autoAlpha:1});
 			TweenLite.to(this, .25, {colorMatrixFilter:{brightness:1.25}});
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.vo.name, ToolTipAlign.TOP));
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.actionType.getItem().name, ToolTipAlign.TOP));
 		}
 
 		private function rollOutHandler(event:MouseEvent):void {
@@ -180,7 +177,7 @@ package com.twinoid.kube.quest.player.components {
 
 		private function imageUpdateHandler(event:Event = null):void {
 			_image.clear();
-			_image.setBitmapData(_data.vo.image.getConcreteBitmapData());
+			_image.setBitmapData(_data.actionType.getItem().image.getConcreteBitmapData());
 		}
 		
 	}

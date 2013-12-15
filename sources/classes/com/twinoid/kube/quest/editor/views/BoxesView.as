@@ -1,10 +1,7 @@
 package com.twinoid.kube.quest.editor.views {
-	import flash.display.Shape;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
-	import flash.utils.getTimer;
 	import gs.TweenLite;
 	import gs.easing.Back;
+	import gs.easing.Sine;
 
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
@@ -28,6 +25,7 @@ package com.twinoid.kube.quest.editor.views {
 	import flash.display.DisplayObject;
 	import flash.display.JointStyle;
 	import flash.display.LineScaleMode;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -35,12 +33,16 @@ package com.twinoid.kube.quest.editor.views {
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	import flash.filters.DropShadowFilter;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	import flash.utils.Dictionary;
+	import flash.utils.clearTimeout;
+	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 
 
@@ -79,20 +81,23 @@ package com.twinoid.kube.quest.editor.views {
 		private var _tree:Dictionary;
 		private var _lastOverEvent:KuestEvent;
 		private var _debugMode:Boolean;
-		private var _debugFilter:ColorMatrixFilter;
+		private var _debugFilter:Array;
 		private var _selectMode:Boolean;
 		private var _selectHolder:Sprite;
 		private var _selectRect:Rectangle;
 		private var _selectedBoxes:Vector.<Box>;
 		private var _selectionDone:Boolean;
 		private var _boxes:Vector.<Box>;
-		private var _highlightFilter:ColorMatrixFilter;
+		private var _highlightFilter:Array;
 		private var _dragSelection:Boolean;
 		private var _dragOffsets:Vector.<Point>;
 		private var _initDependencies:Vector.<Box>;
 		private var _initDataToBox:Dictionary;
 		private var _timeout:uint;
 		private var _loadingPercent:Shape;
+		private var _debugSelectFilters:Array;
+		private var _debugChildFilters:Array;
+		private var _previousDebugTarget:Box;
 		
 		
 		
@@ -123,6 +128,14 @@ package com.twinoid.kube.quest.editor.views {
 		public function get offsetX():Number { return _boxesHolder.x; }
 		//Gets board's offset Y
 		public function get offsetY():Number { return _boxesHolder.y; }
+
+		public function get scrollX():Number { return _endX; }
+
+		public function set scrollX(endX:Number):void { _endX = endX; }
+
+		public function get scrollY():Number { return _endY; }
+
+		public function set scrollY(endY:Number):void { _endY = endY; }
 
 
 
@@ -188,13 +201,58 @@ package com.twinoid.kube.quest.editor.views {
 			_scisors.filters		= [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 			_scisors.mouseChildren	= false;
 			_scisors.mouseEnabled	= false;
-			_highlightFilter		= new ColorMatrixFilter([1,0,0,0,50, 0,1,0,0,50, 0,0,1,0,50, 0,0,0,1,0 ]);
-			_debugFilter			= new ColorMatrixFilter([0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0,0,0,1,0]);
+			_highlightFilter		= [new ColorMatrixFilter([1,0,0,0,50, 0,1,0,0,50, 0,0,1,0,50, 0,0,0,1,0 ])];
+			_debugFilter			= [new ColorMatrixFilter([0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0,0,0,1,0])];
+			_debugSelectFilters		= [new GlowFilter(0xffffff, 1, 10, 10)];
+			_debugChildFilters		= [new ColorMatrixFilter([1.0308935642242432,0.2900744080543518,0.03903200477361679,0,-22.85999870300293,0.14689362049102783,1.1740742921829224,0.03903200477361679,0,-22.860000610351563,0.14689362049102783,0.2900744080543518,0.9230319857597351,0,-22.860000610351563,0,0,0,1,0])];
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			_boxesHolder.addEventListener(BoxEvent.ACTIVATE_DEBUG, debugEventHandler);
 			_comments.addEventListener(BoxesCommentsEvent.ENTER_EDIT_MODE, editCommentsStateChangeHandler);
 			_comments.addEventListener(BoxesCommentsEvent.LEAVE_EDIT_MODE, editCommentsStateChangeHandler);
 			ViewLocator.getInstance().addEventListener(ViewEvent.DEBUG_MODE_CHANGE, debugModeStateChangeHandler);
+		}
+		
+		//TODO move
+		private function debugEventHandler(event:Event):void {
+			var i:int, len:int, noFilter:Array;
+			len = _boxes.length;
+			for(i = 0; i < len; ++i) {
+				_boxes[i].filters = _debugFilter;
+			}
+			len = _linksHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				_linksHolder.getChildAt(i).filters = _debugFilter;
+			}
+			
+			var target:Box = event.target as Box;
+			target.filters = _debugSelectFilters;
+			len = target.links.length;
+			noFilter = [];
+			for(i = 0; i < len; ++i) {
+				if(target.links[i].startEntry == target) {
+					target.links[i].endEntry.filters = _debugChildFilters;
+					target.links[i].filters = noFilter;
+				}
+			}
+			
+			//If there was a previous event, search if the new event
+			//is a child of it, and animate the link between them.
+			if(_previousDebugTarget != null) {
+				len = _previousDebugTarget.links.length;
+				for(i = 0; i < len; ++i) {
+					if(_previousDebugTarget.links[i].endEntry == target) {
+						_previousDebugTarget.links[i].filters = noFilter;
+						_previousDebugTarget.links[i].animateDebug(_debugFilter);
+					}
+				}
+			}
+			
+			var endX:Number = -target.x * _boxesHolder.scaleX + stage.stageWidth * .5;
+			var endY:Number = -target.y * _boxesHolder.scaleY + stage.stageHeight * .5;
+			TweenLite.to(this, .75, {scrollX:endX, scrollY:endY, ease:Sine.easeInOut});
+			
+			_previousDebugTarget = target;
 		}
 		
 		/**
@@ -417,8 +475,8 @@ package com.twinoid.kube.quest.editor.views {
 				if(nodes[i].dependencies.length > 0) {
 					_initDependencies.push(box);
 				}
-				if(getTimer()-s > 50) {
-					_timeout = setTimeout(buildFromCollection, 35, nodes, i);
+				if(getTimer()-s > 80) {
+					_timeout = setTimeout(buildFromCollection, 35, nodes, i + 1);
 					_loadingPercent.graphics.drawRect(0, 0, stage.stageWidth * ((1 - i/len) * .75 + .25), stage.stageHeight);
 					return;
 				}
@@ -433,11 +491,11 @@ package com.twinoid.kube.quest.editor.views {
 					_linksHolder.addChild(link);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
-					if(getTimer()-s > 80) {
-						_timeout = setTimeout(buildFromCollection, 35, nodes, 0, i, j);
-						_loadingPercent.graphics.drawRect(0, 0, stage.stageWidth * .25 * (1 - i/len), stage.stageHeight);
-						return;
-					}
+				}
+				if(getTimer()-s > 80) {
+					_timeout = setTimeout(buildFromCollection, 35, nodes, int.MAX_VALUE, i + 1, 0);
+					_loadingPercent.graphics.drawRect(0, 0, stage.stageWidth * .25 * (1 - i/len), stage.stageHeight);
+					return;
 				}
 			}
 			
@@ -742,8 +800,8 @@ package com.twinoid.kube.quest.editor.views {
 			if(DisplayObject(event.target).parent is Box && !_debugMode) {
 				_lastOverEvent = (DisplayObject(event.target).parent as Box).data;
 				computeTreeGUIDs(_nodes, onComputeTreeOverComplete, true);
-			}else if(!_debugMode){
-				Mouse.cursor = _selectMode && !_selectionDone? MouseCursor.AUTO : MouseCursor.HAND;
+			}else{
+				Mouse.cursor = _selectMode && !_selectionDone? MouseCursor.AUTO : event.target is Box? MouseCursor.BUTTON : MouseCursor.HAND;
 			}
 		}
 		
@@ -752,7 +810,12 @@ package com.twinoid.kube.quest.editor.views {
 		 * Hide the scisors if necessary.
 		 */
 		private function outHandler(event:MouseEvent):void {
-			if(DisplayObject(event.target).parent is Box && !_debugMode) {
+			if(_debugMode) {
+				Mouse.cursor = MouseCursor.AUTO;
+				return;
+			}
+			
+			if(DisplayObject(event.target).parent is Box) {
 				_lastOverEvent = null;
 				var i:int, len:int;
 				len = _boxes.length;
@@ -778,7 +841,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when mouse right button is pressed
 		 */
 		private function mouseRightDownHandler(event:MouseEvent):void {
-			if(_debugMode || _spacePressed) return;
+			if(_debugMode || _spacePressed || _debugMode) return;
 			_selectMode = true;
 			_selectRect.x = _selectHolder.mouseX;
 			_selectRect.y = _selectHolder.mouseY;
@@ -792,6 +855,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when mouse right button is released
 		 */
 		private function mouseRightUpHandler(event:MouseEvent):void {
+			if(_debugMode) return;
+			
 			var i:int, len:int, box:Box, minX:int, minY:int, maxX:int, maxY:int;
 			minX	= Math.min(_selectRect.x, _selectRect.right) - Box.COLS * BackgroundView.CELL_SIZE;
 			minY	= Math.min(_selectRect.y, _selectRect.bottom) - Box.ROWS* BackgroundView.CELL_SIZE;
@@ -801,7 +866,7 @@ package com.twinoid.kube.quest.editor.views {
 			var topLeft:Point		= new Point(int.MAX_VALUE, int.MAX_VALUE);
 			var botRight:Point		= new Point(int.MIN_VALUE, int.MIN_VALUE);
 			_selectedBoxes			= new Vector.<Box>();
-			var selectionOn:Array	= [_highlightFilter];
+			var selectionOn:Array	= _highlightFilter;
 			var selectionOff:Array	= [];
 			for(i = 0; i < len; ++i) {
 				box = _boxes[i];
@@ -857,7 +922,7 @@ package com.twinoid.kube.quest.editor.views {
 			len = _boxes.length;
 			for(i = 0; i < len; ++i) {
 				b = _boxes[i];
-				b.filters = _tree[b.data] == treeID? [_highlightFilter] : [];
+				b.filters = _tree[b.data] == treeID? _highlightFilter : [];
 			}
 		}
 		
@@ -914,15 +979,16 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		private function debugModeStateChangeHandler(event:ViewEvent):void {
 			_debugMode = event.data as Boolean;
+			_previousDebugTarget = null;
 			var i:int, len:int;
 			len = _boxes.length;
 			for(i = 0; i < len; ++i) {
-				_boxes[i].filters = _debugMode? [_debugFilter] : [];
+				_boxes[i].filters = _debugMode? _debugFilter : [];
 				_boxes[i].debugMode = _debugMode;
 			}
 			len = _linksHolder.numChildren;
 			for(i = 0; i < len; ++i) {
-				_linksHolder.getChildAt(i).filters = _debugMode? [_debugFilter] : [];
+				_linksHolder.getChildAt(i).filters = _debugMode? _debugFilter : [];
 			}
 		}
 	}

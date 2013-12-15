@@ -9,7 +9,11 @@ package com.twinoid.kube.quest.editor.vo {
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
+	//Fired when the data changes
 	[Event(name="change", type="flash.events.Event")]
+	
+	//Fired by the debugger when the related box should be enabled
+	[Event(name="select", type="flash.events.Event")]
 	
 	/**
 	 * Contains the data about an event.
@@ -339,6 +343,13 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		override public function toString():String {
 			return "[KuestEvent :: guid="+guid+" startsTree="+startsTree+" endsQuest="+endsQuest+" loosesQuest="+loosesQuest+" \n\tboxPosition="+boxPosition+" \n\tactionPlace="+actionPlace+" \n\tactionDate="+actionDate+" \n\tactionType="+actionType+", \n\tdependencies=["+dependencies+"]]";
+		}
+		
+		/**
+		 * Makes the associated box activate on the editor
+		 */
+		public function activateOnEditor():void {
+			dispatchEvent(new Event(Event.SELECT));
 		}
 
 

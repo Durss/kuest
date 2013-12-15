@@ -69,7 +69,6 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _outBoxes:Vector.<GraphicButton>;
 		private var _outBoxToIndex:Dictionary;
 		private var _debugMode:Boolean;
-		private var _debugFilterBackup:Array;
 		private var _takePut:TakePutIconGraphic;
 		
 		
@@ -119,6 +118,11 @@ package com.twinoid.kube.quest.editor.components.box {
 			_debugMode = value;
 			mouseChildren = !_debugMode;
 		}
+		
+		/**
+		 * Gets the links related to this event
+		 */
+		public function get links():Vector.<BoxLink> { return _links; }
 
 
 
@@ -325,6 +329,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			
 			if(_data != null) {
 				_data.addEventListener(Event.CHANGE, render);
+				_data.addEventListener(Event.SELECT, debugHandler);
 			}
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
@@ -336,6 +341,10 @@ package com.twinoid.kube.quest.editor.components.box {
 			_timeIcon.addEventListener(MouseEvent.ROLL_OVER, overTimeIconGraphicHandler);
 			
 			render();
+		}
+
+		private function debugHandler(event:Event):void {
+			dispatchEvent(new BoxEvent(BoxEvent.ACTIVATE_DEBUG, 0, true));
 		}
 		
 		/**
@@ -418,10 +427,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
 			cacheAsBitmap = false;
-			if(_debugMode) {
-				_debugFilterBackup = filters;
-				filters = [];
-			}else{
+			if(!_debugMode) {
 				addChildAt(_deleteBt, 0);
 				TweenLite.killTweensOf(_deleteBt);
 				TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
@@ -448,9 +454,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		private function rollOutHandler(event:MouseEvent):void {
 			cacheAsBitmap = true;//TODO check if that's a sufficient optimization. If not, remove everything from holder and replace it by a bitmap snapshot
-			if(_debugMode) {
-				filters = _debugFilterBackup;
-			}else{
+			if(!_debugMode) {
 				TweenLite.killTweensOf(_deleteBt);
 				TweenLite.to(_deleteBt, .15, {y:0, removeChild:true});
 			}

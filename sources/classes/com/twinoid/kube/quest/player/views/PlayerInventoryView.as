@@ -1,10 +1,10 @@
 package com.twinoid.kube.quest.player.views {
-	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 
 	import com.nurun.components.button.IconAlign;
 	import com.nurun.components.button.TextAlign;
+	import com.nurun.components.form.GroupableFormComponent;
 	import com.nurun.components.scroll.ScrollPane;
 	import com.nurun.components.scroll.events.ScrollerEvent;
 	import com.nurun.components.text.CssTextField;
@@ -14,7 +14,7 @@ package com.twinoid.kube.quest.player.views {
 	import com.nurun.utils.touch.SwipeManager;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.editor.components.Splitter;
-	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.buttons.ToggleButtonKube;
 	import com.twinoid.kube.quest.editor.components.form.ScrollbarKube;
 	import com.twinoid.kube.quest.editor.vo.SplitterType;
 	import com.twinoid.kube.quest.graphics.MenuObjectIconGraphic;
@@ -23,9 +23,11 @@ package com.twinoid.kube.quest.player.views {
 	import com.twinoid.kube.quest.player.model.DataManager;
 	import com.twinoid.kube.quest.player.vo.InventoryObject;
 
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
 	
 	/**
@@ -33,10 +35,10 @@ package com.twinoid.kube.quest.player.views {
 	 * @author Francois
 	 * @date 19 mai 2013;
 	 */
-	public class PlayerInventoryView extends Sprite {
+	public class PlayerInventoryView extends Sprite implements GroupableFormComponent {
 		
 		private var _width:int;
-		private var _inventoryBt:ButtonKube;
+		private var _inventoryBt:ToggleButtonKube;
 		private var _splitter:Splitter;
 		private var _engine:TileEngine2DSwipeWrapper;
 		private var _swiper:SwipeManager;
@@ -77,6 +79,18 @@ package com.twinoid.kube.quest.player.views {
 		
 		public function get opened():Boolean { return _opened; }
 
+		public function get selected():Boolean {
+			return _opened;
+		}
+
+		public function set selected(value:Boolean):void {
+			_opened = value;
+			_inventoryBt.selected = value;
+			
+			dispatchEvent(new Event(Event.RESIZE, true));
+			TweenLite.to(this, .35, {scrollRect:{height:height}, ease:Sine.easeInOut, overwrite:2});
+		}
+
 
 
 		/* ****** *
@@ -84,11 +98,15 @@ package com.twinoid.kube.quest.player.views {
 		 * ****** */
 
 		public function toggle():void {
-			_opened = !_opened;
-			var e:Event = new Event(Event.RESIZE, true);
-			dispatchEvent(e);
-			TweenLite.killTweensOf(this);
-			TweenLite.to(this, .35, {scrollRect:{height:height}, ease:Sine.easeInOut});
+			selected = !selected;
+		}
+
+		public function select():void {
+			selected = true;
+		}
+
+		public function unSelect():void {
+			selected = false;
 		}
 
 
@@ -101,12 +119,13 @@ package com.twinoid.kube.quest.player.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			var icon:MenuObjectIconGraphic = new MenuObjectIconGraphic();
 			_splitter		= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 			_engine			= new TileEngine2DSwipeWrapper(InventoryTileItem, _width, 100, 100, 100, 5, 0);
 			var w:int		= _engine.visibleWidth;
 			var h:int		= _engine.visibleHeight;
 			_scrollpane		= addChild(new ScrollPane(_engine, null, new ScrollbarKube())) as ScrollPane;
-			_inventoryBt	= addChild(new ButtonKube(Label.getLabel("player-inventory"), new MenuObjectIconGraphic())) as ButtonKube;
+			_inventoryBt	= addChild(new ToggleButtonKube(Label.getLabel("player-inventory"), icon, icon)) as ToggleButtonKube;
 			_swiper			= new SwipeManager(_engine, new Rectangle());
 			_labelTf		= addChild(new CssTextField("kuest-inventoryEmpty")) as CssTextField;
 			
@@ -117,7 +136,7 @@ package com.twinoid.kube.quest.player.views {
 			_engine.lockToLimits	= true;
 			_swiper.roundXValue		= _engine.itemWidth + _engine.hMargin;
 			_scrollpane.width		= w;
-			_scrollpane.height		= h + 15;//15 = scrollbar's height
+			_scrollpane.height		= h + DisplayObject(_scrollpane.hScroll).width;
 			_swiper.viewport.width	= w;
 			_swiper.viewport.height	= h;
 			_labelTf.background		= true;
@@ -153,7 +172,7 @@ package com.twinoid.kube.quest.player.views {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_inventoryBt.x		= Math.round((_width - _inventoryBt.width) * .5);
+			_inventoryBt.x		= Math.round(_width * .5 - _inventoryBt.width);
 			_splitter.width		= _width;
 			_splitter.y			= _inventoryBt.height + 1;
 			_scrollpane.y		= _splitter.y + _splitter.height;
@@ -165,6 +184,11 @@ package com.twinoid.kube.quest.player.views {
 			_scrollpane.update();
 			
 			roundPos(_inventoryBt, _splitter, _scrollpane);
+			
+			graphics.clear();
+			graphics.beginFill(0x47A9D1, 1);
+			graphics.drawRect(0, _scrollpane.y, _width, _scrollpane.height);
+			graphics.endFill();
 		}
 		
 		/**
@@ -202,6 +226,7 @@ package com.twinoid.kube.quest.player.views {
 		private function clickButtonHandler(event:MouseEvent):void {
 			if(event.target == _inventoryBt) {
 				toggle();
+				dispatchEvent(new Event(Event.CHANGE));
 			} else if (event.target is InventoryTileItem) {
 				var item:InventoryTileItem = InventoryTileItem(event.target);
 				if(item.data.total > 0) DataManager.getInstance().useObject(item.data);

@@ -116,7 +116,7 @@ package com.twinoid.kube.quest.editor.components.form {
 		 * Called when an input is submitted via ENTER key
 		 */
 		private function submitHandler(event:Event):void {
-			if(isEmpty(_inputX.value) || isEmpty(_inputY.value)) return;
+//			if(isEmpty(_inputX.value) || isEmpty(_inputY.value)) return;
 			dispatchEvent(event);
 		}
 		

@@ -192,8 +192,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private function buildZone():void {
 			_zone = new Sprite();
 			var label:CssTextField = _zone.addChild(new CssTextField("editWindow-label")) as CssTextField;
-			_zoneX = _zone.addChild(new InputKube("0", true, -99999999, 99999999)) as InputKube;
-			_zoneY = _zone.addChild(new InputKube("0", true, -99999999, 99999999)) as InputKube;
+			_zoneX = _zone.addChild(new InputKube("x", true, -99999999, 99999999)) as InputKube;
+			_zoneY = _zone.addChild(new InputKube("y", true, -99999999, 99999999)) as InputKube;
 			_captureBt = _zone.addChild(new ButtonKube(Label.getLabel("editWindow-place-capture"))) as ButtonKube;
 			_captureZone = _zone.addChild(new Sprite()) as Sprite;
 			
@@ -235,9 +235,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_kube = new Sprite();
 			_helpKubeCoords = _kube.addChild(new CssTextField("editWindow-label")) as CssTextField;
 			_kubeInputsLabel = _kube.addChild(new CssTextField("editWindow-label")) as CssTextField;
-			_kubeX = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
-			_kubeY = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
-			_kubeZ = addChild(new InputKube("0", true, -99999999*32, 99999999*32)) as InputKube;
+			_kubeX = addChild(new InputKube("x", true, -99999999*32, 99999999*32)) as InputKube;
+			_kubeY = addChild(new InputKube("y", true, -99999999*32, 99999999*32)) as InputKube;
+			_kubeZ = addChild(new InputKube("z", true, -99999999*32, 99999999*32)) as InputKube;
 			_kube.addChild(_kubeInputsLabel);
 			_kube.addChild(_kubeX);
 			_kube.addChild(_kubeY);

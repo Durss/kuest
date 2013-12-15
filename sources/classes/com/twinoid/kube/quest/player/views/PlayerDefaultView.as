@@ -64,6 +64,7 @@ package com.twinoid.kube.quest.player.views {
 			DataManager.getInstance().addEventListener(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE, loadCompleteHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.LOAD_COMPLETE, loadCompleteHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, newEventHandler);
+			DataManager.getInstance().addEventListener(DataManagerEvent.SIMULATE_EVENT, newEventHandler);
 			_tf = addChild(new CssTextField("kuest-description")) as CssTextField;
 			_tf.selectable = true;
 		}
@@ -73,7 +74,7 @@ package com.twinoid.kube.quest.player.views {
 		 */
 		private function newEventHandler(event:DataManagerEvent):void {
 			var wasVisible:Boolean = visible;
-			visible = false;
+			visible = visible && DataManager.getInstance().currentEvent == null && DataManager.getInstance().simulatedEvent == null;
 			if(wasVisible) dispatchEvent(new Event(Event.RESIZE, true));
 		}
 		

@@ -19,6 +19,8 @@ package com.twinoid.kube.quest.player.events {
 		public static const CLEAR_PROGRESSION_COMPLETE:String	= "clearProgressComplete";
 		public static const QUEST_COMPLETE:String				= "questComplete";
 		public static const QUEST_FAILED:String					= "questFailed";
+		public static const HISTORY_UPDATE:String				= "historyUpdate";
+		public static const SIMULATE_EVENT:String				= "simulateEvent";
 		
 		
 		

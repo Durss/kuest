@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.components.form.input {
+	import flash.ui.Keyboard;
+	import flash.events.KeyboardEvent;
+	import com.nurun.core.lang.isEmpty;
 	import com.nurun.utils.string.StringUtils;
 	import gs.TweenLite;
 
@@ -91,7 +94,7 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Gets the input's value as a number.
 		 */
 		public function get numValue():Number {
-			return parseFloat(text);
+			return isEmpty(value)? 0 : parseFloat(text);
 		}
 		
 		override public function set text(value:String):void {
@@ -157,9 +160,17 @@ package com.twinoid.kube.quest.editor.components.form.input {
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
+			addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			
 			_dragOffset = new Point();
+		}
+
+		private function keyDownHandler(event:KeyboardEvent):void {
+			if(_isNumeric) {
+				if(event.keyCode == Keyboard.UP) text = (numValue - 1).toString();
+				if(event.keyCode == Keyboard.DOWN) text = (numValue + 1).toString();
+			}
 		}
 
 		private function rollHandler(event:MouseEvent):void {

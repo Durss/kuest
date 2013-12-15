@@ -64,6 +64,9 @@ package com.twinoid.kube.quest.player.vo {
 			var treeID:String = _nodeToTreeID[event];
 			var i:int, len:int, isAccessible:Boolean, priorities:Vector.<KuestEvent>;
 			priorities = _treeIDToPriorities[ treeID ];
+			if(priorities == null) {
+				return false;
+			}
 			len = priorities.length;
 			for(i = 0; i < len; ++i) {
 				if(priorities[i].guid == event.guid) {
@@ -80,9 +83,11 @@ package com.twinoid.kube.quest.player.vo {
 		 * will be added next to it. The old one will have a higher priority.
 		 * 
 		 * @param events						events to be given priority
+		 * @param reference						contains the event the user comes from
 		 * @param comparePositionWithCurrent	if true and only 1 event is given, it will compare the current priorities and set the new one as prioritary only if its box is placed at a higher left/top position.
+		 * @param initMode						set to true on first quest' parsing. Creates a tree priorities backup to manage reset.
 		 */
-		public function givePriorityTo(events:Vector.<KuestEvent>, reference:KuestEvent = null, comparePositionWithCurrent:Boolean = false):void {
+		public function givePriorityTo(events:Vector.<KuestEvent>, reference:KuestEvent = null, comparePositionWithCurrent:Boolean = false, initMode:Boolean = false):void {
 			var i:int, len:int, treeID:String;
 			
 			//If compare mode is enabled, the current priorities of the tree will be compared
@@ -110,20 +115,13 @@ package com.twinoid.kube.quest.player.vo {
 				}
 				if(isPriority) {
 					_treeIDToPriorities[ treeID ] = events;
-					_treeIDToPriorities_backup[ treeID ] = events.concat();
+					if(initMode) _treeIDToPriorities_backup[ treeID ] = events.concat();
 				}
 				return;
 			}
 			
 			
 			
-			//Here we could probably be satisfied with a simple
-			//		_treeIDToPriorities[ _nodeToTreeID[ events[i] ] ] = events;
-			//because the events are most probably all linked to the same event
-			//and so are all part of the same tree.
-			//But, just in case, we split the events by tree IDs and override the
-			//corresponding priorities. 
-			var treeIDsToEvents:Object = {};
 			len = events.length;
 			if (len == 0 && reference != null && reference.dependencies.length > 0) {
 				//No children, clear the tree to end it.
@@ -133,6 +131,13 @@ package com.twinoid.kube.quest.player.vo {
 				_treeIDToPriorities[ treeID ] = new <KuestEvent>[_guidToEvent[-1]];
 				return;
 			}else{
+				//Here we could probably be satisfied with a simple
+				//		_treeIDToPriorities[ _nodeToTreeID[ events[i] ] ] = events;
+				//because the events are most probably all linked to the same event
+				//and so are all part of the same tree.
+				//But, just in case, we split the events by tree IDs and override the
+				//corresponding priorities. 
+				var treeIDsToEvents:Object = {};
 				for(i = 0; i < len; ++i) {
 					treeID = _nodeToTreeID[ events[i] ];
 					if(treeIDsToEvents[treeID] == undefined) {
@@ -140,11 +145,12 @@ package com.twinoid.kube.quest.player.vo {
 					}
 					Vector.<KuestEvent>(treeIDsToEvents[treeID]).push( events[i] );
 				}
-			}
-			
-			//Store the priorities
-			for (treeID in treeIDsToEvents) {
-				_treeIDToPriorities[ treeID ] = treeIDsToEvents[ treeID ];
+				
+				//Store the priorities
+				for (treeID in treeIDsToEvents) {
+					_treeIDToPriorities[ treeID ] = treeIDsToEvents[ treeID ];
+					if(initMode) _treeIDToPriorities_backup[ treeID ] = Vector.<KuestEvent>(treeIDsToEvents[ treeID ]).concat();
+				}
 			}
 		}
 		

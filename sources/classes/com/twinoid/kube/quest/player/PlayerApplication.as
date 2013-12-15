@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.player {
+	import com.nurun.components.form.FormComponentGroup;
+	import com.twinoid.kube.quest.player.views.PlayerHistoryView;
 	import com.twinoid.kube.quest.player.views.EvaluateQuestView;
 	import gs.TweenLite;
 	import gs.easing.Sine;
@@ -62,7 +64,7 @@ package com.twinoid.kube.quest.player {
 	 * @date 10 mai 2013;
 	 */
 	 
-	[SWF(width="800", height="200", backgroundColor="0xFFFFFF", frameRate="31")]
+	[SWF(width="800", height="200", backgroundColor="0x4CA5CD", frameRate="31")]
 	[Frame(factoryClass="com.twinoid.kube.quest.player.PlayerApplicationLoader")]
 	public class PlayerApplication extends MovieClip {
 		
@@ -83,6 +85,7 @@ package com.twinoid.kube.quest.player {
 		private var _menu:DisplayObject;
 		private var _timeOutResize:uint;
 		private var _evaluation:EvaluateQuestView;
+		private var _history:PlayerHistoryView;
 		
 		
 		
@@ -169,17 +172,23 @@ package com.twinoid.kube.quest.player {
 				_spinning.close();
 				
 			}else{
-				
+				var group:FormComponentGroup = new FormComponentGroup();
 				_splitter	= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 				_background	= addChild(new BackWindow(false)) as BackWindow;
 				_holder		= addChild(new Sprite()) as Sprite;
 				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerInventoryView;
+				_history	= addChild(new PlayerHistoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerHistoryView;
 				_evaluation	= addChild(new EvaluateQuestView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as EvaluateQuestView;
 				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
 				_mask		= addChild(createRect(0xffff0000)) as Shape;
 				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerDefaultView;
 				_event		= _holder.addChild(new PlayerEventView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerEventView;
 				addChild(_exception);
+				
+				group.allowNoSelection = true;
+				group.allowMultipleSelection = false;
+				group.add(_history);
+				group.add(_inventory);
 				
 				_mask.height = 0;
 				_holder.mask = _mask;
@@ -272,12 +281,17 @@ package com.twinoid.kube.quest.player {
 			_mask.height		= h;
 			if(_prompt!=null && !_prompt.isClosed) h = Math.max(h, _prompt.height);
 			if(_exception!=null && !_exception.isClosed) h = Math.max(h, _exception.height);
-			h					= Math.max(50, _mask.y + h + margin + _inventory.height + BackWindow.CELL_WIDTH);
+			h					= Math.max(50, _mask.y + h + margin + Math.max(_inventory.height, _history.height) + BackWindow.CELL_WIDTH);
 			_background.height	= h;
 
 			var prevInventoryY:Number = _inventory.y;
 			_inventory.x = BackWindow.CELL_WIDTH + 1;
-			_inventory.y = _background.height - BackWindow.CELL_WIDTH - 2 - _inventory.height;
+			
+			var prevHistoryY:Number = _history.y;
+			_history.x = BackWindow.CELL_WIDTH + 1;
+			
+			_inventory.y = 
+			_history.y = _background.height - BackWindow.CELL_WIDTH - 2 - Math.max(_inventory.height, _history.height);
 
 			var prevMenuY:Number;
 			if (_menu != null) {
@@ -303,13 +317,13 @@ package com.twinoid.kube.quest.player {
 				}
 				TweenLite.killTweensOf(_mask);
 				TweenLite.killTweensOf(_background);
-				TweenLite.killTweensOf(_inventory);
 				TweenLite.killTweensOf(_menu);
 				TweenLite.killTweensOf(_holder);
 				TweenLite.killTweensOf(_mask);
 				TweenLite.from(_mask, .35, {y:prevHolderY, height:prevMaskHeight, ease:Sine.easeInOut});
 				TweenLite.from(_background, .35, {height:prevBackHeight, ease:Sine.easeInOut});
-				TweenLite.from(_inventory, .35, {y:prevInventoryY, ease:Sine.easeInOut});
+				TweenLite.from(_inventory, .35, {y:prevInventoryY, ease:Sine.easeInOut, overwrite:2});
+				TweenLite.from(_history, .35, {y:prevHistoryY, ease:Sine.easeInOut, overwrite:2});
 				TweenLite.from(_holder, .35, {y:prevHolderY, ease:Sine.easeInOut});
 				if(_menu != null) {
 					TweenLite.killTweensOf(_menu);

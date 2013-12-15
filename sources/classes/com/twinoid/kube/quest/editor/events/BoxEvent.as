@@ -9,8 +9,10 @@ package com.twinoid.kube.quest.editor.events {
 	 */
 	public class BoxEvent extends Event {
 		
-		public static const CREATE_LINK:String = "createLink";
 		public static const DELETE:String = "delete";
+		public static const CREATE_LINK:String = "createLink";
+		public static const ACTIVATE_DEBUG:String = "activateDebug";
+		
 		private var _choiceIndex:int;
 		
 		

@@ -77,6 +77,7 @@ package com.twinoid.kube.quest.player.views {
 		 * ****** */
 
 		private function close(delay:Number = 0):void {
+			mouseChildren = tabChildren = false;
 			_opened = false;
 			TweenLite.to(_splitter, .35, {y:0, delay:delay, ease:Sine.easeInOut});
 			TweenLite.to(this, .35, {scrollRect:{height:0}, delay:delay, ease:Sine.easeInOut, onStart:dispatchEvent, onStartParams:[new Event(Event.RESIZE, true)]});
@@ -92,7 +93,8 @@ package com.twinoid.kube.quest.player.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-//			visible = false;
+			mouseChildren = tabChildren = false;
+			
 			_cmd		= new EvaluateCmd();
 			_back		= addChild(new Shape()) as Shape;
 			_smiley		= addChild(new EvaluationSmileyGraphic()) as EvaluationSmileyGraphic;
@@ -154,6 +156,7 @@ package com.twinoid.kube.quest.player.views {
 		 * Called when quest is complete
 		 */
 		private function questCompleteHandler(event:DataManagerEvent):void {
+			mouseChildren = tabChildren = true;
 			_opened = true;
 			TweenLite.to(_splitter, .35, {y:_back.y + _back.height, ease:Sine.easeInOut});
 			TweenLite.to(this, .35, {scrollRect:{height:_back.y + _back.height + _splitter.height}, ease:Sine.easeInOut});

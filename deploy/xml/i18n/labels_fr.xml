@@ -3,7 +3,9 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog70-content"><![CDATA[<ul>
+		<label code="patchlog71-content"><![CDATA[<ul>
+			<li>Ajout d'un historique des événements dans le module in-game.</li>
+			<li>Debug du reset d'une quête qui cassait un peu la logique des quêtes du debugger.</li>
 			<li>Refonte complète du moteur de quête et implémentation dans le module de lecture in-game.</li>
 			<li>Ajout d'un panneau de debug de quêtes utilisant le nouveau moteur.</li>
 			<li>Possibilité de sélectionner des groupes d'événement via click droit.</li>
@@ -44,7 +46,7 @@
 		<label code="exception-CANNOT_WRITE_SAVE"><![CDATA[L'écriture de votre progression sur le serveur a échoue...]]></label>
 		<label code="exception-KUEST_EVALUATION_INVALID_KEY"><![CDATA[La clé de vérification fournie est invalide.]]></label>
 		<label code="exception-KUEST_ALREADY_EVALUATED"><![CDATA[Vous avez déjà évalué cette quête.]]></label>
-		<label code="exception-NOT_CONNECTED"><![CDATA[Vous n'avez pas été authentifié ou votre session a expiré.<br />Rendez-vous à l'addresse suivante pour vous authentifier à nouveau :<br /><a href="http://fevermap.org.com/kuest" class="link" target="_self">http://fevermap.org.com/kuest</a>]]></label>
+		<label code="exception-NOT_CONNECTED"><![CDATA[Vous n'avez pas été authentifié ou votre session a expiré.<br />Rendez-vous à l'addresse suivante pour vous authentifier à nouveau :<br /><a href="http://fevermap.org/kuest" class="link" target="_self">http://fevermap.org/kuest</a>]]></label>
 		<label code="exception-SAVE_FILE_FORMAT"><![CDATA[Le format du fichier de sauvegarde de votre progression est invalide.<br />Son chargement a été annulé et votre progression remise à zéro.]]></label>
 		<label code="exception-SAVE_DIRECTORY_MISSING"><![CDATA[Le dossier de destination des sauvegardes n'a pas été trouvé sur le serveur.]]></label>
 		<label code="exception-PROGRESSION_DIRECTORY_MISSING"><![CDATA[Le dossier de destination des sauvegardes de progression n'a pas été trouvé sur le serveur.]]></label>
@@ -126,7 +128,7 @@
 		<label code="menu-file-rights"><![CDATA[Donnez les droits d'édition à vos amis.]]></label>
 		<label code="menu-file-rightsCB"><![CDATA[Sélectionnez des amis]]></label>
 		<label code="menu-file-test"><![CDATA[Tester la quête]]></label>
-		<label code="menu-file-help"><![CDATA[Aide]]></label>
+		<label code="menu-file-help"><![CDATA[Exemples]]></label>
 		<label code="menu-file-help-tuto"><![CDATA[Voir le tutoriel]]></label>
 		<label code="menu-file-help-samples"><![CDATA[Exemples de quêtes:]]></label>
 		
@@ -265,6 +267,7 @@
 		<label code="player-login"><![CDATA[Aller sur l'application.]]></label>
 		<label code="player-loading-kuest"><![CDATA[Chargement de la quête en cours....]]></label>
 		<label code="player-next"><![CDATA[Suite &gt;]]></label>
+		<label code="player-stopSim"><![CDATA[Fermer]]></label>
 		<!-- tooltip -->
 		<label code="player-resetTT"><![CDATA[Effacer votre progression et recommencer la quête du début.<br /><b>Cette action est irréversible !</b>]]></label>
 		<label code="player-resetTitle"><![CDATA[Effacer votre progression</b>]]></label>
@@ -276,6 +279,7 @@
 		<label code="player-evaluateComplete"><![CDATA[Merci !]]></label>
 		<label code="player-wrongObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 		<label code="player-noNeedObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
+		<label code="player-history"><![CDATA[Historique]]></label>
 	</labels>
 	
 </root>

@@ -136,6 +136,7 @@ package com.twinoid.kube.quest.player.vo {
 			len = _objects.length;
 			for(i = 0; i < len; ++i) {
 				_objects[i].total = 0;
+				_objects[i].unlocked = false;
 			}
 		}
 
