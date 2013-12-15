@@ -1,23 +1,22 @@
 package com.twinoid.kube.quest.player.views {
-	import com.nurun.utils.vector.VectorUtils;
-	import gs.TweenLite;
-	import com.nurun.structure.environnement.label.Label;
-	import flash.utils.Dictionary;
-	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
-	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.bitmap.ImageResizerAlign;
 	import com.nurun.components.button.TextAlign;
 	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 	
 	
 	[Event(name="resize", type="flash.events.Event")]
@@ -37,6 +36,7 @@ package com.twinoid.kube.quest.player.views {
 		private var _buttonToIndex:Dictionary;
 		private var _next:ButtonKube;
 		private var _choicesSpool:Vector.<ButtonKube>;
+		private var _simulatedMode:Boolean;
 		
 		
 		
@@ -84,13 +84,14 @@ package com.twinoid.kube.quest.player.views {
 			
 			_image	= addChild(new ImageResizer(ImageResizerAlign.CENTER, true, true, 100, 100)) as ImageResizer;
 			_tf		= addChild(new CssTextField("kuest-description")) as CssTextField;
-			_next	= addChild(new ButtonKube(Label.getLabel("player-next"))) as ButtonKube;
+			_next	= addChild(new ButtonKube('')) as ButtonKube;
 			
 			_tf.selectable = true;
 			
 			_image.defaultTweenEnabled = false;
 			
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, newEventHandler);
+			DataManager.getInstance().addEventListener(DataManagerEvent.SIMULATE_EVENT, newEventHandler);
 			computePositions();
 			_image.addEventListener(MouseEvent.ROLL_OVER, rollOverImageHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
@@ -105,15 +106,22 @@ package com.twinoid.kube.quest.player.views {
 		/**
 		 * Called when a new event should be displayed
 		 */
-		private function newEventHandler(event:DataManagerEvent):void {
-			_data = DataManager.getInstance().currentEvent;
+		private function newEventHandler(event:DataManagerEvent = null):void {
 			
+			if(event != null && event.type == DataManagerEvent.SIMULATE_EVENT) {
+				_simulatedMode = true;
+				_next.text = Label.getLabel("player-stopSim");
+				_data = DataManager.getInstance().simulatedEvent;
+			}else{
+				_simulatedMode = false;
+				_next.text = Label.getLabel("player-next");
+				_data = DataManager.getInstance().currentEvent;
+			}
 			var wasVisible:Boolean = visible;
 			visible = _data != null;
 			if(!visible) {
+				alpha = 0;
 				if(wasVisible) dispatchEvent(new Event(Event.RESIZE, true));
-				visible = true;
-				TweenLite.to(this, .01, {autoAlpha:0, delay:.35});
 				return;
 			}
 			alpha = 1;
@@ -138,7 +146,7 @@ package com.twinoid.kube.quest.player.views {
 			}
 			
 			//Add/remove next button
-			if(_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0) {//TODO Check for time
+			if(_simulatedMode || (_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0)) {//TODO Check for time
 				addChild(_next);
 			}else if(contains(_next)) {
 				removeChild(_next);
@@ -168,9 +176,11 @@ package com.twinoid.kube.quest.player.views {
 			for(i = 0; i < len; ++i) {
 				_choicesSpool[i].x = _tf.x;
 				_choicesSpool[i].width = maxWidth + 10;
+				_choicesSpool[i].enabled = !_simulatedMode;
 //				PosUtils.hCenterIn(_choicesSpool[i], _tf);
 			}
 			_next.x = _tf.x;
+			_next.validate();
 			
 			dispatchEvent(new Event(Event.RESIZE, true));
 		}
@@ -179,6 +189,7 @@ package com.twinoid.kube.quest.player.views {
 		 * Called when image is rolled over.
 		 */
 		private function rollOverImageHandler(event:MouseEvent):void {
+			if(_data == null || _data.actionType == null) return;
 			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.actionType.getItem().name, ToolTipAlign.BOTTOM));
 		}
 		
@@ -191,7 +202,12 @@ package com.twinoid.kube.quest.player.views {
 				DataManager.getInstance().answer(index);
 			}
 			if(event.target == _next) {
-				DataManager.getInstance().next();
+				if(_simulatedMode) {
+					trace("PlayerEventView.clickHandler(event)");
+					newEventHandler();
+				}else{
+					DataManager.getInstance().next();
+				}
 			}
 		}
 		

@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.player.model {
-	import com.twinoid.kube.quest.player.vo.SaveVersion;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
 	import com.twinoid.kube.quest.editor.vo.ActionType;
@@ -12,6 +11,7 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.player.vo.InventoryManager;
 	import com.twinoid.kube.quest.player.vo.InventoryObject;
 	import com.twinoid.kube.quest.player.vo.PositionManager;
+	import com.twinoid.kube.quest.player.vo.SaveVersion;
 	import com.twinoid.kube.quest.player.vo.TimeAccessManager;
 	import com.twinoid.kube.quest.player.vo.TreeManager;
 
@@ -44,17 +44,16 @@ package com.twinoid.kube.quest.player.model {
 		
 		private var _lastPosData:*;//Contains a Point or Point3D or ActionPlace (in debug mode)
 		private var _positionManager:PositionManager;
-		private var _nodeToTreeID:Dictionary;
-		private var _timeAcessManager:TimeAccessManager;
+		private var _timeAccessManager:TimeAccessManager;
 		private var _inventoryManager:InventoryManager;
 		private var _currentEvent:KuestEvent;
 		private var _treeManager:TreeManager;
 		private var _positionToIndex:Object;
 		private var _eventsHistory:Vector.<String>;
-		private var _guidToEvent:Object;
 		private var _save:ByteArray;
 		private var _questComplete:Boolean;
 		private var _questLost:Boolean;
+		private var _guidToEvent:Object;
 		
 		
 		
@@ -93,6 +92,19 @@ package com.twinoid.kube.quest.player.model {
 		 * Gets if the quest has been lost
 		 */
 		public function get questLost():Boolean { return _questLost; }
+		
+		/**
+		 * Gets the guids history
+		 */
+		public function get eventsHistory():Vector.<KuestEvent>{
+			var i:int, len:int, ret:Vector.<KuestEvent>;
+			len = _eventsHistory.length;
+			ret = new Vector.<KuestEvent>();
+			for(i = 0; i < len; ++i) {
+				ret.push( _guidToEvent[_eventsHistory[i]] );
+			}
+			return ret;
+		}
 
 
 
@@ -106,10 +118,9 @@ package com.twinoid.kube.quest.player.model {
 			_save = save;//Save is parsed when tree computation completes
 			
 			//Builds fast accesses to the events to grab them from a specific position.
-			_nodeToTreeID = new Dictionary();
 			_positionManager.populate(nodes, debugMode);
 			_inventoryManager.initialize(objects);
-			_timeAcessManager.initialize(timeOffset, testMode, debugMode);
+			_timeAccessManager.initialize(timeOffset, testMode, debugMode);
 			
 			computeTreeGUIDs(nodes, onTreeComputeComplete);
 		}
@@ -151,10 +162,11 @@ package com.twinoid.kube.quest.player.model {
 		 * @param pos	a Point or Point3D or an ActionPlace instance
 		 */
 		public function setCurrentPosition(pos:*, debugDate:Date = null):void {
+			if(pos == null) return;
 			if(!(pos is Point) && !(pos is Point3D) && !(pos is ActionPlace)) throw new KuestException('pos parameter must be a Point, a Point3D or an ActionPlace instance !', '#215');
 			_lastPosData = pos['clone']();
 			if(debugDate != null) {
-				_timeAcessManager.currentDate = debugDate;
+				_timeAccessManager.currentDate = debugDate;
 			}
 			
 			//If the previous event has no custom answer and is still accessible, automatically flag it as complete
@@ -179,7 +191,7 @@ package com.twinoid.kube.quest.player.model {
 			i = _positionToIndex[getPositionId(pos)] % len;//Loop offset to switch from item to item
 			loopsLen = len + i;
 			for(i; i < loopsLen; ++i) {
-				if(_timeAcessManager.isEventAccessible(items[i%len])//If it's the right periode or if there are no periode limitation
+				if(_timeAccessManager.isEventAccessible(items[i%len])//If it's the right periode or if there are no periode limitation
 					&& _treeManager.isEventAccessible(items[i%len])) {//If the event is part of the current priority of its tree
 						if(setCurrentEvent(items[i%len])) { 
 							return;//If the event has been selected, stop for searching one.
@@ -263,7 +275,7 @@ package com.twinoid.kube.quest.player.model {
 			for(i = 0; i < len; ++i) {
 				event = events[i];
 				if(event.actionType.type == ActionType.TYPE_OBJECT) {
-					if(_timeAcessManager.isEventAccessible(event)//If it's the right periode or if there are no periode limitation
+					if(_timeAccessManager.isEventAccessible(event)//If it's the right periode or if there are no periode limitation
 					&& _treeManager.isEventAccessible(event)) {//If the event is part of the current priority of its tree
 						if(!event.actionType.takeMode) {//If an object has to be put here
 							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
@@ -285,6 +297,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Clears the player's progression
 		 */
 		public function clearProgression():void {
+			_currentEvent = null;
 			_eventsHistory = new Vector.<String>();
 			_treeManager.reset();
 			_inventoryManager.reset();
@@ -301,42 +314,33 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function initialize():void {
 			_positionManager	= new PositionManager();
-			_timeAcessManager	= new TimeAccessManager();
+			_timeAccessManager	= new TimeAccessManager();
 			_inventoryManager	= new InventoryManager();
 			_treeManager		= new TreeManager();
 			_eventsHistory		= new Vector.<String>();//stores events guids
 			_positionToIndex	= {};//Stores loop indexes for every action places.
-			_guidToEvent		= {};//Links an event's guid to the actual VO.
 		}
 		
 		/**
 		 * Called when tree IDs are computed
 		 */
 		private function onTreeComputeComplete(tree:Dictionary):void {
-			_nodeToTreeID = tree;
 			
-			_treeManager.initialize(_nodeToTreeID);//Do this before the loop because the dictionnary is used on givePriorityTo() method.
+			_treeManager.initialize(tree);//Do this before the loop because the dictionnary is used on givePriorityTo() method.
 			
 			//Define the start points of each trees
-			var id:int, k:KuestEvent;
-			for(var j:* in _nodeToTreeID) {
+			var id:int, k:KuestEvent, guidToEvent:Object;
+			guidToEvent = {};//Links an event's guid to the actual VO.
+			for(var j:* in tree) {
 				k = j as KuestEvent;
-				id = _nodeToTreeID[k];
+				id = tree[k];
 				k.setTreeID(id);
-				_guidToEvent[k.guid] = k;
-				if(k.startsTree) {
-					_treeManager.givePriorityTo( new <KuestEvent>[ k ] );
-				}else{
-					//If the event has no dependencies, set it as the start point of its tree.
-					//The tree manager will actually look if there is a higher priority by position
-					//or by user input (editor) before setting it as the priority.
-//					if(k.dependencies.length == 0) {
-						_treeManager.givePriorityTo( new <KuestEvent>[ k ], null, true );
-//					}
-				}
+				guidToEvent[k.guid] = k;
+				_treeManager.givePriorityTo( new <KuestEvent>[ k ], null, !k.startsTree, true);
 			}
 			
-			_treeManager.guidToEvent = _guidToEvent;
+			_treeManager.guidToEvent = _guidToEvent = guidToEvent;
+			
 			//Load save data if necessary
 			if(_save != null) {
 				_save.inflate();
@@ -348,10 +352,12 @@ package com.twinoid.kube.quest.player.model {
 						_positionToIndex = _save.readObject();
 						
 						_eventsHistory = new Vector.<String>();
-						var tmp:Array = _save.readUTF().split('');
+						var tmp:Array = _save.readUTF().split(',');
 						var i:int, len:int;
 						len = tmp.length;
-						for(i = 0; i < len; ++i) _eventsHistory[i] = tmp[i];
+						for(i = 0; i < len; ++i) {
+							_eventsHistory[i] = tmp[i];
+						}
 						break;
 					default:
 						dispatchEvent(new QuestManagerEvent(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT));
@@ -363,8 +369,10 @@ package com.twinoid.kube.quest.player.model {
 		
 		/**
 		 * Sets the current event.
+		 * Return false if its an object put related event or if the new event
+		 * is the current event 
 		 * 
-		 * @return true if the event have been selected
+		 * @return true if the event has been selected
 		 */
 		private function setCurrentEvent(event:KuestEvent, objectUsed:Boolean = false):Boolean {
 			//In case of unique event on a zone, we loop to it as soon as we
@@ -400,6 +408,6 @@ package com.twinoid.kube.quest.player.model {
 			
 			return true;
 		}
-		
+
 	}
 }

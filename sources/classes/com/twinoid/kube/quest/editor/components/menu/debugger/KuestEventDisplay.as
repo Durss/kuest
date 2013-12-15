@@ -74,6 +74,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 				_image.visible = false;
 				_label.text = Label.getLabel('menu-debug-emptyEvent');
 				visible = true;
+				computePositions();
 				return;
 			}
 			visible = true;

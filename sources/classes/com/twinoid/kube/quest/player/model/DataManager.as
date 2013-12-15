@@ -90,6 +90,10 @@ package com.twinoid.kube.quest.player.model {
 		private var _lastTouchPosition:Point3D;
 		private var _questManager:QuestManager;
 		private var _save:ByteArray;
+		private var _questManagerReady:Boolean;
+		private var _timeoutUpdatePos:uint;
+		private var _lastPlaceChangeWasZone:Boolean;
+		private var _simulatedEvent:KuestEvent;
 		
 		
 		
@@ -159,6 +163,11 @@ package com.twinoid.kube.quest.player.model {
 		public function get currentEvent():KuestEvent { return _questManager.currentEvent; }
 		
 		/**
+		 * Gets the current simulated event
+		 */
+		public function get simulatedEvent():KuestEvent { return _simulatedEvent; }
+		
+		/**
 		 * Gets the current date
 		 */
 		public function get currentDate():Date {
@@ -191,6 +200,11 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		public function get currentQuestGUID():String { return _currentQuestGUID; }
 		
+		/**
+		 * Gets the current quest's guid
+		 */
+		public function get history():Vector.<KuestEvent> { return _questManager.eventsHistory; }
+		
 		
 		
 		
@@ -210,6 +224,7 @@ package com.twinoid.kube.quest.player.model {
 			_questManager.addEventListener(QuestManagerEvent.READY, questReadyHandler);
 			_questManager.addEventListener(QuestManagerEvent.NEW_EVENT, newEventHandler);
 			_questManager.addEventListener(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT, saveLoadingErrorHandler);
+			_questManager.addEventListener(QuestManagerEvent.HISTORY_UPDATE, historyUpdateHandler);
 			
 			initLocalConnections();
 			
@@ -224,8 +239,9 @@ package com.twinoid.kube.quest.player.model {
 				//Tubasa labyrinthe - 51aa7b6cbe1ef
 				//MlleGray _Tom - 51ec728f16b49
 				//1) Messages uniques indépendants - 51ad0d08dc8c8
+				//2) Dépendances d'événements - 51ad0ec570134
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
-				Config.addVariable("kuestID", "51ad0d08dc8c8");
+				Config.addVariable("kuestID", "51ad12eca65b6");
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
@@ -242,6 +258,13 @@ package com.twinoid.kube.quest.player.model {
 			//Send to server after a short delay to prevent from save spamming
 			clearTimeout(_timeoutSave);
 			_timeoutSave = setTimeout(onSaveProgression, 3000);
+		}
+		
+		/**
+		 * Called when history is updated
+		 */
+		private function historyUpdateHandler(event:QuestManagerEvent):void {
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.HISTORY_UPDATE));
 		}
 		
 		/**
@@ -286,6 +309,8 @@ package com.twinoid.kube.quest.player.model {
 			_lcSend = new LocalConnection();
 			_lcSend.addEventListener(StatusEvent.STATUS, statusHandler);
 			
+			//using anonymous objects provides a way not to break callbacks in case
+			//of code obfuscation.
 			var client:Object = {};
 			client["_kill"]					= killLC;
 			client["_onKill"]				= onKill;
@@ -308,13 +333,16 @@ package com.twinoid.kube.quest.player.model {
 				_lcKillCallbackReceive.allowDomain("*");
 				_lcKillCallbackReceive.client = client;
 				_lcKillCallbackReceive.connect(connectionName);
-				_lcSend.send("_lc_kuest_", "_kill", connectionName);
+				_lcSend.send(_lcName, "_kill", connectionName);
 			}
 				
 			_timer = new Timer(100);
 			_timer.addEventListener(TimerEvent.TIMER, ticTimerHandler);
 			
 			_lcGameName = "_kuestGame_"+new Date().getTime()+"_";
+			
+			_senderGame = new LocalConnection();
+			_senderGame.addEventListener(StatusEvent.STATUS, statusHandler);
 			
 			//using anonymous objects provides a way not to break callbacks in case
 			//of code obfuscation.
@@ -323,13 +351,12 @@ package com.twinoid.kube.quest.player.model {
 			client["_action"]		= onAction;
 			client["_touchForum"]	= onTouchForum;
 			
-			_senderGame = new LocalConnection();
-			_senderGame.addEventListener(StatusEvent.STATUS, statusHandler);
-			
 			_receiverGame = new LocalConnection();
 			_receiverGame.client = client;
 			_receiverGame.allowDomain("*");
 			_receiverGame.connect(_lcGameName);
+			
+			attemptToConnectToGame();
 		}
 		
 		/**
@@ -350,7 +377,8 @@ package com.twinoid.kube.quest.player.model {
 		 * Simulates a zone change
 		 */
 		public function simulateZoneChange(x:Number, y:Number):void {
-			_inGamePosition = new Point(x,y);
+			_inGamePosition.x = x;
+			_inGamePosition.y = y;
 			onZoneChange();
 		}
 		
@@ -391,6 +419,14 @@ package com.twinoid.kube.quest.player.model {
 //			_save["evaluated"] = true;
 			clearTimeout(_timeoutSave);
 			onSaveProgression();
+		}
+		
+		/**
+		 * Simulates an event
+		 */
+		public function simulateEvent(data:KuestEvent):void {
+			_simulatedEvent = data;
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.SIMULATE_EVENT));
 		}
 
 
@@ -491,6 +527,11 @@ package com.twinoid.kube.quest.player.model {
 		private function onUpdatePosition(px:int, py:int):void {
 			if(px == 0xffffff || py == 0xffffff //first undefined coord fired by the game. Ignore it.
 			|| (_inGamePosition.x == px && _inGamePosition.y == py)) return;
+			if(!_questManagerReady) {
+				clearTimeout(_timeoutUpdatePos);
+				_timeoutUpdatePos = setTimeout(onUpdatePosition, 500, px, py);
+				return;
+			}
 			_inGamePosition.x = px;
 			_inGamePosition.y = py;
 			onZoneChange();
@@ -507,6 +548,7 @@ package com.twinoid.kube.quest.player.model {
 		private function killLC(callbackLC:String):void {
 			_lcReceive.close();
 			_lcSend.send(callbackLC, "_onKill");
+//			_lcSend.close();
 		}
 		
 		/**
@@ -637,6 +679,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Called when quest is ready to be played (quest parsed and save loaded)
 		 */
 		private function questReadyHandler(event:QuestManagerEvent):void {
+			_questManagerReady = true;
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_COMPLETE));
 		}
 		
@@ -694,7 +737,13 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function clearProgressionCompleteHandler(event:CommandEvent):void {
 			_questManager.clearProgression();
+			if(_lastPlaceChangeWasZone) {
+				onZoneChange();
+			}else{
+				onTouchForum();
+			}
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE));
+//			setTimeout(_lastPlaceChangeWasZone? onZoneChange : onTouchForum, 250);
 		}
 		
 		/**
@@ -775,6 +824,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Called when entering a new zone
 		 */
 		private function onZoneChange():void {
+			_lastPlaceChangeWasZone = true;
 			_questManager.setCurrentPosition(_inGamePosition);
 		}
 		
@@ -782,6 +832,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Called when touching a forum
 		 */
 		private function onTouchForum():void {
+			_lastPlaceChangeWasZone = false;
 			_questManager.setCurrentPosition(_lastTouchPosition);
 		}
 		

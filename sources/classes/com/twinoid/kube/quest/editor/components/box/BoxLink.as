@@ -1,5 +1,6 @@
 package com.twinoid.kube.quest.editor.components.box {
 	import gs.TweenLite;
+	import gs.easing.Sine;
 
 	import com.nurun.core.lang.Disposable;
 	import com.twinoid.kube.quest.editor.views.BackgroundView;
@@ -35,6 +36,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _tmpPt:Point;
 		private var _warning:WarningGraphic;
 		private var _isOver:Boolean;
+		private var _debugOffset:Number;
 		
 		
 		
@@ -97,6 +99,17 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Sets the choice index from which this link starts.
 		 */
 		public function set choiceIndex(choiceIndex:int):void { _choiceIndex = choiceIndex; }
+		
+		/**
+		 * Used for debug mode to animate the link
+		 */
+		public function get debugOffset():Number { return _debugOffset; }
+
+		
+		/**
+		 * Used for debug mode to animate the link
+		 */
+		public function set debugOffset(value:Number):void { _debugOffset = value; update(); }
 
 
 
@@ -221,6 +234,15 @@ package com.twinoid.kube.quest.editor.components.box {
 			removeEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			removeEventListener(Event.ENTER_FRAME, update);
 		}
+		
+		/**
+		 * Animates the link for the debug view.
+		 */
+		public function animateDebug(filtersToApply:Array):void {
+			debugOffset = 0;
+			TweenLite.to(this, .5, {debugOffset:1, delay:.2, ease:Sine.easeInOut, onComplete:onDebugAnimComplete, onCompleteParams:[filtersToApply]});
+		}
+
 
 
 		
@@ -321,6 +343,27 @@ package com.twinoid.kube.quest.editor.components.box {
 			g.lineGradientStyle(GradientType.LINEAR, colors, [1, 1], [0x10, 0xf0], m);
 			g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 			g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+			
+			if(_debugOffset > 0 && _debugOffset < 1) {
+				g.moveTo(0, 0);
+				colors = [0xffffff, 0xffffff];
+//				colors = [0xffffff, 0xffffff, 0xffffff, 0xffffff];
+				g.lineGradientStyle(GradientType.LINEAR, colors, [_debugOffset < .5? 1 : 0, _debugOffset < .5? 0 : 1],
+																		 [_debugOffset < .5? _debugOffset * 2 * 0xff : (_debugOffset-.5) * 2 * 0xff,
+																		 _debugOffset < .5?  _debugOffset * 2 * 0xff : _debugOffset * 0xff],
+																	m);
+//				g.lineGradientStyle(GradientType.LINEAR, colors, [_debugOffset < .25? 1 : 0, 1, 1, _debugOffset + .25? 1 : 0], [Math.max(0, _debugOffset - .25) * 0xff, Math.max(0, _debugOffset - .2) * 0xff, Math.min(1, _debugOffset + .2) * 0xff, Math.min(1, _debugOffset + .25) * 0xff], m);
+				g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
+				g.curveTo(ctrl2X, ctrl2Y, endX, endY);
+				
+			}
+		}
+		
+		/**
+		 * Called when debug animation completes.
+		 */
+		private function onDebugAnimComplete(filtersToApply:Array):void {
+			filters = filtersToApply;
 		}
 		
 	}

@@ -43,7 +43,7 @@ package com.twinoid.kube.quest.editor {
 	 * @date 3 mai 2012;
 	 */
 	 
-	[SWF(width="1000", height="700", backgroundColor="0xFFFFFF", frameRate="31")]
+	[SWF(width="1000", height="700", backgroundColor="0xBBDDEC", frameRate="31")]
 	[Frame(factoryClass="com.twinoid.kube.quest.editor.ApplicationLoader")]
 	public class Application extends MovieClip {
 		private var _model:Model;

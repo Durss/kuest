@@ -74,5 +74,6 @@
 .kuest-description { font-family:Verdana; font-size:14; color:#ffffff; }
 .kuest-date { font-family:Verdana; font-weight:normal; font-size:12; color:#ffffff; text-align:right; }
 .kuest-objectCount { font-family:Verdana; font-size:12; color:#ffffff; text-align:right; }
+.kuest-historyLabel { font-family:Verdana; font-size:8; color:#ffffff; text-align:center; }
 .kuest-inventoryEmpty { font-family:Verdana; font-size:18; font-weight:bold; color:#ffffff; text-align:right; }
 .kuest-evaluationTitle { font-family:Verdana; font-size:18; font-weight:bold; color:#ffffff; text-align:center; }

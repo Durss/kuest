@@ -6301,3 +6301,108 @@ Tout débute à <b>l'origine</b> en [0;0] !
 
     [pubkey] => nw0eChqaEhidt7gXxeA8PY1YEJAzLQq5
 )
+
+(15-12-13 01:20:01) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)
+
+(15-12-13 01:20:10) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)
+
+(15-12-13 01:20:17) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)
+
+(15-12-13 01:21:22) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)
+
+(15-12-13 01:21:28) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)
+
+(15-12-13 01:21:30) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)
+
+(15-12-13 01:21:36) NOT_CONNECTED :: Not connected
+		GET : Array
+(
+)
+
+		POST : Array
+(
+    [samples] => 51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980
+)
+
+		SESSION : Array
+(
+    [version] => 4
+)

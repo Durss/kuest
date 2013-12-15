@@ -27,6 +27,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 	 * @date 16 sept. 2013;
 	 */
 	public class MenuDebuggerContent extends AbstractMenuContent {
+		
 		private var _questManager:QuestManager;
 		private var _header:CssTextField;
 		private var _selectStart:CssTextField;
@@ -187,6 +188,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_holder.addChild(_inventory);
 			_holder.addChild(_simulator);
 			computePositions();
+			_questManager.clearProgression();
 			_questManager.forceEvent(event.data as KuestEvent);
 			_inventory.populate(_questManager.inventory);
 		}
@@ -195,6 +197,9 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called when a new event is available
 		 */
 		private function questTestNewEventHandler(event:QuestManagerEvent):void {
+			if(_questManager.currentEvent!= null) {
+				_questManager.currentEvent.activateOnEditor();
+			}
 			_eventDisplay.populate(_questManager.currentEvent);
 			_inventory.populate(_questManager.inventory);
 			computePositions();
