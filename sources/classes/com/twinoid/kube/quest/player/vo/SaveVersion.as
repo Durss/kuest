@@ -13,8 +13,10 @@ package com.twinoid.kube.quest.player.vo {
 		 * 		ba.writeObject( inventory data );
 		 * 		ba.writeObject( tree positions );
 		 * 		ba.writeUTF( events history );
+		 * 		ba.writeUTF( events history favorites );
 		 * 		ba.writeBoolean( quest complete );
 		 * 		ba.writeBoolean( quest lost );
+		 * 		ba.writeBoolean( quest evaluated );
 		 * 	
 		 * tree data is formated this way :
 		 * 	[
@@ -34,6 +36,9 @@ package com.twinoid.kube.quest.player.vo {
 		 * 	and values the event loop indexes. 
 		 * 
 		 * events history is a comma separated string containing the events GUIDs :
+		 * 		guid1,guid2,guid3,...,guidN
+		 * 
+		 * events history favorites is a comma separated string containing the events GUIDs :
 		 * 		guid1,guid2,guid3,...,guidN
 		 */
 		public static const V1:uint = 1;

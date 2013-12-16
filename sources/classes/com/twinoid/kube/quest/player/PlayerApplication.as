@@ -1,7 +1,5 @@
 package com.twinoid.kube.quest.player {
-	import com.nurun.components.form.FormComponentGroup;
-	import com.twinoid.kube.quest.player.views.PlayerHistoryView;
-	import com.twinoid.kube.quest.player.views.EvaluateQuestView;
+	import com.twinoid.kube.quest.player.views.PlayerLostQuestView;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 	import gs.plugins.RemoveChildPlugin;
@@ -14,6 +12,7 @@ package com.twinoid.kube.quest.player {
 	import com.muxxu.kub3dit.graphics.KeyFocusGraphics;
 	import com.nurun.components.button.AbstractNurunButton;
 	import com.nurun.components.button.focus.NurunButtonKeyFocusManager;
+	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.components.form.Input;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -35,10 +34,12 @@ package com.twinoid.kube.quest.player {
 	import com.twinoid.kube.quest.player.model.DataManager;
 	import com.twinoid.kube.quest.player.utils.resizeFlashTo;
 	import com.twinoid.kube.quest.player.views.ActionSimulatorView;
-	import com.twinoid.kube.quest.player.views.PlayerMenuView;
 	import com.twinoid.kube.quest.player.views.PlayerDefaultView;
+	import com.twinoid.kube.quest.player.views.PlayerEvaluateQuestView;
 	import com.twinoid.kube.quest.player.views.PlayerEventView;
+	import com.twinoid.kube.quest.player.views.PlayerHistoryView;
 	import com.twinoid.kube.quest.player.views.PlayerInventoryView;
+	import com.twinoid.kube.quest.player.views.PlayerMenuView;
 
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -84,8 +85,9 @@ package com.twinoid.kube.quest.player {
 		private var _exception:ExceptionView;
 		private var _menu:DisplayObject;
 		private var _timeOutResize:uint;
-		private var _evaluation:EvaluateQuestView;
+		private var _evaluation:PlayerEvaluateQuestView;
 		private var _history:PlayerHistoryView;
+		private var _lost:PlayerLostQuestView;
 		
 		
 		
@@ -178,7 +180,8 @@ package com.twinoid.kube.quest.player {
 				_holder		= addChild(new Sprite()) as Sprite;
 				_inventory	= addChild(new PlayerInventoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerInventoryView;
 				_history	= addChild(new PlayerHistoryView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerHistoryView;
-				_evaluation	= addChild(new EvaluateQuestView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as EvaluateQuestView;
+				_evaluation	= addChild(new PlayerEvaluateQuestView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerEvaluateQuestView;
+				_lost		= addChild(new PlayerLostQuestView(stage.stageWidth - BackWindow.CELL_WIDTH * 2 - 1)) as PlayerLostQuestView;
 				_title		= addChild(new CssTextField("kuest-title")) as CssTextField;
 				_mask		= addChild(createRect(0xffff0000)) as Shape;
 				_default	= _holder.addChild(new PlayerDefaultView(stage.stageWidth - 20 - BackWindow.CELL_WIDTH * 2)) as PlayerDefaultView;
@@ -261,7 +264,9 @@ package com.twinoid.kube.quest.player {
 			_holder.x			= _mask.x = BackWindow.CELL_WIDTH + margin;
 			_evaluation.x		= BackWindow.CELL_WIDTH + 1;
 			_evaluation.y		= _splitter.y + _splitter.height;
-			_holder.y = _mask.y = _evaluation.y + _evaluation.height + margin;
+			_lost.x				= BackWindow.CELL_WIDTH + 1;
+			_lost.y				= _evaluation.y + _evaluation.height;
+			_holder.y = _mask.y = _lost.y + _lost.height + margin;
 			
 			_background.x			= 0;
 			_background.y			= 0;

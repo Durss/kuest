@@ -3,9 +3,11 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog71-content"><![CDATA[<ul>
+		<label code="patchlog75-content"><![CDATA[<ul>
 			<li>Ajout d'un historique des événements dans le module in-game.</li>
 			<li>Debug du reset d'une quête qui cassait un peu la logique des quêtes du debugger.</li>
+			<li>Gestion de l'événement de perte.</li>
+			<li>Ajout d'un nouvel exemple.</li>
 			<li>Refonte complète du moteur de quête et implémentation dans le module de lecture in-game.</li>
 			<li>Ajout d'un panneau de debug de quêtes utilisant le nouveau moteur.</li>
 			<li>Possibilité de sélectionner des groupes d'événement via click droit.</li>
@@ -171,7 +173,7 @@
 		
 		<!-- !Event's edition window -->
 		<label code="editWindow-title"><![CDATA[EDITER EVENEMENT]]></label>
-		<label code="editWindow-submit"><![CDATA[Valider]]></label>
+		<label code="editWindow-submit"><![CDATA[Enregistrer]]></label>
 		<label code="editWindow-cancel"><![CDATA[Annuler]]></label>
 		<label code="editWindow-endEvent"><![CDATA[Cet événement valide la complétion de la quête.]]></label>
 		<label code="editWindow-looseEvent"><![CDATA[Cet événement fait échouer le joueur.]]></label>
@@ -280,6 +282,11 @@
 		<label code="player-wrongObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 		<label code="player-noNeedObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 		<label code="player-history"><![CDATA[Historique]]></label>
+		<!-- tooltip -->
+		<label code="player-historyFav"><![CDATA[Événements épinglés]]></label>
+		<label code="player-historyFavTT"><![CDATA[Epingler]]></label>
+		<label code="player-questLost"><![CDATA[Vous avez échoué la quête.<br />Recommencez du début et tentez à nouveau de la terminer !]]></label>
+		<label code="player-questLostRestart"><![CDATA[Recommencer]]></label>
 	</labels>
 	
 </root>

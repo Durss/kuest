@@ -4,7 +4,7 @@ package com.twinoid.kube.quest.player.views {
 
 	import com.nurun.components.scroll.events.ScrollerEvent;
 	import com.nurun.components.scroll.scroller.scrollbar.Scrollbar;
-	import com.nurun.components.scroll.scroller.scrollbar.ScrollbarSkin;
+	import com.nurun.components.scroll.scroller.scrollbar.ScrollbarClassicSkin;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.structure.environnement.label.Label;
@@ -33,7 +33,7 @@ package com.twinoid.kube.quest.player.views {
 	 * @author Francois
 	 * @date 1 juin 2013;
 	 */
-	public class EvaluateQuestView extends Sprite {
+	public class PlayerEvaluateQuestView extends Sprite {
 		
 		private var _label:CssTextField;
 		private var _smiley:EvaluationSmileyGraphic;
@@ -53,9 +53,9 @@ package com.twinoid.kube.quest.player.views {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>EvaluateQuestView</code>.
+		 * Creates an instance of <code>PlayerEvaluateQuestView</code>.
 		 */
-		public function EvaluateQuestView(width:int) {
+		public function PlayerEvaluateQuestView(width:int) {
 			_width = width;
 			initialize();
 		}
@@ -99,7 +99,7 @@ package com.twinoid.kube.quest.player.views {
 			_back		= addChild(new Shape()) as Shape;
 			_smiley		= addChild(new EvaluationSmileyGraphic()) as EvaluationSmileyGraphic;
 			_label		= addChild(new CssTextField("kuest-evaluationTitle")) as CssTextField;
-			_scroll		= addChild(new Scrollbar(new ScrollbarSkin(null, null, new EvaluationScrollButtonGraphic(), null, new EvaluationScrollBackGraphic()), false)) as Scrollbar;
+			_scroll		= addChild(new Scrollbar(new ScrollbarClassicSkin(null, null, new EvaluationScrollButtonGraphic(), null, new EvaluationScrollBackGraphic()), false)) as Scrollbar;
 			_submit		= addChild(new ButtonKube(Label.getLabel("player-evaluateSubmit"))) as ButtonKube;
 			_splitter	= addChild(new Splitter(SplitterType.HORIZONTAL)) as Splitter;
 			_spinning	= addChild(new LoaderSpinning()) as LoaderSpinning;
@@ -157,6 +157,7 @@ package com.twinoid.kube.quest.player.views {
 		 */
 		private function questCompleteHandler(event:DataManagerEvent):void {
 			mouseChildren = tabChildren = true;
+			_submit.enabled = true;
 			_opened = true;
 			TweenLite.to(_splitter, .35, {y:_back.y + _back.height, ease:Sine.easeInOut});
 			TweenLite.to(this, .35, {scrollRect:{height:_back.y + _back.height + _splitter.height}, ease:Sine.easeInOut});

@@ -164,7 +164,13 @@ package com.twinoid.kube.quest.player.views {
 				_image.visible = false;
 				_image.clear();
 			}
-			_tf.text = _data.actionType.text;
+			
+			if (_simulatedMode) {
+				var type:String = _data.actionPlace.kubeMode? Label.getLabel('editWindow-place-kube') : Label.getLabel('editWindow-place-zone');
+				_tf.text = '<i>'+type+_data.actionPlace.getAsLabel()+'</i><br />'+_data.actionType.text;
+			}else{
+				_tf.text = _data.actionType.text;
+			}
 			
 			//Place elements
 			_tf.x = _image.visible? _image.width + 10 : 10;

@@ -318,7 +318,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			if(alpha == 1) {
 				//Hit zone
 				g.moveTo(0, 0);
-				g.lineStyle(30, 0xffffff, 0, false, "normal", CapsStyle.NONE);
+				g.lineStyle(22, 0xff0000, 0, false, "normal", CapsStyle.NONE);
 				g.curveTo(ctrl1X, ctrl1Y, halfX, halfY);
 				g.curveTo(ctrl2X, ctrl2Y, endX, endY);
 			}

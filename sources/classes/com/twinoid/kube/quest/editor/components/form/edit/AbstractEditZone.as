@@ -55,8 +55,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		protected var _openCloseBt:GraphicButton;
 		protected var _closed:Boolean;
 		protected var _currentContent:Sprite;
-		private var _toggle:ToggleButton;
-		private var _toggleAble:Boolean;
+		protected var _toggle:ToggleButton;
+		protected var _toggleAble:Boolean;
 
 		
 		
@@ -252,7 +252,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			computePositions();
 		}
 
-		private function wheelHandler(event:MouseEvent):void {
+		protected function wheelHandler(event:MouseEvent):void {
 			if (_buttons.length > 1) {
 				var index:Number = selectedIndex;
 				index += event.delta > 0? -1 : 1;
