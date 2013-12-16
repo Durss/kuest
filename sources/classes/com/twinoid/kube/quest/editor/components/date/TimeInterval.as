@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.date {
+	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.roundPos;
@@ -119,6 +120,14 @@ package com.twinoid.kube.quest.editor.components.date {
 			_endMLabel.text = Label.getLabel("editWindow-time-hourInterval-miutesLabel");
 			
 			computePositions();
+			
+			var i:int, len:int;
+			len = numChildren;
+			for(i = 0; i < len; ++i) {
+				if(getChildAt(i) is Validable) {
+					Validable(getChildAt(i)).validate();
+				}
+			}
 		}
 		
 		/**

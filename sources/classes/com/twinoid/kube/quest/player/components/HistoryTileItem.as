@@ -1,5 +1,5 @@
 package com.twinoid.kube.quest.player.components {
-	import com.twinoid.kube.quest.player.model.DataManager;
+	import com.nurun.structure.environnement.label.Label;
 	import gs.TweenLite;
 
 	import com.nurun.components.bitmap.ImageResizer;
@@ -7,9 +7,12 @@ package com.twinoid.kube.quest.player.components {
 	import com.nurun.components.tile.ITileEngineItem2D;
 	import com.nurun.components.tile.TileEngine2D;
 	import com.nurun.core.lang.Disposable;
+	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
+	import com.twinoid.kube.quest.graphics.FavoriteIcon;
+	import com.twinoid.kube.quest.player.model.DataManager;
 
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -24,12 +27,14 @@ package com.twinoid.kube.quest.player.components {
 	 * @date 25 mai 2013;
 	 */
 	public class HistoryTileItem extends Sprite implements ITileEngineItem2D {
-		private var _image:ImageResizer;
-		private var _label:CssTextField;
-		private var _maxX:Number;
-		private var _engineRef:TileEngine2D;
-		private var _data:KuestEvent;
-		private var _frame:Shape;
+		protected var _image:ImageResizer;
+		protected var _label:CssTextField;
+		protected var _maxX:Number;
+		protected var _engineRef:TileEngine2D;
+		protected var _data:KuestEvent;
+		protected var _frame:Shape;
+		protected var _favBt:GraphicButtonKube;
+		private var _holder:Sprite;
 		
 		
 		
@@ -97,11 +102,8 @@ package com.twinoid.kube.quest.player.components {
 			_image.height = _engineRef.itemHeight;
 			_image.validate();
 			
-//			graphics.clear();
-//			var margin:int = 5;
-//			graphics.beginFill(0x266884, 1);
-//			graphics.drawRect(0, 0, _image.width + margin * 2 + 1, _label.y + _label.height + margin * 2 - 1);
-//			graphics.endFill();
+			_favBt.width = _engineRef.itemWidth;
+			_favBt.y = _engineRef.itemHeight - _favBt.height;
 		}
 		
 		/**
@@ -125,12 +127,14 @@ package com.twinoid.kube.quest.player.components {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize():void {
+		protected function initialize():void {
 			visible = false;
 			
-			_image = addChild(new ImageResizer(null, true, false, 50, 50)) as ImageResizer;
-			_label = addChild(new CssTextField("kuest-historyLabel")) as CssTextField;
-			_frame = addChild(new Shape()) as Shape;
+			_holder		= addChild(new Sprite()) as Sprite;
+			_image		= _holder.addChild(new ImageResizer(null, true, false, 50, 50)) as ImageResizer;
+			_label		= _holder.addChild(new CssTextField("kuest-historyItemLabel")) as CssTextField;
+			_frame		= _holder.addChild(new Shape()) as Shape;
+			_favBt		= addChild(new GraphicButtonKube(new FavoriteIcon())) as GraphicButtonKube;
 			
 			_image.defaultTweenEnabled = false;
 			_label.filters = [new DropShadowFilter(0,0,0,1,1.25,1.25,100,2)];
@@ -138,44 +142,71 @@ package com.twinoid.kube.quest.player.components {
 			
 			_frame.alpha = 0;
 			
-			buttonMode = true;
-			mouseChildren = false;
+			_holder.buttonMode = true;
+			_holder.mouseChildren = false;
 			
-			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_favBt.visible = false;
+			
+			addEventListener(MouseEvent.MOUSE_OVER, rollOverHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
-			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-			addEventListener(MouseEvent.MOUSE_UP, rollOverHandler);
+			_holder.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_holder.addEventListener(MouseEvent.MOUSE_UP, rollOverHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 		}
-
-		private function clickHandler(event:MouseEvent):void {
-			DataManager.getInstance().simulateEvent(_data);
+		
+		/**
+		 * Called when the component is clicked.
+		 */
+		protected function clickHandler(event:MouseEvent):void {
+			if (event.target == _favBt) {
+				DataManager.getInstance().addToFavorites(_data);
+			}else{
+				DataManager.getInstance().simulateEvent(_data);
+			}
 		}
-
-		private function mouseDownHandler(event:MouseEvent):void {
+		
+		/**
+		 * Called when the mouse is pressed
+		 */
+		protected function mouseDownHandler(event:MouseEvent):void {
 			TweenLite.to(this, .25, {colorMatrixFilter:{brightness:.5}});
 		}
 
-		private function rollOverHandler(event:MouseEvent):void {
-			var size:int = 5;
-			_frame.graphics.clear();
-			_frame.graphics.beginFill(0x55b7ff, 1);
-			_frame.graphics.drawRect(0, 0, _engineRef.itemWidth, size);
-			_frame.graphics.drawRect(_engineRef.itemWidth - size, size, size, _engineRef.itemHeight - size);
-			_frame.graphics.drawRect(0, _engineRef.itemHeight - size, _engineRef.itemWidth - size, size);
-			_frame.graphics.drawRect(0, size, size, _engineRef.itemWidth - size * 2);
-			
-			TweenLite.to(_frame, .25, {autoAlpha:1});
-			TweenLite.to(this, .25, {colorMatrixFilter:{brightness:1.25}});
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.actionType.getItem().name, ToolTipAlign.TOP));
+		/**
+		 * Called when the component is rolled over
+		 */
+		protected function rollOverHandler(event:MouseEvent):void {
+			if(event.target == _holder) {
+				var size:int = 5;
+				_frame.graphics.clear();
+				_frame.graphics.beginFill(0x55b7ff, 1);
+				_frame.graphics.drawRect(0, 0, _engineRef.itemWidth, size);
+				_frame.graphics.drawRect(_engineRef.itemWidth - size, size, size, _engineRef.itemHeight - size);
+				_frame.graphics.drawRect(0, _engineRef.itemHeight - size, _engineRef.itemWidth - size, size);
+				_frame.graphics.drawRect(0, size, size, _engineRef.itemWidth - size * 2);
+				
+				TweenLite.to(_frame, .25, {autoAlpha:1});
+				TweenLite.to(this, .25, {colorMatrixFilter:{brightness:1.25}});
+				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.actionType.getItem().name, ToolTipAlign.TOP));
+			}else{
+				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel('player-historyFavTT'), ToolTipAlign.TOP));
+			}
+			_favBt.visible = true;
 		}
-
-		private function rollOutHandler(event:MouseEvent):void {
+		
+		/**
+		 * Called when the component is rolled out
+		 */
+		protected function rollOutHandler(event:MouseEvent):void {
+			_favBt.visible = false;
 			TweenLite.to(_frame, .25, {autoAlpha:0});
 			TweenLite.to(this, .25, {colorMatrixFilter:{brightness:1, remove:true}});
 		}
-
-		private function imageUpdateHandler(event:Event = null):void {
+		
+		/**
+		 * Called when the image is updated
+		 */
+		protected function imageUpdateHandler(event:Event = null):void {
 			_image.clear();
 			_image.setBitmapData(_data.actionType.getItem().image.getConcreteBitmapData());
 		}

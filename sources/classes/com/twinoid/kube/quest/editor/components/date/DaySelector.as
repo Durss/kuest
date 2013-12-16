@@ -119,9 +119,9 @@ package com.twinoid.kube.quest.editor.components.date {
 				applyDefaultFrameVisitorNoTween(item, item.defaultBackground, item.selectedBackground);
 				item.textBoundsMode = false;
 				item.selected = true;
-				item.validate();
 				item.height = Math.round(item.height);
 				item.addEventListener(MouseEvent.ROLL_OVER, overItemHandler);
+				item.validate();
 				
 				_items[i] = item;
 			}

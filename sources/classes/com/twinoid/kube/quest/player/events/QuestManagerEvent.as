@@ -15,6 +15,7 @@ package com.twinoid.kube.quest.player.events {
 		public static const NEW_EVENT:String = "questManagerNewEvent";
 		public static const INVENTORY_UPDATE:String = "questManagerInventoryUpdate";
 		public static const HISTORY_UPDATE:String = "questManagerHistoryUpdate";
+		public static const HISTORY_FAVORITES_UPDATE:String = "questManagerHistoryFavoritesUpdate";
 		public static const QUEST_COMPLETE:String = "questManagerQuestComplete";
 		public static const QUEST_FAILED:String = "questManagerQuestFailed";
 		

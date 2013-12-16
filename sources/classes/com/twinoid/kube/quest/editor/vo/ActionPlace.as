@@ -90,8 +90,8 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Gets the value object as a label like [x,y(,z)]
 		 */
 		public function getAsLabel():String {
-			if(_kubeMode) return '['+x+','+y+''+z+']';
-			else return '['+x+','+y+']';
+			if(_kubeMode) return '['+x+', '+y+', '+z+']';
+			else return '['+x+', '+y+']';
 		}
 
 		/**

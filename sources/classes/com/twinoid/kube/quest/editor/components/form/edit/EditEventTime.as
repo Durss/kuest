@@ -15,8 +15,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	/**
 	 * Displays the time management panel.
 	 * 
-	 * FIXME contents positioning are fucked up the first time most probably due to the calendar
-	 * 
 	 * @author Francois
 	 * @date 4 févr. 2013;
 	 */

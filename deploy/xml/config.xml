@@ -16,10 +16,10 @@
 		<var code="maxFileSize"><![CDATA[10]]></var>
 		<var code="version"><![CDATA[1]]></var>
 		<var code="lang"><![CDATA[fr]]></var>
-		<var code="root"><![CDATA[http://fevermap.org/kuest]]></var>
+		<var code="root"><![CDATA[http://local.kuest]]></var>
 		<var code="dateTimeFormat"><![CDATA[_d_/_m_/_Y_ _h_:_i_:_s_]]></var>
 		<var code="dateFormat"><![CDATA[_d_/_m_/_Y_]]></var>
-		<var code="samples"><![CDATA[51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980]]></var>
+		<var code="samples"><![CDATA[51ad0d08dc8c8,51ad0ec570134,51ad0fe2f0aa8,51ad12eca65b6,51ae54669c980,52ae1f2a60cae]]></var>
 	</vars>
 	
 	<paths>

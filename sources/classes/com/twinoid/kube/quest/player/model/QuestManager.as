@@ -53,7 +53,9 @@ package com.twinoid.kube.quest.player.model {
 		private var _save:ByteArray;
 		private var _questComplete:Boolean;
 		private var _questLost:Boolean;
+		private var _quesEvaluated:Boolean;
 		private var _guidToEvent:Object;
+		private var _historyFavorites:Vector.<String>;
 		
 		
 		
@@ -94,6 +96,16 @@ package com.twinoid.kube.quest.player.model {
 		public function get questLost():Boolean { return _questLost; }
 		
 		/**
+		 * Gets if the quest has been evaluated
+		 */
+		public function get questEvaluated():Boolean { return _quesEvaluated; }
+		
+		/**
+		 * Sets if the quest has been evaluated
+		 */
+		public function set questEvaluated(value:Boolean):void { _quesEvaluated = value; }
+		
+		/**
 		 * Gets the guids history
 		 */
 		public function get eventsHistory():Vector.<KuestEvent>{
@@ -102,6 +114,19 @@ package com.twinoid.kube.quest.player.model {
 			ret = new Vector.<KuestEvent>();
 			for(i = 0; i < len; ++i) {
 				ret.push( _guidToEvent[_eventsHistory[i]] );
+			}
+			return ret;
+		}
+		
+		/**
+		 * Gets the guids favorites
+		 */
+		public function get eventsFavorites():Vector.<KuestEvent>{
+			var i:int, len:int, ret:Vector.<KuestEvent>;
+			len = _historyFavorites.length;
+			ret = new Vector.<KuestEvent>();
+			for(i = 0; i < len; ++i) {
+				ret.push( _guidToEvent[_historyFavorites[i]] );
 			}
 			return ret;
 		}
@@ -136,8 +161,10 @@ package com.twinoid.kube.quest.player.model {
 			ba.writeObject( _inventoryManager.exportData(version) );
 			ba.writeObject( _positionToIndex );
 			ba.writeUTF( _eventsHistory.join(',') );
+			ba.writeUTF( _historyFavorites.join(',') );
 			ba.writeBoolean( _questComplete );
 			ba.writeBoolean( _questLost );
+			ba.writeBoolean( _quesEvaluated );
 			ba.deflate();
 			return ba;
 		}
@@ -174,6 +201,12 @@ package com.twinoid.kube.quest.player.model {
 			&& (_currentEvent.actionChoices == null || _currentEvent.actionChoices.choices.length == 0)
 			&& _treeManager.isEventAccessible(_currentEvent)) {
 				completeEvent(0, false);
+			}
+			
+			if(_questLost) {
+				_currentEvent = null;
+				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.NEW_EVENT));
+				return;
 			}
 			
 			//Define the loop's index.
@@ -297,10 +330,44 @@ package com.twinoid.kube.quest.player.model {
 		 * Clears the player's progression
 		 */
 		public function clearProgression():void {
+			_questLost = false;
 			_currentEvent = null;
+			_questComplete = false;
 			_eventsHistory = new Vector.<String>();
+			_historyFavorites = new Vector.<String>();
 			_treeManager.reset();
 			_inventoryManager.reset();
+		}
+		
+		/**
+		 * Adds an event to the history favorites
+		 */
+		public function addToFavorites(event:KuestEvent):void {
+			var i:int, len:int, guid:String;
+			guid = event.guid.toString();
+			len = _historyFavorites.length;
+			for(i = 0; i < len; ++i) {
+				if(_historyFavorites[i] == guid) return;
+			}
+			_historyFavorites.push(guid);
+			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.HISTORY_UPDATE));
+		}
+		
+		/**
+		 * Removes an item from the favorites
+		 */
+		public function removeFromFavorites(event:KuestEvent):void {
+			var i:int, len:int, guid:String;
+			guid = event.guid.toString();
+			len = _historyFavorites.length;
+			for(i = 0; i < len; ++i) {
+				if(_historyFavorites[i] == guid) {
+					_historyFavorites.splice(i, 1);
+					i--;
+					len--;
+				}
+			}
+			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.HISTORY_FAVORITES_UPDATE));
 		}
 
 
@@ -318,6 +385,7 @@ package com.twinoid.kube.quest.player.model {
 			_inventoryManager	= new InventoryManager();
 			_treeManager		= new TreeManager();
 			_eventsHistory		= new Vector.<String>();//stores events guids
+			_historyFavorites	= new Vector.<String>();//stores events guids
 			_positionToIndex	= {};//Stores loop indexes for every action places.
 		}
 		
@@ -351,6 +419,7 @@ package com.twinoid.kube.quest.player.model {
 						_inventoryManager.importData( _save.readObject(), version );
 						_positionToIndex = _save.readObject();
 						
+						//Load favorites
 						_eventsHistory = new Vector.<String>();
 						var tmp:Array = _save.readUTF().split(',');
 						var i:int, len:int;
@@ -358,6 +427,19 @@ package com.twinoid.kube.quest.player.model {
 						for(i = 0; i < len; ++i) {
 							_eventsHistory[i] = tmp[i];
 						}
+						
+						//Load history favorites
+						_historyFavorites = new Vector.<String>();
+						tmp = _save.readUTF().split(',');
+						len = tmp.length;
+						for(i = 0; i < len; ++i) {
+							_historyFavorites[i] = tmp[i];
+						}
+						
+						_questComplete	= _save.readBoolean();
+						_questLost		= _save.readBoolean();
+						_quesEvaluated	= _save.readBoolean();
+						
 						break;
 					default:
 						dispatchEvent(new QuestManagerEvent(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT));
@@ -396,7 +478,7 @@ package com.twinoid.kube.quest.player.model {
 			_currentEvent = event;
 			dispatchEvent(new QuestManagerEvent(QuestManagerEvent.NEW_EVENT, _currentEvent));
 			
-			if(_currentEvent.endsQuest) {
+			if (_currentEvent.endsQuest) {
 				_questComplete = true;
 				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.QUEST_COMPLETE, _currentEvent));
 			}

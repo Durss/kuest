@@ -213,48 +213,6 @@ package com.twinoid.kube.quest.editor.views {
 			ViewLocator.getInstance().addEventListener(ViewEvent.DEBUG_MODE_CHANGE, debugModeStateChangeHandler);
 		}
 		
-		//TODO move
-		private function debugEventHandler(event:Event):void {
-			var i:int, len:int, noFilter:Array;
-			len = _boxes.length;
-			for(i = 0; i < len; ++i) {
-				_boxes[i].filters = _debugFilter;
-			}
-			len = _linksHolder.numChildren;
-			for(i = 0; i < len; ++i) {
-				_linksHolder.getChildAt(i).filters = _debugFilter;
-			}
-			
-			var target:Box = event.target as Box;
-			target.filters = _debugSelectFilters;
-			len = target.links.length;
-			noFilter = [];
-			for(i = 0; i < len; ++i) {
-				if(target.links[i].startEntry == target) {
-					target.links[i].endEntry.filters = _debugChildFilters;
-					target.links[i].filters = noFilter;
-				}
-			}
-			
-			//If there was a previous event, search if the new event
-			//is a child of it, and animate the link between them.
-			if(_previousDebugTarget != null) {
-				len = _previousDebugTarget.links.length;
-				for(i = 0; i < len; ++i) {
-					if(_previousDebugTarget.links[i].endEntry == target) {
-						_previousDebugTarget.links[i].filters = noFilter;
-						_previousDebugTarget.links[i].animateDebug(_debugFilter);
-					}
-				}
-			}
-			
-			var endX:Number = -target.x * _boxesHolder.scaleX + stage.stageWidth * .5;
-			var endY:Number = -target.y * _boxesHolder.scaleY + stage.stageHeight * .5;
-			TweenLite.to(this, .75, {scrollX:endX, scrollY:endY, ease:Sine.easeInOut});
-			
-			_previousDebugTarget = target;
-		}
-		
 		/**
 		 * Called when the stage is available.
 		 */
@@ -990,6 +948,50 @@ package com.twinoid.kube.quest.editor.views {
 			for(i = 0; i < len; ++i) {
 				_linksHolder.getChildAt(i).filters = _debugMode? _debugFilter : [];
 			}
+		}
+		
+		/**
+		 * Called when a new event should be enabled on debugger
+		 */
+		private function debugEventHandler(event:Event):void {
+			var i:int, len:int, noFilter:Array;
+			len = _boxes.length;
+			for(i = 0; i < len; ++i) {
+				_boxes[i].filters = _debugFilter;
+			}
+			len = _linksHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				_linksHolder.getChildAt(i).filters = _debugFilter;
+			}
+			
+			var target:Box = event.target as Box;
+			target.filters = _debugSelectFilters;
+			len = target.links.length;
+			noFilter = [];
+			for(i = 0; i < len; ++i) {
+				if(target.links[i].startEntry == target) {
+					target.links[i].endEntry.filters = _debugChildFilters;
+					target.links[i].filters = noFilter;
+				}
+			}
+			
+			//If there was a previous event, search if the new event
+			//is a child of it, and animate the link between them.
+			if(_previousDebugTarget != null) {
+				len = _previousDebugTarget.links.length;
+				for(i = 0; i < len; ++i) {
+					if(_previousDebugTarget.links[i].endEntry == target) {
+						_previousDebugTarget.links[i].filters = noFilter;
+						_previousDebugTarget.links[i].animateDebug(_debugFilter);
+					}
+				}
+			}
+			
+			var endX:Number = -target.x * _boxesHolder.scaleX + stage.stageWidth * .5;
+			var endY:Number = -target.y * _boxesHolder.scaleY + stage.stageHeight * .5;
+			TweenLite.to(this, .75, {scrollX:endX, scrollY:endY, ease:Sine.easeInOut});
+			
+			_previousDebugTarget = target;
 		}
 	}
 }

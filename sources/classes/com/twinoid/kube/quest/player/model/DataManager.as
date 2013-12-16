@@ -94,6 +94,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _timeoutUpdatePos:uint;
 		private var _lastPlaceChangeWasZone:Boolean;
 		private var _simulatedEvent:KuestEvent;
+		private var _lastDate:Date;
 		
 		
 		
@@ -201,9 +202,14 @@ package com.twinoid.kube.quest.player.model {
 		public function get currentQuestGUID():String { return _currentQuestGUID; }
 		
 		/**
-		 * Gets the current quest's guid
+		 * Gets the events history
 		 */
 		public function get history():Vector.<KuestEvent> { return _questManager.eventsHistory; }
+		
+		/**
+		 * Gets the favorites events
+		 */
+		public function get historyFavorites():Vector.<KuestEvent> { return _questManager.eventsFavorites; }
 		
 		
 		
@@ -225,6 +231,9 @@ package com.twinoid.kube.quest.player.model {
 			_questManager.addEventListener(QuestManagerEvent.NEW_EVENT, newEventHandler);
 			_questManager.addEventListener(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT, saveLoadingErrorHandler);
 			_questManager.addEventListener(QuestManagerEvent.HISTORY_UPDATE, historyUpdateHandler);
+			_questManager.addEventListener(QuestManagerEvent.HISTORY_FAVORITES_UPDATE, historyUpdateHandler);
+			_questManager.addEventListener(QuestManagerEvent.QUEST_COMPLETE, questCompleteHandler);
+			_questManager.addEventListener(QuestManagerEvent.QUEST_FAILED, questFailedHandler);
 			
 			initLocalConnections();
 			
@@ -254,10 +263,30 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function newEventHandler(event:QuestManagerEvent):void {
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
-			
+			saveProgression();
+		}
+		
+		/**
+		 * Called when quest is completed
+		 */
+		private function questCompleteHandler(event:QuestManagerEvent):void {
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.QUEST_COMPLETE));
+		}
+
+		/**
+		 * Called if quest is failed
+		 */
+		private function questFailedHandler(event:QuestManagerEvent):void {
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.QUEST_FAILED));
+		}
+		
+		/**
+		 * Saves the user's progression
+		 */
+		private function saveProgression():void {
 			//Send to server after a short delay to prevent from save spamming
 			clearTimeout(_timeoutSave);
-			_timeoutSave = setTimeout(onSaveProgression, 3000);
+			_timeoutSave = setTimeout(onDoSaveProgression, 3000);
 		}
 		
 		/**
@@ -415,10 +444,9 @@ package com.twinoid.kube.quest.player.model {
 		 * Flags the quest as evaluated
 		 */
 		public function questEvaluated():void {
-			//TODO
-//			_save["evaluated"] = true;
+			_questManager.questEvaluated = true;
 			clearTimeout(_timeoutSave);
-			onSaveProgression();
+			onDoSaveProgression();
 		}
 		
 		/**
@@ -427,6 +455,22 @@ package com.twinoid.kube.quest.player.model {
 		public function simulateEvent(data:KuestEvent):void {
 			_simulatedEvent = data;
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.SIMULATE_EVENT));
+		}
+		
+		/**
+		 * Adds an event to the history favorites
+		 */
+		public function addToFavorites(event:KuestEvent):void {
+			_questManager.addToFavorites(event);
+			saveProgression();
+		}
+		
+		/**
+		 * Removes an item from the favorites
+		 */
+		public function removeFromFavorites(event:KuestEvent):void {
+			_questManager.removeFromFavorites(event);
+			saveProgression();
 		}
 
 
@@ -670,9 +714,6 @@ package com.twinoid.kube.quest.player.model {
 			_kuest.deserialize(bytes);
 			
 			_questManager.loadData(_kuest.nodes, _kuest.objects, _save, new Date().getTime(), _testMode, false);
-			if(_questManager.questComplete && _save["evaluated"] !== true) {//TODO 'evaluated' test!
-				dispatchEvent(new DataManagerEvent(DataManagerEvent.QUEST_COMPLETE));
-			}
 		}
 		
 		/**
@@ -680,6 +721,11 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function questReadyHandler(event:QuestManagerEvent):void {
 			_questManagerReady = true;
+			if(_questManager.questComplete && !_questManager.questEvaluated) {
+				dispatchEvent(new DataManagerEvent(DataManagerEvent.QUEST_COMPLETE));
+			}
+			_lastDate	= new Date();
+			setInterval(checkSpeedHack, 1000);
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.LOAD_COMPLETE));
 		}
 		
@@ -793,7 +839,7 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Saves the progression
 		 */
-		private function onSaveProgression():void {
+		private function onDoSaveProgression():void {
 			_saveProgressionCmd.populate(_currentQuestGUID, _questManager.exportSave());
 			_saveProgressionCmd.execute();
 		}
@@ -810,7 +856,7 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function saveProgressionErrorHandler(event:CommandEvent):void {
 			clearTimeout(_timeoutSave);
-			_timeoutSave = setTimeout(onSaveProgression, 5000);//Try again
+			_timeoutSave = setTimeout(onDoSaveProgression, 5000);//Try again
 			throw new KuestException(Label.getLabel("exception-"+event.data), "0");
 		}
 		
@@ -834,6 +880,16 @@ package com.twinoid.kube.quest.player.model {
 		private function onTouchForum():void {
 			_lastPlaceChangeWasZone = false;
 			_questManager.setCurrentPosition(_lastTouchPosition);
+		}
+		
+		/**
+		 * Check for speedhack
+		 */
+		private function checkSpeedHack():void {
+			var diff:Number = new Date().getTime() - _lastDate.getTime();
+			var hack:Boolean = diff < 900;// || diff > 1100;//if > 1000 its because it's too slow. Don't care about this
+			//TODO
+			_lastDate = new Date();
 		}
 		
 		
