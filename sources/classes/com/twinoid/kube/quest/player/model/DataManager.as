@@ -888,7 +888,7 @@ package com.twinoid.kube.quest.player.model {
 		private function checkSpeedHack():void {
 			var diff:Number = new Date().getTime() - _lastDate.getTime();
 			var hack:Boolean = diff < 900;// || diff > 1100;//if > 1000 its because it's too slow. Don't care about this
-			//TODO
+			hack;//TODO
 			_lastDate = new Date();
 		}
 		

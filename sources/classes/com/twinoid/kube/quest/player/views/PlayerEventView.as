@@ -176,8 +176,11 @@ package com.twinoid.kube.quest.player.views {
 			_tf.x = _image.visible? _image.width + 10 : 10;
 			_tf.width = _image.visible? _width - _image.width - 10 : _width - 20;
 			
-			PosUtils.vPlaceNext(5, _tf, VectorUtils.toArray(_choicesSpool));
-			PosUtils.vPlaceNext(5, _tf, _next);
+			if(_data.actionChoices.choices.length > 0) {
+				PosUtils.vPlaceNext(5, _tf, VectorUtils.toArray(_choicesSpool), _next);
+			}else{
+				PosUtils.vPlaceNext(5, _tf, _next);
+			}
 			len = _choicesSpool.length;
 			for(i = 0; i < len; ++i) {
 				_choicesSpool[i].x = _tf.x;
