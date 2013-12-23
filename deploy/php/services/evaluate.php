@@ -48,8 +48,6 @@
 			
 		}else {
 			//Grab the statistics
-			OAuth::call('siteUser/'.$_SESSION['uid'].'/18?fields=user,site,realId,link,stats.fields(id,score)');
-			
 			$json = OAuth::call('siteUser/'.$_SESSION['uid'].'/18?fields=user,site,realId,link,stats.fields(id,score)');
 			$stats = $json->stats;
 			$points = 0;
@@ -62,8 +60,8 @@
 			//Ponderate note
 			$noteBase = min(20, max(1, $_POST['note']));//Limit note input
 			$note = $noteBase;
-			$note += max(0, round($points * .03));
-			$note += max(0, round($zones * .0001));
+			$note += max(0, round($points * .0001));
+			$note += max(0, round($zones * .00005));
 			
 			//Get the quest's ID
 			$sql = "SELECT * FROM kuests WHERE guid=:guid";

@@ -76,6 +76,7 @@ package com.twinoid.kube.quest.editor {
 			if(Capabilities.playerType.toLowerCase() == "standalone" || stage.loaderInfo.url.search("http://local.kuest") > -1) {
 				_env.addVariables({version:new Date().getTime()});
 				_env.addVariables({local:"1"});
+//				_env.addVariables({lang:"en"});
 				_env.addVariables({root:"http://local.kuest"});
 			}
 			_env.initialise(getFV("configXml", "xml/config.xml"));
