@@ -1,151 +1,311 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<labels>
-		<label code="tutorial-title"><![CDATA[Tutorial (F1)]]></label>
-		
-		<label code="exception-title"><![CDATA[Error]]></label>
-		<label code="exception-INCOMPLETE_FORM"><![CDATA[Missing request data.]]></label>
-		<label code="exception-SQL_CONNECTION_FAIL"><![CDATA[Cannot connect to database.]]></label>
-		<label code="exception-API_ERROR"><![CDATA[Twinoid is down at the moment.<br />Try again in a few minutes.]]></label>
-		<label code="exception-INVALID_IDS"><![CDATA[Invalid IDs.]]></label>
-		<label code="exception-NOT_LOGGED"><![CDATA[You must be logged in to perform this action.]]></label>
-		<label code="exception-SQL_ERROR"><![CDATA[Invalid SQL request.]]></label>
-		<label code="exception-EDITION_KUEST_NOT_FOUND"><![CDATA[The quest to edit doesn't exist.]]></label>
-		<label code="exception-EDITION_NO_RIGHTS"><![CDATA[You don't have the rights to edit this quest.]]></label>
-		<label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[The quest doesn't exist.]]></label>
-		<label code="exception-LOADING_NO_RIGHTS"><![CDATA[You don't have the rights to load this quest.]]></label>
-		<label code="exception-IOERROR"><![CDATA[Can't connect to server.]]></label>
-		
-		<label code="loader-login"><![CDATA[Login...]]></label>
-		<label code="loader-loginOK"><![CDATA[Login OK]]></label>
-		<label code="loader-loginKO"><![CDATA[Error...]]></label>
-		<label code="loader-saving"><![CDATA[Saving...]]></label>
-		<label code="loader-savingOK"><![CDATA[Saving OK]]></label>
-		<label code="loader-savingKO"><![CDATA[Error...]]></label>
-		<label code="loader-publishing"><![CDATA[Publishing...]]></label>
-		<label code="loader-publishingOK"><![CDATA[Published OK]]></label>
-		<label code="loader-publishingKO"><![CDATA[Error...]]></label>
-		<label code="loader-loading"><![CDATA[Loading...]]></label>
-		<label code="loader-loadingOK"><![CDATA[Loading OK]]></label>
-		<label code="loader-loadingKO"><![CDATA[Error...]]></label>
-		
-		<label code="prompt-window-submit"><![CDATA[Submit]]></label>
-		<label code="prompt-window-cancel"><![CDATA[Cancel]]></label>
-		<label code="prompt-window-ignore"><![CDATA[Do not ask confirmation for this action in the futur.]]></label>
-		
-		<label code="login-title"><![CDATA[You must be logged in to save or load yor work.<br /><a class="link" href="http://fevermap.org/" target="_blank">&gt; Get my IDs.</a>]]></label>
-		<label code="login-uid"><![CDATA[UID]]></label>
-		<label code="login-pubkey"><![CDATA[PUBKEY]]></label>
-		<label code="login-submit"><![CDATA[Log-in]]></label>
-		<label code="login-invalidIDS"><![CDATA[I.]]></label>
-		
-		<label code="selector-char"><![CDATA[Choose a character]]></label>
-		<label code="selector-object"><![CDATA[Choose an object]]></label>
-		<label code="selector-none"><![CDATA[<i>(none)</i>]]></label>
-		
-		<label code="box-empty"><![CDATA[<p align="center">Click to edit...</p>]]></label>
-		<label code="box-delete-promptTitle"><![CDATA[Delete]]></label>
-		<label code="box-delete-promptContent"><![CDATA[Do you really want to delete this event ?<br />Every related links will be destroyed.]]></label>
-		<label code="box-timeIcon"><![CDATA[This action is only<br />avaiable at certain times.]]></label>
-		
-		<label code="menu-file"><![CDATA[Main menu]]></label>
-		<label code="menu-file-new"><![CDATA[Reset]]></label>
-		<label code="menu-file-new-name"><![CDATA[Quest name :]]></label>
-		<label code="menu-file-new-description"><![CDATA[Description :]]></label>
-		<label code="menu-file-new-submit"><![CDATA[Create]]></label>
-		<label code="menu-file-load"><![CDATA[Load a quest]]></label>
-		<label code="menu-file-load-title"><![CDATA[Quest you created :]]></label>
-		<label code="menu-file-load-empty"><![CDATA[You didn't create any quest yet.<br />Save a quest to make it appear in that pannel.]]></label>
-		<label code="menu-file-load-prompt-title"><![CDATA[Warning]]></label>
-		<label code="menu-file-load-prompt-content"><![CDATA[You will loose any unsaved data !<br />Do you really want to load this quest ?]]></label>
-		<label code="menu-file-new-prompt-title"><![CDATA[Warning]]></label>
-		<label code="menu-file-new-prompt-content"><![CDATA[You will loose any unsaved data !<br />Do you really want to erase the current quest ?]]></label>
-		<label code="menu-file-save"><![CDATA[Save]]></label>
-		<label code="menu-file-publish"><![CDATA[Publish]]></label>
-		<label code="menu-file-params"><![CDATA[Parameters]]></label>
-		<label code="menu-file-saveNewTT"><![CDATA[Save as<br />a new quest.]]></label>
-		<label code="menu-file-publishTT"><![CDATA[Publish your quest to<br />make it playable by anyone.]]></label>
-		<label code="menu-file-clearTT"><![CDATA[Erases the current quest data.]]></label>
-		
-		<label code="menu-credits"><![CDATA[Credits]]></label>
-		<label code="menu-credits-content"><![CDATA[<img src="./img/sparrow-chan.jpg" width="77" height="100" />Many thanks to <b>Sparrow-Chan</b> which kindly accepted i use her portraits from her <i><a href="http://sparrow-chan.deviantart.com/art/Summary-of-my-30days-challenge-faces-354459357" class="link" target="_blank">30 days Challenge</a></i>.<br />Feel free to visit her <a href="http://sparrow-chan.deviantart.com/" class="link" target="_blank">Deviant Art</a> and her <a href="http://sparrow-chan.tumblr.com/" class="link" target="_blank">Tumblr</a>.
-
-<img src="./img/mt.png" width="77" height="100" />Thanks to <b>Motion-Twin</b> for offering the server hosting this application.<br/>The default objects images are taken from their game <a href="http://www.skywar.net/" target="_blank" class="link">Skywar</a>, are their property and will be removed if asked.
-
-<img src="./img/durss.jpg" width="77" height="100" />This application has been developped by <b>Durss</b> for the game <a href="http://kube.muxxu.com/" target="_blank" class="link">Kube</a>.<br />To report a bug or make a suggestion <a href="http://twinoid.com/user/48" target="_blank" class="link">contact me</a> via the Twinoid's private messaging.]]></label>
-		
-		<label code="menu-objects"><![CDATA[Objects]]></label>
-		<label code="menu-objects-details"><![CDATA[Manage objects usable in the events.]]></label>
-		<label code="menu-objects-names"><![CDATA[Burrin,Ancient stone,Cloth,Seed,Golem,Horn of Plenty,Lens,Pestle,Shield,Spear,Winch,Crystal,Minerals]]></label>
-		<label code="menu-objects-add-name"><![CDATA[Object's name...]]></label>
-		<label code="menu-objects-delete-title"><![CDATA[Deletion]]></label>
-		<label code="menu-objects-delete-content"><![CDATA[Deletion of is object is permanent.<br />If event are assiciated to it, they will be emptied.]]></label>
-		
-		<label code="menu-chars"><![CDATA[Characters]]></label>
-		<label code="menu-chars-details"><![CDATA[Manage characters usable in the events.]]></label>
-		<label code="menu-chars-names"><![CDATA[Florence,Carole,Louis,Richard,Rahema,Le pêcheur,Vincent,Florent,Arthur,Win,Adana,Marion,Marya]]></label>
-		<label code="menu-chars-add-name"><![CDATA[Character's name...]]></label>
-		<label code="menu-chars-delete-title"><![CDATA[Deletion]]></label>
-		<label code="menu-chars-delete-content"><![CDATA[Deletion of is character is permanent.<br />If event are assiciated to it, they will be emptied.]]></label>
-		
-		<label code="editWindow-title"><![CDATA[EDIT THIS EVENT]]></label>
-		<label code="editWindow-submit"><![CDATA[Submit]]></label>
-		<label code="editWindow-cancel"><![CDATA[Cancel]]></label>
-		
-		<label code="editWindow-place-title"><![CDATA[Event's place]]></label>
-		<label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
-		<label code="editWindow-place-kubeTT"><![CDATA[Kube]]></label>
-		<label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
-		<label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
-		<label code="editWindow-place-kubeHelp"><![CDATA[Touch a forum Kube in-game to define the exact coordinates automatically.<br /><i>Warning, This only works if the kube is on a public zone !</i>]]></label>
-		<label code="editWindow-place-capture"><![CDATA[Capture]]></label>
-		<label code="editWindow-place-captureTT"><![CDATA[Launch the game and click<br />This button to automatically<br />fill the inputs with your current location.]]></label>
-		
-		<label code="editWindow-type-title"><![CDATA[Event's type]]></label>
-		<label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
-		<label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
-		<label code="editWindow-type-objectTT"><![CDATA[Object's put/take]]></label>
-		<label code="editWindow-type-objectDefault"><![CDATA[Text to be displayed when the object is put/took...]]></label>
-		<label code="editWindow-type-take"><![CDATA[Take]]></label>
-		<label code="editWindow-type-put"><![CDATA[Put]]></label>
-		<label code="editWindow-type-placeHolderObjectTT"><![CDATA[Select an object.]]></label>
-		<label code="editWindow-type-placeHolderCharacterTT"><![CDATA[Select a character.]]></label>
-		
-		<label code="editWindow-choice-title"><![CDATA[CHoices list]]></label>
-		<label code="editWindow-choice-noneTT"><![CDATA[None]]></label>
-		<label code="editWindow-choice-yupTT"><![CDATA[Yes]]></label>
-		<label code="editWindow-choice-help"><![CDATA[Define a list of choices asked to the player at the end of the action.<br />An event might then depend on the choices made by the user.]]></label>
-		<label code="editWindow-choice-defaultText"><![CDATA[Choice {I}...]]></label>
-		
-		<label code="editWindow-time-title"><![CDATA[Event's temporality]]></label>
-		<label code="editWindow-time-noneTT"><![CDATA[Always]]></label>
-		<label code="editWindow-time-calendarTT"><![CDATA[Some days]]></label>
-		<label code="editWindow-time-periodicTT"><![CDATA[Some hours range]]></label>
-		<label code="editWindow-time-hourIntervalStart"><![CDATA[Start hour : ]]></label>
-		<label code="editWindow-time-hourIntervalEnd"><![CDATA[End hour : ]]></label>
-		<label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
-		<label code="editWindow-time-hourInterval-miutesLabel"><![CDATA[m]]></label>
-		
-		<label code="month1"><![CDATA[January]]></label>
-		<label code="month2"><![CDATA[February]]></label>
-		<label code="month3"><![CDATA[March]]></label>
-		<label code="month4"><![CDATA[April]]></label>
-		<label code="month5"><![CDATA[May]]></label>
-		<label code="month6"><![CDATA[June]]></label>
-		<label code="month7"><![CDATA[July]]></label>
-		<label code="month8"><![CDATA[August]]></label>
-		<label code="month9"><![CDATA[Septembre]]></label>
-		<label code="month10"><![CDATA[Octobre]]></label>
-		<label code="month11"><![CDATA[Novembre]]></label>
-		<label code="month12"><![CDATA[Decembre]]></label>
-		
-		<label code="day1"><![CDATA[Mon]]></label>
-		<label code="day2"><![CDATA[Tue]]></label>
-		<label code="day3"><![CDATA[Wen]]></label>
-		<label code="day4"><![CDATA[Thu]]></label>
-		<label code="day5"><![CDATA[Fri]]></label>
-		<label code="day6"><![CDATA[Sat]]></label>
-		<label code="day7"><![CDATA[Sun]]></label>
-	</labels>
-	
+  <labels>
+    <label code="patchlog-title"><![CDATA[Updates]]></label>
+    <!-- !Tutorial -->
+    <label code="tutorial-title"><![CDATA[Tutorial (F1)]]></label>
+    <label code="tutorial-close"><![CDATA[Close]]></label>
+    <!-- !Errors -->
+    <label code="exception-title"><![CDATA[Error]]></label>
+    <label code="exception-INCOMPLETE_FORM"><![CDATA[Missing query data.]]></label>
+    <label code="exception-SQL_CONNECTION_FAIL"><![CDATA[Unable to connect to data base]]></label>
+    <label code="exception-API_ERROR"><![CDATA[Twinoid is momentarily unavailable.<br />Please try again later.]]></label>
+    <label code="exception-INVALID_IDS"><![CDATA[Invalid logins.]]></label>
+    <label code="exception-NOT_LOGGED"><![CDATA[You must be connected to do this action.]]></label>
+    <label code="exception-SQL_ERROR"><![CDATA[Invalid SQL request]]></label>
+    <label code="exception-EDITION_KUEST_NOT_FOUND"><![CDATA[The quest you want to edit doesn't exist.]]></label>
+    <label code="exception-EDITION_NO_RIGHTS"><![CDATA[You don't have the rights to edit this quest.]]></label>
+    <label code="exception-LOADING_KUEST_NOT_FOUND"><![CDATA[This quest doesn't exist.]]></label>
+    <label code="exception-LOADING_NO_RIGHTS"><![CDATA[You don't have the rights to load this quest.]]></label>
+    <label code="exception-MISSING_DATA_PART"><![CDATA[The server didn't received all the data to save.]]></label>
+    <!-- Be carefull to keep {SIZE} and {MAX} tags !   They are replaced dynamically. -->
+    <label code="exception-MAX_SAVE_SIZE"><![CDATA[Your quest is too heavy to be sent to the server <i>({SIZE}MB instead of {MAX}MB max)</i>.<br />Please delete useless characters and objects or try to remove some coments to reduce the size.]]></label>
+    <label code="exception-QUEST_FILE_NOT_FOUND"><![CDATA[The quest's file couldn't be found on the server]]></label>
+    <label code="exception-QUEST_FILE_NOT_PUBLISHED"><![CDATA[The optimised file of the quest couldn't be found on the server]]></label>
+    <label code="exception-QUEST_NOT_PUBLISHED"><![CDATA[The requested quest hasn't been published yet.]]></label>
+    <label code="exception-IOERROR"><![CDATA[Unable to contact server...<br />Please check you have an active internet connection.]]></label>
+    <label code="exception-DELETE_KUEST_NOT_FOUND"><![CDATA[The requested quest doesn't exist.]]></label>
+    <label code="exception-DELETE_NO_RIGHTS"><![CDATA[You don't have the rights to delete this quest.]]></label>
+    <label code="exception-DEEP_CHECK_OVERFLOW"><![CDATA[The tree of your quest is too complexe to build this link.]]></label>
+    <label code="exception-CANNOT_WRITE_SAVE"><![CDATA[The upload of your progression has failed.]]></label>
+    <label code="exception-KUEST_EVALUATION_INVALID_KEY"><![CDATA[The verification key is invalid.]]></label>
+    <label code="exception-KUEST_ALREADY_EVALUATED"><![CDATA[You have already evaluated this quest.]]></label>
+    <label code="exception-NOT_CONNECTED"><![CDATA[You haven't been authenticated or your session has expired.<br />Please go to the following address to authenticate again :<br /><a href="http://fevermap.org/kuest" class="link" target="_self">http://fevermap.org/kuest</a>]]></label>
+    <label code="exception-SAVE_FILE_FORMAT"><![CDATA[The file format of your progression's save is invalid.<br />Its loading has been canceled and your progression reset.]]></label>
+    <label code="exception-SAVE_DIRECTORY_MISSING"><![CDATA[The target directory of the quests couldn't be found on the server.]]></label>
+    <label code="exception-PROGRESSION_DIRECTORY_MISSING"><![CDATA[The target directory of the progressions couldn't be found on the server.]]></label>
+    <!-- !Loader spinning states -->
+    <label code="loader-login"><![CDATA[Login...]]></label>
+    <label code="loader-loginOK"><![CDATA[Login OK]]></label>
+    <label code="loader-loginKO"><![CDATA[Error...]]></label>
+    <label code="loader-saving"><![CDATA[Saving...]]></label>
+    <label code="loader-savingOK"><![CDATA[Saving OK]]></label>
+    <label code="loader-savingKO"><![CDATA[Error...]]></label>
+    <label code="loader-publishing"><![CDATA[Publishing...]]></label>
+    <label code="loader-publishingOK"><![CDATA[Published OK]]></label>
+    <label code="loader-publishingKO"><![CDATA[Error...]]></label>
+    <label code="loader-loading"><![CDATA[Loading...]]></label>
+    <label code="loader-loadingOK"><![CDATA[Loading OK]]></label>
+    <label code="loader-loadingKO"><![CDATA[Error...]]></label>
+    <label code="loader-loadingKORead"><![CDATA[Decompression error]]></label>
+    <label code="loader-parsingDebug"><![CDATA[Parsing quest...]]></label>
+    <label code="loader-parsingDebugOK"><![CDATA[Parsing OK]]></label>
+    <!-- !Prompt window -->
+    <label code="prompt-window-submit"><![CDATA[Submit]]></label>
+    <label code="prompt-window-cancel"><![CDATA[Cancel]]></label>
+    <label code="prompt-window-ignore"><![CDATA[Do not ask again for this action.]]></label>
+    <!-- !Char/objects selectors -->
+    <label code="selector-char"><![CDATA[Choose a character]]></label>
+    <label code="selector-object"><![CDATA[Choose an object]]></label>
+    <!-- Corresponds to the "empty" item at the beggining of the selectors. -->
+    <label code="selector-none"><![CDATA[<i>(none)</i>]]></label>
+    <!-- !Boxes -->
+    <label code="box-empty"><![CDATA[<p align="center">Click to edit...</p>]]></label>
+    <!-- Title of the prompt window displayed when deleting an event -->
+    <label code="box-delete-promptTitle"><![CDATA[Delete]]></label>
+    <!-- Content of the prompt window displayed when deleting an event -->
+    <label code="box-delete-promptContent"><![CDATA[Do you really want to deleted this event?<br />Every related links will be destroyed.]]></label>
+    <!-- Tootltip displayed on time icon's roll when the event time access is limited -->
+    <label code="box-timeIcon"><![CDATA[This event is available only<br />during specific moments.]]></label>
+    <!-- !Boxes links -->
+    <label code="editor-linkDelPromptTitle"><![CDATA[Delete link?]]></label>
+    <label code="editor-linkDelPromptContent"><![CDATA[Do you really want to delete this link?<br ><span class="window-content-small"><i>This confirmation is asked to prevent from deleting links unintentionally.</i></span>]]></label>
+    <!-- !Quest menu -->
+    <label code="menu-file"><![CDATA[Main menu]]></label>
+    <label code="menu-file-new"><![CDATA[Reset]]></label>
+    <label code="menu-file-new-name"><![CDATA[Quest name :]]></label>
+    <label code="menu-file-new-description"><![CDATA[Description :]]></label>
+    <label code="menu-file-new-submit"><![CDATA[Create]]></label>
+    <label code="menu-file-new-edit"><![CDATA[Update]]></label>
+    <label code="menu-file-load"><![CDATA[My quests]]></label>
+    <label code="menu-file-load-title"><![CDATA[Quest you created :]]></label>
+    <label code="menu-file-load-empty"><![CDATA[You haven't created any quest yet.<br />Save a quest to get it displayed on this panel.]]></label>
+    <label code="menu-file-load-prompt-title"><![CDATA[Warning]]></label>
+    <label code="menu-file-load-prompt-content"><![CDATA[You will loose every unsaved data !<br />Do you really want to load this quest ?]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-delete-buttonTT"><![CDATA[Delete this quest]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-delete-self-buttonTT"><![CDATA[Remove my rights on this quest.]]></label>
+    <label code="menu-file-delete-prompt-title"><![CDATA[Delete]]></label>
+    <label code="menu-file-delete-prompt-content"><![CDATA[Do you really want to delete this quest ?<br /><b>Warning</b>, this operation cannot be canceled !]]></label>
+    <label code="menu-file-new-prompt-title"><![CDATA[Warning]]></label>
+    <label code="menu-file-new-prompt-content"><![CDATA[You will loose every unsaved data !<br />Do you really want to reset this quest ?]]></label>
+    <label code="menu-file-save"><![CDATA[Save]]></label>
+    <label code="menu-file-publish"><![CDATA[Publish]]></label>
+    <!-- Be carefull to keep {ROOT} and {ID} tags !   They are replaced dynamically. -->
+    <label code="menu-file-publish-label"><![CDATA[Find your quest at this address :<br /><a href="{ROOT}/k/{ID}" target="_blank" class="link">{ROOT}/k/{ID}</a>]]></label>
+    <label code="menu-file-publish-promptTitle"><![CDATA[Publish confirmation]]></label>
+    <label code="menu-file-publish-promptContent"><![CDATA[<b>Do you really want to publish your quest ?</b><br /><b>Warning</b>, any structural update of your quest after a first publication may<span class="window-content-big">corrupt</span> the player's saves and force them to restart the quest from the beggining.<br />It is strongly advised to publish a quest in its final state !]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-saveNewTT"><![CDATA[Save as a<br />new quest]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-publishTT"><![CDATA[Publish the quest so that<br />it can be played by anyone.]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-clearTT"><![CDATA[Erases the current quest.]]></label>
+    <label code="menu-file-rights"><![CDATA[Give edition rights to friends.]]></label>
+    <label code="menu-file-rightsCB"><![CDATA[Select friends]]></label>
+    <label code="menu-file-test"><![CDATA[Test quest]]></label>
+    <label code="menu-file-help"><![CDATA[Examples]]></label>
+    <label code="menu-file-help-tuto"><![CDATA[See tutorial]]></label>
+    <label code="menu-file-help-samples"><![CDATA[Quest samples :]]></label>
+    <!-- !Objects manager -->
+    <label code="menu-objects"><![CDATA[Objects]]></label>
+    <label code="menu-objects-details"><![CDATA[Manage the objects to be used in your quest.]]></label>
+    <label code="menu-objects-names"><![CDATA[Burrin,Ancient Stone,Canvas,Seed,Golem,Horn of Plenty,Lens,Pestle,Shield,Lance,Winch,Cristal,Minerals]]></label>
+    <label code="menu-objects-add-name"><![CDATA[Object's name...]]></label>
+    <label code="menu-objects-delete-title"><![CDATA[Delete object]]></label>
+    <label code="menu-objects-delete-content"><![CDATA[The deletion of this object cannot be canceld.<br />Any events using this object will be empty.]]></label>
+    <!-- !Characters manager -->
+    <label code="menu-chars"><![CDATA[Characters]]></label>
+    <label code="menu-chars-details"><![CDATA[Manage characters to be meet in your quest.]]></label>
+    <label code="menu-chars-names"><![CDATA[Florence,Carole,Louis,Richard,Rahema,Le pêcheur,Vincent,Florent,Arthur,Win,Adana,Marion,Marya]]></label>
+    <label code="menu-chars-add-name"><![CDATA[Chracter's name...]]></label>
+    <label code="menu-chars-delete-title"><![CDATA[Delete]]></label>
+    <label code="menu-chars-delete-content"><![CDATA[The deletion of this character cannot be canceld.<br />Any events using this object will be empty.]]></label>
+    <!-- !Debugger -->
+    <label code="menu-debug-title"><![CDATA[Debugger]]></label>
+    <label code="menu-debug-header"><![CDATA[Test your quest logic !<br />Select a start point inside the editor and check if the events sequences work as you expected.]]></label>
+    <label code="menu-debug-selectStart"><![CDATA[Click on<br />the debug<br />start point<br />]]></label>
+    <label code="menu-debug-simulateZone"><![CDATA[Coordinates :]]></label>
+    <label code="menu-debug-simulateDate"><![CDATA[Date :]]></label>
+    <!-- tooltip -->
+    <label code="menu-debug-switchClockTT"><![CDATA[If enabled, your computer's time will be used instead of the inputs values.]]></label>
+    <label code="menu-debug-emptyEvent"><![CDATA[This event is empty. It will block your quest progression in real game conditions.]]></label>
+    <label code="menu-debug-inventory"><![CDATA[Inventory :]]></label>
+    <!-- tooltip -->
+    <label code="menu-debug-inventoryTT"><![CDATA[When debugging a quest you can use<br />an object even if there are none left.]]></label>
+    <!-- !Credits -->
+    <label code="menu-credits"><![CDATA[Credits]]></label>
+    <!-- Be careful to keep style formating ! -->
+    <label code="menu-credits-content"><![CDATA[TODO]]></label>
+    <!-- !Event's edition window -->
+    <label code="editWindow-title"><![CDATA[EDIT EVENT]]></label>
+    <label code="editWindow-submit"><![CDATA[Submit]]></label>
+    <label code="editWindow-cancel"><![CDATA[Cancel]]></label>
+    <label code="editWindow-endEvent"><![CDATA[This event makes the use win.]]></label>
+    <label code="editWindow-looseEvent"><![CDATA[This event makes the use loose.]]></label>
+    <label code="editWindow-startTree"><![CDATA[Structur start point.]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-startTreeTT"><![CDATA[The structure corresponds to the higlighted events on roll over.<br />By default the entry point of a structure will be the most top left event except if an event is explicitly specified as the entry point with this option.]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-endEventTT"><![CDATA[The player will win the quest if he arrives on this event. He will then be able to evaluate your quest.]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-looseEventTT"><![CDATA[The player will loose the quest and will have to restart it from the beggining if he arrives on this event.]]></label>
+    <!-- !Event's place edition -->
+    <label code="editWindow-place-title"><![CDATA[Event's place]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-place-zoneTT"><![CDATA[Zone]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-place-kubeTT"><![CDATA[Kube]]></label>
+    <label code="editWindow-place-zone"><![CDATA[<b>Zone :</b>]]></label>
+    <label code="editWindow-place-kube"><![CDATA[<b>Kube :</b>]]></label>
+    <label code="editWindow-place-kubeHelp"><![CDATA[Touch a forum in game to define the exact place of this event automatically.<br /><i>Be careful, this option only works on public zones !</i>]]></label>
+    <label code="editWindow-place-kubeConnectHelp"><![CDATA[Touch a forum in game to define the exact place of this event automatically.Yu need to install the GreaseMonkey script <a href="js/kuest.user.js" class="link">Kuest</a> to make this work.<br />If you already installed it, just click on a forum.]]></label>
+    <label code="editWindow-place-capture"><![CDATA[Capture]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-place-captureTT"><![CDATA[Start the game Kube and click on<br />this button to pre-fill the inputs with<br />with your current position.]]></label>
+    <!-- !Event's type edition -->
+    <label code="editWindow-type-title"><![CDATA[Event's type]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-type-dialogueTT"><![CDATA[Dialogue]]></label>
+    <label code="editWindow-type-dialogueDefault"><![CDATA[Dialogue...]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-type-objectTT"><![CDATA[Object take/put ]]></label>
+    <label code="editWindow-type-objectDefault"><![CDATA[Text displayed when the object is taken/put...]]></label>
+    <label code="editWindow-type-take"><![CDATA[Take]]></label>
+    <label code="editWindow-type-put"><![CDATA[Put]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-type-placeHolderObjectTT"><![CDATA[Select an object.]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-type-placeHolderCharacterTT"><![CDATA[Select a character.]]></label>
+    <!-- !Event's choices edition -->
+    <label code="editWindow-choice-title"><![CDATA[Choices list]]></label>
+    <label code="editWindow-choice-help"><![CDATA[Here you can define a list of choices the user will be asked.<br />An event might then depend on the user's choice.]]></label>
+    <!-- Be carefull to keep {I} tag !   It's replaced dynamically. -->
+    <label code="editWindow-choice-defaultText"><![CDATA[Choice {I}...]]></label>
+    <!-- tootlip -->
+    <label code="editWindow-choice-payingChoice"><![CDATA[Make this choice paying]]></label>
+    <!-- !Event's time edition -->
+    <label code="editWindow-time-title"><![CDATA[Event's date]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-time-calendarTT"><![CDATA[Specific days]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-time-periodicTT"><![CDATA[Hours ranges]]></label>
+    <label code="editWindow-time-hourIntervalStart"><![CDATA[Hour start :]]></label>
+    <label code="editWindow-time-hourIntervalEnd"><![CDATA[Hour end :]]></label>
+    <label code="editWindow-time-hourInterval-hoursLabel"><![CDATA[h]]></label>
+    <label code="editWindow-time-hourInterval-miutesLabel"><![CDATA[m]]></label>
+    <!-- !Event's sound edition -->
+    <label code="editWindow-sound-title"><![CDATA[Background's sound]]></label>
+    <label code="editWindow-sound-urlTitle"><![CDATA[Define the internet path of a sound to be played]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-sound-testTT"><![CDATA[Try if the sound plays correctly.]]></label>
+    <label code="editWindow-sound-loop"><![CDATA[Loop sound]]></label>
+    <label code="editWindow-sound-testSuccess"><![CDATA[<font color="#006600">Invalid sound.</font>]]></label>
+    <label code="editWindow-sound-testError"><![CDATA[<font color="#cc0000">Valid sound.</font>]]></label>
+    <label code="editWindow-sound-sfxrTitle"><![CDATA[Play an <a href="http://www.superflashbros.net/as3sfxr/" target="_blank" class="link">SFXR</a> sound :]]></label>
+    <!-- tooltip -->
+    <label code="editWindow-sound-sfxrHelpTT"><![CDATA[Press CTRL+C inside SFXR app<br />to copy the sound's data<br />then past it on the input below.]]></label>
+    <!-- !Event's money -->
+    <label code="editWindow-money-title"><![CDATA[Money (Kubor)]]></label>
+    <label code="editWindow-money-label"><![CDATA[Kubors earned by the player when unlocking this event :]]></label>
+    <!-- tootlip -->
+    <label code="editWindow-money-helpTT"><![CDATA[Kubors can be used to unlock choices.<br /><i>(View "Choices list" under)</i>]]></label>
+    <label code="editWindow-money-range"><![CDATA[Event accessible only if the user owns :]]></label>
+    <label code="editWindow-money-list-+"><![CDATA[&gt; (more than)]]></label>
+    <label code="editWindow-money-list--"><![CDATA[&lt; (less than)]]></label>
+    <!-- &#61; means "=". Would break google doc if it was written "=" instead of this... -->
+    <label code="editWindow-money-list-="><![CDATA[&equals; (exactly)]]></label>
+    <label code="editWindow-money-list-+="><![CDATA[&gt;= (exactly or more than)]]></label>
+    <label code="editWindow-money-list--="><![CDATA[&lt;= (exactly or less than)]]></label>
+    <!-- !Calendar's months -->
+    <label code="month1"><![CDATA[January]]></label>
+    <label code="month2"><![CDATA[February]]></label>
+    <label code="month3"><![CDATA[March]]></label>
+    <label code="month4"><![CDATA[April]]></label>
+    <label code="month5"><![CDATA[May]]></label>
+    <label code="month6"><![CDATA[June]]></label>
+    <label code="month7"><![CDATA[July]]></label>
+    <label code="month8"><![CDATA[August]]></label>
+    <label code="month9"><![CDATA[Septembre]]></label>
+    <label code="month10"><![CDATA[Octobre]]></label>
+    <label code="month11"><![CDATA[Novembre]]></label>
+    <label code="month12"><![CDATA[Decembre]]></label>
+    <!-- !Calandar's days -->
+    <label code="day1"><![CDATA[Mon]]></label>
+    <label code="day2"><![CDATA[Tue]]></label>
+    <label code="day3"><![CDATA[Wen]]></label>
+    <label code="day4"><![CDATA[Thu]]></label>
+    <label code="day5"><![CDATA[Fri]]></label>
+    <label code="day6"><![CDATA[Sat]]></label>
+    <label code="day7"><![CDATA[Sun]]></label>
+    <!-- !GM module -->
+    <label code="player-loginTitle"><![CDATA[Please go on Kuest application to connect.<br />Then refresh this page.]]></label>
+    <label code="player-login"><![CDATA[Go on Kuest]]></label>
+    <label code="player-loading-kuest"><![CDATA[Loading quest...]]></label>
+    <label code="player-next"><![CDATA[next &gt;]]></label>
+    <label code="player-stopSim"><![CDATA[Close]]></label>
+    <!-- tooltip -->
+    <label code="player-resetTT"><![CDATA[Clear progression and restart from the begining.<br /><b>Be careful, this can't be undone !</b>]]></label>
+    <label code="player-resetTitle"><![CDATA[Clear progression.]]></label>
+    <label code="player-resetContent"><![CDATA[Are you sure you want to clear your progression and restart the quest from the begining ?<br /><b>This action cannot be undone !</b>]]></label>
+    <label code="player-inventory"><![CDATA[Inventory]]></label>
+    <label code="player-inventoryEmpty"><![CDATA[You found no object yet.]]></label>
+    <label code="player-evaluate"><![CDATA[Congratulations you complete the quest !<br />How much did you like it ?]]></label>
+    <label code="player-evaluateSubmit"><![CDATA[Submit]]></label>
+    <label code="player-evaluateComplete"><![CDATA[Thanks !]]></label>
+    <label code="player-wrongObject"><![CDATA[This object isn't useful here.]]></label>
+    <label code="player-noNeedObject"><![CDATA[This object isn't useful here.]]></label>
+    <label code="player-history"><![CDATA[History]]></label>
+    <label code="player-historyFav"><![CDATA[Pinned event]]></label>
+    <!-- tooltip -->
+    <label code="player-historyFavTT"><![CDATA[Pin]]></label>
+    <label code="player-questLost"><![CDATA[You failed the quest.<br />Restart from the begining and try to complete it again !]]></label>
+    <label code="player-questLostRestart"><![CDATA[Restart]]></label>
+    <!-- !HTML pages -->
+    <label code="menu_createButton"><![CDATA[Create a quest]]></label>
+    <label code="menu_createButtonTT"><![CDATA[Discover the quest editor and create your own quest for the game Kube !]]></label>
+    <label code="menu_kuests"><![CDATA[Quests list]]></label>
+    <label code="menu_connect"><![CDATA[Connect]]></label>
+    <label code="menu_history"><![CDATA[Played quests]]></label>
+    <label code="menu_histoButtonTT"><![CDATA[browse the quest you played]]></label>
+    <label code="menu_kuestsTT"><![CDATA[Back to the quests list.]]></label>
+    <label code="browse_search"><![CDATA[Search for a quest]]></label>
+    <label code="browse_searchPlaceholder"><![CDATA[Enter a keyword or a nickname...]]></label>
+    <label code="browse_searchSubmit"><![CDATA[Search]]></label>
+    <label code="browse_results"><![CDATA[Search results]]></label>
+    <label code="browse_titleLeft"><![CDATA[Best quests]]></label>
+    <label code="browse_titleRight"><![CDATA[Last created quests]]></label>
+    <label code="browse_players"><![CDATA[<span class='totalPlays'>This quest has been played by {TOTAL} players.</span>]]></label>
+    <label code="loading"><![CDATA[Loading...]]></label>
+    <label code="noResults"><![CDATA[No result.]]></label>
+    <label code="loadingError"><![CDATA[Woops... an error has occurred while loading quests list.]]></label>
+    <label code="history_titleRight"><![CDATA[Played quests]]></label>
+    <label code="history_noResults"><![CDATA[You haven't played any quest for now !<br/><br/>Why don't you try this one ?]]></label>
+    <label code="history_complete"><![CDATA[<strong>You have complete this quest !</strong>]]></label>
+    <label code="history_inProgress"><![CDATA[<b>You haven't complete this quest yet.</b>]]></label>
+    <label code="down_content"><![CDATA[Twinoid is unavailable for the moment, which makes this application unusable.<br /><br />Please try again later.<br /><br /><i>Sorry for the inconvenience.</i>]]></label>
+    <label code="down_title"><![CDATA[Server error]]></label>
+    <label code="redirect_title"><![CDATA[If you are not automatically redirected, <a href=\"{URL}\" target=\"_blank\">click here</a>.]]></label>
+    <label code="syncer_description"><![CDATA[<strong class='collapser collapserOpen'>Quest description :</strong>]]></label>
+    <label code="syncer_load"><![CDATA[Launch this quest]]></label>
+    <label code="syncer_installScript"><![CDATA[Install script Kuest]]></label>
+    <label code="syncer_installGM"><![CDATA[Install GreaseMonkey]]></label>
+    <label code="syncer_installTM"><![CDATA[Install TamperMonkey ]]></label>
+    <label code="syncer_installInstructions"><![CDATA[<img src='/kuest/img/warning.png' alt='warning' />To play this quest, install <span id='extension-GM'><a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>GreaseMonkey</a></span><span id='extension-TM'><a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a></span> as well as the script <b>Kuest</b> :]]></label>
+    <label code="syncer_infoTitle"><![CDATA[Help :]]></label>
+    <label code="syncer_infoContent"><![CDATA[Here are the steps to be able to play a quest.<br /><ul><li>If you use <b>Firefox</b>, <a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>install GreaseMonkey</a> then click on <a href='/kuest/js/kuest.user.js' target='_blank'>that link</a>.</li><li>If you use <b>Google Chrome</b>, install <a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a> then click on <a href='/kuest/js/kuest.user.js' target='_blank'>that link</a>.<br />Or go to the page <b>chrome://extensions</b> then drag&drop the file <a href='/kuest/js/kuest.user.js' target='_blank'>Kuest.user.js</a> inside the page.</li><li>The script hasen't been tested on <b>Opera</b></li><li><b>Internet Explorer</b> doesn't support the script.</li></ul>Once installed, you only need to click on "<b>Launch this quest</b>" under to start the quest.]]></label>
+    <label code="syncer_notFoundTitle"><![CDATA[Quest not found]]></label>
+    <label code="syncer_notFoundContent"><![CDATA[<img src='/kuest/img/error.png' alt='error'/> Quest not found]]></label>
+    <label code="error_title"><![CDATA[API error]]></label>
+    <label code="error_content"><![CDATA[An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>]]></label>
+    <label code="error_auth_title"><![CDATA[Connection failed]]></label>
+    <label code="error_auth_content"><![CDATA[In order to use this application, you need to grant it authorization to access your personnal informations.<br /><br />Your informations will be used to :<ul><li>Authenticate</li><li>Weight your evaluations depending on your Kube's statistics</li></ul><br />Click on the button above to connect again.]]></label>
+    <label code="error_db_title"><![CDATA[Database connection error]]></label>
+    <label code="error_db_content"><![CDATA[<br/><br/><br/>Unable to connect database.<br />Please try again later !]]></label>
+    <label code="error_api_title"><![CDATA[API error]]></label>
+    <label code="error_api_content"><![CDATA[An error has occured while connecting to the application.<br /><br />Twinoid's API has answered :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>]]></label>
+    <label code="syncer_players"><![CDATA[Players that finished this quest]]></label>
+    <label code="syncer_playersContent"><![CDATA[Nobody has finished this quest yet.<br />A quest is considered as complete when the player evaluated it.]]></label>
+  </labels>
 </root>

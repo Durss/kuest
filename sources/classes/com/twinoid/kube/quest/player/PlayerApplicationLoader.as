@@ -42,6 +42,7 @@ package com.twinoid.kube.quest.player {
 			initialize();
 		}
 
+
 		
 		
 		/* ***************** *
