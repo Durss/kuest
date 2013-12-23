@@ -43,7 +43,6 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		private var _pressedItem:ToggleButton;
 		private var _allowMultipleSelection:Boolean;
 		private var _group:FormComponentGroup;
-		private var _postponedRender:Boolean;
 		
 		
 		
@@ -87,7 +86,6 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 			}
 			
 			if(stage != null) render();
-			else _postponedRender = true;
 		}
 
 
@@ -305,14 +303,14 @@ package com.twinoid.kube.quest.editor.components.date.calendar {
 		 * Updates the cells rendering.
 		 */
 		private function render(event:Event = null):void {
+			if(event != null) removeEventListener(Event.ADDED_TO_STAGE, render);
+			
 			if(_allowMultipleSelection && !hasEventListener(MouseEvent.MOUSE_DOWN)) {
 				addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 				stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 				_monthLabel.addEventListener(MouseEvent.CLICK, clickMonthHandler);
 			}
 			
-			if(event != null && !_postponedRender) return;
-			_postponedRender = false;
 			_currentDate = new Date(_todayDate.getFullYear(), _todayDate.getMonth() + _monthsOffset, 1);
 			_monthLabel.text = Label.getLabel("month"+(_currentDate.getMonth()+1)) + " " + _currentDate.getFullYear();
 

@@ -521,6 +521,7 @@ package com.twinoid.kube.quest.editor.views {
 				//check if a box or link is between the stage and the mouse.
 				var objs:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
 				var top:DisplayObject = objs[objs.length - 1];
+				if(top == null) return;
 				if (top == this || _linksHolder.contains(top) || _scisors.contains(top)) {
 					_spacePressed = true;
 					Mouse.cursor = MouseCursor.ARROW;
@@ -670,8 +671,15 @@ package com.twinoid.kube.quest.editor.views {
 				clearSelection();
 				return;
 			
-			//If we were selecting or moving a selection, clear the selection
+			//If we were dragging a selection, stop its drag
 			}else if(_dragSelection) {
+				//update the selected boxes positions
+				var i:int, len:int;
+				len = _selectedBoxes.length;
+				for(i = 0; i < len; ++i) {
+					_selectedBoxes[i].data.boxPosition.x = _selectedBoxes[i].x;
+					_selectedBoxes[i].data.boxPosition.y = _selectedBoxes[i].y;
+				}
 				_dragSelection = false;
 				return;
 				
@@ -682,6 +690,13 @@ package com.twinoid.kube.quest.editor.views {
 				var py:Number = Math.round((_boxesHolder.mouseY - _tempBox.height * .5) / size) * size;
 				//Add an item to the tree
 				FrontControler.getInstance().addEntryPoint(px, py);
+			
+			//If we were dragging an item, update its position
+			}else if (_draggedItem != null) {
+				Box(_draggedItem).data.boxPosition.x = _draggedItem.x;
+				Box(_draggedItem).data.boxPosition.y = _draggedItem.y;
+				_draggedItem.stopDrag();
+				_draggedItem = null;
 			}
 			
 			//If a link has just been created correctly, try to create the link
@@ -702,14 +717,6 @@ package com.twinoid.kube.quest.editor.views {
 			//success test prevents from instant line clearing if the link
 			//is actually displaying an error. In this case, the link self clears.
 			if(success) _tempLink.update();
-			
-			//Clean stuffs that need to be
-			if (_draggedItem != null) {
-				Box(_draggedItem).data.boxPosition.x = _draggedItem.x;
-				Box(_draggedItem).data.boxPosition.y = _draggedItem.y;
-				_draggedItem.stopDrag();
-			}
-			_draggedItem = null;
 			
 			//When a link is deleted it's not captured here. It does its things
 			//on its side. We show the mouse and hide the scisors here just in case.

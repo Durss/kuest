@@ -2,6 +2,7 @@ package com.twinoid.kube.quest.player.views {
 	import treefortress.sound.SoundAS;
 
 	import com.muxxu.kub3dit.graphics.RubberIcon;
+	import com.nurun.components.button.BaseButton;
 	import com.nurun.components.button.IconAlign;
 	import com.nurun.components.button.TextAlign;
 	import com.nurun.core.lang.isEmpty;
@@ -13,6 +14,7 @@ package com.twinoid.kube.quest.player.views {
 	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
+	import com.twinoid.kube.quest.graphics.MoneyIcon;
 	import com.twinoid.kube.quest.graphics.SoundCutIcon;
 	import com.twinoid.kube.quest.graphics.SoundIcon;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
@@ -34,6 +36,7 @@ package com.twinoid.kube.quest.player.views {
 		private var _soundBT:ToggleButtonKube;
 		private var _prevUrl:String;
 		private var _width:Number;
+		private var _money:BaseButton;
 		
 		
 		
@@ -81,13 +84,23 @@ package com.twinoid.kube.quest.player.views {
 			
 			_razBT		= addChild(new GraphicButtonKube(new RubberIcon())) as GraphicButtonKube;
 			_soundBT	= addChild(new ToggleButtonKube("", new SoundIcon(), new SoundCutIcon())) as ToggleButtonKube;
+			_money		= addChild(new BaseButton('0', 'buttonBig', null, new MoneyIcon())) as BaseButton;
 			
-			_soundBT.iconAlign = IconAlign.CENTER;
-			_soundBT.textAlign = TextAlign.CENTER;
-			setToolTip(_razBT, Label.getLabel("player-resetTT"), ToolTipAlign.TOP_LEFT);
+			_soundBT.iconAlign	= IconAlign.CENTER;
+			_soundBT.textAlign	= TextAlign.CENTER;
+			_money.tabEnabled	= false;
+			_money.buttonMode	= false;
+			_money.iconAlign	= IconAlign.LEFT;
+			_money.textAlign	= TextAlign.LEFT;
+			setToolTip(_razBT, Label.getLabel("player-resetTT"), ToolTipAlign.TOP_RIGHT);
+			setToolTip(_money, Label.getLabel("player-moneyTT"), ToolTipAlign.TOP_RIGHT);
+			
+			moneyUpdateHandler(null);
 			
 			addEventListener(MouseEvent.CLICK, clickRAZHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, newEventHandler);
+			DataManager.getInstance().addEventListener(DataManagerEvent.MONEY_UPDATE, moneyUpdateHandler);
+			DataManager.getInstance().addEventListener(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE, moneyUpdateHandler);
 			
 			computePositions();
 		}
@@ -98,8 +111,13 @@ package com.twinoid.kube.quest.player.views {
 		private function computePositions():void {
 			_razBT.width		= _razBT.height = 
 			_soundBT.width		= _soundBT.height = 19;
+			_money.icon.scaleX	=
+			_money.icon.scaleY	= 1;
+			_money.icon.scaleX	=
+			_money.icon.scaleY	= _soundBT.height / _money.icon.height;
+			_money.validate();
 			
-			PosUtils.hPlaceNext(5, _razBT, _soundBT);
+			PosUtils.hPlaceNext(5, _razBT, _soundBT, _money);
 			
 			roundPos(_razBT, _soundBT);
 		}
@@ -132,6 +150,13 @@ package com.twinoid.kube.quest.player.views {
 					SoundAS.play("music");
 				}
 			}
+		}
+		
+		/**
+		 * Called when money updates
+		 */
+		private function moneyUpdateHandler(event:DataManagerEvent = null):void {
+			_money.text = DataManager.getInstance().money.toString();
 		}
 		
 	}

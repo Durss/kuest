@@ -46,7 +46,6 @@ package com.twinoid.kube.quest.player.vo {
 		public function initialize(objects:Vector.<ObjectItemData>):void {
 			_objects = new Vector.<InventoryObject>();
 			_guidToObject = {};
-			
 			var i:int, len:int;
 			len = objects.length;
 			for(i = 0; i < len; ++i) {
@@ -118,8 +117,14 @@ package com.twinoid.kube.quest.player.vo {
 					var i:int, len:int;
 					len = data.length;
 					for(i = 0; i < len; ++i) {
-						InventoryObject(_guidToObject[data[i]['guid']]).total = data[i]['total'];
-						InventoryObject(_guidToObject[data[i]['guid']]).unlocked = data[i]['unlocked'];
+						//In release mode, only used objects are compiled to the binary file.
+						//this prevents from crash if first playing in test mode and making
+						//a save file containing the objects references, and then playing
+						//in release mode with potential disapeared objects.
+						if(_guidToObject[data[i]['guid']] != null) {
+							InventoryObject(_guidToObject[data[i]['guid']]).total = data[i]['total'];
+							InventoryObject(_guidToObject[data[i]['guid']]).unlocked = data[i]['unlocked'];
+						}
 					}
 					break;
 				default:

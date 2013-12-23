@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.menu.debugger {
+	import flash.display.DisplayObject;
 	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import com.twinoid.kube.quest.graphics.HelpSmallIcon;
 	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
@@ -101,9 +102,10 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 			
 			_label.text				= Label.getLabel('menu-debug-inventory');
 			_engine.lockToLimits	= true;
+			_engine.lockY			= true;
 			_swiper.roundXValue		= _engine.itemWidth + _engine.hMargin;
 			_scrollpane.width		= w;
-			_scrollpane.height		= h + 15;//15 = scrollbar's height
+			_scrollpane.height		= h + DisplayObject(_scrollpane.hScroll).width;
 			_swiper.viewport.width	= w;
 			_swiper.viewport.height	= h;
 			_helpBt.x				= Math.round(_label.width);

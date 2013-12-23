@@ -172,9 +172,9 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			PosUtils.vPlaceNext(0, _loadBt, _loadForm);
 			PosUtils.vPlaceNext(10, _loadForm, _saveBt);
 			PosUtils.vPlaceNext(0, _saveBt, _saveForm);
-			PosUtils.vPlaceNext(10, _saveForm, _publishBt);
+			PosUtils.vPlaceNext(10, _saveForm, _testBt, _publishBt);
 			PosUtils.vPlaceNext(0, _publishBt, _publishForm);
-			PosUtils.vPlaceNext(10, _publishForm, _testBt, _helpBt);
+			PosUtils.vPlaceNext(10, _publishForm, _helpBt);
 			PosUtils.vPlaceNext(0, _helpBt, _helpForm);
 			
 			//If we already saved the kuest or if we loaded one, display the

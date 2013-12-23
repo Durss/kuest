@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="Add Advanced Telemetry" name="Kuest - Advanced Telemetry">
+	<fdt.loadProjectProperties projectname="KubeQuest" />
+	<!--
+		This ant script will allow You to enable Advanced Telementry on your SWF file in order to use 
+		the advanced features of Adobe Scout
+		
+		To make this ant task working you need to :
+		- compile the SWF with flex SDK 4.6+.
+		- execute the SWF with flash player 11.4+
+		- install Python : http://www.python.org/download/ (don't forget to add python to the window's environment vars)
+		- if run from ant panel, right click on it -> Run as -> External Tools configuration.. -> JRE -> check : Run in the same JRE as the workspace
+	-->
+	
+	<property name="scripts_dir" 		value="${FDTProjectPath}/sources/assets/ant/" />
+	<property name="swf_file" 			value="${FDTProjectPath}/deploy/swf/application.swf" />
+	
+	<!-- 
+		Errors :
+		 - "Cannot run program "python" CreateProcess error=2" ==> Add python in the PATH environment variable on windows !
+		 - "Bad SWF: Unrecognized signature: b'CWS' " ==> search for an updated pythong script from Adobe.
+	 -->
+	<target name="Add Advanced Telemetry">
+		<exec dir="${scripts_dir}" executable="python" failonerror="true">
+		    <arg line="add-opt-in.py ${swf_file}" />
+		</exec>
+	</target>
+</project>

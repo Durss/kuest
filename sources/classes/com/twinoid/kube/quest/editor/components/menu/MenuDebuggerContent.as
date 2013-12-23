@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.components.menu {
+	import com.nurun.components.button.BaseButton;
+	import com.nurun.components.button.IconAlign;
+	import com.nurun.components.button.TextAlign;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
@@ -12,7 +15,10 @@ package com.twinoid.kube.quest.editor.components.menu {
 	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.model.Model;
+	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
+	import com.twinoid.kube.quest.graphics.MoneyIcon;
 	import com.twinoid.kube.quest.player.events.QuestManagerEvent;
 	import com.twinoid.kube.quest.player.model.QuestManager;
 
@@ -37,6 +43,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private var _simulator:GameContextSimulatorForm;
 		private var _tabIndex:int;
 		private var _inventory:GameInventorySimulatorForm;
+		private var _money:BaseButton;
 		
 		
 		
@@ -95,6 +102,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_splitter		= _holder.addChild(createRect(0xff2D89B0, _width, 1));
 			_header			= _holder.addChild(new CssTextField('menu-label')) as CssTextField;
 			_spin			= _holder.addChild(new LoaderSpinning()) as LoaderSpinning;
+			_money			= new BaseButton('0', 'buttonBig', null, new MoneyIcon());
 			_inventory		= new GameInventorySimulatorForm(_width - 10);
 			_simulator		= new GameContextSimulatorForm(_width - 10);
 			_eventDisplay	= new KuestEventDisplay(_width - 10);
@@ -103,9 +111,14 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_title.text			= Label.getLabel('menu-debug-title');
 			_header.text		= Label.getLabel('menu-debug-header');
 			_selectStart.text	= Label.getLabel('menu-debug-selectStart');
+			_money.iconAlign	= IconAlign.LEFT;
+			_money.textAlign	= TextAlign.LEFT;
+			
+			setToolTip(_money, Label.getLabel("player-moneyTT"), ToolTipAlign.TOP_RIGHT);
 			
 			_eventDisplay.addEventListener(Event.SELECT, answerHandler);
 			_questManager.addEventListener(QuestManagerEvent.READY, questTestReadyHandler);
+			_questManager.addEventListener(QuestManagerEvent.MONEY_UPDATE, moneyUpdateHandler);
 			_questManager.addEventListener(QuestManagerEvent.NEW_EVENT, questTestNewEventHandler);
 			_simulator.addEventListener(FormComponentEvent.SUBMIT, submitSimulatorHandler);
 			_inventory.addEventListener(Event.SELECT, selectObjectHandler);
@@ -123,6 +136,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_header.width = _width - 15;
 			_selectStart.width = _width - 15;
 			_eventDisplay.x = 5;
+			_money.x = 5;
 			_simulator.x = 5;
 			_inventory.x = 5;
 			
@@ -134,12 +148,13 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_spin.x = _width * .5;
 			_spin.y = _header.height + _spin.height;
 			
-			_splitter.y = Math.round(_header.y + _header.height) + 5;
-			_simulator.y = Math.round(_splitter.y + _splitter.height) + 5;
-			_inventory.y = Math.round(_simulator.y + _simulator.height) + 5;
-			_eventDisplay.y = Math.round(_inventory.y + _inventory.height) + 10;
+			_splitter.y		= Math.round(_header.y + _header.height) + 5;
+			_simulator.y	= Math.round(_splitter.y + _splitter.height) + 5;
+			_inventory.y	= Math.round(_simulator.y + _simulator.height) + 5;
+			_money.y		= Math.round(_inventory.y + _inventory.height) + 5;
+			_eventDisplay.y	= Math.round(_money.y + _money.height) + 10;
 			
-			roundPos(_selectStart, _spin, _eventDisplay, _splitter, _inventory, _simulator);
+			roundPos(_selectStart, _spin, _eventDisplay, _splitter, _inventory, _simulator, _money);
 			
 			super.computePositions(event);
 			if(event == null) dispatchEvent(new Event(Event.RESIZE, true));
@@ -161,7 +176,9 @@ package com.twinoid.kube.quest.editor.components.menu {
 			if(_holder.contains(_eventDisplay))	_holder.removeChild(_eventDisplay);
 			if(_holder.contains(_simulator))	_holder.removeChild(_simulator);
 			if(_holder.contains(_inventory))	_holder.removeChild(_inventory);
+			if(_holder.contains(_money))		_holder.removeChild(_money);
 			_eventDisplay.clear();
+			_money.text = '0';
 			FrontControler.getInstance().setDebugMode(false);
 		}
 		
@@ -184,6 +201,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		private function debugStartHandler(event:ViewEvent):void {
 			_selectStart.visible = false;
+			_holder.addChild(_money);
 			_holder.addChild(_eventDisplay);
 			_holder.addChild(_inventory);
 			_holder.addChild(_simulator);
@@ -200,7 +218,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			if(_questManager.currentEvent!= null) {
 				_questManager.currentEvent.activateOnEditor();
 			}
-			_eventDisplay.populate(_questManager.currentEvent);
+			_eventDisplay.populate(_questManager.currentEvent, _questManager.money);
 			_inventory.populate(_questManager.inventory);
 			computePositions();
 		}
@@ -217,6 +235,13 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		private function selectObjectHandler(event:Event):void {
 			_questManager.useObject(_inventory.objectUsed, false);
+		}
+		
+		/**
+		 * Called when money value changes
+		 */
+		private function moneyUpdateHandler(event:QuestManagerEvent):void {
+			_money.text = _questManager.money.toString();
 		}
 		
 	}

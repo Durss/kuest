@@ -10,6 +10,7 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.editor.cmd.LoginCmd;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.events.LCManagerEvent;
+	import com.twinoid.kube.quest.editor.utils.SfxrSynth;
 	import com.twinoid.kube.quest.editor.utils.initSerializableClasses;
 	import com.twinoid.kube.quest.editor.utils.prompt;
 	import com.twinoid.kube.quest.editor.vo.KuestData;
@@ -211,6 +212,11 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		public function get historyFavorites():Vector.<KuestEvent> { return _questManager.eventsFavorites; }
 		
+		/**
+		 * Gets the money earned
+		 */
+		public function get money():uint { return _questManager.money; }
+		
 		
 		
 		
@@ -231,6 +237,7 @@ package com.twinoid.kube.quest.player.model {
 			_questManager.addEventListener(QuestManagerEvent.NEW_EVENT, newEventHandler);
 			_questManager.addEventListener(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT, saveLoadingErrorHandler);
 			_questManager.addEventListener(QuestManagerEvent.HISTORY_UPDATE, historyUpdateHandler);
+			_questManager.addEventListener(QuestManagerEvent.MONEY_UPDATE, moneyUpdateHandler);
 			_questManager.addEventListener(QuestManagerEvent.HISTORY_FAVORITES_UPDATE, historyUpdateHandler);
 			_questManager.addEventListener(QuestManagerEvent.QUEST_COMPLETE, questCompleteHandler);
 			_questManager.addEventListener(QuestManagerEvent.QUEST_FAILED, questFailedHandler);
@@ -250,7 +257,8 @@ package com.twinoid.kube.quest.player.model {
 				//1) Messages uniques indépendants - 51ad0d08dc8c8
 				//2) Dépendances d'événements - 51ad0ec570134
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
-				Config.addVariable("kuestID", "51ad12eca65b6");
+				//7) Utiliser les Kubors - 52b6070ecfe6b
+				Config.addVariable("kuestID", "52b6070ecfe6b");
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
@@ -262,6 +270,13 @@ package com.twinoid.kube.quest.player.model {
 		 * Called when a new event is available
 		 */
 		private function newEventHandler(event:QuestManagerEvent):void {
+			if(currentEvent != null && currentEvent.actionSound != null) {
+				if(!isEmpty(currentEvent.actionSound.sfxr)) {
+					var synth:SfxrSynth = new SfxrSynth();
+					synth.params.setSettingsString( currentEvent.actionSound.sfxr );
+					synth.play();
+				}
+			}
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
 			saveProgression();
 		}
@@ -294,6 +309,13 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function historyUpdateHandler(event:QuestManagerEvent):void {
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.HISTORY_UPDATE));
+		}
+		
+		/**
+		 * Called when money value updates
+		 */
+		private function moneyUpdateHandler(event:QuestManagerEvent):void {
+			dispatchEvent(new DataManagerEvent(DataManagerEvent.MONEY_UPDATE));
 		}
 		
 		/**
@@ -783,6 +805,7 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function clearProgressionCompleteHandler(event:CommandEvent):void {
 			_questManager.clearProgression();
+			_simulatedEvent = null;
 			if(_lastPlaceChangeWasZone) {
 				onZoneChange();
 			}else{

@@ -91,6 +91,7 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	//Searches for UID inside page's source.
 	//If the fevermap server's UID isn't the same, the user will be disconnected.
 	function getUIDAndInstanciateApp() {
+		if(gameDiv == undefined) return;
 		var offset = 0;
 		var currentUID = -1;
 		var ctn = document.body.innerHTML;
@@ -142,7 +143,7 @@ if(/zone\/choose/gi.test(window.location.href)) {
 		var gameDiv = document.getElementsByClassName("game")[0];
 		var btLabel = [];
 		btLabel["fr"] = "Choisir une quête";
-		btLabel["en"] = "Choisir a quest";
+		btLabel["en"] = "Choose a quest";
 		btLabel["es"] = "Elegir una búsqueda";
 		btLabel["de"] = "Wählen eine quest";
 		var link = document.createElement('div');

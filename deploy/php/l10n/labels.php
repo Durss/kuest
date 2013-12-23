@@ -217,6 +217,16 @@
 	$syncer_notFoundContent["en"] = "<img src='/kuest/img/error.png' alt='error'/> Quest not found";
 	$syncer_notFoundContent = $syncer_notFoundContent[ $lang ];
 	
+	$syncer_players = array();
+	$syncer_players["fr"] = "Joueurs ayant terminé la quête";
+	$syncer_players["en"] = "Players that finished this quest";
+	$syncer_players= $syncer_players[ $lang ];
+	
+	$syncer_playersContent = array();
+	$syncer_playersContent["fr"] = "Personne n'a terminé cette quête pour le moment.<br />Une quête est considérée comme terminée lorsque le joueur l'a évalué.";
+	$syncer_playersContent["en"] = "Nobody has finished this quest yet.<br />A quest is considered as complete when the player evaluated it.";
+	$syncer_playersContent= $syncer_playersContent[ $lang ];
+	
 	
 	
 	//ERROR PAGE//

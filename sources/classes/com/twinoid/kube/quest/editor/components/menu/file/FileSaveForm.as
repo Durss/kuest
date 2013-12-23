@@ -162,7 +162,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 					_friendsCB.addSkinnedItem(_friends[i].uname+" <span class='friendItemId'>(ID:"+_friends[i].uid+")</span>", _friends[i].uid);
 				}
 				//Add myself for eventual technical support on quests
-				if(!amIIn && Config.getVariable("uid") != "48") {
+				if (!amIIn && Config.getVariable("uid") != "48") {
 					_friendsCB.addSkinnedItem("Durss <span class='friendItemId'>(ID:48)</span>", 48);
 				}
 			}

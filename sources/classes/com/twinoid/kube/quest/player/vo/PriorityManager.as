@@ -87,7 +87,7 @@ package com.twinoid.kube.quest.player.vo {
 		/**
 		 * Initializes the manager
 		 */
-		public function initiliaze(nodes:Vector.<KuestEvent>):void {
+		public function initialize(nodes:Vector.<KuestEvent>):void {
 			var i:int, len:int;
 			len = nodes.length;
 			for(i = 0; i < len; ++i) {

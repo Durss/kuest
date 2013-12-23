@@ -168,8 +168,8 @@ package com.twinoid.kube.quest.editor.components.form.input {
 
 		private function keyDownHandler(event:KeyboardEvent):void {
 			if(_isNumeric) {
-				if(event.keyCode == Keyboard.UP) text = (numValue - 1).toString();
-				if(event.keyCode == Keyboard.DOWN) text = (numValue + 1).toString();
+				if(event.keyCode == Keyboard.UP) text = MathUtils.restrict(numValue - 1, _minNumValue, _maxNumValue).toString();
+				if(event.keyCode == Keyboard.DOWN) text = MathUtils.restrict(numValue + 1, _minNumValue, _maxNumValue).toString();
 			}
 		}
 

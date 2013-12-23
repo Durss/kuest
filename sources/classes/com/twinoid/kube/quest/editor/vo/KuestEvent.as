@@ -33,6 +33,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _actionType:ActionType;
 		private var _actionChoices:ActionChoices;
 		private var _actionSound:ActionSound;
+		private var _actionMoney:ActionMoney;
 		private var _endsQuest:Boolean;
 		private var _loosesQuest:Boolean;
 		private var _guid:int;
@@ -148,6 +149,21 @@ package com.twinoid.kube.quest.editor.vo {
 		public function set actionSound(actionSound:ActionSound):void {
 			if(_actionSound != null) _actionSound.dispose();
 			_actionSound = actionSound;
+		}
+		
+		/**
+		 * Gets the action's sound.
+		 */
+		public function get actionMoney():ActionMoney {
+			return _actionMoney;
+		}
+
+		/**
+		 * Sets the action's sound.
+		 */
+		public function set actionMoney(actionMoney:ActionMoney):void {
+			if(_actionMoney != null) _actionMoney.dispose();
+			_actionMoney = actionMoney;
 		}
 		
 		/**

@@ -90,7 +90,9 @@ package com.twinoid.kube.quest.player.components {
 				return;
 			}
 			//Images are loaded asynchronously at the quest init, wait for it just in case
-			_data.actionType.getItem().image.addEventListener(Event.CHANGE, imageUpdateHandler, false, 0, true);
+			if(_data.actionType.getItem() != null && _data.actionType.getItem().image != null) {
+				_data.actionType.getItem().image.addEventListener(Event.CHANGE, imageUpdateHandler, false, 0, true);
+			}
 			
 			_label.text		= _data.actionPlace.getAsLabel();
 			_label.y		= _engineRef.itemHeight - _label.height;
@@ -147,6 +149,10 @@ package com.twinoid.kube.quest.player.components {
 			
 			_favBt.visible = false;
 			
+			_holder.graphics.beginFill(0xff0000, 0);
+			_holder.graphics.drawRect(0, 0, 50, 50);
+			_holder.graphics.endFill();
+			
 			addEventListener(MouseEvent.MOUSE_OVER, rollOverHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			_holder.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
@@ -187,7 +193,9 @@ package com.twinoid.kube.quest.player.components {
 				
 				TweenLite.to(_frame, .25, {autoAlpha:1});
 				TweenLite.to(this, .25, {colorMatrixFilter:{brightness:1.25}});
-				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.actionType.getItem().name, ToolTipAlign.TOP));
+				if(_data.actionType.getItem() != null) {
+					dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _data.actionType.getItem().name, ToolTipAlign.TOP));
+				}
 			}else{
 				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel('player-historyFavTT'), ToolTipAlign.TOP));
 			}
@@ -208,7 +216,9 @@ package com.twinoid.kube.quest.player.components {
 		 */
 		protected function imageUpdateHandler(event:Event = null):void {
 			_image.clear();
-			_image.setBitmapData(_data.actionType.getItem().image.getConcreteBitmapData());
+			if(_data.actionType.getItem() != null && _data.actionType.getItem().image != null) {
+				_image.setBitmapData(_data.actionType.getItem().image.getConcreteBitmapData());
+			}
 		}
 		
 	}

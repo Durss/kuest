@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	import gs.TweenLite;
 
 	import treefortress.sound.SoundAS;
@@ -15,9 +17,12 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
 	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
+	import com.twinoid.kube.quest.editor.utils.SfxrSynth;
+	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.EventChoiceYupIcon;
+	import com.twinoid.kube.quest.graphics.HelpSmallIcon;
 	import com.twinoid.kube.quest.graphics.PlaySoundIcon;
 	import com.twinoid.kube.quest.graphics.StopSoundIcon;
 
@@ -36,7 +41,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	 * @date 22 mai 2013;
 	 */
 	public class EditEventSound extends AbstractEditZone {
-		private var _formUrlHolder:Sprite;
+		private var _formUrlSFXRHolder:Sprite;
 		private var _inputURL:InputKube;
 		private var _testBt:GraphicButtonKube;
 		private var _spin:LoaderSpinning;
@@ -47,6 +52,11 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private var _timeout:uint;
 		private var _loop:CheckBoxKube;
 		private var _currentSound:SoundInstance;
+		private var _titleURL:CssTextField;
+		private var _titleSFXR:CssTextField;
+		private var _inputSFXR:InputKube;
+		private var _testSFXRBt:GraphicButtonKube;
+		private var _helpSFXR:GraphicButtonKube;
 		
 		
 		
@@ -71,7 +81,12 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 */
 		override public function set tabIndex(value:int):void {
 			super.tabIndex		= value;
-			_inputURL.tabIndex	= value + 10;
+			value				+= 10;
+			_inputURL.tabIndex	= value++;
+			_testBt.tabIndex	= value++;
+			_loop.tabIndex		= value++;
+			_inputSFXR.tabIndex	= value++;
+			_testSFXRBt.tabIndex= value++;
 		}
 
 
@@ -91,6 +106,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 					data.actionSound.url = _inputURL.text;
 					data.actionSound.loop = _loop.selected;
 				}
+				if(_testSFXRBt.enabled && StringUtils.trim(_inputSFXR.value as String).length > 0) {
+					data.actionSound.sfxr = _inputSFXR.text;
+				}
 			}
 			SoundAS.stopAll();
 		}
@@ -99,26 +117,27 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Loads the configuration to the value object
 		 */
 		public function load(data:KuestEvent):void {
+			var enabled:Boolean = false;
 			if (data.actionSound != null) {
+				if(data.actionSound.sfxr != null && StringUtils.trim(data.actionSound.sfxr).length > 0) {
+					_inputSFXR.text = data.actionSound.sfxr;
+					enabled = true;
+				}else{
+					_inputSFXR.text = '';
+				}
+				
 				if (data.actionSound.url != null && StringUtils.trim(data.actionSound.url).length > 0) {
 					_inputURL.text = data.actionSound.url;
 					_loop.selected = data.actionSound.loop;
-					selectedIndex = 0;
 					enabled = true;
-					return;
+				}else{
+					clearSoundPlayerState();
 				}
+			}else{
+				clearSoundPlayerState();
 			}
 			
-			enabled = false;
-			selectedIndex = 0;
-			SoundAS.stopAll();
-			_inputURL.text = "";
-			_spin.close();
-			_inputURL.enabled = true;
-			_loop.selected = false;
-			_testBt.icon = _playIcon;
-			_testBt.enabled = false;
-			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			super.onload(enabled, 0);
 		}
 
 
@@ -135,31 +154,38 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			buildUrlForm();
 			
-//			addEntry(new EventChoiceNoneIcon(), new Sprite(), Label.getLabel("editWindow-sound-noneTT"));
-			addEntry(new EventChoiceYupIcon(), _formUrlHolder, Label.getLabel("editWindow-sound-urlTT"));
+			addEntry(new EventChoiceYupIcon(), _formUrlSFXRHolder, Label.getLabel("editWindow-sound-urlTT"));
 		}
 
 		private function buildUrlForm():void {
-			_formUrlHolder = new Sprite();
-			var title:CssTextField = _formUrlHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
-			_inputURL	= _formUrlHolder.addChild(new InputKube("http://")) as InputKube;
-			_testBt		= _formUrlHolder.addChild(new GraphicButtonKube(new PlaySoundIcon())) as GraphicButtonKube;
-			_result		= _formUrlHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
-			_spin		= _formUrlHolder.addChild(new LoaderSpinning()) as LoaderSpinning;
-			_loop		= _formUrlHolder.addChild(new CheckBoxKube(Label.getLabel("editWindow-sound-loop"))) as CheckBoxKube;
+			_formUrlSFXRHolder = new Sprite();
+			_titleURL	= _formUrlSFXRHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_inputURL	= _formUrlSFXRHolder.addChild(new InputKube("http://")) as InputKube;
+			_testBt		= _formUrlSFXRHolder.addChild(new GraphicButtonKube(new PlaySoundIcon())) as GraphicButtonKube;
+			_result		= _formUrlSFXRHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_spin		= _formUrlSFXRHolder.addChild(new LoaderSpinning()) as LoaderSpinning;
+			_loop		= _formUrlSFXRHolder.addChild(new CheckBoxKube(Label.getLabel("editWindow-sound-loop"))) as CheckBoxKube;
+			_titleSFXR	= _formUrlSFXRHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
+			_inputSFXR	= _formUrlSFXRHolder.addChild(new InputKube("0,,0.0488,0.5997,0.3338,0.68,,,,,,0.62,0.67,,,,,-0.02,1,0.02,,,-0.04,0.5")) as InputKube;
+			_testSFXRBt	= _formUrlSFXRHolder.addChild(new GraphicButtonKube(new PlaySoundIcon())) as GraphicButtonKube;
+			_helpSFXR	= _formUrlSFXRHolder.addChild(new GraphicButtonKube(new HelpSmallIcon(), false)) as GraphicButtonKube;
+			
 			_stopIcon	= new StopSoundIcon();
 			_playIcon	= _testBt.icon;
 			
-			title.text	= Label.getLabel("editWindow-sound-urlTitle");
-			_result.background = true;
-			_result.backgroundColor = 0x47A9D1;
+			_titleURL.text			= Label.getLabel("editWindow-sound-urlTitle");
+			_titleSFXR.text			= Label.getLabel("editWindow-sound-sfxrTitle");
+			_result.background		= true;
+			_result.backgroundColor	= 0x47A9D1;
 			applyDefaultFrameVisitorNoTween(_testBt, _stopIcon);
 			
-			title.width		= _width;
+			setToolTip(_helpSFXR, Label.getLabel('editWindow-sound-sfxrHelpTT'));
+			
+			_titleURL.width	= _width;
 			_testBt.enabled	= false;
 			_testBt.width	= _testBt.height = _inputURL.height;
 			_testBt.x		= _width - _testBt.width;
-			_inputURL.y		= _testBt.y = title.height;
+			_inputURL.y		= _testBt.y = _titleURL.height;
 			_inputURL.width	= _width - _testBt.width - 2;
 			_result.x		= _inputURL.x + 1;
 			_result.y		= _inputURL.y + 1;
@@ -169,16 +195,34 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_result.alpha	= 0;
 			_result.visible	= false;
 			
+			_titleSFXR.x	= _helpSFXR.width;
+			_titleSFXR.y	= _loop.y + _loop.height + 20;
+			_inputSFXR.y	= _testSFXRBt.y = _titleSFXR.y + _titleSFXR.height;
+			_titleSFXR.width= _width - _helpSFXR.width;
+			_helpSFXR.y		= _titleSFXR.y + _titleSFXR.height - _helpSFXR.height;
+			_testSFXRBt.width= _testSFXRBt.height = _inputSFXR.height;
+			_testSFXRBt.x	= _width - _testBt.width;
+			_inputSFXR.width= _width - _testSFXRBt.width - 2;
+			
 			SoundAS.loadFailed.addOnce(onSoundError);
 			
-			_testBt.addEventListener(MouseEvent.CLICK, clickTestHandler);
+			_testBt.addEventListener(MouseEvent.CLICK, clickHandler);
+			_testSFXRBt.addEventListener(MouseEvent.CLICK, clickHandler);
+			_helpSFXR.addEventListener(MouseEvent.CLICK, clickHandler);
 			_inputURL.addEventListener(Event.CHANGE, changeUrlHandler);
+			_inputSFXR.addEventListener(Event.CHANGE, changeSFXRHandler);
+			_inputSFXR.addEventListener(FocusEvent.FOCUS_IN, focusInputHandler);
+			_inputSFXR.addEventListener(FocusEvent.FOCUS_OUT, focusInputHandler);
 			_inputURL.addEventListener(FocusEvent.FOCUS_IN, focusInputHandler);
 			_inputURL.addEventListener(MouseEvent.MOUSE_DOWN, mouseUpInputHandler);
-			_inputURL.addEventListener(FormComponentEvent.SUBMIT, clickTestHandler);
+			_inputURL.addEventListener(FormComponentEvent.SUBMIT, clickHandler);
+			_inputSFXR.addEventListener(FormComponentEvent.SUBMIT, clickHandler);
 			
-			roundPos(_testBt, _inputURL, _result, _loop);
+			roundPos(_testBt, _inputURL, _result, _loop, _inputSFXR, _titleSFXR, _testSFXRBt, _helpSFXR);
 			
+			_formUrlSFXRHolder.graphics.beginFill(0x8BC9E2, 1);
+			_formUrlSFXRHolder.graphics.drawRect(0, _titleSFXR.y - 10, _width, 1);
+			_formUrlSFXRHolder.graphics.endFill();
 		}
 		
 		/**
@@ -190,28 +234,52 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		}
 		
 		/**
-		 * Called when test button is clicked.
+		 * Called when SFXR data changes
+		 */
+		private function changeSFXRHandler(event:Event):void {
+			_testSFXRBt.enabled = _inputSFXR.text.split(',').length == 24;
+		}
+		
+		/**
+		 * Called when a button is clicked.
+		 * 
+		 * In case of distant sound button :
 		 * If already playing, it cuts the sound.
 		 * If no sound is playing, start the loading/playing and wait for
 		 * data to come on SoundMixer.
+		 * 
+		 * In case of SFXR test button, it plays the sound
 		 */
-		private function clickTestHandler(event:Event):void {
-			if(!_testBt.enabled) return;
-			
-			SoundAS.stopAll();
-			if(_testBt.icon == _playIcon) {
-				_testBt.enabled = false;
-				_inputURL.enabled = false;
-				_spin.open();
-				_spin.x = _width * .5;
-				_spin.y = _inputURL.y + _inputURL.height * .5;
+		private function clickHandler(event:Event):void {
+			if(event.currentTarget == _testBt || event.currentTarget == _inputURL) {
+				if(!_testBt.enabled) return;
 				
-				SoundAS.loadSound(_inputURL.text, "test", 0);
-				_currentSound = SoundAS.play("test");
-				_currentSound.soundCompleted.addOnce(onSoundComplete);
-				addEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			}else{
-				_testBt.icon = _playIcon;
+				SoundAS.stopAll();
+				
+				if(_testBt.icon == _playIcon) {
+					_testBt.enabled = false;
+					_inputURL.enabled = false;
+					_spin.open();
+					_spin.x = _width * .5;
+					_spin.y = _inputURL.y + _inputURL.height * .5;
+					
+					SoundAS.loadSound(_inputURL.text, "test", 0);
+					_currentSound = SoundAS.play("test");
+					_currentSound.soundCompleted.addOnce(onSoundComplete);
+					addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+				}else{
+					_testBt.icon = _playIcon;
+				}
+			}else
+			
+			if(event.currentTarget == _testSFXRBt || event.currentTarget == _inputSFXR) {
+				var synth:SfxrSynth = new SfxrSynth();
+				synth.params.setSettingsString( _inputSFXR.text );
+				synth.play();
+			}else
+			
+			if(event.currentTarget == _helpSFXR) {
+				navigateToURL(new URLRequest('http://www.superflashbros.net/as3sfxr/'), '_blank');
 			}
 		}
 
@@ -236,10 +304,14 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 
 
 		private function focusInputHandler(event:FocusEvent):void {
-			if(_inputURL.text.length == 0) {
-				_inputURL.text = "http://";
+			if(event.currentTarget == _inputURL) {
+				if(_inputURL.text.length == 0) {
+					_inputURL.text = "http://";
+				}
+				_lastFocusTime = getTimer();
+			}else{
+				changeSFXRHandler(event);
 			}
-			_lastFocusTime = getTimer();
 		}
 
 		private function mouseUpInputHandler(event:MouseEvent):void {
@@ -257,6 +329,17 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_inputURL.errorFlash();
 			clearTimeout(_timeout);
 			_timeout = setTimeout(hideResult, 2000);
+		}
+
+		private function clearSoundPlayerState():void {
+			SoundAS.stopAll();
+			_inputURL.text = "";
+			_spin.close();
+			_inputURL.enabled = true;
+			_loop.selected = false;
+			_testBt.icon = _playIcon;
+			_testBt.enabled = false;
+			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 
 		private function hideResult():void {

@@ -1,6 +1,7 @@
 package com.twinoid.kube.quest.player.views {
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.bitmap.ImageResizerAlign;
+	import com.nurun.components.button.IconAlign;
 	import com.nurun.components.button.TextAlign;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
@@ -10,6 +11,7 @@ package com.twinoid.kube.quest.player.views {
 	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
+	import com.twinoid.kube.quest.graphics.MoneyIcon;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
 
@@ -141,7 +143,24 @@ package com.twinoid.kube.quest.player.views {
 				}
 				_choicesSpool[i].width = -1;//Reset autosize capabilities
 				addChild(_choicesSpool[i]);
-				_choicesSpool[i].label = "● " + _data.actionChoices.choices[i].replace(/</gi, "&lt;").replace(/>/gi, "&gt;");
+				
+				if(_data.actionChoices.choicesCost != null
+				&& _data.actionChoices.choicesCost.length > i
+				&& _data.actionChoices.choicesCost[i] > 0) {
+					if(_choicesSpool[i].icon == null) {
+						_choicesSpool[i].icon = new MoneyIcon();
+						_choicesSpool[i].iconAlign = IconAlign.LEFT;
+						_choicesSpool[i].textAlign = TextAlign.LEFT;
+						_choicesSpool[i].icon.scaleX = _choicesSpool[i].icon.scaleY = 2;
+					}
+					_choicesSpool[i].label = '(x'+_data.actionChoices.choicesCost[i]+')    ● ' + _data.actionChoices.choices[i].replace(/</gi, "&lt;").replace(/>/gi, "&gt;");
+					_choicesSpool[i].enabled = DataManager.getInstance().money >= _data.actionChoices.choicesCost[i];
+				}else{
+					_choicesSpool[i].icon = null;
+					_choicesSpool[i].enabled = true;
+					_choicesSpool[i].textAlign = TextAlign.LEFT;
+					_choicesSpool[i].label = "● " + _data.actionChoices.choices[i].replace(/</gi, "&lt;").replace(/>/gi, "&gt;");
+				}
 				maxWidth = Math.max(maxWidth, _choicesSpool[i].width);
 			}
 			
@@ -185,7 +204,7 @@ package com.twinoid.kube.quest.player.views {
 			for(i = 0; i < len; ++i) {
 				_choicesSpool[i].x = _tf.x;
 				_choicesSpool[i].width = maxWidth + 10;
-				_choicesSpool[i].enabled = !_simulatedMode;
+				_choicesSpool[i].enabled = _choicesSpool[i].enabled && !_simulatedMode;
 //				PosUtils.hCenterIn(_choicesSpool[i], _tf);
 			}
 			_next.x = _tf.x;

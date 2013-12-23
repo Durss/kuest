@@ -20,6 +20,7 @@ package com.twinoid.kube.quest.player.events {
 		public static const QUEST_COMPLETE:String				= "questComplete";
 		public static const QUEST_FAILED:String					= "questFailed";
 		public static const HISTORY_UPDATE:String				= "historyUpdate";
+		public static const MONEY_UPDATE:String					= "moneyUpdate";
 		public static const SIMULATE_EVENT:String				= "simulateEvent";
 		
 		

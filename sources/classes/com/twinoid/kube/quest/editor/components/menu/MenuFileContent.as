@@ -15,7 +15,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 	
 	/**
 	 * Displays main menu.
-	 * Allows the user to log in or to save/load/etc.. his quests
+	 * Allows the user to save/load/etc.. his quests
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;

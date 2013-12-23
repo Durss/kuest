@@ -89,8 +89,10 @@ package com.twinoid.kube.quest.editor.components.buttons {
 		 * ******* */
 		override protected function computePositions():void {
 			super.computePositions();
-			_backgroundMc.width = Math.round(_backgroundMc.width);
-			_backgroundMc.height = Math.round(_backgroundMc.height);
+			if(_backgroundMc != null) {
+				_backgroundMc.width = Math.round(_backgroundMc.width);
+				_backgroundMc.height = Math.round(_backgroundMc.height);
+			}
 		}
 		
 	}

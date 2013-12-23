@@ -285,7 +285,7 @@ package com.twinoid.kube.quest.player {
 			
 			_mask.height		= h;
 			if(_prompt!=null && !_prompt.isClosed) h = Math.max(h, _prompt.height);
-			if(_exception!=null && !_exception.isClosed) h = Math.max(h, _exception.height);
+			if(_exception!=null && !_exception.isClosed) h = Math.max(h, _exception.windowHeight);
 			h					= Math.max(50, _mask.y + h + margin + Math.max(_inventory.height, _history.height) + BackWindow.CELL_WIDTH);
 			_background.height	= h;
 

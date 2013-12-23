@@ -85,13 +85,14 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Loads the configuration to the value object
 		 */
 		public function load(data:KuestEvent):void {
-			enabled = false;
+			var enabled:Boolean = false;
+			var selectedIndex:int = 0;
 			if(data.actionDate == null) {
-				selectedIndex = 0;
 				_calendar.selectedDates = null;
 				_periodicDaySel.days = null;
 				_periodicTimeInterval.startTime = 0;
 				_periodicTimeInterval.endTime = 0;
+				super.onload(false, 0);
 				return;
 			}
 			
@@ -109,6 +110,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_periodicDaySel.days = data.actionDate.days;
 			_periodicTimeInterval.startTime = data.actionDate.startTime;
 			_periodicTimeInterval.endTime = data.actionDate.endTime;
+			
+			super.onload(enabled, selectedIndex);
 		}
 
 
@@ -126,7 +129,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			buildCalendar();
 			buildPeriodic();
 			
-//			addEntry(new EventTimeNoneIcon(), new Sprite(), Label.getLabel("editWindow-time-noneTT"));
 			addEntry(new EventTimeCalendarIcon(), _calendarHolder, Label.getLabel("editWindow-time-calendarTT"));
 			addEntry(new EventTimeStartIcon(), _periodicHolder, Label.getLabel("editWindow-time-periodicTT"));
 		}

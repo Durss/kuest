@@ -98,30 +98,30 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 */
 		public function load(data:KuestEvent):void {
 			if(data.actionType == null) {
-				selectedIndex = 0;
 				_objectHolder.data = null;
 				_objectDialogue.text = "";
 				_charHolder.data = null;
 				_charDialogue.text = "";
+				super.onload(true, 0);
 				return;
 			}
 			
 			if(data.actionType.type == ActionType.TYPE_CHARACTER) {
-				selectedIndex = 0;
 				_charHolder.data = data.actionType.getItem();
 				_charDialogue.text = data.actionType.text;
 				_objectHolder.data = null;
 				_objectDialogue.text = "";
 				_cbTake.selected = true;
 				_cbPut.selected = false;
+				super.onload(true, 0);
 			}else{
-				selectedIndex = 1;
 				_charHolder.data = null;
 				_charDialogue.text = "";
 				_objectHolder.data = data.actionType.getItem();
 				_objectDialogue.text = data.actionType.text;
 				_cbTake.selected = data.actionType.takeMode;
 				_cbPut.selected = !data.actionType.takeMode;
+				super.onload(true, 1);
 			}
 		}
 

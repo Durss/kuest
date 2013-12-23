@@ -1,6 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
 	import gs.TweenLite;
-	import gs.easing.Back;
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
@@ -13,7 +12,9 @@ package com.twinoid.kube.quest.editor.views {
 	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
 	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
+	import com.twinoid.kube.quest.editor.components.form.edit.AbstractEditZone;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventChoices;
+	import com.twinoid.kube.quest.editor.components.form.edit.EditEventMoney;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventPlace;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventSound;
 	import com.twinoid.kube.quest.editor.components.form.edit.EditEventTime;
@@ -62,6 +63,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _startTree:CheckBoxKube;
 		private var _group:FormComponentGroup;
 		private var _tabIndex:int;
+		private var _money:EditEventMoney;
 		
 		
 		
@@ -121,10 +123,14 @@ package com.twinoid.kube.quest.editor.views {
 					//Do not put this AFTER the populate or textfields will be
 					//totally fucked up. The getLineMetrics used by some components
 					//will return shitty values.
-					_window.scaleX = _window.scaleY = 1;
+//					_window.scaleX = _window.scaleY = 1;//Scale tween removed, not usefull anymore
+					
+					_window.alpha = 1;
+					_window.visible = true;
 					
 					_place.load( _data );
 					_type.load( _data );
+					_money.load( _data );
 					_times.load( _data );
 					_choices.load( _data );
 					_sound.load( _data );
@@ -138,7 +144,8 @@ package com.twinoid.kube.quest.editor.views {
 					TweenLite.killTweensOf(_disable);
 					
 					setTimeout(flagOpened, 0);//Flag as opened a frame later. See method for more infos
-					TweenLite.from(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:.1, scaleY:.1, ease:Back.easeInOut});
+					TweenLite.from(_window, .25, {autoAlpha:0});
+//					TweenLite.from(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:.1, scaleY:.1, ease:Back.easeInOut});
 					TweenLite.to(_disable, .25, {autoAlpha:1});
 				}
 				_place.connectedToGame		= model.connectedToGame;
@@ -149,7 +156,8 @@ package com.twinoid.kube.quest.editor.views {
 			}else if(!_closed){
 				_closed = true;
 				TweenLite.killTweensOf(_window);
-				TweenLite.to(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
+				TweenLite.to(_window, .25, {autoAlpha:0});
+//				TweenLite.to(_window, .5, {x:_window.x + width * .5, y:_window.y + height * .5, scaleX:0, scaleY:0, visible:false, ease:Back.easeIn});
 				TweenLite.to(_disable, .25, {autoAlpha:0});
 			}
 		}
@@ -177,6 +185,7 @@ package com.twinoid.kube.quest.editor.views {
 			_holder		= addChild(new Sprite()) as Sprite;
 			_place		= _holder.addChild(new EditEventPlace(_WIDTH)) as EditEventPlace;
 			_type		= _holder.addChild(new EditEventType(_WIDTH)) as EditEventType;
+			_money		= _holder.addChild(new EditEventMoney(_WIDTH)) as EditEventMoney;
 			_choices	= _holder.addChild(new EditEventChoices(_WIDTH)) as EditEventChoices;
 			_times		= _holder.addChild(new EditEventTime(_WIDTH)) as EditEventTime;
 			_sound		= _holder.addChild(new EditEventSound(_WIDTH)) as EditEventSound;
@@ -196,14 +205,15 @@ package com.twinoid.kube.quest.editor.views {
 			
 			_place.tabIndex			= _tabIndex;
 			_type.tabIndex			= _tabIndex + 50;
-			_choices.tabIndex		= _tabIndex + 100;
-			_times.tabIndex			= _tabIndex + 150;
-			_sound.tabIndex			= _tabIndex + 200;
-			_startTree.tabIndex		= _tabIndex + 250;
-			_endsQuest.tabIndex		= _tabIndex + 300;
-			_loosesQuest.tabIndex	= _tabIndex + 301;
-			_submit.tabIndex		= _tabIndex + 350;
-			_cancel.tabIndex		= _tabIndex + 351;
+			_money.tabIndex			= _tabIndex + 100;
+			_choices.tabIndex		= _tabIndex + 150;
+			_times.tabIndex			= _tabIndex + 200;
+			_sound.tabIndex			= _tabIndex + 250;
+			_startTree.tabIndex		= _tabIndex + 300;
+			_endsQuest.tabIndex		= _tabIndex + 350;
+			_loosesQuest.tabIndex	= _tabIndex + 351;
+			_submit.tabIndex		= _tabIndex + 400;
+			_cancel.tabIndex		= _tabIndex + 401;
 			
 			//Prevents from selecting both start and end boxes
 			_group = new FormComponentGroup();
@@ -240,10 +250,18 @@ package com.twinoid.kube.quest.editor.views {
 			if(event != null && event.currentTarget == _holder) event.stopPropagation();
 			
 			_window.width = _WIDTH;
-			var i:int, len:int, item:DisplayObject, py:int;
+			var i:int, len:int, item:DisplayObject, py:int, gapAdded:Boolean;
 			len = _holder.numChildren;
 			for(i = 0; i < len; ++i) {
 				item = _holder.getChildAt(i);
+				if(!(item is AbstractEditZone) && !gapAdded) {
+					py += 10;
+					gapAdded = true;
+					_holder.graphics.clear();
+					_holder.graphics.beginFill(0x8BC9E2, 1);
+					_holder.graphics.drawRect(0, py - 11, _WIDTH, 3);
+					_holder.graphics.endFill();
+				}
 				if(item == _cancel) break;
 				item.y = py;
 				py += item.height + 10;
@@ -298,6 +316,7 @@ package com.twinoid.kube.quest.editor.views {
 		private function submit():void {
 			_place.save( _data );
 			_type.save( _data );
+			_money.save( _data );
 			_times.save( _data );
 			_choices.save( _data );
 			_sound.save( _data );

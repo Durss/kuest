@@ -8,6 +8,7 @@ package com.twinoid.kube.quest.editor.vo {
 	public class ActionChoices {
 		
 		private var _choices:Vector.<String>;
+		private var _choicesCosts:Vector.<uint>;
 		
 		
 		
@@ -20,6 +21,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		public function ActionChoices() {
 			_choices = new Vector.<String>();
+			_choicesCosts = new Vector.<uint>();
 		}
 
 		
@@ -38,6 +40,17 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Here just for serialisation
 		 */
 		public function set choices(choices:Vector.<String>):void { _choices = choices; }
+		
+		/**
+		 * Gets the choices costs.
+		 */
+		public function get choicesCost():Vector.<uint> { return _choicesCosts; }
+
+		/**
+		 * @private
+		 * Here just for serialisation
+		 */
+		public function set choicesCost(choices:Vector.<uint>):void { _choicesCosts = choices; }
 
 
 
@@ -60,8 +73,9 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Adds a choice to the list
 		 */
-		public function addChoice(label:String):void {
+		public function addChoice(label:String, choiceCost:uint):void {
 			_choices.push(label);
+			_choicesCosts.push(choiceCost);
 		}
 
 

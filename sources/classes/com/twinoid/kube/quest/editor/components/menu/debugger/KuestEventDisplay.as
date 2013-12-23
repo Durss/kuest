@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.components.menu.debugger {
+	import com.nurun.components.button.IconAlign;
+	import com.twinoid.kube.quest.graphics.MoneyIcon;
 	import com.nurun.structure.environnement.label.Label;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -30,6 +32,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private var _width:int;
 		private var _answerToIndex:Dictionary;
 		private var _selectedAnswerIndex:int;
+		private var _money:uint;
 		
 		
 		
@@ -65,8 +68,9 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		/**
 		 * Populates the component with an event's data
 		 */
-		public function populate(event:KuestEvent):void {
-			if(event == null) {
+		public function populate(event:KuestEvent, money:uint):void {
+			_money = money;
+			if (event == null) {
 				clear();
 				return;
 			}
@@ -162,6 +166,15 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 				}
 				addChild(bt);
 				bt.label = _currentEvent.actionChoices.choices[i];
+				bt.enabled = true;
+				bt.icon = null;
+				if(_currentEvent.actionChoices.choicesCost[i] > 0) {
+					bt.icon = new MoneyIcon();
+					bt.iconAlign = IconAlign.LEFT;
+					bt.icon.scaleX = bt.icon.scaleY = 2;
+					bt.label = '(x'+_currentEvent.actionChoices.choicesCost[i]+')    '+bt.label;
+					bt.enabled = _money >= _currentEvent.actionChoices.choicesCost[i];
+				}
 			}
 			
 			if(len == 0) {
@@ -172,6 +185,8 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 				}else{
 					bt = _answersSpool[i];
 				}
+				bt.enabled = true;
+				bt.icon = null;
 				addChild(bt);
 				bt.label = Label.getLabel('player-next');
 			}
