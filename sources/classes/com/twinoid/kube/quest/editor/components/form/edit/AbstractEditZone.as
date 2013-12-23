@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
-	import com.nurun.utils.math.MathUtils;
 	import gs.TweenLite;
 
 	import com.nurun.components.button.GraphicButton;
@@ -8,10 +7,10 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.components.form.ToggleButton;
 	import com.nurun.components.form.events.FormComponentGroupEvent;
-	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.components.vo.Margin;
 	import com.nurun.utils.draw.createRect;
+	import com.nurun.utils.math.MathUtils;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.editor.components.buttons.ToggleButtonKube;
@@ -57,6 +56,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		protected var _currentContent:Sprite;
 		protected var _toggle:ToggleButton;
 		protected var _toggleAble:Boolean;
+		private var _selectedIndex:Number;
+		private var _loadingMode:Boolean;
 
 		
 		
@@ -91,7 +92,11 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		/**
 		 * Sets the currently selected button index
 		 */
-		public function set selectedIndex(value:Number):void { 
+		public function set selectedIndex(value:Number):void {
+			if(value == _selectedIndex) return;
+			
+			_selectedIndex = value;
+			 
 			var i:int, len:int;
 			len = _buttons.length;
 			for(i = 0; i < len; ++i) {
@@ -109,6 +114,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * @inheritDoc
 		 */
 		override public function set tabIndex(value:int):void {
+			if(_toggleAble) _toggle.tabIndex = value++;
 			var i:int, len:int;
 			len = _buttons.length;
 			for(i = 0; i < len; ++i) {
@@ -127,6 +133,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 * Sets if the etry is enabled
 		 */
 		public function set enabled(value:Boolean):void {
+			if(value == _toggle.selected) return;
 			_toggle.selected = value;
 			toggleHandler();
 		}
@@ -149,33 +156,17 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			_itemToIndex[bt] = _buttons.length;
 			
-			//Validate all the children to be sure to get the right size of the content
-			var i:int, len:int;
-			len = content.numChildren;
-			for(i = 0; i < len; ++i) {
-				if(content.getChildAt(i) is Validable) Validable(content.getChildAt(i)).validate();
-			}
-			
 			_buttons.push(bt);
 			_contents.push(content);
 			_group.add(bt);
 			
 			_buttonsHolder.addChild(bt);
 			_buttonsHolder.visible = _buttons.length > 1;
-			if(_contents.length == 1) {
-				_contentsHolder.addChild(content);
-			}else{
-				//This addchild followed by a removechild simply provides a
-				//way to force the rendering of the contents before they are
-				//displayed. This prevent from lags for complex contents when
-				//they are displayed the first time. Like the calendar.
-//				addChild(content);
-//				setTimeout(removeChild, 0, content);//Wait one frame to be sure rendering is done.
-			}
 			
 			_buttons[0].x = _width - bt.width * _buttons.length;
 			PosUtils.hPlaceNext(0, VectorUtils.toArray(_buttons) );
 			
+			var i:int, len:int;
 			len = _contents.length;
 			for(i = 0; i < len; ++i) {
 				Sprite(_contents[i]).x = i * _width;
@@ -204,7 +195,13 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			TweenLite.killTweensOf(_contentsHolder);
 			var e:Event = new Event(Event.RESIZE, true);
 			TweenLite.killTweensOf(_contentsMask);
-			TweenLite.to(_contentsMask, .25, {height:_closed? 0 : _currentContent.height, onUpdate:dispatchEvent, onUpdateParams:[e], onComplete:onOpenCloseComplete});
+			if(!_loadingMode) {
+				TweenLite.to(_contentsMask, .25, {height:_closed? 0 : _currentContent.height, onUpdate:dispatchEvent, onUpdateParams:[e], onComplete:onOpenCloseComplete});
+			}else{
+				_contentsMask.height = _closed? 0 : _currentContent.height;
+				dispatchEvent(e);
+				onOpenCloseComplete();
+			}
 		}
 
 
@@ -251,7 +248,10 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			computePositions();
 		}
-
+		
+		/**
+		 * Called when mouse wheel is used
+		 */
 		protected function wheelHandler(event:MouseEvent):void {
 			if (_buttons.length > 1) {
 				var index:Number = selectedIndex;
@@ -336,11 +336,25 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		protected function toggleHandler(event:Event = null):void {
 			_openCloseBt.enabled = 
 			_buttonsHolder.mouseEnabled =
+			_buttonsHolder.tabChildren = 
+			_buttonsHolder.tabEnabled = 
 			_buttonsHolder.mouseChildren = _toggle.selected;
+			
 			_title.alpha =
 			_buttonsHolder.alpha = _toggle.selected? 1 : .4;
+			
 			if(!_toggle.selected) close();
 			else open();
+		}
+		
+		/**
+		 * Called when loading completes to set the enabled and selectedIndex values.
+		 */
+		protected function onload(enabled:Boolean, selectedIndex:int):void {
+			_loadingMode = true;
+			this.selectedIndex = selectedIndex;
+			if(_toggleAble) this.enabled = enabled;
+			_loadingMode = false;
 		}
 		
 	}

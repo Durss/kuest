@@ -132,7 +132,7 @@ package com.twinoid.kube.quest.player.views {
 			_scrollpane1	= addChild(new ScrollPane(_engine1, null, new ScrollbarKube())) as ScrollPane;
 			_scrollpane2	= addChild(new ScrollPane(_engine2, null, new ScrollbarKube())) as ScrollPane;
 			_swiper1		= new SwipeManager(_engine1, new Rectangle());
-			_swiper2		= new SwipeManager(_engine1, new Rectangle());
+			_swiper2		= new SwipeManager(_engine2, new Rectangle());
 			_favLabel		= addChild(new CssTextField('kuest-favoritesLabel')) as CssTextField;
 			
 			_favLabel.text			= Label.getLabel('player-historyFav');
@@ -145,6 +145,7 @@ package com.twinoid.kube.quest.player.views {
 			_historyBt.textAlign	= TextAlign.LEFT;
 			
 			_engine1.lockToLimits	= true;
+			_engine1.lockY			= true;
 			_swiper1.roundXValue	= _engine1.itemWidth + _engine1.hMargin;
 			_scrollpane1.width		= w;
 //			_scrollpane1.autoHideScrollers = true;
@@ -153,6 +154,7 @@ package com.twinoid.kube.quest.player.views {
 			_engine1.addLine([]);
 			
 			_engine2.lockToLimits	= true;
+			_engine2.lockY			= true;
 			_swiper2.roundXValue	= _engine2.itemWidth + _engine2.hMargin;
 			_scrollpane2.width		= w;
 //			_scrollpane2.autoHideScrollers = true;
@@ -169,6 +171,8 @@ package com.twinoid.kube.quest.player.views {
 			DataManager.getInstance().addEventListener(DataManagerEvent.CLEAR_PROGRESSION_COMPLETE, historyUpdateHandler);
 			_scrollpane1.hScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);
 			_scrollpane1.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler);
+			_scrollpane2.hScroll.addEventListener(ScrollerEvent.SCROLLING, scrollHandler);
+			_scrollpane2.addEventListener(MouseEvent.MOUSE_WHEEL, scrollHandler);
 		}
 		
 		/**
@@ -225,7 +229,13 @@ package com.twinoid.kube.quest.player.views {
 		 * Here we force the SwipeManager to synch with the content's position.
 		 */
 		private function scrollHandler(event:Event):void {
-			_swiper1.syncWithContent();
+			trace('T: ' + (event.currentTarget));
+			if (event.currentTarget == _scrollpane1 || event.currentTarget == _scrollpane1.hScroll) {
+				_swiper1.syncWithContent();
+			}
+			if(event.currentTarget == _scrollpane2 || event.currentTarget == _scrollpane2.hScroll) {
+				_swiper2.syncWithContent();
+			}
 		}
 		
 		/**
@@ -274,6 +284,9 @@ package com.twinoid.kube.quest.player.views {
 			_engine2.addLine(data);
 			_engine2.scrollX = prevScroll;
 			_swiper2.syncWithContent();
+			
+			_scrollpane1.validate();
+			_scrollpane2.validate();
 			
 			selected = selected;//Forces resize
 		}

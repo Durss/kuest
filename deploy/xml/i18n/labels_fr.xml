@@ -3,18 +3,17 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog75-content"><![CDATA[<ul>
+		<label code="patchlog76-content"><![CDATA[<ul>
+			<li>Ajout d'une monnaie virtuelle.</li>
 			<li>Ajout d'un historique des événements dans le module in-game.</li>
-			<li>Debug du reset d'une quête qui cassait un peu la logique des quêtes du debugger.</li>
-			<li>Gestion de l'événement de perte.</li>
-			<li>Ajout d'un nouvel exemple.</li>
-			<li>Refonte complète du moteur de quête et implémentation dans le module de lecture in-game.</li>
+			<li>Ajout de nouveaux exemples.</li>
+			<li>Ajout de la gestion de sons SFXR.</li>
+			<li>Ajout d'une option d'événement "Fait perdre le quête".</li>
+			<li>Refonte complète du moteur de quête.</li>
 			<li>Ajout d'un panneau de debug de quêtes utilisant le nouveau moteur.</li>
 			<li>Possibilité de sélectionner des groupes d'événement via click droit.</li>
 			<li>Inversion du drag&drop du plateau et de la prise de notes <i>("espace" pour les notes au lieu de dragger)</i>.</li>
 			<li>Changement de la manière d'activer/désactiver les onglets de choix, date et son dans l'édition d'événement.</li>
-			<li>Ajout d'une option d'événement "Fait perdre le quête". <i>(pas encore implémenté dans le script GM)</i></li>
-			<li>Debug de la limitation par jour de semaine qui ne fonctionnait pas.</li>
 			<li>Ajout d'un indicateur prise/pose sur les boites d'évènements d'objets.</li>
 		</ul>]]></label>
 		
@@ -220,6 +219,8 @@
 		<!-- Be carefull to keep {I} tag !
 		It's replaced dynamically. -->
 		<label code="editWindow-choice-defaultText"><![CDATA[Choix {I}...]]></label>
+		<!-- tooltip -->
+		<label code="editWindow-choice-payingChoice"><![CDATA[Rendre ce choix payant]]></label>
 		
 		<!-- !Event's time edition -->
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
@@ -240,6 +241,22 @@
 		<label code="editWindow-sound-loop"><![CDATA[Jouer le son en boucle.]]></label>
 		<label code="editWindow-sound-testSuccess"><![CDATA[<font color="#006600">Son valide.</font>]]></label>
 		<label code="editWindow-sound-testError"><![CDATA[<font color="#cc0000">Son invalide.</font>]]></label>
+		<label code="editWindow-sound-sfxrTitle"><![CDATA[Jouer un son <a href="http://www.superflashbros.net/as3sfxr/" target="_blank" class="link">SFXR</a> :]]></label>
+		<!-- tooltip -->
+		<label code="editWindow-sound-sfxrHelpTT"><![CDATA[Faites CTRL+C sur l'application SFXR<br />pour copier les données du son<br />puis collez-lez dans le champs ci-dessous.]]></label>
+		
+		<!-- !Event's money edition -->
+		<label code="editWindow-money-title"><![CDATA[Argent (Kubor)]]></label>
+		<label code="editWindow-money-label"><![CDATA[Nombre de Kubors gagnés par le joueur en débloquant cet événement :]]></label>
+		<!-- tooltip -->
+		<label code="editWindow-money-helpTT"><![CDATA[Vous pourrez faire dépenser<br />les Kubors amassés par le joueur<br />pour débloquer des choix.<br /><i>(voir "Liste de choix" ci-dessous)</i>]]></label>
+		<label code="editWindow-money-range"><![CDATA[Événement accessible uniquement si le joueur possède :]]></label>
+		<label code="editWindow-money-list-+"><![CDATA[&gt; (plus de)]]></label>
+		<label code="editWindow-money-list--"><![CDATA[&lt; (moins de)]]></label>
+		<!-- &#61; means "=". Would break google doc if it was written "=" instead of this... -->
+		<label code="editWindow-money-list-="><![CDATA[&#61; (exactement)]]></label>
+		<label code="editWindow-money-list-+="><![CDATA[&gt;= (exactement ou plus de)]]></label>
+		<label code="editWindow-money-list--="><![CDATA[&lt;= (exactement ou moins de)]]></label>
 		
 		<!-- !Calendar's months -->
 		<label code="month1"><![CDATA[Janvier]]></label>
@@ -272,7 +289,7 @@
 		<label code="player-stopSim"><![CDATA[Fermer]]></label>
 		<!-- tooltip -->
 		<label code="player-resetTT"><![CDATA[Effacer votre progression et recommencer la quête du début.<br /><b>Cette action est irréversible !</b>]]></label>
-		<label code="player-resetTitle"><![CDATA[Effacer votre progression</b>]]></label>
+		<label code="player-resetTitle"><![CDATA[Effacer votre progression]]></label>
 		<label code="player-resetContent"><![CDATA[Êtes-vous sûr de vouloir effacer votre progression et recommencer la quête depuis le début ?<br /><b>Cette action est irréversible !</b>]]></label>
 		<label code="player-inventory"><![CDATA[Inventaire]]></label>
 		<label code="player-inventoryEmpty"><![CDATA[Vous n'avez trouvé aucun objet pour l'instant.]]></label>
@@ -282,11 +299,13 @@
 		<label code="player-wrongObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 		<label code="player-noNeedObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 		<label code="player-history"><![CDATA[Historique]]></label>
-		<!-- tooltip -->
 		<label code="player-historyFav"><![CDATA[Événements épinglés]]></label>
+		<!-- tooltip -->
 		<label code="player-historyFavTT"><![CDATA[Epingler]]></label>
 		<label code="player-questLost"><![CDATA[Vous avez échoué la quête.<br />Recommencez du début et tentez à nouveau de la terminer !]]></label>
 		<label code="player-questLostRestart"><![CDATA[Recommencer]]></label>
+		<!-- tooltip -->
+		<label code="player-moneyTT"><![CDATA[Kubors]]></label>
 	</labels>
 	
 </root>

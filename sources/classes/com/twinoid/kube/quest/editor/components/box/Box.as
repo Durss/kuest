@@ -1,6 +1,5 @@
 package com.twinoid.kube.quest.editor.components.box {
-	import com.twinoid.kube.quest.editor.vo.ActionType;
-	import com.twinoid.kube.quest.graphics.TakePutIconGraphic;
+	import flash.display.MovieClip;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
@@ -21,6 +20,7 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.twinoid.kube.quest.editor.utils.hexToMatrix;
 	import com.twinoid.kube.quest.editor.utils.prompt;
 	import com.twinoid.kube.quest.editor.views.BackgroundView;
+	import com.twinoid.kube.quest.editor.vo.ActionType;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.Point3D;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
@@ -30,6 +30,8 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.twinoid.kube.quest.graphics.BoxOutGraphic;
 	import com.twinoid.kube.quest.graphics.BoxTimerEventGraphic;
 	import com.twinoid.kube.quest.graphics.ClearBoxGraphic;
+	import com.twinoid.kube.quest.graphics.MoneyIndicationIconGraphic;
+	import com.twinoid.kube.quest.graphics.TakePutIconGraphic;
 
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
@@ -70,6 +72,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _outBoxToIndex:Dictionary;
 		private var _debugMode:Boolean;
 		private var _takePut:TakePutIconGraphic;
+		private var _money:MoneyIndicationIconGraphic;
 		
 		
 		
@@ -185,6 +188,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			if(_data == null || _data.isEmpty()) {
 				_label.text = Label.getLabel("box-empty");
 				_takePut.visible = false;
+				_money.visible = false;
 //				if(_data != null) _label.text += _data.guid;
 			}else{
 				//Image
@@ -210,15 +214,15 @@ package com.twinoid.kube.quest.editor.components.box {
 				
 				//Colorize box
 				if(_data.endsQuest) {
-					_background.filters = _takePut.filters = [new ColorMatrixFilter([0.37878480553627014,1.6029037237167358,-1.051688551902771,0,11.885000228881836,0.01224497240036726,0.5073512196540833,0.4104038178920746,0,11.885000228881836,1.1350740194320679,-0.12359676510095596,-0.08147723972797394,0,11.885000228881836,0,0,0,1,0])];
+					_background.filters = _takePut.filters = _money.filters = [new ColorMatrixFilter([0.37878480553627014,1.6029037237167358,-1.051688551902771,0,11.885000228881836,0.01224497240036726,0.5073512196540833,0.4104038178920746,0,11.885000228881836,1.1350740194320679,-0.12359676510095596,-0.08147723972797394,0,11.885000228881836,0,0,0,1,0])];
 				}else
 				if(_data.loosesQuest) {
-					_background.filters = _takePut.filters = [new ColorMatrixFilter([-0.8141878247261047,1.2870899438858032,0.45709773898124695,0,-11.364999771118164,0.46661293506622314,0.409849613904953,0.05353740602731705,0,-11.36500072479248,0.15669459104537964,1.7636311054229736,-0.9903256893157959,0,-11.364999771118164,0,0,0,1,0])];
+					_background.filters = _takePut.filters = _money.filters = [new ColorMatrixFilter([-0.8141878247261047,1.2870899438858032,0.45709773898124695,0,-11.364999771118164,0.46661293506622314,0.409849613904953,0.05353740602731705,0,-11.36500072479248,0.15669459104537964,1.7636311054229736,-0.9903256893157959,0,-11.364999771118164,0,0,0,1,0])];
 				}else
 				if(_data.startsTree) {
-					_background.filters = _takePut.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
+					_background.filters = _takePut.filters = _money.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
 				}else{
-					_background.filters = _takePut.filters = [];
+					_background.filters = _takePut.filters = _money.filters = [];
 				}
 				
 				//============ LINKS MANAGEMNT ============
@@ -234,12 +238,18 @@ package com.twinoid.kube.quest.editor.components.box {
 				if(_data.actionChoices != null) {
 					var numChoices:int = Math.max(1, _data.actionChoices.choices.length);
 					for(i = 1; i < numChoices; ++i) {
+						MovieClip(_outBoxes[i].icon).gotoAndStop(_data.actionChoices.choicesCost[i] > 0? 2 : 1);
 						addChildAt(_outBoxes[i], getChildIndex(_outBoxes[i-1])+1);
 					}
 				}
 				
-				//If choices have been deleted, some links might have to be cleared
-				//Clear the links for the second output.
+				if(_data.actionChoices != null && _data.actionChoices.choicesCost.length > 0){
+					MovieClip(_outBoxes[0].icon).gotoAndStop(_data.actionChoices.choicesCost[0] > 0? 2 : 1);
+				}else{
+					MovieClip(_outBoxes[0].icon).gotoAndStop(1);
+				}
+				
+				//If choices have been deleted, some links might have to be cleared as well
 				var j:int, lenJ:int;
 				lenJ = _links.length;
 				for(i = 1; i < len; ++i) {
@@ -252,6 +262,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				
 				//Object indicator
 				_takePut.visible = _data.actionType.type == ActionType.TYPE_OBJECT;
+				_money.visible = _data.actionMoney.kuborsEarned > 0;
 				_takePut.gotoAndStop(_data.actionType.takeMode? 2 : 1);
 			}
 				
@@ -292,6 +303,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			for(i = 0; i < len; ++i) {
 				_outBoxes[i] = new GraphicButton(new BoxOutGraphic(), new BoxLinkIconGraphic());
 				_outBoxes[i].width = 30;
+				MovieClip(_outBoxes[i].icon).gotoAndStop(1);
 				_outBoxes[i].iconAlign = IconAlign.LEFT;
 				_outBoxes[i].contentMargin = new Margin(10, 0, 0, 0);
 				_outBoxes[i].background.filters = [new ColorMatrixFilter(hexToMatrix( colors[i] ))];
@@ -306,8 +318,11 @@ package com.twinoid.kube.quest.editor.components.box {
 			_image		= addChild(new ImageResizer()) as ImageResizer;
 			_label		= addChild(new CssTextField("box-label")) as CssTextField;
 			_takePut	= addChild(new TakePutIconGraphic()) as TakePutIconGraphic;
+			_money		= addChild(new MoneyIndicationIconGraphic()) as MoneyIndicationIconGraphic;
 			_deleteBt	= new GraphicButton(new ClearBoxGraphic(), new CancelIcon());
 			_timeIcon	= new BoxTimerEventGraphic();
+			
+			MovieClip(_inBox.icon).gotoAndStop(1);
 			
 			_dragOffset = new Point();
 			_label.mouseEnabled = false;
@@ -393,8 +408,9 @@ package com.twinoid.kube.quest.editor.components.box {
 				_label.width = _background.width - 5 - margin * 2;
 			}
 			
-			_takePut.x = _image.x + _image.width - _takePut.width;
-			_takePut.y = _image.y + _image.height - _takePut.height;
+			_takePut.x	= _image.x + _image.width - _takePut.width;
+			_money.x	= _takePut.visible? _takePut.x - _money.width + 1 : _takePut.x;
+			_takePut.y	= _money.y = _image.y + _image.height - _takePut.height;
 			
 			_timeIcon.x = _background.x + (_background.width - _timeIcon.width) * .5;
 			_timeIcon.y = -_timeIcon.height;

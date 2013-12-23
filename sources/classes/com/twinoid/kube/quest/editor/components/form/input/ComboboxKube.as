@@ -1,4 +1,9 @@
 package com.twinoid.kube.quest.editor.components.form.input {
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.geom.Point;
 	import com.muxxu.kub3dit.graphics.ComboboxBackgroundGraphic;
 	import com.muxxu.kub3dit.graphics.ComboboxIconGraphic;
 	import com.nurun.components.button.IconAlign;
@@ -36,6 +41,12 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		private var _listHeightMax:int;
 		private var _keyHistory:Array;
 		private var _lastKeyTime:int;
+		private var _prevHolder:DisplayObjectContainer;
+		private var _prevPos:Point;
+		private var _displayItemLabelOnSelect:Boolean;
+		private var _listWidth:int;
+		private var _labelRenderer:Function;
+		private var _closeTimeout:uint;
 		
 		
 		
@@ -45,7 +56,8 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		/**
 		 * Creates an instance of <code>KubeCombobox</code>.
 		 */
-		public function ComboboxKube(label:String, openToTop:Boolean = false) {
+		public function ComboboxKube(label:String, openToTop:Boolean = false, displayItemLabelOnSelect:Boolean = false) {
+			_displayItemLabelOnSelect = displayItemLabelOnSelect;
 			_label = label;
 			super(new ButtonKube(label, openToTop ? new ComboboxIconUpGraphic() : new ComboboxIconGraphic()), new ScrollbarKube(), null, new ComboboxBackgroundGraphic(), openToTop);
 			_list.filters = [new DropShadowFilter(2,90,0,.2,0,2,1,3)];
@@ -56,12 +68,11 @@ package com.twinoid.kube.quest.editor.components.form.input {
 			autosizeItems = true;
 			_keyHistory = [];
 			_lastKeyTime = 0;
+			_listHeightMax = 300;
+			_listWidth = -1;
+			_labelRenderer = renderLabel;
 			
 			addEventListener(MouseEvent.ROLL_OUT, rolloutHandler);
-		}
-
-		private function rolloutHandler(event:MouseEvent):void {
-			event.stopPropagation();
 		}
 
 		
@@ -88,9 +99,27 @@ package com.twinoid.kube.quest.editor.components.form.input {
 			_listHeightMax = value;
 		}
 		
+		public function set listWidth(value:int):void {
+			_listWidth = value;
+			list.width = value;
+		}
+		
 		public function set selectedDatas(value:Array):void {
 			list.scrollableList.selectedDatas = value;
-			ButtonKube(button).label = _label + " ("+list.scrollableList.selectedIndexes.length+")";
+			_labelRenderer();
+		}
+		
+		override public function set selectedIndex(value:int):void {
+			super.selectedIndex = value;
+			_labelRenderer();
+		}
+		
+		override public function set enabled(value:Boolean):void {
+			ButtonKube(_button).enabled = value;
+		}
+
+		public function set labelRenderer(value:Function):void {
+			_labelRenderer = value;
 		}
 
 
@@ -111,7 +140,22 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		override public function open():void {
 			listHeight = Math.min(_list.scrollableList.heightMax, _listHeightMax);
 			super.open();
-			_button.filters = [new DropShadowFilter(2,openToTop? 270 : 90,0,.2,0,2,1,3)];
+			_button.filters = [new DropShadowFilter(2, openToTop ? 270 : 90, 0, .2, 0, 2, 1, 3)];
+			_prevHolder = parent;
+			_prevPos = new Point(x, y);
+			var pos:Point = localToGlobal(new Point());
+			stage.addChild(this);
+			x = pos.x;
+			y = pos.y;
+			if(_listWidth != -1) {
+				var i:int, len:int;
+				len = list.scrollableList.items.length;
+				for(i = 0; i < len; ++i) {
+					DisplayObject(list.scrollableList.items[i]).width = _listWidth;
+				}
+				list.width = _listWidth;
+			}
+			clearTimeout(_closeTimeout);
 		}
 		
 		/**
@@ -119,8 +163,18 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 */
 		override public function close():void {
 			super.close();
-			_button.filters = [];
+			clearTimeout(_closeTimeout);
+			_closeTimeout = setTimeout(onCloseComplete, 250);
+			if(_listWidth != -1){
+				var i:int, len:int;
+				len = list.scrollableList.items.length;
+				for(i = 0; i < len; ++i) {
+					DisplayObject(list.scrollableList.items[i]).width = _listWidth;
+				}
+				list.width = _listWidth;
+			}
 		}
+
 
 
 		
@@ -134,6 +188,10 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		override protected function addedToStageHandler(e:Event):void {
 			super.addedToStageHandler(e);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownStageHandler, true, 0xff);
+		}
+
+		private function rolloutHandler(event:MouseEvent):void {
+			event.stopPropagation();
 		}
 		
 		/**
@@ -186,7 +244,30 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 */
 		override protected function selectItemHandler(e:ListEvent):void {
 			super.selectItemHandler(e);
-			ButtonKube(button).label = _label + " ("+list.scrollableList.selectedIndexes.length+")";
+			_labelRenderer();
+		}
+		
+		/**
+		 * Method called to render the combobox label
+		 */
+		private function renderLabel():void {
+			if(_displayItemLabelOnSelect) {
+				ButtonKube(button).label = ComboboxItem(list.scrollableList.getItemAt(list.scrollableList.selectedIndex)).label;
+			}else{
+				ButtonKube(button).label = _label + " ("+list.scrollableList.selectedIndexes.length+")";
+			}
+		}
+		
+		/**
+		 * Called when close animation completes
+		 */
+		private function onCloseComplete():void {
+			_button.filters = [];
+			if(_prevHolder != null) {
+				_prevHolder.addChild(this);
+				x = _prevPos.x;
+				y = _prevPos.y;
+			}
 		}
 		
 	}

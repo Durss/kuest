@@ -10,6 +10,7 @@ package com.twinoid.kube.quest.editor.vo {
 		
 		private var _url:String;
 		private var _loop:Boolean;
+		private var _sfxr:String;
 		
 		
 		
@@ -36,6 +37,10 @@ package com.twinoid.kube.quest.editor.vo {
 
 		public function set loop(loop:Boolean):void { _loop = loop; }
 
+		public function get sfxr():String { return _sfxr; }
+
+		public function set sfxr(sfxr:String):void { _sfxr = sfxr; }
+
 
 
 		/* ****** *
@@ -51,7 +56,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Gets a string representation of the value object.
 		 */
 		public function toString():String {
-			return "[ActionSound :: loop="+loop+", url=\"" + url + "\"]";
+			return "[ActionSound :: loop=" + loop + ", url=\"" + url + "\", sfxr=\"" + sfxr + "\"]";
 		}
 
 

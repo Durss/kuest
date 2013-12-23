@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.utils {
+	import com.twinoid.kube.quest.editor.vo.ActionMoney;
 	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.ActionDate;
@@ -41,6 +42,7 @@ package com.twinoid.kube.quest.editor.utils {
 											ActionType,
 											ActionChoices,
 											ActionSound,
+											ActionMoney,
 											IItemData,
 											ObjectItemData,
 											CharItemData,

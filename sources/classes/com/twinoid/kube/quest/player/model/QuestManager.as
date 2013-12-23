@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.model {
+	import com.twinoid.kube.quest.player.vo.MoneyManager;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
 	import com.twinoid.kube.quest.editor.vo.ActionType;
@@ -56,6 +57,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _quesEvaluated:Boolean;
 		private var _guidToEvent:Object;
 		private var _historyFavorites:Vector.<String>;
+		private var _moneyManager:MoneyManager;
 		
 		
 		
@@ -130,6 +132,11 @@ package com.twinoid.kube.quest.player.model {
 			}
 			return ret;
 		}
+		
+		/**
+		 * Gets the money earned
+		 */
+		public function get money():uint { return _moneyManager.money; }
 
 
 
@@ -165,6 +172,7 @@ package com.twinoid.kube.quest.player.model {
 			ba.writeBoolean( _questComplete );
 			ba.writeBoolean( _questLost );
 			ba.writeBoolean( _quesEvaluated );
+			ba.writeObject( _moneyManager.exportData(version) );
 			ba.deflate();
 			return ba;
 		}
@@ -199,7 +207,8 @@ package com.twinoid.kube.quest.player.model {
 			//If the previous event has no custom answer and is still accessible, automatically flag it as complete
 			if(_currentEvent != null
 			&& (_currentEvent.actionChoices == null || _currentEvent.actionChoices.choices.length == 0)
-			&& _treeManager.isEventAccessible(_currentEvent)) {
+			&& _treeManager.isEventAccessible(_currentEvent)
+			&& _moneyManager.isEventAccessible(_currentEvent)) {
 				completeEvent(0, false);
 			}
 			
@@ -225,7 +234,8 @@ package com.twinoid.kube.quest.player.model {
 			loopsLen = len + i;
 			for(i; i < loopsLen; ++i) {
 				if(_timeAccessManager.isEventAccessible(items[i%len])//If it's the right periode or if there are no periode limitation
-					&& _treeManager.isEventAccessible(items[i%len])) {//If the event is part of the current priority of its tree
+					&& _treeManager.isEventAccessible(items[i%len])//If the event is part of the current priority of its tree
+					&& _moneyManager.isEventAccessible(items[i%len])) {
 						if(setCurrentEvent(items[i%len])) { 
 							return;//If the event has been selected, stop for searching one.
 						}
@@ -265,6 +275,15 @@ package com.twinoid.kube.quest.player.model {
 			|| _currentEvent.actionChoices.choices.length < 2) {
 				_treeManager.givePriorityTo( children, _currentEvent );
 			}else{
+			
+				//Remove as much money as the answer's cost.
+				if(_currentEvent.actionChoices.choicesCost.length > answerIndex) {
+					if(_moneyManager.money >= _currentEvent.actionChoices.choicesCost[answerIndex]) {
+						_moneyManager.answerChoice( _currentEvent.actionChoices.choicesCost[answerIndex] );
+						dispatchEvent(new QuestManagerEvent(QuestManagerEvent.MONEY_UPDATE));
+					}
+				}
+			
 				//The event has two or more choices
 				var priorities:Vector.<KuestEvent> = new Vector.<KuestEvent>();
 				//Loop through children and check if one of its dependencies is
@@ -309,7 +328,8 @@ package com.twinoid.kube.quest.player.model {
 				event = events[i];
 				if(event.actionType.type == ActionType.TYPE_OBJECT) {
 					if(_timeAccessManager.isEventAccessible(event)//If it's the right periode or if there are no periode limitation
-					&& _treeManager.isEventAccessible(event)) {//If the event is part of the current priority of its tree
+					&& _treeManager.isEventAccessible(event)//If the event is part of the current priority of its tree
+					&& _moneyManager.isEventAccessible(event)) {//If the event
 						if(!event.actionType.takeMode) {//If an object has to be put here
 							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
 								if(_inventoryManager.useObject(object.vo.guid) || !verifyNumber) {//Use the object
@@ -337,6 +357,7 @@ package com.twinoid.kube.quest.player.model {
 			_historyFavorites = new Vector.<String>();
 			_treeManager.reset();
 			_inventoryManager.reset();
+			_moneyManager.reset();
 		}
 		
 		/**
@@ -384,6 +405,7 @@ package com.twinoid.kube.quest.player.model {
 			_timeAccessManager	= new TimeAccessManager();
 			_inventoryManager	= new InventoryManager();
 			_treeManager		= new TreeManager();
+			_moneyManager		= new MoneyManager();
 			_eventsHistory		= new Vector.<String>();//stores events guids
 			_historyFavorites	= new Vector.<String>();//stores events guids
 			_positionToIndex	= {};//Stores loop indexes for every action places.
@@ -440,7 +462,9 @@ package com.twinoid.kube.quest.player.model {
 						_questLost		= _save.readBoolean();
 						_quesEvaluated	= _save.readBoolean();
 						
+						_moneyManager.importData(_save.readObject(), version);
 						break;
+						
 					default:
 						dispatchEvent(new QuestManagerEvent(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT));
 				}
@@ -486,6 +510,10 @@ package com.twinoid.kube.quest.player.model {
 			if(_currentEvent.loosesQuest) {
 				_questLost = true;
 				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.QUEST_FAILED, _currentEvent));
+			}
+			
+			if(_moneyManager.selectEvent(_currentEvent)){
+				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.MONEY_UPDATE));
 			}
 			
 			return true;

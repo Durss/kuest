@@ -212,12 +212,13 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			}else
 			
 			if(_itemToData[event.target] != undefined) {
-				mouseEnabled = mouseChildren = false;
-				_spinning.open(Label.getLabel("loader-loading"));
-				_spinning.x = _width * .5;
-				_spinning.y = height * .5;
-				addChild(_spinning);
-				FrontControler.getInstance().load(_itemToData[event.target], onLoad, onLoadSampleCancel);
+				if(FrontControler.getInstance().load(_itemToData[event.target], onLoad, onLoadSampleCancel)) {
+					mouseEnabled = mouseChildren = false;
+					_spinning.open(Label.getLabel("loader-loading"));
+					_spinning.x = _width * .5;
+					_spinning.y = height * .5;
+					addChild(_spinning);
+				}
 			}
 		}
 

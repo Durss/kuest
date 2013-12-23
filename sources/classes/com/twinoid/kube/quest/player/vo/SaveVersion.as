@@ -17,6 +17,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * 		ba.writeBoolean( quest complete );
 		 * 		ba.writeBoolean( quest lost );
 		 * 		ba.writeBoolean( quest evaluated );
+		 * 		ba.writeObject( money data );
 		 * 	
 		 * tree data is formated this way :
 		 * 	[
@@ -40,6 +41,9 @@ package com.twinoid.kube.quest.player.vo {
 		 * 
 		 * events history favorites is a comma separated string containing the events GUIDs :
 		 * 		guid1,guid2,guid3,...,guidN
+		 * 
+		 * money data is formated this way :
+		 * 		{money:x}
 		 */
 		public static const V1:uint = 1;
 		

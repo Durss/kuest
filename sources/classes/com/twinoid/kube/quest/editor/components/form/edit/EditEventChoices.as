@@ -4,7 +4,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.editor.components.box.Box;
 	import com.twinoid.kube.quest.editor.components.box.BoxLink;
-	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
+	import com.twinoid.kube.quest.editor.components.form.EventChoiceEntry;
 	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.EventChoiceYupIcon;
@@ -21,7 +21,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		
 		private var _form:Sprite;
 		private var _label:CssTextField;
-		private var _choices:Vector.<InputKube>;
+		private var _choices:Vector.<EventChoiceEntry>;
 		
 		
 		
@@ -69,7 +69,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				var i:int, len:int;
 				len = _choices.length;
 				for(i = 0; i < len; ++i) {
-					if(StringUtils.trim(_choices[i].value as String).length > 0) data.actionChoices.addChoice(_choices[i].text);
+					if(StringUtils.trim(_choices[i].value as String).length > 0) {
+						data.actionChoices.addChoice(_choices[i].text, _choices[i].choiceCost);
+					}
 				}
 			}
 		}
@@ -81,19 +83,20 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			var i:int, len:int;
 			len = _choices.length;
 			for(i = 0; i < len; ++i) {
-				_choices[i].text = _choices[i].defaultLabel;
+				_choices[i].reset();
 			}
-			enabled = false;
-			selectedIndex = 0;
 			
 			if(data.actionChoices != null) {
+				var enabled:Boolean;
 				for(i = 0; i < len; ++i) {
 					if (data.actionChoices.choices.length > i && data.actionChoices.choices[i].length > 0) {
-						_choices[i].text = data.actionChoices.choices[i];
-						selectedIndex = 0;
 						enabled = true;
+						_choices[i].populate( data.actionChoices.choices[i], data.actionChoices.choicesCost[i] );
 					}
 				}
+				super.onload(enabled, 0);
+			}else{
+				super.onload(false, 0);
 			}
 		}
 
@@ -111,7 +114,6 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			buildForm();
 			
-//			addEntry(new EventChoiceNoneIcon(), new Sprite(), Label.getLabel("editWindow-choice-noneTT"));
 			addEntry(new EventChoiceYupIcon(), _form, Label.getLabel("editWindow-choice-yupTT"));
 		}
 		
@@ -127,17 +129,11 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			len = Box.NUM_CHOICES;
 			py = _label.height + 5;
 			colors = BoxLink.COLORS;
-			_choices = new Vector.<InputKube>();
+			_choices = new Vector.<EventChoiceEntry>();
 			for(i = 0; i < len; ++i) {
-				_choices[i] = _form.addChild(new InputKube(Label.getLabel("editWindow-choice-defaultText").replace(/\{I\}/gi, (i+1).toString()))) as InputKube;
-				_choices[i].textfield.maxChars = 50;
-				_choices[i].width = _width - 10;
-				_choices[i].x = 11;
+				_choices[i] = _form.addChild(new EventChoiceEntry(i, _width, colors[i])) as EventChoiceEntry;
 				_choices[i].y = py;
 				py += _choices[i].height + 5;
-				_form.graphics.beginFill(colors[i], 1);
-				_form.graphics.drawRect(0, _choices[i].y, 10, _choices[i].height);
-				_form.graphics.endFill();
 			}
 		}
 		

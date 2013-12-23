@@ -71,6 +71,11 @@ package com.twinoid.kube.quest.editor.views {
 			_closed = true;
 			TweenLite.to(this, .25, {autoAlpha:0});
 		}
+		
+		/**
+		 * Gets the window's height.
+		 */
+		public function get windowHeight():Number { return _window.height; }
 
 
 		

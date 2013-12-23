@@ -27,6 +27,7 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		private var _over:Boolean;
 		private var _scrollDirection:int;
 		private var _lastScrollH:int;
+		private var _framesToWait:int;
 		
 		
 		
@@ -100,14 +101,16 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Called on ENTER_FRAME event to make the text scrolling
 		 */
 		private function enterFrameHandler(event:Event):void {
+			if(--_framesToWait > 0) return;
 			if(_over || _labelTxt.scrollH > 0) {
-				if(_labelTxt.scrollH + _scrollDirection * 3 < 0) {
+				if(_labelTxt.scrollH + _scrollDirection * 2 < 0) {
 					_labelTxt.scrollH = 0;
 				}else{
-					_labelTxt.scrollH += _scrollDirection * 3;
+					_labelTxt.scrollH += _scrollDirection * 2;
 				}
 				if(_labelTxt.scrollH == 0 || _labelTxt.scrollH == _labelTxt.maxScrollH) {
 					_scrollDirection = -_scrollDirection;
+					_framesToWait = 31;
 				}
 			}else{
 				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);

@@ -40,7 +40,8 @@
 .comboboxButtonItemSelected_disabled { font-family:Verdana; font-size:14; font-weight:bold; color:#8E2424; flash-alpha:.4; }
 
 .checkBox { font-family:Verdana; font-size:12; color:#ffffff; }
-.checkBox_selected { font-family:Verdana; font-size:12; color:#ffffff; }
+.checkBox_fade { font-family:Verdana; font-size:12; color:#ffffff; flash-alpha:.5; }
+.checkBox_selected { font-family:Verdana; font-size:12; color:#ffffff; flash-alpha:1; }
 /*.checkBox_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }*/
 
 .radioButton { font-family:Verdana; font-size:12; color:#ffffff; }

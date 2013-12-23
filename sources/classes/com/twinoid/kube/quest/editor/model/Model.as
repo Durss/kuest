@@ -564,6 +564,7 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		private function loginCompleteHandler(event:CommandEvent):void {
 			_uid = event.data["uid"];
+			Config.addVariable("uid", _uid);
 			_kuests = event.data["kuests"] as Vector.<KuestInfo>;
 			_samples = event.data["samples"] as Vector.<KuestInfo>;
 			_friends = event.data["friends"] as Vector.<UserInfo>;

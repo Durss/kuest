@@ -141,29 +141,29 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 */
 		public function load(data:KuestEvent):void {
 			if (data.actionPlace == null) {
-				selectedIndex = 0;
 				_zoneX.text = "";
 				_zoneY.text = "";
 				_kubeX.text = "";
 				_kubeY.text = "";
 				_kubeZ.text = "";
+				super.onload(true, 0);
 				return;
 			}
 			
 			if(!data.actionPlace.kubeMode) {
-				selectedIndex = 0;
 				_zoneX.text = data.actionPlace.x.toString();
 				_zoneY.text = data.actionPlace.y.toString();
 				_kubeX.text = "";
 				_kubeY.text = "";
 				_kubeZ.text = "";
+				super.onload(true, 0);
 			}else{
-				selectedIndex = 1;
 				_kubeX.text = data.actionPlace.x.toString();
 				_kubeY.text = data.actionPlace.y.toString();
 				_kubeZ.text = data.actionPlace.z.toString();
 				_zoneX.text = "";
 				_zoneY.text = "";
+				super.onload(true, 1);
 			}
 		}
 
