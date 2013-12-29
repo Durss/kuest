@@ -12,7 +12,7 @@
 	}
 	
 	//Not logged
-	if(!isset($_SESSION["uid"])) {
+	if(!isset($_SESSION['kuest_uid'])) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
@@ -48,7 +48,7 @@
 		
 		//Check if we have rights to load this kuest.
 		$res = $req->fetch();
-		if (!$releaseMode && $res['uid'] != "0" && $_SESSION["uid"] != $res['uid'] && strpos($res['friends'], ",".$_SESSION["uid"].",") === false) {
+		if (!$releaseMode && $res['uid'] != "0" && $_SESSION['kuest_uid'] != $res['uid'] && strpos($res['friends'], ",".$_SESSION['kuest_uid'].",") === false) {
 			Out::printOut(false, '', 'Quest loading denied.', 'LOADING_NO_RIGHTS');
 			die;
 		}

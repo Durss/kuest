@@ -24,7 +24,7 @@
 		LEFT JOIN kuestEvaluations ON (kuestEvaluations.kid = kuestSaves.kid AND kuestEvaluations.uid = kuestSaves.uid)
 		WHERE kuestSaves.uid = :uid
 		ORDER BY kuestSaves.id DESC";
-		$params = array(':uid' => $_SESSION["uid"]);
+		$params = array(':uid' => $_SESSION['kuest_uid']);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -37,14 +37,14 @@
 		//No result. Get a suggestion
 		if (count($res) == 0) {
 			//That request is probably heavy.. Put it in cache to prevent from doing it multiple times
-			if(!isset($_SESSION['suggestionCache']) || !isset($_SESSION['suggestionCacheExpirationTime']) || time() > $_SESSION['suggestionCacheExpirationTime']) {
+			if(!isset($_SESSION['kuest_suggestionCache']) || !isset($_SESSION['kuest_suggestionCacheExpirationTime']) || time() > $_SESSION['kuest_suggestionCacheExpirationTime']) {
 				$sql = "SELECT kuestEvaluations.uid, SUM(kuestEvaluations.note) as total, kuestEvaluations.kid, kuests.name as title, kuests.description, kuests.guid, kuestUsers.name as pseudo
 				FROM kuestEvaluations
 				INNER JOIN kuests ON kuestEvaluations.kid = kuests.id
 				INNER JOIN kuestUsers ON kuests.uid = kuestUsers.uid
 				GROUP BY kuestEvaluations.kid
 				ORDER BY total DESC LIMIT 0,5";
-				$params = array(':uid' => $_SESSION["uid"]);
+				$params = array(':uid' => $_SESSION['kuest_uid']);
 				$req = DBConnection::getLink()->prepare($sql);
 				if (!$req->execute($params)) {
 					$error = $req->errorInfo();
@@ -55,10 +55,10 @@
 				$res = $req->fetchAll();
 				$key = array_rand($res);
 				$entry = $res[$key];
-				$_SESSION['suggestionCache'] = $entry;
-				$_SESSION['suggestionCacheExpirationTime'] = time() + 60 * 30;//Suggestion lasts 30 mins
+				$_SESSION['kuest_suggestionCache'] = $entry;
+				$_SESSION['kuest_suggestionCacheExpirationTime'] = time() + 60 * 30;//Suggestion lasts 30 mins
 			}else {
-				$entry = $_SESSION['suggestionCache'];
+				$entry = $_SESSION['kuest_suggestionCache'];
 			}
 			
 			$additionnals = "<kuests/>\n";

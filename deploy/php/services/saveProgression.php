@@ -12,7 +12,7 @@
 	}
 	
 	//Not logged
-	if(!isset($_SESSION["uid"])) {
+	if(!isset($_SESSION['kuest_uid'])) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
@@ -32,7 +32,7 @@
 			die;
 		}
 		
-		$dataFile = $_GET["id"]."_".$_SESSION['uid'];
+		$dataFile = $_GET["id"]."_".$_SESSION['kuest_uid'];
 		//Save file
 		if($fp = @fopen($path.$dataFile.".sav", 'wb')) {
 			fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
@@ -40,7 +40,7 @@
 			
 			//Check if file is already registered
 			$sql = "SELECT * FROM `kuestSaves` WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
-			$params = array(':guid' => $_GET["id"], ':uid' => $_SESSION["uid"]);
+			$params = array(':guid' => $_GET["id"], ':uid' => $_SESSION['kuest_uid']);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();
@@ -52,7 +52,7 @@
 			if ($tot == 0) {
 				//No save yet, add DB entry
 				$sql = "INSERT INTO `kuestSaves` (uid, kid, dataFile) VALUES (:uid, (SELECT id FROM kuests WHERE guid=:guid), :file)";
-				$params = array(':uid' => $_SESSION["uid"], ':guid' => $_GET["id"], ':file' => $dataFile);
+				$params = array(':uid' => $_SESSION['kuest_uid'], ':guid' => $_GET['id'], ':file' => $dataFile);
 				$req = DBConnection::getLink()->prepare($sql);
 				if (!$req->execute($params)) {
 					$error = $req->errorInfo();

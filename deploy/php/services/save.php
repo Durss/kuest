@@ -24,7 +24,7 @@
 	}
 	
 	//Not logged
-	if(!isset($_SESSION["uid"])) {
+	if(!isset($_SESSION['kuest_uid'])) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
@@ -66,7 +66,7 @@
 			}
 			
 			$res = $req->fetch();
-			if ($_SESSION["uid"] != $res['uid'] && strlen($res['friends']) > 0 && strpos(",".$_SESSION["uid"].",", $res['friends']) ) {
+			if ($_SESSION['kuest_uid'] != $res['uid'] && strlen($res['friends']) > 0 && strpos(",".$_SESSION['kuest_uid'].",", $res['friends']) ) {
 				//Not a map of ours, can't edit it.
 				Out::printOut(false, '', 'Loading denied.', 'EDITION_NO_RIGHTS');
 				die;
@@ -76,7 +76,7 @@
 			$friendsSrc	= array_filter( explode(",", $res['friends']) );
 			$friendsA	= array_filter( explode(",", $_GET["friends"]) );
 			$friendsA	= array_merge( $friendsSrc, $friendsA );
-			if ($_SESSION["uid"] != $res['uid'])	$friendsA[] = $_SESSION["uid"];
+			if ($_SESSION['kuest_uid'] != $res['uid'])	$friendsA[] = $_SESSION['kuest_uid'];
 			$friendsA	= array_unique( $friendsA );
 			if (count($friendsA) == 0) $friends = "";
 			else $friends = ",".implode(",", $friendsA).",";
@@ -114,7 +114,7 @@
 		}else {
 			// New quest !
 			
-			$owner = $_SESSION["uid"];
+			$owner = $_SESSION['kuest_uid'];
 			
 			//Create index file
 			$filepath = $dir."index.txt";
@@ -140,7 +140,7 @@
 			//Insert into DB
 			$guid = uniqid();
 			$sql = "INSERT into kuests (guid, uid, lang, name, description, dataFile, friends) VALUES (:guid, :uid, :lang, :name, :description, :dataFile, :friends)";
-			$params = array('guid' => $guid, ':uid' => $_SESSION['uid'], ':lang' => $_SESSION['lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index, ':friends' => ",".$_GET["friends"].",");
+			$params = array('guid' => $guid, ':uid' => $_SESSION['kuest_uid'], ':lang' => $_SESSION['kuest_lang'], ':name' => $_GET["title"], ':description' => $_GET["description"], ':dataFile' => $index, ':friends' => ",".$_GET['friends'].",");
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();

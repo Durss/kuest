@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor {
+	import com.nurun.utils.math.MathUtils;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.EnvironnementManager;
 	import com.nurun.utils.pos.PosUtils;
@@ -107,6 +108,7 @@ package com.twinoid.kube.quest.editor {
 				var h:int = 6; 
 				var percent:Number = (root.loaderInfo.bytesLoaded / root.loaderInfo.bytesTotal) * .5 + (_env.bytesLoaded / _env.bytesTotal) * .5;
 				if(isNaN(percent)) percent = 0;
+				percent = MathUtils.restrict(percent, 0, 1);
 				var rect:Rectangle = new Rectangle(0,0,0,0);
 				rect.x	= Math.round((stage.stageWidth - w) * .5);
 				rect.y	= Math.round((stage.stageHeight - h) * .5);

@@ -58,6 +58,7 @@ function addItem(i, node, holder) {
 
 var template;
 var onload = function () {
+	document.getElementsByClassName('banner')[0].onclick = function () { window.location.href='/kuest'; }
 	parseExpandableBlocks();
 	if(document.getElementsByClassName("template").length == 0) return;
 	template = document.getElementsByClassName("template")[0].innerHTML;

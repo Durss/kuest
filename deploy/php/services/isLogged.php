@@ -11,13 +11,13 @@
 	define('XOR_KEY', "DataManagerEvent"); //Encryption key
 	$time = base64_encode(Xorer::bitxor(XOR_KEY, (string) time()));
 	
-	$isLogged = isset($_SESSION['logged']) && $_SESSION['logged'] === true;
+	$isLogged = isset($_SESSION['kuest_logged']) && $_SESSION['kuest_logged'] === true;
 	$additionnals = "<logged>".($isLogged? 'true' : 'false')."</logged>";
 	if ($isLogged) {
-		$additionnals .= "<uid>".$_SESSION["uid"]."</uid>\n";
-		$additionnals .= "\t<name>".$_SESSION["name"]."</name>\n";
-		$additionnals .= "\t<pubkey>".$_SESSION["pubkey"]."</pubkey>\n";
-		$additionnals .= "\t<lang>".$_SESSION["lang"]."</lang>\n";
+		$additionnals .= "<uid>".$_SESSION['kuest_uid']."</uid>\n";
+		$additionnals .= "\t<name>".$_SESSION['kuest_name']."</name>\n";
+		$additionnals .= "\t<pubkey>".$_SESSION['kuest_oAuthkey']."</pubkey>\n";
+		$additionnals .= "\t<lang>".$_SESSION['kuest_lang']."</lang>\n";
 		$additionnals .= "\t<time><![CDATA[".$time."]]></time>\n";//encrypted time is sent to prevent from time hacking by simply changing the desktop's time.
 	}
 	//session_destroy();

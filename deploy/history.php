@@ -18,7 +18,7 @@
 	try {
 		DBConnection::connect();
 	}catch (Exception $loadingError) {
-		$loadingError = "Unable to connect DataBase...";
+		header("location: /kuest/error?e=dbconnect");
 		die;
 	}
 	
