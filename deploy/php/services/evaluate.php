@@ -15,7 +15,7 @@
 	OAuth::connect();
 	
 	//Not logged
-	if(!isset($_SESSION["logged"]) || $_SESSION["logged"] === false) {
+	if(!isset($_SESSION['kuest_logged']) || $_SESSION['kuest_logged'] === false) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
@@ -23,14 +23,14 @@
 	//If query parameters are correct
 	if (isset($_POST["id"], $_POST["note"], $_POST["key"])) {
 		//Check if the quest key is valid
-		if ($_SESSION["pubkey"] != $_POST['key']) {
+		if ($_SESSION['kuest_oAuthkey'] != $_POST['key']) {
 			Out::printOut(false, '', 'Invalid key.', 'KUEST_EVALUATION_INVALID_KEY', false);
 			die;
 		}
 	
 		//Check if we have already evaluated this quest or not
 		$sql = "SELECT * FROM kuestEvaluations WHERE kid=(SELECT id FROM kuests WHERE guid=:guid) AND uid=:uid";
-		$params = array(':guid' => $_POST["id"], ':uid' => $_SESSION["uid"]);
+		$params = array(':guid' => $_POST["id"], ':uid' => $_SESSION['kuest_uid']);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -48,7 +48,7 @@
 			
 		}else {
 			//Grab the statistics
-			$json = OAuth::call('siteUser/'.$_SESSION['uid'].'/18?fields=user,site,realId,link,stats.fields(id,score)');
+			$json = OAuth::call('siteUser/'.$_SESSION['kuest_uid'].'/18?fields=user,site,realId,link,stats.fields(id,score)');
 			$stats = $json->stats;
 			$points = 0;
 			$zones = 0;
@@ -77,7 +77,7 @@
 			
 			//Register evaluation
 			$sql = "INSERT INTO kuestEvaluations (uid, kid, note, noteBase) VALUES (:uid, :kid, :note, :noteBase)";
-			$params = array(':uid' => $_SESSION['uid'], ':kid' => $res["id"], ':note' => $note, ':noteBase' => $noteBase);
+			$params = array(':uid' => $_SESSION['kuest_uid'], ':kid' => $res['id'], ':note' => $note, ':noteBase' => $noteBase);
 			$req = DBConnection::getLink()->prepare($sql);
 			if (!$req->execute($params)) {
 				$error = $req->errorInfo();

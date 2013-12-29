@@ -1,7 +1,7 @@
 <?php
 	class DBConnection {
 		private static $connection;
-		private static $SESSION_VERSION = 4;
+		private static $SESSION_VERSION = 6;
 		
 		public static function connect() {
 			if ($_SERVER['HTTP_HOST'] != "fevermap.org") {
@@ -26,9 +26,9 @@
 		
 		public static function initSession() {
 			session_start();
-			if (!isset($_SESSION["version"]) || $_SESSION["version"] != self::$SESSION_VERSION) {
+			if (!isset($_SESSION['kuest_version']) || $_SESSION['kuest_version'] != self::$SESSION_VERSION) {
 				session_unset();
-				$_SESSION["version"] = self::$SESSION_VERSION;
+				$_SESSION['kuest_version'] = self::$SESSION_VERSION;
 			}
 		}
 		

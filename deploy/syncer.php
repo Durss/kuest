@@ -16,7 +16,7 @@
 		die;
 	}
 	
-	if (!isset($_SESSION['uid'])) {
+	if (!isset($_SESSION['kuest_uid'])) {
 		OAuth::connect();
 	}
 	

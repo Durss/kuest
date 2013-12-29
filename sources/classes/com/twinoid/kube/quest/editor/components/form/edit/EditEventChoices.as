@@ -91,7 +91,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				for(i = 0; i < len; ++i) {
 					if (data.actionChoices.choices.length > i && data.actionChoices.choices[i].length > 0) {
 						enabled = true;
-						_choices[i].populate( data.actionChoices.choices[i], data.actionChoices.choicesCost[i] );
+						_choices[i].populate( data.actionChoices.choices[i], data.actionChoices.choicesCost.length > i? data.actionChoices.choicesCost[i] : 0 );
 					}
 				}
 				super.onload(enabled, 0);

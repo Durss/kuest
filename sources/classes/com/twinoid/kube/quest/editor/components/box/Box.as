@@ -238,13 +238,13 @@ package com.twinoid.kube.quest.editor.components.box {
 				if(_data.actionChoices != null) {
 					var numChoices:int = Math.max(1, _data.actionChoices.choices.length);
 					for(i = 1; i < numChoices; ++i) {
-						MovieClip(_outBoxes[i].icon).gotoAndStop(_data.actionChoices.choicesCost[i] > 0? 2 : 1);
+						MovieClip(_outBoxes[i].icon).gotoAndStop(_data.actionChoices.choicesCost.length > i && _data.actionChoices.choicesCost[i] > 0? 2 : 1);
 						addChildAt(_outBoxes[i], getChildIndex(_outBoxes[i-1])+1);
 					}
 				}
 				
 				if(_data.actionChoices != null && _data.actionChoices.choicesCost.length > 0){
-					MovieClip(_outBoxes[0].icon).gotoAndStop(_data.actionChoices.choicesCost[0] > 0? 2 : 1);
+					MovieClip(_outBoxes[0].icon).gotoAndStop(_data.actionChoices.choicesCost.length > 0 && _data.actionChoices.choicesCost[0] > 0? 2 : 1);
 				}else{
 					MovieClip(_outBoxes[0].icon).gotoAndStop(1);
 				}
@@ -262,7 +262,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				
 				//Object indicator
 				_takePut.visible = _data.actionType.type == ActionType.TYPE_OBJECT;
-				_money.visible = _data.actionMoney.kuborsEarned > 0;
+				_money.visible = _data.actionMoney != null && _data.actionMoney.kuborsEarned > 0;
 				_takePut.gotoAndStop(_data.actionType.takeMode? 2 : 1);
 			}
 				

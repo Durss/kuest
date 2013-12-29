@@ -7,8 +7,8 @@
 	$isIncluded = $files[0] != __FILE__;
 	
 	$lang = '';
-	if(isset($_SESSION["lang"])) 
-		$lang = $_SESSION["lang"];
+	if(isset($_SESSION['kuest_lang'])) 
+		$lang = $_SESSION['kuest_lang'];
 	else
 		$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	

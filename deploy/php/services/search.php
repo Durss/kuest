@@ -22,7 +22,7 @@
 		INNER JOIN kuestUsers ON kuestUsers.uid = kuests.uid
 		WHERE published = 1 AND lang = :lang AND (kuests.name LIKE :search OR kuestUsers.name LIKE :search)
 		ORDER BY kuests.id DESC";
-		$params = array(':lang' => $_SESSION["lang"], ':search' => '%'.$_POST["search"].'%');
+		$params = array(':lang' => $_SESSION['kuest_lang'], ':search' => '%'.$_POST['search'].'%');
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();

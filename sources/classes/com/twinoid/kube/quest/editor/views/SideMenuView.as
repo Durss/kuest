@@ -1,6 +1,9 @@
 package com.twinoid.kube.quest.editor.views {
-	import com.twinoid.kube.quest.editor.components.menu.MenuDebuggerContent;
-	import com.twinoid.kube.quest.graphics.MenuDebuggerIconGraphic;
+	import gs.TweenLite;
+
+	import com.nurun.components.button.GraphicButton;
+	import com.nurun.components.button.visitors.PropertiesVisitor;
+	import com.nurun.components.button.visitors.PropertiesVisitorOptions;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -10,21 +13,26 @@ package com.twinoid.kube.quest.editor.views {
 	import com.twinoid.kube.quest.editor.components.menu.AbstractMenuContent;
 	import com.twinoid.kube.quest.editor.components.menu.MenuCharsContent;
 	import com.twinoid.kube.quest.editor.components.menu.MenuCreditsContent;
+	import com.twinoid.kube.quest.editor.components.menu.MenuDebuggerContent;
 	import com.twinoid.kube.quest.editor.components.menu.MenuFileContent;
 	import com.twinoid.kube.quest.editor.components.menu.MenuObjectContent;
 	import com.twinoid.kube.quest.editor.model.Model;
+	import com.twinoid.kube.quest.graphics.BackHomeButtonGraphic;
 	import com.twinoid.kube.quest.graphics.MenuCharactersIconGraphic;
 	import com.twinoid.kube.quest.graphics.MenuCreditsIconGraphic;
+	import com.twinoid.kube.quest.graphics.MenuDebuggerIconGraphic;
 	import com.twinoid.kube.quest.graphics.MenuFileIconGraphic;
 	import com.twinoid.kube.quest.graphics.MenuObjectIconGraphic;
+
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	import flash.utils.Dictionary;
-	import gs.TweenLite;
 
 	/**
 	 * Displays the side menu with file, objects and characters menus.
@@ -54,6 +62,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _selectedIndex:int;
 		private var _back:Shape;
 		private var _tabIndex:int;
+		private var _backBt:GraphicButton;
 		
 		
 		
@@ -116,9 +125,10 @@ package com.twinoid.kube.quest.editor.views {
 		private function initialize(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_group = new FormComponentGroup();
-			_back = addChild(new Shape()) as Shape;
-			_buttonsHolder = addChild(new Sprite()) as Sprite;
+			_group			= new FormComponentGroup();
+			_back			= addChild(new Shape()) as Shape;
+			_buttonsHolder	= addChild(new Sprite()) as Sprite;
+			_backBt			= addChild(new GraphicButton(new BackHomeButtonGraphic())) as GraphicButton;
 			
 			var icons:Array = [new MenuFileIconGraphic(),
 								new MenuCharactersIconGraphic(),
@@ -146,22 +156,20 @@ package com.twinoid.kube.quest.editor.views {
 				_contents[i].tabIndex = _tabIndex + i + len + i * 100;
 				_group.add( _buttons[i] );
 				_buttonToIndex[ _buttons[i] ] = i;
-				
-				//These two stupid lines  provides a way to initialize the
-				//contents directly. Which is necessary as Chars and Objects
-				//menus creates the default items at their initialize.
-				//Without that the ItemSelectorView would be empty.
-				//Yup, I actually should initialize those default items in
-				//the model not in the views...
-//				addChild(_contents[i]);
-//				removeChild(_contents[i]);
 			}
 			
 			_back.filters = [new DropShadowFilter(4, 0, 0, .35, 5, 0, 1, 2)];
 			
 			_opened = true;
 			_buttons[0].selected = true;
+			_backBt.x = -25;
+			_backBt.filters = [new DropShadowFilter(4,0,0,.4,5,0,1,2)];
 			addChild(_contents[0]);
+			addChild(_backBt);
+
+			var v:PropertiesVisitor = new PropertiesVisitor();
+			v.addTarget(_backBt, new PropertiesVisitorOptions({x:-25},{x:-1},{},{},.25));
+			_backBt.accept(v);
 			
 			computePositions();
 			stage.addEventListener(Event.RESIZE, computePositions);
@@ -205,6 +213,11 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when a component is clicked.
 		 */
 		private function clickHandler(event:MouseEvent):void {
+			if(event.target == _backBt) {
+				navigateToURL(new URLRequest('/kuest'), '_self');
+				return;
+			}
+			
 			if(_buttonToIndex[ event.target ] == null) return;
 			
 			var index:int = _buttonToIndex[ event.target ];
@@ -224,6 +237,7 @@ package com.twinoid.kube.quest.editor.views {
 			}
 			
 			_selectedIndex = index;
+			addChild(_backBt);
 		}
 		
 	}

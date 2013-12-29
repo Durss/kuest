@@ -12,7 +12,7 @@
 	}
 	
 	//Not logged
-	if(!isset($_SESSION["uid"])) {
+	if(!isset($_SESSION['kuest_uid'])) {
 		Out::printOut(false, '', 'You must be logged in.', 'NOT_LOGGED');
 		die;
 	}
@@ -42,7 +42,7 @@
 		
 		//Check if we have rights to delete this kuest.
 		$res = $req->fetch();
-		if ($_SESSION["uid"] != $res['uid']) {
+		if ($_SESSION['kuest_uid'] != $res['uid']) {
 			//If we have the rights on the map but are not its creator,
 			//remove us from the rights
 			$friends = explode(",", $res['friends']);
@@ -54,9 +54,9 @@
 				}
 			}
 			
-			if (in_array($_SESSION["uid"], $friends)) {
+			if (in_array($_SESSION['kuest_uid'], $friends)) {
 				for ($i = 0; $i < count($friends); $i++) {
-					if ($friends[$i] == $_SESSION['uid']) {
+					if ($friends[$i] == $_SESSION['kuest_uid']) {
 						array_splice($friends, $i, 1);
 						$i --;
 					}

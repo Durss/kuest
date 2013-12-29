@@ -3,7 +3,7 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog76-content"><![CDATA[<ul>
+		<label code="patchlog77-content"><![CDATA[<ul>
 			<li>Ajout d'une monnaie virtuelle.</li>
 			<li>Ajout d'un historique des événements dans le module in-game.</li>
 			<li>Ajout de nouveaux exemples.</li>

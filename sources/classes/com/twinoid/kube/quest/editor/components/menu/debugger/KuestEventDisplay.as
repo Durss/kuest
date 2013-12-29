@@ -168,7 +168,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 				bt.label = _currentEvent.actionChoices.choices[i];
 				bt.enabled = true;
 				bt.icon = null;
-				if(_currentEvent.actionChoices.choicesCost[i] > 0) {
+				if(_currentEvent.actionChoices.choicesCost.length > i && _currentEvent.actionChoices.choicesCost[i] > 0) {
 					bt.icon = new MoneyIcon();
 					bt.iconAlign = IconAlign.LEFT;
 					bt.icon.scaleX = bt.icon.scaleY = 2;

@@ -24,7 +24,7 @@
 		ORDER BY kuests.id DESC
 		LIMIT 0, 30";
 		
-		$params = array(':lang' => $_SESSION["lang"]);
+		$params = array(':lang' => $_SESSION['kuest_lang']);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -61,7 +61,7 @@
 		WHERE kuests.lang = :lang
 		GROUP BY kid ORDER BY SUM(note)
 		DESC LIMIT 0,30";
-		$params = array(':lang' => $_SESSION["lang"]);
+		$params = array(':lang' => $_SESSION['kuest_lang']);
 		$req = DBConnection::getLink()->prepare($sql);
 		if (!$req->execute($params)) {
 			$error = $req->errorInfo();
@@ -84,7 +84,7 @@
 			$req2->execute($params2);
 			if ($req2->rowCount() > 0) {
 				$res2 = $req2->fetch();
-				if ($res2['lang'] == $_SESSION["lang"]) {
+				if ($res2['lang'] == $_SESSION['kuest_lang']) {
 					$additionnals .= "\t\t<k guid='".$res2['guid']."' note='".$res[$i]['total']."' plays='".$res2['totalPlays']."'>\n";
 					$additionnals .= "\t\t\t<u id='".$res2['uid']."'><![CDATA[".htmlspecialchars($res2['pseudo'])."]]></u>\n";
 					$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res2['title']))."]]></title>\n";
