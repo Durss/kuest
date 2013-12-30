@@ -75,6 +75,20 @@
 		if(trim(uid.value).length > 0 && parseInt(uid.value) > 0) {
 			refreshAvatar();
 		}
+		
+		
+		var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+		var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;// Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+		var isChrome = !!window.chrome && !isOpera; // Chrome 1+
+		if(isFirefox) {
+			document.getElementById('GM').style.display = 'inline';
+		}else
+		if(isChrome) {
+			document.getElementById('TM').style.display = 'inline';
+		}else {
+			document.getElementById('gmLink').style.display = 'none';
+		}
+		
 	}
 	addEvent(window, 'load', onload);
 })()

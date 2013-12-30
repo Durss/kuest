@@ -18,7 +18,7 @@ var onload = function () {
 			function removeNode(node) {
 				node.parentNode.removeChild(node);
 			}
-			TweenLite.to(flash[0], .25, {alpha:0, y:"-20", height:0, delay:2, onComplete:removeNode, onCompleteParams:[flash[0]]});
+			TweenLite.to(flash[0], .25, {alpha:0, y:"-20", height:0, delay:5, onComplete:removeNode, onCompleteParams:[flash[0]]});
 		}
 	}
 }
