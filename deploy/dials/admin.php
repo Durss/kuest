@@ -26,7 +26,15 @@
 		die;
 	}
 	
-	if (!isset($_SESSION['kuest_uid']) || ($_SESSION['kuest_uid'] != 48 && $_SESSION['kuest_uid'] != 1875)) {
+	$admins = array();
+	$admins[] = 48;
+	$admins[] = 1875;
+	$admins[] = 338;
+	$admins[] = 32215;
+	$admins[] = 41997;
+	$admins[] = 45643;
+	$admins[] = 7610252;
+	if (!isset($_SESSION['kuest_uid']) || !in_array($_SESSION['kuest_uid'], $admins)) {
 		header("location: /dials");
 	}
 	
