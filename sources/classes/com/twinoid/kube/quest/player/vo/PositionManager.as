@@ -55,6 +55,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * Gets the events of a specific position.
 		 */
 		public function getEventsFromPos(pos:*):Vector.<KuestEvent> {
+			if(_posToEvents == null) return new Vector.<KuestEvent>();
 			var items:Vector.<KuestEvent> = _posToEvents[getPositionId(pos)] as Vector.<KuestEvent>;
 			//Sort them to get them with "natural" loop priorities
 			if(items != null) items.sort(sortByPosition);

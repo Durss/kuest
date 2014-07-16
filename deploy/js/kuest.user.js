@@ -81,11 +81,13 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	var gameDiv = unsafeWindow.document.getElementsByClassName("game")[0];
 	var url = "http://"+server+"/swf/player.swf?";
 	var kuestApp = unsafeWindow.document.createElement('div');
-	if(kuestID) url += "kuestID="+kuestID;
-	if(testMode) url += "&testMode=true";
-	url += "&version=" + Math.round( Math.round( new Date().getTime() / 1000 )  / 3600 ) * 3600;//bypass cache every hour
-	url += "&lang="+lang;
-	url += "&configXml=http://"+server+"/xml/config.xml";
+    var params = [];
+	if(kuestID)    params.push("kuestID="+kuestID);
+	if(testMode)   params.push("testMode=true");
+	params.push("version=" + Math.round( Math.round( new Date().getTime() / 1000 )  / 3600 ) * 3600);//bypass cache every hour
+	params.push("lang="+lang);
+	params.push("configXml=http://"+server+"/xml/config.xml");
+    url += params.join('&');
 
 	//Gets the current's session user's ID.
 	//Searches for UID inside page's source.
