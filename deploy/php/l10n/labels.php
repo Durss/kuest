@@ -21,7 +21,7 @@
 	//MENU
 	
 	$editor_prompt = array();
-	$editor_prompt["fr"] = "En quittant cette page vous perdrez des données non sauvegardée!\\rÊtes-vous certain de vouloir continuer ?";
+	$editor_prompt["fr"] = "En quittant cette page vous perdrez des données non sauvegardées !\\rÊtes-vous certain de vouloir continuer ?";
 	$editor_prompt["en"] = "You have currently unsaved data.\\rDo you really wish to leave this page ?";
 	$editor_prompt = $editor_prompt[ $lang ];
 	
