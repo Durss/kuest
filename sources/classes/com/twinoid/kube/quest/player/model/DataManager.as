@@ -262,7 +262,6 @@ package com.twinoid.kube.quest.player.model {
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
-			
 			loadCurrentQuest();
 		}
 		
@@ -356,7 +355,8 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Initializes the local connections stuff.
 		 */
-		private function initLocalConnections():void {_lcClientNames = [];
+		private function initLocalConnections():void {
+			_lcClientNames = [];
 			_lcSend = new LocalConnection();
 			_lcSend.addEventListener(StatusEvent.STATUS, statusHandler);
 			
@@ -389,6 +389,7 @@ package com.twinoid.kube.quest.player.model {
 				
 			_timer = new Timer(100);
 			_timer.addEventListener(TimerEvent.TIMER, ticTimerHandler);
+			_timer.start();
 			
 			_lcGameName = "_kuestGame_"+new Date().getTime()+"_";
 			
@@ -514,7 +515,6 @@ package com.twinoid.kube.quest.player.model {
 		        ]]></script>;
 		    
 	        var text:String = ExternalInterface.call(getZoneInfos.toString()); 
-		    
 			//check if picking up a forum
 			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/gi.test(text)) {
 				text = text.replace(/.*(removeKube\(.*?\)).*/gi, "$1");
@@ -863,6 +863,7 @@ package com.twinoid.kube.quest.player.model {
 		 * Saves the progression
 		 */
 		private function onDoSaveProgression():void {
+			if(_kuest == null) return;
 			_saveProgressionCmd.populate(_currentQuestGUID, _questManager.exportSave());
 			_saveProgressionCmd.execute();
 		}
