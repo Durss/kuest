@@ -21,6 +21,8 @@ com.twinoid.kube.quest.editor.utils{
 	 */
 	public class SfxrParams
 	{
+		public function SfxrParams() { }
+		
 		//--------------------------------------------------------------------------
 		//
 		//  Properties

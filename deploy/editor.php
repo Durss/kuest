@@ -26,14 +26,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="language" content="en" />
 		<meta name="description" content="Tool to create quests for the game Kube." />
-		<meta name="keywords" content="kube, quest, durss" />
+		<meta name="keywords" content="kube, kuest, quest, durss" />
 		
 		<link rel="stylesheet" type="text/css" href="/kuest/css/stylesheet.css"/>
-		
-		<script type="text/javascript" src="/kuest/js/swfobject.js"></script>
-		<script type="text/javascript" src="/kuest/js/SWFAddress.js"></script>
-		<script type="text/javascript" src="/kuest/js/swfwheel.js"></script>
-		<script type="text/javascript" src="/kuest/js/swffit.js"></script>
 		<STYLE type="text/css">
 		  <!--
 		  body, html {
@@ -42,6 +37,14 @@
 		  }
 		  -->
 		  </STYLE>
+		
+		<script type="text/javascript" src="/kuest/js/isEventSupported.js"></script>
+		<script type="text/javascript" src="/kuest/js/addRemoveEvent.js"></script>
+        <script type="text/javascript" src="/kuest/js/swfobject.js"></script>
+		<script type="text/javascript" src="/kuest/js/SWFAddress.js"></script>
+		<script type="text/javascript" src="/kuest/js/swfwheel.js"></script>
+		<script type="text/javascript" src="/kuest/js/swffit.js"></script>
+		<script type="text/javascript" src="/kuest/js/editor.js"></script>
 	</head>
 	<body>
 		<div id="content">
@@ -51,28 +54,8 @@
 		
 		<script type="text/javascript">
 			var lang = "<?php echo $lang ?>";
-			if(lang.length == 0) {//Get browser's language if we couldn't get the user's language from Twinoid's API because ... dunno.
-				lang = (navigator.language) ? navigator.language : navigator.userLanguage;
-				lang = lang.split("-")[0];
-			}
-			//Compute this languages list via PHP depending on the folder's content.
-			if(lang != "fr" && lang != "en") lang = "en";
-			
-			var flashvars = {};
-			flashvars["version"] = "77";
-			flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
-			flashvars["lang"] = lang;
-			var attributes = {};
-			attributes["id"] = "externalDynamicContent";
-			attributes["name"] = "externalDynamicContent";
-			
-			var params = {};
-			params['allowFullScreen'] = 'true';
-			params['menu'] = 'false';
-			
-			swfobject.embedSWF("/kuest/swf/application.swf?v="+flashvars["version"], "content", "100%", "100%", "11", "/kuest/swf/expressinstall.swf", flashvars, params, attributes);
-			
-			swffit.fit("externalDynamicContent", 800, 600, 3000, 3000, true, true);
+			var prompt = "<?php echo $editor_prompt; ?>";
+            var Editor = new Editor();
 		</script>
 	</body>
 </html>

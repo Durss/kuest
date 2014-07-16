@@ -119,7 +119,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		public function set debugMode(value:Boolean):void {
 			_debugMode = value;
-			mouseChildren = !_debugMode;
+//			mouseChildren = !_debugMode;
 		}
 		
 		/**
@@ -308,7 +308,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				_outBoxes[i].contentMargin = new Margin(10, 0, 0, 0);
 				_outBoxes[i].background.filters = [new ColorMatrixFilter(hexToMatrix( colors[i] ))];
 				_outBoxes[i].addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-				_outBoxes[i].addEventListener(MouseEvent.ROLL_OVER, overOutBoxandler);
+				_outBoxes[i].addEventListener(MouseEvent.ROLL_OVER, overOutBoxHandler);
 				applyDefaultFrameVisitorNoTween(_outBoxes[i], _outBoxes[i].background);
 				_outBoxToIndex[ _outBoxes[i] ] = i;
 				if(i == 0) addChild(_outBoxes[i]);
@@ -360,7 +360,10 @@ package com.twinoid.kube.quest.editor.components.box {
 			
 			render();
 		}
-
+		
+		/**
+		 * Tell the debugger the current display node is this one.
+		 */
 		private function debugHandler(event:Event):void {
 			dispatchEvent(new BoxEvent(BoxEvent.ACTIVATE_DEBUG, 0, true));
 		}
@@ -432,7 +435,10 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function overTimeIconGraphicHandler(event:MouseEvent):void {
 			_timeIcon.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("box-timeIcon"), ToolTipAlign.TOP));
 		}
-
+		
+		/**
+		 * Called when background is rolled over to display the box'scoordinates
+		 */
 		private function overBackGraphicHandler(event:MouseEvent):void {
 			var p:* = _data.actionPlace == null? new Point() : _data.actionPlace.getAsPoint();
 			var label:String;
@@ -460,7 +466,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * Called when an out box is rolled over.
 		 * Display the related choice.
 		 */
-		private function overOutBoxandler(event:MouseEvent):void {
+		private function overOutBoxHandler(event:MouseEvent):void {
 			if(_data.actionChoices != null && _data.actionChoices.choices.length > 0) {
 				var label:String;
 				label = _data.actionChoices.choices[ _outBoxToIndex[event.currentTarget] ];

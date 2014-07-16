@@ -50,6 +50,8 @@ package com.twinoid.kube.quest.editor.components.window {
 			_titleTf.text = _title = value;
 			computePositions();
 		}
+		//Alias of label
+		public function set title(value:String):void { label = value; }
 		
 		/**
 		 * Gets the width of the component.

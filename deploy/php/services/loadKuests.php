@@ -44,9 +44,9 @@
 				$note = $res2['note'];
 			}
 			$additionnals .= "\t\t<k guid='".$res[$i]['guid']."' note='".$note."' plays='".$res[$i]['totalPlays']."'>\n";
-			$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['pseudo']))."]]></u>\n";
-			$additionnals .= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['title']))."]]></title>\n";
-			$additionnals .= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description'])).$browse_players."]]></description>\n";
+			$additionnals .= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".htmlspecialchars(utf8_encode($res[$i]['pseudo']), ENT_COMPAT, "UTF-8")."]]></u>\n";
+			$additionnals .= "\t\t\t<title><![CDATA[".htmlspecialchars(utf8_encode($res[$i]['title']), ENT_COMPAT, "UTF-8")."]]></title>\n";
+			$additionnals .= "\t\t\t<description><![CDATA[".htmlspecialchars(utf8_encode($res[$i]['description']), ENT_COMPAT, "UTF-8").$browse_players."]]></description>\n";
 			$additionnals .= "\t\t</k>\n";
 		}
 		$additionnals .= "\t</kuests>\n";

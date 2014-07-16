@@ -40,7 +40,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _spinning:LoaderSpinning;
 		private var _label:CssTextField;
 		private var _holder:Sprite;
-		private var _itemToData:Dictionary;
+		private var _itemToData : Dictionary;
 		
 		
 		
@@ -78,7 +78,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		/**
 		 * Populates the component
 		 */
-		public function populate(data:Vector.<KuestInfo>):void {
+		public function populate(data:Vector.<KuestInfo>, currentKuest:KuestInfo = null):void {
 			_label.text = data == null || data.length == 0? Label.getLabel("menu-file-load-empty") : Label.getLabel("menu-file-load-title");
 			
 			while(_holder.numChildren > 0) {
@@ -92,7 +92,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			for(i = 0; i < len; ++i) {
 				if (data[i].isSample) continue;
 				deleteBt		= _holder.addChild(new GraphicButtonKube(new CancelIcon())) as GraphicButtonKube;
-				item			= _holder.addChild(new ButtonKube(data[i].title)) as ButtonKube;
+				item			= _holder.addChild(new ButtonKube(data[i].title, null, currentKuest == data[i])) as ButtonKube;
 				item.textAlign	= TextAlign.LEFT;
 				item.width		= _width - deleteBt.width - 12;
 				item.y			= py;

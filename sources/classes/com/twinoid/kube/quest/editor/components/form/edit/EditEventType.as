@@ -152,7 +152,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			_charHolder = new ItemPlaceholder(false, true);
 			_dialogue.addChild(_charHolder);
-			_charDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-dialogueDefault"), false);
+			_charDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-dialogueDefault"), false, true, Label.getLabel("editWindow-type-dialogueTT"));
 			_dialogue.addChild( _charDialogue );
 			
 			_charDialogue.width = _width - _charHolder.width - 5;
@@ -171,7 +171,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			_objectHolder = new ItemPlaceholder(false, true, ItemSelectorEvent.ITEM_TYPE_OBJECT);
 			_object.addChild(_objectHolder);
-			_objectDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-objectDefault"), false);
+			_objectDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-objectDefault"), false, true, Label.getLabel("editWindow-type-objectTT"));
 			_object.addChild( _objectDialogue );
 			_cbTake = new RadioButtonKube(Label.getLabel("editWindow-type-take"), _objectGroup);
 			_cbPut = new RadioButtonKube(Label.getLabel("editWindow-type-put"), _objectGroup);

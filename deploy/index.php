@@ -11,7 +11,7 @@
 	//Redirect the user if "www" are on the address. Prevents from SharedObject problems.
 	if (strpos($_SERVER["SERVER_NAME"], "www") > -1) {
 		header("location: http://fevermap.org/kuest");
-		die;
+		exit();
 	}
 	
 	//Connect to database
@@ -19,11 +19,24 @@
 		DBConnection::connect();
 	}catch (Exception $loadingError) {
 		header("location: /kuest/error?e=dbconnect");
-		die;
+		exit();
 	}
 	
 	//session_destroy(); die;
-	OAuth::connect();
+	if (!isset($_SESSION['kuest_logged']) || $_SESSION['kuest_logged'] === false) {
+		if (!isset($_COOKIE['kuestAppAuthorized_'.CLIENT_ID]) || $_COOKIE['kuestAppAuthorized_'.$_SERVER['SERVER_NAME']] !== 'true') {
+			if (isset($_GET['connect']) || isset($_GET['state']) || (isset($_GET['error']) && $_GET['error'] == 'access_denied')) {
+				OAuth::connect();
+			}else{
+				header("location: /kuest/auth");
+				exit();
+			}
+		}else {
+			OAuth::connect();
+		}
+	}else{
+		OAuth::connect();
+	}
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

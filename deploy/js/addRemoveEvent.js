@@ -128,9 +128,9 @@ function fixEvent(event) {
         var handlers = getData(elem).events[event.type];  
         // Go through and call all the real bound handlers  
         for (var i = 0, l = handlers.length; i < l; i++) {  
-          handlers[i].call(elem, event);  
+          handlers[i].call(elem, event); 
           // Stop executing handlers since the user requested it  
-          if (event.isImmediatePropagationStopped()) {  
+          if (event.isImmediatePropagationStopped != undefined && event.isImmediatePropagationStopped()) {  
             break;  
           }  
         }  

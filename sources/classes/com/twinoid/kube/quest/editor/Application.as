@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor {
+	import com.twinoid.kube.quest.editor.views.MagnifiedTextfield;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -100,6 +101,7 @@ package com.twinoid.kube.quest.editor {
 			addChild(new PromptWindowView());
 			addChild(new ToolTipView());
 			addChild(new BoxDebugView());
+			addChild(new MagnifiedTextfield());
 			addChild(new ExceptionView());
 //			addChild(new Stats());
 			getChildAt(numChildren - 1).addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);//Wait for the views to be added to stage, not this view
