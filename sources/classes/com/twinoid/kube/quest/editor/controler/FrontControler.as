@@ -175,6 +175,13 @@ package com.twinoid.kube.quest.editor.controler {
 		public function setDebugStart(data:KuestEvent):void {
 			_model.setDebugStart(data);
 		}
+		
+		/**
+		 * Flags a change in the current quest
+		 */
+		public function flagChange():void {
+			_model.flagChange();
+		}
 
 
 		

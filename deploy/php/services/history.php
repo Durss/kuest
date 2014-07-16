@@ -63,9 +63,9 @@
 			
 			$additionnals = "<kuests/>\n";
 			$additionnals .= "\t<suggestion guid='".$entry['guid']."'>\n";
-			$additionnals .= "\t\t<u id='".$entry['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($entry['pseudo']))."]]></u>\n";
-			$additionnals .= "\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($entry['title']))."]]></title>\n";
-			$additionnals .= "\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($entry['description']))."]]></description>\n";
+			$additionnals .= "\t\t<u id='".$entry['uid']."'><![CDATA[".htmlspecialchars(utf8_encode($entry['pseudo']), ENT_COMPAT, "UTF-8")."]]></u>\n";
+			$additionnals .= "\t\t<title><![CDATA[".htmlspecialchars(utf8_encode($entry['title']), ENT_COMPAT, "UTF-8")."]]></title>\n";
+			$additionnals .= "\t\t<description><![CDATA[".htmlspecialchars(utf8_encode($entry['description']), ENT_COMPAT, "UTF-8")."]]></description>\n";
 			$additionnals .= "\t</suggestion>\n";
 		
 		}else {
@@ -75,9 +75,9 @@
 				$complete		= empty($res[$i]['evalId'])? 'false' : 'true';
 				$completeLabel	= empty($res[$i]['evalId'])? $history_inProgress : $history_complete;
 				$additionnals	.= "\t\t<k guid='".$res[$i]['guid']."' complete='".$complete."'>\n";
-				$additionnals	.= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['pseudo']))."]]></u>\n";
-				$additionnals	.= "\t\t\t<title><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['title']))."]]></title>\n";
-				$additionnals	.= "\t\t\t<description><![CDATA[".utf8_encode(htmlspecialchars($res[$i]['description'])).$completeLabel."]]></description>\n";
+				$additionnals	.= "\t\t\t<u id='".$res[$i]['uid']."'><![CDATA[".htmlspecialchars(utf8_encode($res[$i]['pseudo']), ENT_COMPAT, "UTF-8")."]]></u>\n";
+				$additionnals	.= "\t\t\t<title><![CDATA[".htmlspecialchars(utf8_encode($res[$i]['title']), ENT_COMPAT, "UTF-8")."]]></title>\n";
+				$additionnals	.= "\t\t\t<description><![CDATA[".htmlspecialchars(utf8_encode($res[$i]['description']), ENT_COMPAT, "UTF-8").$completeLabel."]]></description>\n";
 				$additionnals	.= "\t\t</k>\n";
 			}
 			$additionnals .= "\t</kuests>\n";

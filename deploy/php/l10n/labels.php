@@ -20,6 +20,17 @@
 	
 	//MENU
 	
+	$editor_prompt = array();
+	$editor_prompt["fr"] = "En quittant cette page vous perdrez des données non sauvegardée!\\rÊtes-vous certain de vouloir continuer ?";
+	$editor_prompt["en"] = "You have currently unsaved data.\\rDo you really wish to leave this page ?";
+	$editor_prompt = $editor_prompt[ $lang ];
+	
+	
+	
+	
+	
+	//MENU
+	
 	$menu_createButton = array();
 	$menu_createButton["fr"] = "Créer une quête";
 	$menu_createButton["en"] = "Create a quest";
@@ -148,11 +159,33 @@
 	$down_content["fr"] = "Twinoid est actuellement indisponible rendant cette application hors service.<br /><br />Essayez à nouveau un peu plus tard.<br /><br /><i>Désolé pour la gêne occasionnée.</i>";
 	$down_content["en"] = "Twinoid is unavailable for the moment, which makes this application unusable.<br /><br />Please try again later.<br /><br /><i>Sorry for the inconvenience.</i>";
 	$down_content = $down_content[ $lang ];
+	if ($_SERVER['HTTP_HOST'] != "fevermap.org") {
+		$down_content .= '<br /><br /><br /><span class="error"><i>Make sure PHP module "<b>php_openssl</b>" is enabled as well as apache extension "<b>ssl_module</b>"!</i></span>';
+	}
 	
 	$down_title = array();
 	$down_title["fr"] = "Erreur serveur";
 	$down_title["en"] = "Server error";
 	$down_title = $down_title[ $lang ];
+	
+	$down_tryAgain = array();
+	$down_tryAgain["fr"] = "Essayer à nouveau";
+	$down_tryAgain["en"] = "Try again";
+	$down_tryAgain = $down_tryAgain[ $lang ];
+	
+	
+	
+	//AUTH PAGE//
+	
+	$auth_title = array();
+	$auth_title["fr"] = "Application Kuest";
+	$auth_title["en"] = "Kuest application";
+	$auth_title = $auth_title[ $lang ];
+	
+	$auth_content = array();
+	$auth_content["fr"] = "Pour utiliser <b>Kuest</b> vous devez l'autoriser à accéder à certaines de vos informations personnelles : <br/> <ul><li>votre pseudo</li><li>votre avatar</li><li>votre liste d'amis</li></ul><br/><br/><b>Kuest</b> vous permettra de jouer à des quêtes créées par la communauté ou de créer vos propres quêtes jouable directement dans le monde de kube.<br/><br/>Vous pourrez créer des <b>dialogues</b> sur des zones, faire ramasser ou utiliser des <b>objets</b>, faire gagner de l'<b>argent</b> virtuel pour acheter des indices ou objets, et bien plus encore.<br />N'hésitez plus et essayez-vous à kuest en vous y connectant !";
+	$auth_content["en"] = "To be able to use <b>Kuest</b> you need to authorize it to access some of your private details :<br /><ul><li>your nickname</li><li>your avatar</li><li>your friends list</li></ul><br/><br/><b>Kuest</b> will allow you to play quest created by the community or to create your own quests playable right in the kube's world.<br /><br />You'll be able to create <b>dialogues</b> on any zone of the game, give <b>objects</b> to the player or ask him to use some, give <b>money</b> to the player so he can buy hints or objects, and even more...<br />Try <b>Kuest</b> now by connecting to it !";
+	$auth_content = $auth_content[ $lang ];
 	
 	
 	
@@ -279,8 +312,10 @@
 			$error_content["en"] = "An error has occured while connecting to the application.<br /><br />Twinoid's API has answered :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>";
 			$error_content = $error_content[ $lang ];
 			
-			$error_content = str_replace('{CODE}', $_GET['e'], $error_content);
-			$error_content = str_replace('{API}', $_GET['api'], $error_content);
+			if(isset($_GET['e']))
+				$error_content = str_replace('{CODE}', $_GET['e'], $error_content);
+			if(isset($_GET['api']))
+				$error_content = str_replace('{API}', $_GET['api'], $error_content);
 			
 			$error_api_title = $error_title;
 			$error_api_content = $error_content;

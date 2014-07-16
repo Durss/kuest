@@ -229,6 +229,7 @@ package com.twinoid.kube.quest.editor.views {
 			addEventListener(MouseEvent.MOUSE_OUT, outHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			//If mouse right button is supported (player >= 11.2)
+			//In order to work, this needs "-swf-version=15" in compiler arguments !
 			if (MouseEvent.RIGHT_MOUSE_DOWN != null) {
 				addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, mouseRightDownHandler);
 				addEventListener(MouseEvent.RIGHT_MOUSE_UP, mouseRightUpHandler);
@@ -535,6 +536,14 @@ package com.twinoid.kube.quest.editor.views {
 					}
 				}
 			}
+			
+			if(event.keyCode == Keyboard.LEFT)	_endX += BackgroundView.CELL_SIZE * 2;
+			if(event.keyCode == Keyboard.RIGHT)	_endX -= BackgroundView.CELL_SIZE * 2;
+			if(event.keyCode == Keyboard.UP)	_endY += BackgroundView.CELL_SIZE * 2;
+			if(event.keyCode == Keyboard.DOWN)	_endY -= BackgroundView.CELL_SIZE * 2;
+			if(event.keyCode == Keyboard.MINUS ||
+			event.keyCode == Keyboard.NUMPAD_SUBTRACT)	wheelHandler(null, -1);
+			if(event.keyCode == Keyboard.NUMPAD_ADD)	wheelHandler(null, 1);
 		}
 		
 		/**
@@ -564,18 +573,28 @@ package com.twinoid.kube.quest.editor.views {
 
 		
 		/**
-		 * Called when user scrolls its mouse wheel to zoom in/out the board
+		 * Called when user scrolls its mouse wheel to zoom in/out the board.
+		 * Also called when +/- keys are pressed
 		 */
-		private function wheelHandler(event:MouseEvent):void {
-			var p:Point = new Point(_boxesHolder.mouseX, _boxesHolder.mouseY);
-			_boxesHolder.scaleX = _boxesHolder.scaleY += MathUtils.sign(event.delta) * .15;
-			_boxesHolder.scaleX = _boxesHolder.scaleY = MathUtils.restrict(_boxesHolder.scaleX, .25, 1);
+		private function wheelHandler(event:MouseEvent, delta:int = 0):void {
+			if(delta == 0) delta = MathUtils.sign(event.delta);
+			var p:Point;
+			if(event == null){
+				p = new Point(stage.stageWidth * .5, stage.stageHeight * .5);
+				p = _boxesHolder.globalToLocal(p);
+			}else{
+				p = new Point(_boxesHolder.mouseX, _boxesHolder.mouseY);
+			}
+			_boxesHolder.x += (event == null? stage.stageWidth * .5 : stage.mouseX) - p.x;
+			_boxesHolder.y += (event == null? stage.stageHeight * .5 : stage.mouseY) - p.y;
+			_boxesHolder.scaleX = _boxesHolder.scaleY += delta * .15;
+			_boxesHolder.scaleX = _boxesHolder.scaleY = 
 			_linksHolder.scaleX = _linksHolder.scaleY =
-			_selectHolder.scaleX = _selectHolder.scaleY = _boxesHolder.scaleX;
+			_selectHolder.scaleX = _selectHolder.scaleY = MathUtils.restrict(_boxesHolder.scaleX, .25, 1);
 			
 			p = _boxesHolder.localToGlobal(p);
-			_boxesHolder.x += stage.mouseX - p.x;
-			_boxesHolder.y += stage.mouseY - p.y;
+			_boxesHolder.x += (event == null? stage.stageWidth * .5 : stage.mouseX) - p.x;
+			_boxesHolder.y += (event == null? stage.stageHeight * .5 : stage.mouseY) - p.y;
 			_linksHolder.x = _selectHolder.x = _boxesHolder.x;
 			_linksHolder.y = _selectHolder.y = _boxesHolder.y;
 			_endX = Math.round(_boxesHolder.x);
@@ -681,6 +700,7 @@ package com.twinoid.kube.quest.editor.views {
 					_selectedBoxes[i].data.boxPosition.y = _selectedBoxes[i].y;
 				}
 				_dragSelection = false;
+				FrontControler.getInstance().flagChange();
 				return;
 				
 			//If we weren't dragging the board, create a new item
@@ -697,6 +717,7 @@ package com.twinoid.kube.quest.editor.views {
 				Box(_draggedItem).data.boxPosition.y = _draggedItem.y;
 				_draggedItem.stopDrag();
 				_draggedItem = null;
+				FrontControler.getInstance().flagChange();
 			}
 			
 			//If a link has just been created correctly, try to create the link
@@ -710,12 +731,13 @@ package com.twinoid.kube.quest.editor.views {
 					_linksHolder.addChild(link);
 					link.startEntry.addlink(link);
 					link.endEntry.addlink(link);
+					FrontControler.getInstance().flagChange();
 				}
 			}
 			_tempLink.startEntry = null;
 			_tempLink.endEntry = null;
 			//success test prevents from instant line clearing if the link
-			//is actually displaying an error. In this case, the link self clears.
+			//is actually displaying an error. In this case, the link self clears after showing its warning.
 			if(success) _tempLink.update();
 			
 			//When a link is deleted it's not captured here. It does its things
@@ -929,7 +951,7 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		/**
-		 * Called when user starts/ends to edit comments.
+		 * Called when user starts/ends to edit comments. (drawings on the board)
 		 */
 		private function editCommentsStateChangeHandler(event:BoxesCommentsEvent):void {
 			if(event.type == BoxesCommentsEvent.ENTER_EDIT_MODE) {

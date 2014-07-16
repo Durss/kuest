@@ -102,7 +102,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_model = model;
 			_saveNewBt.visible = model.currentKuest != null;
 			_publishBt.enabled = _testBt.enabled = _saveNewBt.visible;
-			_loadForm.populate(model.kuests);
+			_loadForm.populate(model.kuests, model.currentKuest);
 			_saveForm.populate(model.currentKuest, model.friends);
 			_helpForm.populate(model.samples);
 			if(model.currentKuestGUID != _prevKuestGUID) _publishForm.close();

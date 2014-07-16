@@ -1,5 +1,7 @@
 Options +FollowSymlinks
+#Enable rewrite_module on apache config to make this work !
 RewriteEngine On
+RewriteRule	^auth$					auth.php				[L]
 RewriteRule	^down$					down.php				[L]
 RewriteRule	^browse$				index.php				[L]
 RewriteRule	^editor$				editor.php				[L]

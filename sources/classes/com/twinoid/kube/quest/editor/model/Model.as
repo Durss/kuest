@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.model {
+	import flash.external.ExternalInterface;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -71,7 +72,8 @@ package com.twinoid.kube.quest.editor.model {
 		private var _cmdDelete:DeleteQuestCmd;
 		private var _friends:Vector.<UserInfo>;
 		private var _samples:Vector.<KuestInfo>;
-		private var _debugMode:Boolean;
+		private var _debugMode : Boolean;
+		private var _editing : Boolean;
 		
 		
 		
@@ -221,6 +223,7 @@ package com.twinoid.kube.quest.editor.model {
 		public function addEntryPoint(px:int, py:int):void {
 			_kuestData.addEntryPoint(px, py);
 			update();
+			flagChange();
 		}
 		
 		/**
@@ -356,6 +359,11 @@ package com.twinoid.kube.quest.editor.model {
 			}else{
 				_saveCmd.execute();
 			}
+			
+			_editing = false;
+			if(ExternalInterface.available) {
+				ExternalInterface.call('Editor.setEditMode', false);
+			}
 		}
 		
 		/**
@@ -369,7 +377,7 @@ package com.twinoid.kube.quest.editor.model {
 			}
 			
 			_loadCmd.populate(kuest.guid, callback);
-			if(_kuestData.nodes.length > 0) {
+			if(_editing) {
 				prompt("menu-file-load-prompt-title", "menu-file-load-prompt-content", _loadCmd.execute, "loadLooseData", cancelCallback);
 			}else{
 				_loadCmd.execute();
@@ -418,6 +426,17 @@ package com.twinoid.kube.quest.editor.model {
 		 */
 		public function setDebugStart(data:KuestEvent):void {
 			ViewLocator.getInstance().dispatchToViews(new ViewEvent(ViewEvent.DEBUG_START_POINT, data));
+		}
+		
+		/**
+		 * Flags a change in the current quest.
+		 * Prevent the browser from closing if editing something.
+		 */
+		public function flagChange():void {
+			_editing = true;
+			if(ExternalInterface.available) {
+				ExternalInterface.call('Editor.setEditMode', true);
+			}
 		}
 
 
@@ -475,6 +494,10 @@ package com.twinoid.kube.quest.editor.model {
 		 * Resets the quest
 		 */
 		private function reset():void {
+			_editing = false;
+			if(ExternalInterface.available) {
+				ExternalInterface.call('Editor.setEditMode', false);
+			}
 			_comments = null;
 			_currentKuestGUID = null;
 			_currentBoxToEdit = null;
@@ -622,6 +645,10 @@ package com.twinoid.kube.quest.editor.model {
 			_currentKuestGUID = _loadCmd.guid;
 			_charactersUpdate = _objectsUpdate = true;
 			_loadCmd.callback(true);
+			_editing = false;
+			if(ExternalInterface.available) {
+				ExternalInterface.call('Editor.setEditMode', false);
+			}
 			update();
 			_charactersUpdate = _objectsUpdate = false;
 		}

@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import com.twinoid.kube.quest.editor.controler.FrontControler;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 
@@ -212,6 +213,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			dispose();
 			parent.removeChild(this);
 			Mouse.show();
+			FrontControler.getInstance().flagChange();
 		}
 		
 		/**

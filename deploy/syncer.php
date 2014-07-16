@@ -40,8 +40,8 @@
 			$title = $syncer_notFoundTitle;
 			$syncer_description = $syncer_notFoundContent;
 		}else {
-			$title = utf8_encode(htmlspecialchars($res["name"]));
-			$syncer_description = $syncer_description.'<div class="description">'.utf8_encode(htmlspecialchars($res["description"])).'<br /><a href="http://twinoid.com/user/'.$res['uid'].'" target="_blank" class="pseudo author">'.$res['pseudo'].'</a></div>';
+			$title = htmlspecialchars(utf8_encode($res["name"]), ENT_COMPAT, "UTF-8");
+			$syncer_description = $syncer_description.'<div class="description">'.htmlspecialchars(utf8_encode($res["description"]), ENT_COMPAT, "UTF-8").'<br /><a href="http://twinoid.com/user/'.$res['uid'].'" target="_blank" class="pseudo author">'.$res['pseudo'].'</a></div>';
 			$syncer_description .= '<br /><strong class="collapser">'.$syncer_infoTitle.'</strong><div class="description collapsed">'.$syncer_infoContent.'</div>';
 			$syncer_description .= '<div class="instructions-holder">';
 			$syncer_description .= '	<div class="syncer-buttons-holder">';

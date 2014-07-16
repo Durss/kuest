@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.form.input {
+	import com.twinoid.kube.quest.editor.components.MagnifyableTextfield;
 	import com.muxxu.kub3dit.graphics.InputSkin;
 	import com.nurun.components.scroll.ScrollPane;
 	import com.nurun.components.scroll.scrollable.ScrollableTextField;
@@ -28,9 +29,9 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Creates an instance of <code>TextArea</code>.
 		 */
 
-		public function TextArea(css:String = "textarea", defaultLabel:String = "", hscroll:Boolean = true) {
+		public function TextArea(css:String = "textarea", defaultLabel:String = "", hscroll:Boolean = true, magnifyable:Boolean = false, magnifyTitle:String = null) {
 			_defaultLabel = defaultLabel;
-			_tf = new ScrollableTextField("", css);
+			_tf = magnifyable? new MagnifyableTextfield(magnifyTitle, css) : new ScrollableTextField("", css);
 			_tf.type = TextFieldType.INPUT;
 			_tf.autoWrap = !hscroll;
 			_tf.text = _defaultLabel;

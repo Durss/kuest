@@ -86,6 +86,7 @@
 			$_SESSION['kuest_name']	= $json->name;
 			$_SESSION['kuest_friends']= $json->contacts;
 			$_SESSION['kuest_oAuthkey']	= $oAuthCode;
+			setcookie('kuestAppAuthorized_'.$_SERVER['SERVER_NAME'], 'true', time()+60*60*24*365*5);//5 years of living, fuck yeah \o/
 		}
 		
 		

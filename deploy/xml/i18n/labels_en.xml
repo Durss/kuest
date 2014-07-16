@@ -2,6 +2,8 @@
 <root>
   <labels>
     <label code="patchlog-title"><![CDATA[Updates]]></label>
+	<!-- !Global -->
+	<label code="global-magnifiedTextfieldInfo"><![CDATA[Press Esc, Ctrl+Enter or click outside to end edition.]]></label>
     <!-- !Tutorial -->
     <label code="tutorial-title"><![CDATA[Tutorial (F1)]]></label>
     <label code="tutorial-close"><![CDATA[Close]]></label>
@@ -78,7 +80,7 @@
     <label code="menu-file-new-submit"><![CDATA[Create]]></label>
     <label code="menu-file-new-edit"><![CDATA[Update]]></label>
     <label code="menu-file-load"><![CDATA[My quests]]></label>
-    <label code="menu-file-load-title"><![CDATA[Quest you created :]]></label>
+    <label code="menu-file-load-title"><![CDATA[Your quests :]]></label>
     <label code="menu-file-load-empty"><![CDATA[You haven't created any quest yet.<br />Save a quest to get it displayed on this panel.]]></label>
     <label code="menu-file-load-prompt-title"><![CDATA[Warning]]></label>
     <label code="menu-file-load-prompt-content"><![CDATA[You will loose every unsaved data !<br />Do you really want to load this quest ?]]></label>

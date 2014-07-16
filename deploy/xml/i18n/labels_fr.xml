@@ -4,18 +4,14 @@
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
 		<label code="patchlog77-content"><![CDATA[<ul>
-			<li>Ajout d'une monnaie virtuelle.</li>
-			<li>Ajout d'un historique des événements dans le module in-game.</li>
-			<li>Ajout de nouveaux exemples.</li>
-			<li>Ajout de la gestion de sons SFXR.</li>
-			<li>Ajout d'une option d'événement "Fait perdre le quête".</li>
-			<li>Refonte complète du moteur de quête.</li>
-			<li>Ajout d'un panneau de debug de quêtes utilisant le nouveau moteur.</li>
-			<li>Possibilité de sélectionner des groupes d'événement via click droit.</li>
-			<li>Inversion du drag&drop du plateau et de la prise de notes <i>("espace" pour les notes au lieu de dragger)</i>.</li>
-			<li>Changement de la manière d'activer/désactiver les onglets de choix, date et son dans l'édition d'événement.</li>
-			<li>Ajout d'un indicateur prise/pose sur les boites d'évènements d'objets.</li>
+			<li>Agrandissement de certains champs de texte en popin à leur édition.</li>
+			<li>Déplacement/zoom du plateau au clavier.</li>
+			<li>Mise en évidence de la quête en cours d'édition dans la liste des quêtes.</li>
+			<li>Demande de confirmation si on quitte la page en cours d'édition\n.</li>
 		</ul>]]></label>
+		
+		<!-- !Global -->
+		<label code="global-magnifiedTextfieldInfo"><![CDATA[Pressez Echap, Ctrl+Entrée ou cliquez en dehors pour terminer l'édition.]]></label>
 		
 		<!-- !Tutorial -->
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
@@ -101,7 +97,7 @@
 		<label code="menu-file-new-submit"><![CDATA[Créer]]></label>
 		<label code="menu-file-new-edit"><![CDATA[Mettre à jour]]></label>
 		<label code="menu-file-load"><![CDATA[Mes quêtes]]></label>
-		<label code="menu-file-load-title"><![CDATA[Quêtes que vous avez créées :]]></label>
+		<label code="menu-file-load-title"><![CDATA[Vos quêtes :]]></label>
 		<label code="menu-file-load-empty"><![CDATA[Vous n'avez créé aucune quête.<br />Enregistrez une quête pour qu'elle apparaîsse dans ce panneau.]]></label>
 		<label code="menu-file-load-prompt-title"><![CDATA[Attention]]></label>
 		<label code="menu-file-load-prompt-content"><![CDATA[Vous allez perdre toutes les données non sauvegardées !<br />Êtes-vous certain de vouloir charger cette quête ?]]></label>
