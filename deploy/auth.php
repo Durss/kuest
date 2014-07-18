@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
-		<title>Kuest, server error</title>
+		<title>Kuest login</title>
 		<link rel="shortcut icon" href="favicon.ico" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="language" content="fr" />

@@ -1,8 +1,8 @@
 package com.twinoid.kube.quest.editor.components.box {
-	import flash.display.MovieClip;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.CancelIcon;
+	import com.muxxu.kub3dit.graphics.DuplicateIcon;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
@@ -34,6 +34,7 @@ package com.twinoid.kube.quest.editor.components.box {
 	import com.twinoid.kube.quest.graphics.TakePutIconGraphic;
 
 	import flash.display.InteractiveObject;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -72,7 +73,8 @@ package com.twinoid.kube.quest.editor.components.box {
 		private var _outBoxToIndex:Dictionary;
 		private var _debugMode:Boolean;
 		private var _takePut:TakePutIconGraphic;
-		private var _money:MoneyIndicationIconGraphic;
+		private var _money : MoneyIndicationIconGraphic;
+		private var _copyBt : GraphicButton;
 		
 		
 		
@@ -320,6 +322,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			_takePut	= addChild(new TakePutIconGraphic()) as TakePutIconGraphic;
 			_money		= addChild(new MoneyIndicationIconGraphic()) as MoneyIndicationIconGraphic;
 			_deleteBt	= new GraphicButton(new ClearBoxGraphic(), new CancelIcon());
+			_copyBt		= new GraphicButton(new ClearBoxGraphic(), new DuplicateIcon());
 			_timeIcon	= new BoxTimerEventGraphic();
 			
 			MovieClip(_inBox.icon).gotoAndStop(1);
@@ -328,17 +331,22 @@ package com.twinoid.kube.quest.editor.components.box {
 			_label.mouseEnabled = false;
 			
 			applyDefaultFrameVisitorNoTween(_deleteBt, _deleteBt.background, _deleteBt.icon);
+			applyDefaultFrameVisitorNoTween(_copyBt, _copyBt.background, _copyBt.icon);
 			
 			_deleteBt.width = 27;
 			_deleteBt.height = 22;
+			_copyBt.width = 27;
+			_copyBt.height = 22;
 			_inBox.width = 30;
 			_inBox.iconAlign = IconAlign.LEFT;
 			_inBox.contentMargin = new Margin(10, 0, 0, 0);
 			
 			_deleteBt.iconAlign = IconAlign.LEFT;
+			_copyBt.iconAlign = IconAlign.LEFT;
 			
 			_inBox.contentMargin = new Margin(10, 0, 0, 0);
 			_deleteBt.contentMargin = new Margin(7, 0, 0, 0);
+			_copyBt.contentMargin = new Margin(7, 0, 0, 0);
 			
 			if(_data != null && _data.boxPosition != null) {
 				x = _data.boxPosition.x;
@@ -353,6 +361,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 			addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_copyBt.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_deleteBt.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 //			_inBox.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_background.addEventListener(MouseEvent.ROLL_OVER, overBackGraphicHandler);
@@ -421,7 +430,10 @@ package com.twinoid.kube.quest.editor.components.box {
 			_deleteBt.x = _background.x + _background.width - _deleteBt.width;
 			_deleteBt.y = -_deleteBt.height;
 			
-			roundPos(_background, _timeIcon, _deleteBt);
+			_copyBt.x = _deleteBt.x - _copyBt.width - 5;
+			_copyBt.y = -_copyBt.height;
+			
+			roundPos(_background, _timeIcon, _deleteBt, _copyBt);
 		}
 		
 		
@@ -452,10 +464,14 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		private function rollOverHandler(event:MouseEvent):void {
 			cacheAsBitmap = false;
+			opaqueBackground = null;
 			if(!_debugMode) {
 				addChildAt(_deleteBt, 0);
+				addChildAt(_copyBt, 1);
 				TweenLite.killTweensOf(_deleteBt);
+				TweenLite.killTweensOf(_copyBt);
 				TweenLite.to(_deleteBt, .15, {y:Math.round(-_deleteBt.height)});
+				TweenLite.to(_copyBt, .15, {y:Math.round(-_copyBt.height)});
 				if(event.shiftKey && event.altKey) {
 					_label.text = 'GUID : '+_data.guid.toString()+'<br />TREE : '+_data.getTreeID();
 				}
@@ -482,7 +498,19 @@ package com.twinoid.kube.quest.editor.components.box {
 			if(!_debugMode) {
 				TweenLite.killTweensOf(_deleteBt);
 				TweenLite.to(_deleteBt, .15, {y:0, removeChild:true});
+				TweenLite.killTweensOf(_copyBt);
+				TweenLite.to(_copyBt, .15, {y:0, removeChild:true, onComplete:resetOpaqueBackground});
 			}
+		}
+		
+		/**
+		 * Sets the opaque background when user does not
+		 * interact with the coponent to optimise its rendering.
+		 * As there are no "visible" holes in the design, it's
+		 * graphically totally ok to do that.
+		 */
+		private function resetOpaqueBackground():void {
+			opaqueBackground = 0x8FC7DE;
 		}
 		
 		/**
@@ -491,7 +519,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function clickHandler(event:MouseEvent):void {
 			if(_debugMode) return;
 			
-			if(event.target == _deleteBt || _outBoxToIndex[event.target] != undefined) {
+			if(event.target == _deleteBt || event.target == _copyBt || _outBoxToIndex[event.target] != undefined) {
 				event.stopPropagation();
 				if(event.target == _deleteBt) {
 					if(_data.isEmpty()) {
@@ -499,6 +527,9 @@ package com.twinoid.kube.quest.editor.components.box {
 					}else{
 						prompt("box-delete-promptTitle", "box-delete-promptContent", onDelete, "deleteEvent");
 					}
+				}else
+				if(event.target == _copyBt) {
+					dispatchEvent(new BoxEvent(BoxEvent.DUPLICATE));
 				}
 				return;
 			}
@@ -516,13 +547,15 @@ package com.twinoid.kube.quest.editor.components.box {
 		}
 		
 		/**
-		 * Called when mouse is pressed over the in/out box
+		 * Called when mouse is pressed over the out box
+		 * Prevents dragging if pressing delete/duplicate icon, and starts a link
+		 * creation if starting from an out box.
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
 			if(_debugMode) return;
 			
 			event.stopPropagation();
-			if (event.currentTarget != _deleteBt) {
+			if (event.currentTarget != _deleteBt && event.currentTarget != _copyBt) {
 				var index:int = _outBoxToIndex[event.currentTarget];
 				dispatchEvent(new BoxEvent(BoxEvent.CREATE_LINK, index));
 			}

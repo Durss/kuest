@@ -58,6 +58,17 @@ package com.twinoid.kube.quest.editor.vo {
 		public function toString():String {
 			return "[ActionSound :: loop=" + loop + ", url=\"" + url + "\", sfxr=\"" + sfxr + "\"]";
 		}
+		
+		/**
+		 * Clones the object
+		 */
+		public function clone():ActionSound {
+			var a:ActionSound = new ActionSound();
+			a.url = url;
+			a.loop = loop;
+			a.sfxr = sfxr;
+			return a;
+		}
 
 
 		

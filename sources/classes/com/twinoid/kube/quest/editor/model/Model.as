@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.model {
+	import com.twinoid.kube.quest.editor.views.NotificationView;
 	import flash.external.ExternalInterface;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
@@ -220,8 +221,8 @@ package com.twinoid.kube.quest.editor.model {
 		/**
 		 * Adds an entry point to the scenario
 		 */
-		public function addEntryPoint(px:int, py:int):void {
-			_kuestData.addEntryPoint(px, py);
+		public function addEntryPoint(px:int, py:int, duplicateFrom:KuestEvent = null):void {
+			_kuestData.addEntryPoint(px, py, duplicateFrom);
 			update();
 			flagChange();
 		}
@@ -554,6 +555,7 @@ package com.twinoid.kube.quest.editor.model {
 			}
 			_saveCmd.callback(true, "", _saveCmd.publish? event.data["guid"] : 0);
 			update();
+			NotificationView.getInstance().notify(Label.getLabel('global-saveNotification'));
 		}
 		
 		/**

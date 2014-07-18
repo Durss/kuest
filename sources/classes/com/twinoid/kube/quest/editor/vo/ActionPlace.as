@@ -76,6 +76,7 @@ package com.twinoid.kube.quest.editor.vo {
 			a.x = x;
 			a.y = y;
 			a.z = z;
+			a.kubeMode = kubeMode;
 			return a;
 		}
 
