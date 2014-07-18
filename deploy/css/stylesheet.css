@@ -398,7 +398,7 @@ input:-moz-placeholder { color:#3094BE; }
 .description {
 	overflow:auto;
 	width:90%;
-	max-height:200px;
+	max-height:400px;
 	padding:5px;
 	margin-left:10px;
 	margin-top:0px;

@@ -1,4 +1,6 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.nurun.components.button.AbstractNurunButton;
+	import flash.text.TextField;
 	import gs.TweenLite;
 	import gs.easing.Back;
 	import gs.easing.Sine;
@@ -353,6 +355,7 @@ package com.twinoid.kube.quest.editor.views {
 			var target:Box = event.currentTarget as Box;
 			target.removeEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
 			target.removeEventListener(BoxEvent.DELETE, deleteBoxHandler);
+			target.removeEventListener(BoxEvent.DUPLICATE, duplicateBoxHandler);
 			
 			var i:int, len:int, item:DisplayObject, link:BoxLink;
 			len = _boxes.length;
@@ -387,6 +390,14 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		/**
+		 * Called when duplicate button is clicked on a box.
+		 */
+		private function duplicateBoxHandler(event:BoxEvent):void {
+			var ref:Box = event.currentTarget as Box;
+			FrontControler.getInstance().addEntryPoint(ref.x + BackgroundView.CELL_SIZE * 2, ref.y + BackgroundView.CELL_SIZE, ref.data);
+		}
+		
+		/**
 		 * Clears everything.
 		 */
 		private function clear():void {
@@ -402,6 +413,7 @@ package com.twinoid.kube.quest.editor.views {
 					if(item is Disposable) Disposable(item).dispose();
 					item.removeEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
 					item.removeEventListener(BoxEvent.DELETE, deleteBoxHandler);
+					item.removeEventListener(BoxEvent.DUPLICATE, duplicateBoxHandler);
 				}
 				_linksHolder.removeChild(item);
 			}
@@ -478,6 +490,7 @@ package com.twinoid.kube.quest.editor.views {
 			item.buttonMode = true;
 			item.addEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
 			item.addEventListener(BoxEvent.DELETE, deleteBoxHandler);
+			item.addEventListener(BoxEvent.DUPLICATE, duplicateBoxHandler);
 			_boxesHolder.addChild( item );
 			_boxes.push(item);
 			
@@ -518,6 +531,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when a key is pressed
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
+			if(event.target is TextField || event.target is AbstractNurunButton) return;
+			
 			if(!_stagePressed && !_spacePressed && event.keyCode == Keyboard.SPACE) {
 				//check if a box or link is between the stage and the mouse.
 				var objs:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));

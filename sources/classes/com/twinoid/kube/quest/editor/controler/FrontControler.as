@@ -65,8 +65,8 @@ package com.twinoid.kube.quest.editor.controler {
 		/**
 		 * Adds a new entry point
 		 */
-		public function addEntryPoint(px:int, py:int):void {
-			_model.addEntryPoint(px, py);
+		public function addEntryPoint(px:int, py:int, duplicateFrom:KuestEvent = null):void {
+			_model.addEntryPoint(px, py, duplicateFrom);
 		}
 		
 		/**

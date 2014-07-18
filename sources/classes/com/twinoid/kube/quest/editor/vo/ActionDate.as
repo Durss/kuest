@@ -100,6 +100,23 @@ package com.twinoid.kube.quest.editor.vo {
 		 * specific days of the week during a specific time range (daysMode=true).
 		 */
 		public function getAlwaysEnabled():Boolean { return getDaysMode() && days == null; }
+		
+		/**
+		 * Clones the object
+		 */
+		public function clone():ActionDate {
+			var a:ActionDate = new ActionDate();
+			a.days = days;
+			a.startTime = startTime;
+			a.endTime = endTime;
+			var i:int, len:int, newDates:Vector.<Date>;
+			len = dates != null? dates.length : 0;
+			newDates = new Vector.<Date>();
+			for(i = 0; i < len; ++i) {
+				newDates.push( new Date(dates[i]) );
+			}
+			return a;
+		}
 
 
 		

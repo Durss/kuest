@@ -13,7 +13,7 @@ package com.twinoid.kube.quest.editor.vo {
 
 	
 	/**
-	 * Contains all the kuest's entry points.
+	 * Contains all the kuest events.
 	 * Can be serialized as a string and can deserialize a string.
 	 * 
 	 * It basically contains KuestEvent items.
@@ -35,7 +35,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _characters:Vector.<CharItemData>;
 		private var _objects:Vector.<ObjectItemData>;
 		private var _guid:int;
-		private var _lastTreeComputationKey : Number;
+		private var _lastTreeComputationKey:Number;
 		private var _tree:Dictionary;
 		private var _lastUpdatedEvent : KuestEvent;
 		private var _playerMode:Boolean;
@@ -100,10 +100,11 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Adds an entry point
 		 */
-		public function addEntryPoint(px:int, py:int):void {
-			var e:KuestEvent = new KuestEvent();
+		public function addEntryPoint(px:int, py:int, duplicateFrom:KuestEvent = null):void {
+			var e:KuestEvent = new KuestEvent(false, duplicateFrom);
 			e.boxPosition.x = px;
 			e.boxPosition.y = py;
+			
 			_nodes.push(e);
 			_lastItemAdded = e;
 			if(!_playerMode) e.addEventListener(Event.CHANGE, changeEventHandler);

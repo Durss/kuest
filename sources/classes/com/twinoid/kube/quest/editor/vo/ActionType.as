@@ -124,6 +124,18 @@ package com.twinoid.kube.quest.editor.vo {
 			}
 			_itemGuid = item == null? -1 : item.guid;
 		}
+		
+		/**
+		 * Clones the object
+		 */
+		public function clone():ActionType {
+			var vo:ActionType = new ActionType();
+			vo.type = type;
+			vo.text = text;
+			vo.takeMode = takeMode;
+			vo.setItem( getItem() );
+			return vo;
+		}
 
 
 		

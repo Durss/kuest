@@ -23,8 +23,8 @@
 	}
 	
 	//session_destroy(); die;
-	if (!isset($_SESSION['kuest_logged']) || $_SESSION['kuest_logged'] === false) {
-		if (!isset($_COOKIE['kuestAppAuthorized_'.CLIENT_ID]) || $_COOKIE['kuestAppAuthorized_'.$_SERVER['SERVER_NAME']] !== 'true') {
+	if ((!isset($_SESSION['kuest_logged']) || $_SESSION['kuest_logged'] === false) && !isset($_GET['bpAuth'])) {
+		if (!isset($_COOKIE['kuestAppAuthorized_'.CLIENT_ID]) || $_COOKIE['kuestAppAuthorized_'.CLIENT_ID] !== 'true') {
 			if (isset($_GET['connect']) || isset($_GET['state']) || (isset($_GET['error']) && $_GET['error'] == 'access_denied')) {
 				OAuth::connect();
 			}else{
@@ -37,12 +37,23 @@
 	}else{
 		OAuth::connect();
 	}
+
+//Parameter "bpAuth" is here to ByPass the auth view ( http://fevermap.org/kuest/auth )
+//It's used by the user script. An hidden iFrame is created by the user script to log the
+//user in the background without asking him to manually connect from the application which
+//would be a nightmare.
+//Moreover, if this var is set we just return a simple XML stating the request succeed.
+//We don't want to have an "heavy" HTML page that takes ressources for nothing in the background.
+if(isset($_GET['bpAuth'])) {
+    Out::printOut(true);
+    die;
+}
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<title>Kuests</title>
+		<title>Kuest</title>
 		<link rel="shortcut icon" href="/kuest/favicon.ico" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="language" content="en" />

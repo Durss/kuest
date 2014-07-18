@@ -115,6 +115,7 @@ package com.twinoid.kube.quest.editor.components.form {
 			
 			_input.textfield.maxChars = 100;
 			_toggle.defaultIcon.alpha = .5;
+			_inputMoney.width = 50;
 			_inputMoney.scaleX = 0;
 			
 			setToolTip(_toggle, Label.getLabel('editWindow-choice-payingChoice'), ToolTipAlign.TOP_LEFT);

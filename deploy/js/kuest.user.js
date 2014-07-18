@@ -87,6 +87,7 @@ if(/zone\/choose/gi.test(window.location.href)) {
 	params.push("version=" + Math.round( Math.round( new Date().getTime() / 1000 )  / 3600 ) * 3600);//bypass cache every hour
 	params.push("lang="+lang);
 	params.push("configXml=http://"+server+"/xml/config.xml");
+	params.push("root=http://"+server);
     url += params.join('&');
 
 	//Gets the current's session user's ID.
@@ -110,7 +111,7 @@ if(/zone\/choose/gi.test(window.location.href)) {
 		}
 		url += "&currentUID="+currentUID;
 
-		kuestApp.innerHTML = '<embed type="application/x-shockwave-flash" src="'+url+'" width="812" height="1" allowScriptAccess="always" bgcolor="#4CA5CD" id="kuestSWF" />';
+		kuestApp.innerHTML = '<iframe src="http://'+server+'/?bpAuth" width="0" height="0" style="border: 0px none transparent; padding: 0px; overflow: hidden;"></iframe><embed type="application/x-shockwave-flash" src="'+url+'" width="812" height="1" allowScriptAccess="always" bgcolor="#4CA5CD" id="kuestSWF" />';
 		kuestApp.setAttribute("id", "kuestApp");
 		kuestApp.style.position = "relative";
 		kuestApp.style.left = "0px";

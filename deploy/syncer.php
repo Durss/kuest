@@ -19,6 +19,10 @@
 	if (!isset($_SESSION['kuest_uid'])) {
 		OAuth::connect();
 	}
+
+    function makeClickableLinks($s) {
+      return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank">$1</a>', $s);
+    }
 	
 	//Loading kuest details
 	$sql = 'SELECT kuests.name as `name`, kuests.description as `description`, kuestUsers.name as `pseudo`, kuestUsers.uid as `uid`
@@ -41,7 +45,7 @@
 			$syncer_description = $syncer_notFoundContent;
 		}else {
 			$title = htmlspecialchars(utf8_encode($res["name"]), ENT_COMPAT, "UTF-8");
-			$syncer_description = $syncer_description.'<div class="description">'.htmlspecialchars(utf8_encode($res["description"]), ENT_COMPAT, "UTF-8").'<br /><a href="http://twinoid.com/user/'.$res['uid'].'" target="_blank" class="pseudo author">'.$res['pseudo'].'</a></div>';
+			$syncer_description = $syncer_description.'<div class="description">'.nl2br(makeClickableLinks(htmlspecialchars(utf8_encode($res["description"])), ENT_COMPAT, "UTF-8")).'<br /><a href="http://twinoid.com/user/'.$res['uid'].'" target="_blank" class="pseudo author">'.$res['pseudo'].'</a></div>';
 			$syncer_description .= '<br /><strong class="collapser">'.$syncer_infoTitle.'</strong><div class="description collapsed">'.$syncer_infoContent.'</div>';
 			$syncer_description .= '<div class="instructions-holder">';
 			$syncer_description .= '	<div class="syncer-buttons-holder">';
@@ -52,7 +56,7 @@
 			$syncer_description .= '			<div class="installInstructions">'.$syncer_installInstructions.'<br /></div>';
 			$syncer_description .= '			<a href="https://addons.mozilla.org/firefox/addon/greasemonkey/" target="_blank"><button id="install_gm_ff" class="button syncer"><img src="/kuest/img/icon-greasemonkey-16.png"/>'.$syncer_installGM.'</button></a>';
 			$syncer_description .= '			<a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank"><button id="install_gm_chrome" class="button syncer"><img src="/kuest/img/icon-tampermonkey.png"/>'.$syncer_installTM.'</button></a>';
-			$syncer_description .= '			<a href="/kuest/js/kuest.user.js" target="_blank"><button id="install_script" class="button syncer"><img src="/kuest/img/app_logo_icon.jpg"/>'.$syncer_installScript.'</button></a>';
+			$syncer_description .= '			<a href="/kuest/js/kuest.user.js"><button id="install_script" class="button syncer"><img src="/kuest/img/app_logo_icon.jpg"/>'.$syncer_installScript.'</button></a>';
 			$syncer_description .= '		</div>';
 			$syncer_description .= '	</div>';
 			$syncer_description .= '	<img id="syncer-loader" src="/kuest/img/loader.gif"/>';

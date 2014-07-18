@@ -1,17 +1,20 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog77-content"><![CDATA[<ul>
+		<label code="patchlog80-content"><![CDATA[<ul>
 			<li>Agrandissement de certains champs de texte en popin à leur édition.</li>
 			<li>Déplacement/zoom du plateau au clavier.</li>
 			<li>Mise en évidence de la quête en cours d'édition dans la liste des quêtes.</li>
-			<li>Demande de confirmation si on quitte la page en cours d'édition\n.</li>
+			<li>Demande de confirmation si on quitte la page en cours d'édition.</li>
+			<li>Ajout de la possibilité de dupliquer un événement.</li>
+			<li>Ajout d'une notification quand la sauvegarde est terminée.</li>
 		</ul>]]></label>
 		
 		<!-- !Global -->
 		<label code="global-magnifiedTextfieldInfo"><![CDATA[Pressez Echap, Ctrl+Entrée ou cliquez en dehors pour terminer l'édition.]]></label>
+		<label code="global-saveNotification"><![CDATA[Quête sauvegardée !]]></label>
 		
 		<!-- !Tutorial -->
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>

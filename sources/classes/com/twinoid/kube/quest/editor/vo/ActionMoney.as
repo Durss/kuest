@@ -93,6 +93,9 @@ package com.twinoid.kube.quest.editor.vo {
 		public function clone():ActionMoney {
 			var a:ActionMoney = new ActionMoney();
 			a.kuborsEarned = kuborsEarned;
+			a.unlockCondition = unlockCondition;
+			a.unlockConditionEnabled = unlockConditionEnabled;
+			a.unlockValue = unlockValue;
 			return a;
 		}
 

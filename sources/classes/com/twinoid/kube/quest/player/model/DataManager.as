@@ -96,6 +96,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _lastPlaceChangeWasZone:Boolean;
 		private var _simulatedEvent:KuestEvent;
 		private var _lastDate:Date;
+		private var _loginAttemps:int;
 		
 		
 		
@@ -699,7 +700,11 @@ package com.twinoid.kube.quest.player.model {
 				spool.addCommand(_loadKuestCmd);
 				spool.execute();
 			}
-			dispatchEvent(new DataManagerEvent(DataManagerEvent.ON_LOGIN_STATE));
+			if( _logged || ++_loginAttemps == 5 ) {
+				dispatchEvent(new DataManagerEvent(DataManagerEvent.ON_LOGIN_STATE));
+			}else{
+				setTimeout(_isLoggedCmd.execute, 1000);
+			}
 		}
 
 		/**

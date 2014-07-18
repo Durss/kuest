@@ -49,9 +49,18 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Creates an instance of <code>KuestEvent</code>.
 		 */
-		public function KuestEvent(endTreeEvent:Boolean = false) {
+		public function KuestEvent(endTreeEvent:Boolean = false, duplicateFrom:KuestEvent = null) {
 			initialize(endTreeEvent);
 			_boxPosition = new Point(0, 0);
+			
+			if(duplicateFrom != null) {
+				actionType = duplicateFrom.actionType == null? null : duplicateFrom.actionType.clone();
+				actionPlace = duplicateFrom.actionPlace == null? null : duplicateFrom.actionPlace.clone();
+				actionDate = duplicateFrom.actionDate == null? null : duplicateFrom.actionDate.clone();
+				actionSound = duplicateFrom.actionSound == null? null : duplicateFrom.actionSound.clone(); 
+				actionMoney = duplicateFrom.actionMoney == null? null : duplicateFrom.actionMoney.clone(); 
+				actionChoices = new ActionChoices();
+			}
 		}
 
 		
