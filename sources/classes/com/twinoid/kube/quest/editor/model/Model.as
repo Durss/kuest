@@ -564,6 +564,7 @@ package com.twinoid.kube.quest.editor.model {
 		private function saveErrorHandler(event:CommandEvent):void {
 			_saveCmd.callback(false, event.data);
 			throw new KuestException(Label.getLabel("exception-"+event.data), String(event.data));
+			NotificationView.getInstance().notify(Label.getLabel('global-saveNotificationError'), false);
 		}
 		
 		/**
