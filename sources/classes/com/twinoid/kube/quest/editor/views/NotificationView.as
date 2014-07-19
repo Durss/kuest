@@ -131,6 +131,7 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		private function clickHandler(event:MouseEvent):void {
 			TweenLite.killTweensOf(this);
+			TweenLite.to(this, .25, {y:-height - 5, onComplete:onClose});
 		}
 		
 	}
