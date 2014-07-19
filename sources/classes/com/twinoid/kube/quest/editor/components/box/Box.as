@@ -121,7 +121,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 */
 		public function set debugMode(value:Boolean):void {
 			_debugMode = value;
-//			mouseChildren = !_debugMode;
+			mouseChildren = !_debugMode;
 		}
 		
 		/**
@@ -475,6 +475,8 @@ package com.twinoid.kube.quest.editor.components.box {
 				if(event.shiftKey && event.altKey) {
 					_label.text = 'GUID : '+_data.guid.toString()+'<br />TREE : '+_data.getTreeID();
 				}
+			}else{
+				overBackGraphicHandler(event);
 			}
 		}
 		
@@ -510,7 +512,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * graphically totally ok to do that.
 		 */
 		private function resetOpaqueBackground():void {
-			opaqueBackground = 0x8FC7DE;
+			opaqueBackground = 0xBBDDEC;
 		}
 		
 		/**
