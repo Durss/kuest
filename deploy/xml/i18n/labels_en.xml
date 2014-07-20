@@ -8,7 +8,7 @@
     <label code="global-saveNotificationError"><![CDATA[An arror occured while saving your quest...<br />Please try again.]]></label>
     <label code="global-publishNotification"><![CDATA[Your quest has been published !<br />It is now playable by everyone.<br />Tell your friends about it !]]></label>
     <label code="global-promptsResetNotification"><![CDATA[Confirmations have all been reactivated !]]></label>
-    <label code="global-todoTitle"><![CDATA[Todos]]></label>
+    <label code="global-todoTitle"><![CDATA[Todo]]></label>
     <!-- !Tutorial -->
     <label code="tutorial-title"><![CDATA[Tutorial (F1)]]></label>
     <label code="tutorial-close"><![CDATA[Close]]></label>
@@ -121,6 +121,7 @@
     <label code="menu-file-config-promptsHelpTT"><![CDATA[Click-me to get a confirmation example]]></label>
     <label code="menu-file-config-prompts-sampleTitle"><![CDATA[Confirmation Example]]></label>
     <label code="menu-file-config-prompts-sampleContent"><![CDATA[This winodw asks you to confirm an action.<br />The checkbox at the bottom allows you to ignore this specific confirmation.<br />By reseting confirmations, the one ignored will appear again.]]></label>
+    <label code="menu-file-todos"><![CDATA[Todos]]></label>
     <label code="menu-file-todosDetails"><![CDATA[Search a todo :]]></label>
     <!-- tooltip -->
     <label code="menu-file-todosDetailsTT"><![CDATA[You can create a todo by pressing left click<br />on the grid for half a second.<br /><br />Thanks to them you won't forget a thing !]]></label>
