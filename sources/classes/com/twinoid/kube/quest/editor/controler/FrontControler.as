@@ -4,6 +4,7 @@ package com.twinoid.kube.quest.editor.controler {
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import com.twinoid.kube.quest.editor.vo.ObjectItemData;
+	import com.twinoid.kube.quest.editor.vo.TodoData;
 
 	import flash.display.GraphicsPath;
 	import flash.errors.IllegalOperationError;
@@ -181,6 +182,20 @@ package com.twinoid.kube.quest.editor.controler {
 		 */
 		public function flagChange():void {
 			_model.flagChange();
+		}
+		
+		/**
+		 * Adds a todo to the list
+		 */
+		public function addTodo(todoData:TodoData):void {
+			_model.addTodo(todoData);
+		}
+		
+		/**
+		 * Deltes a todo from the list
+		 */
+		public function deleteTodo(todoData:TodoData):void {
+			_model.deleteTodo(todoData);
 		}
 
 

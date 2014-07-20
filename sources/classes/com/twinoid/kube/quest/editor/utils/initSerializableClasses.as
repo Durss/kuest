@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.utils {
+	import com.twinoid.kube.quest.editor.vo.TodoData;
 	import com.twinoid.kube.quest.editor.vo.ActionMoney;
 	import com.twinoid.kube.quest.editor.vo.ActionSound;
 	import com.twinoid.kube.quest.editor.vo.ActionChoices;
@@ -46,7 +47,8 @@ package com.twinoid.kube.quest.editor.utils {
 											IItemData,
 											ObjectItemData,
 											CharItemData,
-											SerializableBitmapData];
+											SerializableBitmapData,
+											TodoData];
 			var i:int, len:int;
 			var j:int, lenJ:int;
 			len = serializableClasses.length;

@@ -2,6 +2,7 @@ package com.twinoid.kube.quest.player.views {
 	import com.nurun.components.text.CssTextField;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
+	import com.twinoid.kube.quest.player.utils.enrichText;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -84,7 +85,7 @@ package com.twinoid.kube.quest.player.views {
 		private function loadCompleteHandler(event:DataManagerEvent):void {
 			if(DataManager.getInstance().currentEvent == null) {
 				visible = true;
-				_tf.text = DataManager.getInstance().description;
+				_tf.text = enrichText(DataManager.getInstance().description);
 				_tf.width = _width;
 				dispatchEvent(new Event(Event.RESIZE, true));
 			}

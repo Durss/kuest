@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.views {
+	import com.twinoid.kube.quest.editor.vo.TodoData;
+	import com.nurun.utils.pos.roundPos;
+	import com.twinoid.kube.quest.editor.components.box.BoxTodo;
 	import com.nurun.components.button.AbstractNurunButton;
 	import flash.text.TextField;
 	import gs.TweenLite;
@@ -99,7 +102,10 @@ package com.twinoid.kube.quest.editor.views {
 		private var _loadingPercent:Shape;
 		private var _debugSelectFilters:Array;
 		private var _debugChildFilters:Array;
-		private var _previousDebugTarget:Box;
+		private var _previousDebugTarget : Box;
+		private var _todoTimeout : uint;
+		private var _todosHolder : Sprite;
+		private var _todoCreated : Boolean;
 		
 		
 		
@@ -160,6 +166,7 @@ package com.twinoid.kube.quest.editor.views {
 				_comments.load(model.comments, model.commentsViewports);
 				clear();
 				buildFromCollection(model.kuestData.nodes);
+				buildTodosFromCollection(model.kuestData.todos);
 			}
 			
 			if(_background == null) {
@@ -197,6 +204,7 @@ package com.twinoid.kube.quest.editor.views {
 			_linksHolder	= addChild(new Sprite()) as Sprite;
 			_boxesHolder	= addChild(new Sprite()) as Sprite;
 			_selectHolder	= addChild(new Sprite()) as Sprite;
+			_todosHolder	= addChild(new Sprite()) as Sprite;
 			_loadingPercent	= addChild(new Shape()) as Shape;
 			_tempLink		= _linksHolder.addChild(new BoxLink(null, null)) as BoxLink;
 			
@@ -209,6 +217,7 @@ package com.twinoid.kube.quest.editor.views {
 			_debugChildFilters		= [new ColorMatrixFilter([1.0308935642242432,0.2900744080543518,0.03903200477361679,0,-22.85999870300293,0.14689362049102783,1.1740742921829224,0.03903200477361679,0,-22.860000610351563,0.14689362049102783,0.2900744080543518,0.9230319857597351,0,-22.860000610351563,0,0,0,1,0])];
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			addEventListener(BoxEvent.SEARCH_TODO, searchTodoHandler);
 			_boxesHolder.addEventListener(BoxEvent.ACTIVATE_DEBUG, debugEventHandler);
 			_comments.addEventListener(BoxesCommentsEvent.ENTER_EDIT_MODE, editCommentsStateChangeHandler);
 			_comments.addEventListener(BoxesCommentsEvent.LEAVE_EDIT_MODE, editCommentsStateChangeHandler);
@@ -301,8 +310,8 @@ package com.twinoid.kube.quest.editor.views {
 			//Move the board
 			_boxesHolder.x += (_endX - _boxesHolder.x) * .5;
 			_boxesHolder.y += (_endY - _boxesHolder.y) * .5;
-			_linksHolder.x = _selectHolder.x = _boxesHolder.x;
-			_linksHolder.y = _selectHolder.y = _boxesHolder.y;
+			_linksHolder.x = _selectHolder.x = _todosHolder.x = _boxesHolder.x;
+			_linksHolder.y = _selectHolder.y = _todosHolder.y = _boxesHolder.y;
 			_background.scrollTo(_boxesHolder.x, _boxesHolder.y);
 			_comments.scrollTo(_boxesHolder.x, _boxesHolder.y);
 			
@@ -417,6 +426,12 @@ package com.twinoid.kube.quest.editor.views {
 				}
 				_linksHolder.removeChild(item);
 			}
+			
+			while(_todosHolder.numChildren > 0) {
+				item = _todosHolder.getChildAt(0);
+				if(item is Disposable) Disposable(item).dispose();
+//				_todosHolder.removeChild(item);//No need to remove it! It self removes on dispose !
+			}
 			_linksHolder.addChild(_tempLink);
 		}
 		
@@ -480,6 +495,32 @@ package com.twinoid.kube.quest.editor.views {
 			_initDataToBox		= null;
 			_initDependencies	= null;
 			_loadingPercent.graphics.clear();
+		}
+		
+		/**
+		 * Builds the todo items from a vector when anew quest is loaded
+		 */
+		private function buildTodosFromCollection(todos:Vector.<TodoData>):void {
+			var i:int, len:int;
+			len = todos.length;
+			for(i = 0; i < len; ++i) {
+				_todosHolder.addChild(new BoxTodo(todos[i]));
+			}
+		}
+		
+		/**
+		 * Creates a todo instance
+		 */
+		private function createTodo(offsetX:Number, offsetY:Number):void {
+			if(Math.sqrt(Math.pow(_boxesHolder.y-offsetY, 2) + Math.pow(_boxesHolder.x-offsetX, 2)) > 4) return;//Board has moved!
+			
+			_todoCreated = true;
+			_stagePressed = false;//prevents from draging the board after creation
+			var todo:BoxTodo = _todosHolder.addChild(new BoxTodo()) as BoxTodo;
+			todo.x = _todosHolder.mouseX - todo.width * .5;
+			todo.y = _todosHolder.mouseY - todo.height * .5;
+			roundPos(todo);
+			todo.open();
 		}
 		
 		/**
@@ -605,13 +646,14 @@ package com.twinoid.kube.quest.editor.views {
 			_boxesHolder.scaleX = _boxesHolder.scaleY += delta * .15;
 			_boxesHolder.scaleX = _boxesHolder.scaleY = 
 			_linksHolder.scaleX = _linksHolder.scaleY =
-			_selectHolder.scaleX = _selectHolder.scaleY = MathUtils.restrict(_boxesHolder.scaleX, .25, 1);
+			_selectHolder.scaleX = _selectHolder.scaleY = 
+			_todosHolder.scaleX = _todosHolder.scaleY = MathUtils.restrict(_boxesHolder.scaleX, 1/10, 1);
 			
 			p = _boxesHolder.localToGlobal(p);
 			_boxesHolder.x += (event == null? stage.stageWidth * .5 : stage.mouseX) - p.x;
 			_boxesHolder.y += (event == null? stage.stageHeight * .5 : stage.mouseY) - p.y;
-			_linksHolder.x = _selectHolder.x = _boxesHolder.x;
-			_linksHolder.y = _selectHolder.y = _boxesHolder.y;
+			_linksHolder.x = _selectHolder.x = _todosHolder.x = _boxesHolder.x;
+			_linksHolder.y = _selectHolder.y = _todosHolder.y = _boxesHolder.y;
 			_endX = Math.round(_boxesHolder.x);
 			_endY = Math.round(_boxesHolder.y);
 			_background.setScale(_boxesHolder.scaleX);
@@ -624,6 +666,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when mouse is pressed.
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
+			//Detect Box dragging
 			if(!_spacePressed && event.target != this && event.target != _selectHolder && event.target != _comments) {
 				if (_boxesHolder.contains(event.target as DisplayObject)) {
 					//Go up until we find a box (or the stage..)
@@ -682,13 +725,23 @@ package com.twinoid.kube.quest.editor.views {
 			}
 			
 			if(_spacePressed) _comments.startDraw();
+			
+			clearTimeout(_todoTimeout);
+			_todoTimeout = setTimeout(createTodo, 250, _boxesHolder.x, _boxesHolder.y);
 		}
 		
 		/**
 		 * Called when mouse is released
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
+			clearTimeout(_todoTimeout);
 			_comments.stopDraw();
+			
+			//Prevents from creating a box after a todo creation
+			if(_todoCreated) {
+				_todoCreated = false;
+				return;
+			}
 			
 			_stagePressed = false;
 			
@@ -741,6 +794,7 @@ package com.twinoid.kube.quest.editor.views {
 				success = _tempLink.endEntry.data.addDependency(_tempLink.startEntry.data, _tempLink.choiceIndex);
 				if(!success) {
 					_tempLink.showError();
+					_linksHolder.addChild(_tempLink);
 				} else {
 					var link:BoxLink = _tempLink.clone();
 					_linksHolder.addChild(link);
@@ -803,7 +857,8 @@ package com.twinoid.kube.quest.editor.views {
 				_lastOverEvent = (DisplayObject(event.target).parent as Box).data;
 				computeTreeGUIDs(_nodes, onComputeTreeOverComplete, true);
 			}else{
-				Mouse.cursor = _selectMode && !_selectionDone? MouseCursor.AUTO : event.target is Box? MouseCursor.BUTTON : MouseCursor.HAND;
+				Mouse.cursor = _selectMode && !_selectionDone? MouseCursor.AUTO :
+								((event.target is Box || event.target is BoxTodo || event.target is AbstractNurunButton)? MouseCursor.BUTTON : MouseCursor.HAND);
 			}
 		}
 		
@@ -837,6 +892,7 @@ package com.twinoid.kube.quest.editor.views {
 			}else{
 				Mouse.cursor = MouseCursor.AUTO;
 			}
+			addChild(_todosHolder);
 		}
 		
 		/**
@@ -974,6 +1030,7 @@ package com.twinoid.kube.quest.editor.views {
 			}else{
 				addChildAt(_comments, 0);
 			}
+			addChild(_todosHolder);
 		}
 		
 		/**
@@ -1036,6 +1093,24 @@ package com.twinoid.kube.quest.editor.views {
 			TweenLite.to(this, .75, {scrollX:endX, scrollY:endY, ease:Sine.easeInOut});
 			
 			_previousDebugTarget = target;
+		}
+		
+		/**
+		 * Called when the user searches for a todo from the menu
+		 */
+		private function searchTodoHandler(event:BoxEvent):void {
+			var item:BoxTodo = event.target as BoxTodo;
+			
+			if(item != null) {
+				var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
+				if(menu != null) {
+					_endX = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width)) * .5 - item.x);
+				}else{
+					_endX = -item.x + stage.stageWidth * .5;
+				}
+				
+				_endY = -item.y + stage.stageHeight * .5;
+			}
 		}
 	}
 }

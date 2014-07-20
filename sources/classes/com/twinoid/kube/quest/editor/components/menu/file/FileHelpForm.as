@@ -167,8 +167,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 */
 		private function computePositions():void {
 			var margin:int = 5;
-			
-			var h:int = super.height + margin;
+			graphics.clear();
 			
 			_tutorialBt.y		= margin;
 			_samplesLabel.y		= Math.round(_tutorialBt.y + _tutorialBt.height + 9);
@@ -176,12 +175,13 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_tutorialBt.width	= _width - margin * 2;
 			_tutorialBt.x		= margin;
 			
+			var h:int = super.height + margin;
+			
 			_mask.graphics.clear();
 			_mask.graphics.beginFill(0xff0000, 0);
 			_mask.graphics.drawRect(0, 0, _width, h);
 			_mask.graphics.endFill();
 			
-			graphics.clear();
 			graphics.lineStyle(0, 0x265367, 1);
 			graphics.beginFill(0x2e92b8, 1);
 			graphics.drawRect(0, 0, _width - 1, h - 1);

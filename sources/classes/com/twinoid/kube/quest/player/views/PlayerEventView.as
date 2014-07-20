@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.player.views {
+	import com.twinoid.kube.quest.player.utils.enrichText;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.bitmap.ImageResizerAlign;
 	import com.nurun.components.button.IconAlign;
@@ -186,9 +187,9 @@ package com.twinoid.kube.quest.player.views {
 			
 			if (_simulatedMode) {
 				var type:String = _data.actionPlace.kubeMode? Label.getLabel('editWindow-place-kube') : Label.getLabel('editWindow-place-zone');
-				_tf.text = '<i>'+type+_data.actionPlace.getAsLabel()+'</i><br />'+_data.actionType.text;
+				_tf.text = '<i>'+type+_data.actionPlace.getAsLabel()+'</i><br />'+enrichText(_data.actionType.text);
 			}else{
-				_tf.text = _data.actionType.text;
+				_tf.text = enrichText(_data.actionType.text);
 			}
 			
 			//Place elements

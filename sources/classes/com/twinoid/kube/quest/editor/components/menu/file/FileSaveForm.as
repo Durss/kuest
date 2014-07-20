@@ -221,6 +221,8 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
+			graphics.clear();
+			
 			var margin:int = 5;
 			_descriptionInput.height = 100;
 			_nameLabel.x = _nameInput.x = _descriptionLabel.x =
@@ -244,7 +246,6 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_mask.graphics.drawRect(0, 0, _width, h);
 			_mask.graphics.endFill();
 			
-			graphics.clear();
 			graphics.lineStyle(0, 0x265367, 1);
 			graphics.beginFill(0x2e92b8, 1);
 			graphics.drawRect(0, 0, _width - 1, h - 1);

@@ -1,9 +1,14 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <root>
   <labels>
     <label code="patchlog-title"><![CDATA[Updates]]></label>
 	<!-- !Global -->
 	<label code="global-magnifiedTextfieldInfo"><![CDATA[Press Esc, Ctrl+Enter or click outside to end edition.]]></label>
+    <label code="global-saveNotification"><![CDATA[Quest saved !]]></label>
+    <label code="global-saveNotificationError"><![CDATA[An arror occured while saving your quest...<br />Please try again.]]></label>
+    <label code="global-publishNotification"><![CDATA[Your quest has been published !<br />It is now playable by everyone.<br />Tell your friends about it !]]></label>
+    <label code="global-promptsResetNotification"><![CDATA[Confirmations have all been reactivated !]]></label>
+    <label code="global-todoTitle"><![CDATA[Todos]]></label>
     <!-- !Tutorial -->
     <label code="tutorial-title"><![CDATA[Tutorial (F1)]]></label>
     <label code="tutorial-close"><![CDATA[Close]]></label>
@@ -110,6 +115,16 @@
     <label code="menu-file-help"><![CDATA[Examples]]></label>
     <label code="menu-file-help-tuto"><![CDATA[See tutorial]]></label>
     <label code="menu-file-help-samples"><![CDATA[Quest samples :]]></label>
+    <label code="menu-file-config"><![CDATA[Parameters]]></label>
+    <label code="menu-file-config-prompts"><![CDATA[Reset ignored confirmations]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-config-promptsHelpTT"><![CDATA[Click-me to get a confirmation example]]></label>
+    <label code="menu-file-config-prompts-sampleTitle"><![CDATA[Confirmation Example]]></label>
+    <label code="menu-file-config-prompts-sampleContent"><![CDATA[This winodw asks you to confirm an action.<br />The checkbox at the bottom allows you to ignore this specific confirmation.<br />By reseting confirmations, the one ignored will appear again.]]></label>
+    <label code="menu-file-todosDetails"><![CDATA[Search a todo :]]></label>
+    <!-- tooltip -->
+    <label code="menu-file-todosDetailsTT"><![CDATA[You can create a todo by pressing left click<br />on the grid for half a second.<br /><br />Thanks to them you won't forget a thing !]]></label>
+    <label code="menu-file-todosSearchPlaceholder"><![CDATA[Search a todo...]]></label>
     <!-- !Objects manager -->
     <label code="menu-objects"><![CDATA[Objects]]></label>
     <label code="menu-objects-details"><![CDATA[Manage the objects to be used in your quest.]]></label>
@@ -146,7 +161,7 @@
     <label code="editWindow-cancel"><![CDATA[Cancel]]></label>
     <label code="editWindow-endEvent"><![CDATA[This event makes the use win.]]></label>
     <label code="editWindow-looseEvent"><![CDATA[This event makes the use loose.]]></label>
-    <label code="editWindow-startTree"><![CDATA[Structur start point.]]></label>
+    <label code="editWindow-startTree"><![CDATA[Structure start point.]]></label>
     <!-- tooltip -->
     <label code="editWindow-startTreeTT"><![CDATA[The structure corresponds to the higlighted events on roll over.<br />By default the entry point of a structure will be the most top left event except if an event is explicitly specified as the entry point with this option.]]></label>
     <!-- tooltip -->
@@ -174,8 +189,8 @@
     <!-- tooltip -->
     <label code="editWindow-type-objectTT"><![CDATA[Object take/put ]]></label>
     <label code="editWindow-type-objectDefault"><![CDATA[Text displayed when the object is taken/put...]]></label>
-    <label code="editWindow-type-take"><![CDATA[Take]]></label>
-    <label code="editWindow-type-put"><![CDATA[Put]]></label>
+    <label code="editWindow-type-take"><![CDATA[Get]]></label>
+    <label code="editWindow-type-put"><![CDATA[User]]></label>
     <!-- tooltip -->
     <label code="editWindow-type-placeHolderObjectTT"><![CDATA[Select an object.]]></label>
     <!-- tooltip -->
@@ -207,7 +222,7 @@
     <label code="editWindow-sound-testError"><![CDATA[<font color="#cc0000">Valid sound.</font>]]></label>
     <label code="editWindow-sound-sfxrTitle"><![CDATA[Play an <a href="http://www.superflashbros.net/as3sfxr/" target="_blank" class="link">SFXR</a> sound :]]></label>
     <!-- tooltip -->
-    <label code="editWindow-sound-sfxrHelpTT"><![CDATA[Press CTRL+C inside SFXR app<br />to copy the sound's data<br />then past it on the input below.]]></label>
+    <label code="editWindow-sound-sfxrHelpTT"><![CDATA[Press CTRL+C inside SFXR app<br />to copy the create sound's data<br />then past it on the input below.]]></label>
     <!-- !Event's money -->
     <label code="editWindow-money-title"><![CDATA[Money (Kubor)]]></label>
     <label code="editWindow-money-label"><![CDATA[Kubors earned by the player when unlocking this event :]]></label>

@@ -10,6 +10,9 @@ package com.twinoid.kube.quest.editor.components {
 	public class MagnifyableTextfield extends ScrollableTextField {
 		
 		private var _title:String;
+		//Optional method called when edition ends.
+		//Receives the new text as parameter.
+		public var endEditionCallback:Function;
 		
 		
 		

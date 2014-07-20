@@ -12,7 +12,8 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _content:String;
 		private var _callback:Function;
 		private var _id:String;
-		private var _callbackCancel:Function;
+		private var _callbackCancel : Function;
+		private var _canIgnore : Boolean;
 		
 		
 		
@@ -22,12 +23,13 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Creates an instance of <code>PromptData</code>.
 		 */
-		public function PromptData(title:String, label:String, callback:Function, id:String, callbackCancel:Function = null) {
+		public function PromptData(title:String, label:String, callback:Function, id:String, callbackCancel:Function = null, canIgnore:Boolean = true) {
 			_callbackCancel = callbackCancel;
 			_id = id;
 			_callback = callback;
 			_content = label;
 			_title = title;
+			_canIgnore = canIgnore;
 		}
 
 		
@@ -60,7 +62,16 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Used to remember if a specific prompt should be ignore and
 		 * automatically submitted.
 		 */
-		public function get actionID():String { return _id; }
+		public function get actionID() : String {
+			return _id;
+		}
+		
+		/**
+		 * Gets if the user can ignore the prompt.
+		 */
+		public function get canIgnore() : Boolean {
+			return _canIgnore;
+		}
 
 
 

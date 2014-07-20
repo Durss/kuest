@@ -13,6 +13,7 @@ package com.twinoid.kube.quest.editor.events {
 		public static const LOGIN_SUCCESS:String = "logginSuccess";
 		public static const LOGIN_FAIL:String = "logginFail";
 		public static const PROMPT:String = "prompt";
+		public static const PROMPT_RESET:String = "promptReset";
 		public static const TUTORIAL:String = "tutorial";
 		public static const DEBUG_MODE_CHANGE:String = "debugModeChange";
 		public static const DEBUG_START_POINT:String = "debugStartPoint";

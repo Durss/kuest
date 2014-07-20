@@ -1,6 +1,4 @@
 package com.twinoid.kube.quest.editor.model {
-	import com.twinoid.kube.quest.editor.views.NotificationView;
-	import flash.external.ExternalInterface;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.configuration.Config;
@@ -19,6 +17,7 @@ package com.twinoid.kube.quest.editor.model {
 	import com.twinoid.kube.quest.editor.events.ViewEvent;
 	import com.twinoid.kube.quest.editor.utils.initSerializableClasses;
 	import com.twinoid.kube.quest.editor.utils.prompt;
+	import com.twinoid.kube.quest.editor.views.NotificationView;
 	import com.twinoid.kube.quest.editor.vo.CharItemData;
 	import com.twinoid.kube.quest.editor.vo.IItemData;
 	import com.twinoid.kube.quest.editor.vo.KuestData;
@@ -26,12 +25,14 @@ package com.twinoid.kube.quest.editor.model {
 	import com.twinoid.kube.quest.editor.vo.KuestInfo;
 	import com.twinoid.kube.quest.editor.vo.ObjectItemData;
 	import com.twinoid.kube.quest.editor.vo.Point3D;
+	import com.twinoid.kube.quest.editor.vo.TodoData;
 	import com.twinoid.kube.quest.editor.vo.UserInfo;
 	import com.twinoid.kube.quest.editor.vo.Version;
 
 	import flash.display.GraphicsPath;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
+	import flash.external.ExternalInterface;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.net.SharedObject;
@@ -120,6 +121,11 @@ package com.twinoid.kube.quest.editor.model {
 		 * Gets the characters list
 		 */
 		public function get characters():Vector.<CharItemData> { return _kuestData.characters; }
+
+		/**
+		 * Gets the todos
+		 */
+		public function get todos():Vector.<TodoData> { return _kuestData.todos; }
 		
 		/**
 		 * Gets the in game's position.
@@ -342,6 +348,7 @@ package com.twinoid.kube.quest.editor.model {
 			bytes.writeObject(_kuestData.nodes);
 			bytes.writeObject(_comments);//Should be removed when file has to be optimized but it would actually be a quite useless weight gain
 			bytes.writeObject(_commentsViewports);//Should be removed when file has to be optimized but it would actually be a quite useless weight gain
+			bytes.writeObject(_kuestData.todos);
 			bytes.deflate();
 			XOR(bytes, optimise? "ErrorEvent :: kuest cannot be optimised..." : "ErrorEvent :: kuest cannot be saved...");//Shitty XOR key to loose hackers
 			
@@ -356,7 +363,7 @@ package com.twinoid.kube.quest.editor.model {
 			var guid:String = updateMode || optimise? _currentKuestGUID : "";
 			_saveCmd.populate(title, description, bytes, friends, callback, guid, optimise);
 			if(optimise) {
-				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback);
+				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback, false);
 			}else{
 				_saveCmd.execute();
 			}
@@ -438,6 +445,20 @@ package com.twinoid.kube.quest.editor.model {
 			if(ExternalInterface.available) {
 				ExternalInterface.call('Editor.setEditMode', true);
 			}
+		}
+		
+		/**
+		 * Adds a todo to the list
+		 */
+		public function addTodo(todoData:TodoData):void {
+			_kuestData.addTodo(todoData);
+		}
+		
+		/**
+		 * Deltes a todo from the list
+		 */
+		public function deleteTodo(todoData:TodoData):void {
+			_kuestData.deleteTodo(todoData);
 		}
 
 
@@ -555,7 +576,11 @@ package com.twinoid.kube.quest.editor.model {
 			}
 			_saveCmd.callback(true, "", _saveCmd.publish? event.data["guid"] : 0);
 			update();
-			NotificationView.getInstance().notify(Label.getLabel('global-saveNotification'));
+			if(SaveQuestCmd(event.currentTarget).publish) {
+				NotificationView.getInstance().notify(Label.getLabel('global-publishNotification'));
+			}else{
+				NotificationView.getInstance().notify(Label.getLabel('global-saveNotification'));
+			}
 		}
 		
 		/**
@@ -644,6 +669,8 @@ package com.twinoid.kube.quest.editor.model {
 			_kuestData.deserialize(bytes);
 			if(bytes.position < bytes.length) _comments = bytes.readObject();
 			if(bytes.position < bytes.length) _commentsViewports = bytes.readObject();
+			//Todos are not read in the "deserialize()" method of KuestData for retro-compatibility reason
+			if(bytes.position < bytes.length) _kuestData.todos = bytes.readObject();
 			
 			_currentKuestGUID = _loadCmd.guid;
 			_charactersUpdate = _objectsUpdate = true;

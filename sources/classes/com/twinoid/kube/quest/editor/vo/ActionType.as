@@ -20,6 +20,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _text:String;
 		private var _itemGuid:int;
 		private var _takeMode:Boolean;
+		private var _putMode:Boolean;
 		
 		
 		
@@ -71,18 +72,30 @@ package com.twinoid.kube.quest.editor.vo {
 		public function set type(type:String):void { _type = type; }
 		
 		/**
-		 * Gets if the user receives an object (true) or uses an object (false)
+		 * Gets if the user receives an object (true)
 		 * when he arrives at the specified coordinates
 		 */
 		public function get takeMode():Boolean { return _takeMode; }
 		
 		/**
-		 * Defines if an object is taken or put in case of object type.
+		 * Defines if an object is taken in case of object type.
 		 * If true, when the user arrives at the specified coordinates, he will
 		 * receive the object.
-		 * If false, he will use the object.
 		 */
 		public function set takeMode(value:Boolean):void { _takeMode = value; }
+		
+		/**
+		 * Gets if the user uses an object (true)
+		 * when he arrives at the specified coordinates
+		 */
+		public function get putMode():Boolean { return _putMode; }
+		
+		/**
+		 * Defines if an object is put in case of object type.
+		 * If true, when the user arrives at the specified coordinates, he will
+		 * user the object.
+		 */
+		public function set putMode(value:Boolean):void { _putMode = value; }
 
 
 
@@ -133,6 +146,7 @@ package com.twinoid.kube.quest.editor.vo {
 			vo.type = type;
 			vo.text = text;
 			vo.takeMode = takeMode;
+			vo.putMode = putMode;
 			vo.setItem( getItem() );
 			return vo;
 		}

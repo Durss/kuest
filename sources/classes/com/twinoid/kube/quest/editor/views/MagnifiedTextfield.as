@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.views {
+	import flash.text.TextFieldAutoSize;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.components.text.CssTextField;
 	import gs.TweenLite;
@@ -20,6 +21,9 @@ package com.twinoid.kube.quest.editor.views {
 	import flash.ui.Keyboard;
 	
 	/**
+	 * Detects when a magniyable textfield gets focus.
+	 * When one is detected, it opens a window from the textfield and enlarges
+	 * to get more space to write.
 	 * 
 	 * @author Durss
 	 * @date 4 avr. 2014;
@@ -29,8 +33,8 @@ package com.twinoid.kube.quest.editor.views {
 		private var _content:Sprite;
 		private var _textarea:TextArea;
 		private var _dimmer:Shape;
-		private var _currentTarget : MagnifyableTextfield;
-		private var _infos : CssTextField;
+		private var _currentTarget:MagnifyableTextfield;
+		private var _infos:CssTextField;
 		
 		
 		
@@ -79,7 +83,7 @@ package com.twinoid.kube.quest.editor.views {
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			_textarea.textfield.addEventListener(Event.CHANGE, changeHandler);
 			stage.addEventListener(FocusEvent.FOCUS_IN, focusInHandler);
-			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler, true, 0xffffff);
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler, true, int.MAX_VALUE);//overpasses the Escape closer
 			stage.addEventListener(Event.RESIZE, computePositions);
 			computePositions();
 		}
@@ -130,25 +134,35 @@ package com.twinoid.kube.quest.editor.views {
 			_textarea.textfield.text		= _currentTarget.text;
 			_textarea.textfield.maxChars	= _currentTarget.maxChars;
 			stage.focus						= _textarea.textfield;
-			open();
+			visible = true;
+			computePositions();
+			
 			_textarea.textfield.setSelection(_currentTarget.caretIndex, _currentTarget.caretIndex);
 			var p1:Point = _currentTarget.localToGlobal(new Point());
 			var p2:Point = _textarea.textfield.localToGlobal(new Point());
 			p2 = _window.globalToLocal(p2);
 			
 			var w:int = (_currentTarget.parent is TextArea)? _currentTarget.parent.width : _currentTarget.width;
+			_infos.autoSize = TextFieldAutoSize.NONE;
 			
 			_dimmer.alpha = 1;
 			TweenLite.from(_dimmer, .25, {alpha:0});
-			TweenLite.from(_textarea, .25, {width:w, height:_currentTarget.height, onUpdate:_textarea.validate, delay:.1});
-			TweenLite.from(_infos, .25, {width:w, y:_currentTarget.height, onUpdate:_textarea.validate, delay:.1});
-			TweenLite.from(_window, .25, {x:p1.x - p2.x, y:p1.y - p2.y, onUpdate:_window.updateSizes, delay:.1});
+			TweenLite.from(_infos, .25, {width:w, y:_currentTarget.height, delay:.1});
+			TweenLite.from(_textarea, .25, {width:w, height:_currentTarget.height, onUpdate:renderWindow, delay:.1});
+			TweenLite.from(_window, .25, {x:p1.x - p2.x, y:p1.y - p2.y, delay:.1});
 		}
+
+		private function renderWindow():void {
+			_textarea.validate();
+			_window.updateSizes();
+		}
+
 		
 		/**
 		 * Listens for CTRL+Enter or ESCAPE to close the view.
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
+			if(!contains(event.target as DisplayObject)) return;
 			if( (event.keyCode == Keyboard.ENTER && event.ctrlKey) || event.keyCode == Keyboard.ESCAPE) {
 				event.stopImmediatePropagation();
 				close();
@@ -166,18 +180,15 @@ package com.twinoid.kube.quest.editor.views {
 		}
 		
 		/**
-		 * Opens the view
-		 */
-		private function open():void {
-			visible = true;
-			computePositions();
-		}
-		
-		/**
 		 * Closes the view
 		 */
 		private function close():void {
-			if(_currentTarget != null) _currentTarget.text = _textarea.text;
+			if(_currentTarget != null) {
+				_currentTarget.text = _textarea.text;
+				if(_currentTarget.endEditionCallback != null) {
+					_currentTarget.endEditionCallback(_textarea.text);
+				}
+			}
 			_currentTarget = null;
 			visible = false;
 		}

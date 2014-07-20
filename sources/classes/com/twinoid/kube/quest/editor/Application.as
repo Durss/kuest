@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor {
+	import gs.plugins.ScrollRectPlugin;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TransformAroundCenterPlugin;
 	import gs.plugins.TweenPlugin;
@@ -85,7 +86,7 @@ package com.twinoid.kube.quest.editor {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			TweenPlugin.activate([TransformAroundCenterPlugin, RemoveChildPlugin, VisiblePlugin]);
+			TweenPlugin.activate([TransformAroundCenterPlugin, RemoveChildPlugin, VisiblePlugin, ScrollRectPlugin]);
 			
 			_model = new Model();
 			

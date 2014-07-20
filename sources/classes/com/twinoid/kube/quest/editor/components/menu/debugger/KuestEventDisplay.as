@@ -1,17 +1,19 @@
 package com.twinoid.kube.quest.editor.components.menu.debugger {
 	import com.nurun.components.button.IconAlign;
-	import com.twinoid.kube.quest.graphics.MoneyIcon;
+	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.utils.pos.roundPos;
+	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.item.ItemPlaceholder;
+	import com.twinoid.kube.quest.editor.vo.KuestEvent;
+	import com.twinoid.kube.quest.graphics.MoneyIcon;
+	import com.twinoid.kube.quest.player.utils.enrichText;
+
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
-	import com.nurun.utils.pos.roundPos;
-	import com.nurun.utils.pos.PosUtils;
-	import com.twinoid.kube.quest.editor.vo.KuestEvent;
-	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
-	import com.nurun.components.text.CssTextField;
-	import com.twinoid.kube.quest.editor.components.item.ItemPlaceholder;
-	import flash.display.Sprite;
 	
 	//Fired when an answer is selected.
 	[Event(name="select", type="flash.events.Event")]
@@ -90,7 +92,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 				_image.visible = false;
 				_image.clear();
 			}
-			_label.text = event.actionType.text;
+			_label.text = enrichText(event.actionType.text);
 			buildChoices();
 		}
 		
