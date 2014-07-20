@@ -21,7 +21,7 @@
         <label code="global-saveNotificationError"><![CDATA[Une erreur est survenue lors de la sauvegarde...<br />Essayez à nouveau dans quelques instant.]]></label>
         <label code="global-publishNotification"><![CDATA[Votre quête a été publiée avec succès !<br />Elle est maintenant jouable par tous les joueurs.<br />Dîtes-le à vos ami !]]></label>
 		<label code="global-promptsResetNotification"><![CDATA[Les confirmations ont toutes été réactivées !]]></label>
-		<label code="global-todoTitle"><![CDATA[Mémos]]></label>
+		<label code="global-todoTitle"><![CDATA[Mémo]]></label>
 		
 		<!-- !Tutorial -->
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>

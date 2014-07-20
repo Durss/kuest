@@ -89,6 +89,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 					data.actionType.setItem(_objectHolder.data);
 					data.actionType.text = _objectDialogue.text;
 					data.actionType.takeMode = _cbTake.selected;
+					data.actionType.putMode = _cbPut.selected;
 					break;
 				default:
 			}

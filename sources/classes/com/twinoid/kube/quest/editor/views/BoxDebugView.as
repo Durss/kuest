@@ -15,6 +15,7 @@ package com.twinoid.kube.quest.editor.views {
 
 
 	/**
+	 * Displays when writing "debug" + Enter to show a minimap of all the events/links
 	 * 
 	 * @author Francois
 	 * @date 28 avr. 2013;

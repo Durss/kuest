@@ -724,10 +724,10 @@ package com.twinoid.kube.quest.editor.views {
 									|| stage.mouseY > stage.stageHeight - DRAG_GAP);
 			}
 			
-			if(_spacePressed) _comments.startDraw();
-			
 			clearTimeout(_todoTimeout);
-			_todoTimeout = setTimeout(createTodo, 250, _boxesHolder.x, _boxesHolder.y);
+			
+			if(_spacePressed) _comments.startDraw();
+			else _todoTimeout = setTimeout(createTodo, 250, _boxesHolder.x, _boxesHolder.y);
 		}
 		
 		/**
@@ -1104,12 +1104,12 @@ package com.twinoid.kube.quest.editor.views {
 			if(item != null) {
 				var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
 				if(menu != null) {
-					_endX = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width)) * .5 - item.x);
+					_endX = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width)) * .5 - item.x * _todosHolder.scaleX);
 				}else{
-					_endX = -item.x + stage.stageWidth * .5;
+					_endX = -item.x * _todosHolder.scaleX + stage.stageWidth * .5;
 				}
 				
-				_endY = -item.y + stage.stageHeight * .5;
+				_endY = -item.y * _todosHolder.scaleY + stage.stageHeight * .5;
 			}
 		}
 	}
