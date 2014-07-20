@@ -263,7 +263,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				}
 				
 				//Object indicator
-				_takePut.visible = _data.actionType.type == ActionType.TYPE_OBJECT;
+				_takePut.visible = _data.actionType.type == ActionType.TYPE_OBJECT && (_data.actionType.takeMode || _data.actionType.putMode);
 				_money.visible = _data.actionMoney != null && _data.actionMoney.kuborsEarned > 0;
 				_takePut.gotoAndStop(_data.actionType.takeMode? 2 : 1);
 			}
@@ -456,7 +456,7 @@ package com.twinoid.kube.quest.editor.components.box {
 			var label:String;
 			if(p is Point) label = "["+Point(p).x+"]["+Point(p).y+"]";
 			if(p is Point3D) label = "["+Point3D(p).x+"]["+Point3D(p).y+"]["+Point3D(p).z+"]";
-			_background.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.BOTTOM, 10));
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.BOTTOM, 10));
 		}
 		
 		/**

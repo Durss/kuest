@@ -13,7 +13,7 @@ package com.twinoid.kube.quest.editor.vo {
 
 	
 	/**
-	 * Contains all the kuest events.
+	 * Contains all the data about the quest's logic. (NOT the title, description, friends allowed, etc..)
 	 * Can be serialized as a string and can deserialize a string.
 	 * 
 	 * It basically contains KuestEvent items.
@@ -37,8 +37,9 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _guid:int;
 		private var _lastTreeComputationKey:Number;
 		private var _tree:Dictionary;
-		private var _lastUpdatedEvent : KuestEvent;
+		private var _lastUpdatedEvent:KuestEvent;
 		private var _playerMode:Boolean;
+		private var _todos:Vector.<TodoData>;
 		
 		
 		
@@ -90,6 +91,16 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Gets the current kuest's GUID.
 		 */
 		public function get guid():int { return _guid; }
+
+		/**
+		 * Gets the todos
+		 */
+		public function get todos():Vector.<TodoData> { return _todos; }
+
+		/**
+		 * Sets the todos
+		 */
+		public function set todos(value:Vector.<TodoData>):void  { _todos = value; }
 
 
 
@@ -205,9 +216,32 @@ package com.twinoid.kube.quest.editor.vo {
 				for(i = 0; i < len; ++i) _objects[i].kill();
 			}
 			_nodes = new Vector.<KuestEvent>();
+			_todos = new Vector.<TodoData>();
 			setDefaults();
 			_lastItemAdded = null;
 			_guid ++;
+		}
+		
+		/**
+		 * Adds a todo to the list
+		 */
+		public function addTodo(todoData:TodoData):void {
+			_todos.push(todoData);
+		}
+		
+		/**
+		 * Deltes a todo from the list
+		 */
+		public function deleteTodo(todoData:TodoData):void {
+			var i:int, len:int;
+			len = _todos.length;
+			for(i = 0; i < len; ++i) {
+				if(_todos[i] == todoData) {
+					_todos.splice(i, 1);
+					i--;
+					len--;
+				}
+			}
 		}
 
 
@@ -221,6 +255,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		private function initialize():void {
 			_nodes = new Vector.<KuestEvent>();
+			_todos = new Vector.<TodoData>();
 			setDefaults();
 		}
 		

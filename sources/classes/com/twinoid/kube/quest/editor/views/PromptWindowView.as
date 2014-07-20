@@ -134,6 +134,7 @@ package com.twinoid.kube.quest.editor.views {
 			makeEscapeClosable(this);
 			
 			ViewLocator.getInstance().addEventListener(ViewEvent.PROMPT, promptHandler);
+			ViewLocator.getInstance().addEventListener(ViewEvent.PROMPT_RESET, promptResetHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
@@ -194,6 +195,8 @@ package com.twinoid.kube.quest.editor.views {
 			_label.text = _data.content;
 			_window.label = _data.title;
 			_ignore.selected = false;
+			_holder.addChild(_ignore);
+			if(_holder.contains(_ignore) && !_data.canIgnore) _holder.removeChild(_ignore);
 			computePositions();
 			TweenLite.to(this, .25, {autoAlpha:1});
 		}
@@ -227,6 +230,9 @@ package com.twinoid.kube.quest.editor.views {
 			}
 		}
 		
+		/**
+		 * Called when confirmation button is clicked
+		 */
 		private function submit():void {
 			if(_so != null && _ignore.selected) {
 				if(_so.data["ignoredPromptActions"] == undefined) {
@@ -237,10 +243,19 @@ package com.twinoid.kube.quest.editor.views {
 				_so.flush();
 			}
 			
-			_data.callback();
+			if(_data.callback != null) _data.callback();
 			_data = null;
 			
 			close();
+		}
+		
+		/**
+		 * Called when asking to reset the ignored confirmations
+		 * from the parameters menu
+		 */
+		private function promptResetHandler(event:ViewEvent):void {
+			_so.data['ignoredPromptActions'] = {};
+			NotificationView.getInstance().notify(Label.getLabel('global-promptsResetNotification'));
 		}
 		
 	}

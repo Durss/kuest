@@ -433,7 +433,12 @@ package com.twinoid.kube.quest.player.model {
 			
 			//Load save data if necessary
 			if(_save != null) {
-				_save.inflate();
+				try {
+					_save.inflate();
+				}catch(error:Error) {
+					dispatchEvent(new QuestManagerEvent(QuestManagerEvent.WRONG_SAVE_FILE_FORMAT));
+					return;
+				}
 				var version:uint = _save.readUnsignedInt();
 				switch(version){
 					case SaveVersion.V1:
@@ -491,7 +496,7 @@ package com.twinoid.kube.quest.player.model {
 				if(event.actionType.takeMode) {
 					_inventoryManager.takeObject(event.actionType.itemGUID);
 					dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
-				}else{
+				}else if(event.actionType.putMode) {
 					//If an object has to be put, ignore it.
 					//When the user will put the object, this event will be
 					//checked and the object used.

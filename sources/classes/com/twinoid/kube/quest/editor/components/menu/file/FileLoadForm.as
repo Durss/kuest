@@ -40,7 +40,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		private var _spinning:LoaderSpinning;
 		private var _label:CssTextField;
 		private var _holder:Sprite;
-		private var _itemToData : Dictionary;
+		private var _itemToData:Dictionary;
 		
 		
 		

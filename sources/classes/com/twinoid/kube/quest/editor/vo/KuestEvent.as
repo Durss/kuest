@@ -57,9 +57,9 @@ package com.twinoid.kube.quest.editor.vo {
 				actionType = duplicateFrom.actionType == null? null : duplicateFrom.actionType.clone();
 				actionPlace = duplicateFrom.actionPlace == null? null : duplicateFrom.actionPlace.clone();
 				actionDate = duplicateFrom.actionDate == null? null : duplicateFrom.actionDate.clone();
-				actionSound = duplicateFrom.actionSound == null? null : duplicateFrom.actionSound.clone(); 
-				actionMoney = duplicateFrom.actionMoney == null? null : duplicateFrom.actionMoney.clone(); 
-				actionChoices = new ActionChoices();
+				actionSound = duplicateFrom.actionSound == null? null : duplicateFrom.actionSound.clone();
+				actionMoney = duplicateFrom.actionMoney == null? null : duplicateFrom.actionMoney.clone();
+				actionChoices = duplicateFrom.actionChoices == null? null : duplicateFrom.actionChoices.clone();
 			}
 		}
 

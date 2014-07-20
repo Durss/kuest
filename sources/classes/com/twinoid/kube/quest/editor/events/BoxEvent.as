@@ -13,6 +13,7 @@ package com.twinoid.kube.quest.editor.events {
 		public static const DUPLICATE:String = "duplicate";
 		public static const CREATE_LINK:String = "createLink";
 		public static const ACTIVATE_DEBUG:String = "activateDebug";
+		public static const SEARCH_TODO:String = "searchTodo";
 		
 		private var _choiceIndex:int;
 		

@@ -1,7 +1,7 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.structure.environnement.label.Label;
-	import com.twinoid.kube.quest.editor.components.form.RadioButtonKube;
+	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
 	import com.twinoid.kube.quest.editor.components.form.input.TextArea;
 	import com.twinoid.kube.quest.editor.components.item.ItemPlaceholder;
 	import com.twinoid.kube.quest.editor.events.ItemSelectorEvent;
@@ -11,6 +11,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
 	import com.twinoid.kube.quest.graphics.EventTypeDialogueIcon;
 	import com.twinoid.kube.quest.graphics.EventTypeObjectIcon;
+
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -32,8 +33,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private var _objectHolder:ItemPlaceholder;
 		private var _charDialogue:TextArea;
 		private var _objectDialogue:TextArea;
-		private var _cbTake:RadioButtonKube;
-		private var _cbPut:RadioButtonKube;
+		private var _cbTake:CheckBoxKube;
+		private var _cbPut:CheckBoxKube;
 		
 		
 		
@@ -111,7 +112,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				_charDialogue.text = data.actionType.text;
 				_objectHolder.data = null;
 				_objectDialogue.text = "";
-				_cbTake.selected = true;
+				_cbTake.selected = false;
 				_cbPut.selected = false;
 				super.onload(true, 0);
 			}else{
@@ -120,7 +121,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				_objectHolder.data = data.actionType.getItem();
 				_objectDialogue.text = data.actionType.text;
 				_cbTake.selected = data.actionType.takeMode;
-				_cbPut.selected = !data.actionType.takeMode;
+				_cbPut.selected = data.actionType.putMode;
 				super.onload(true, 1);
 			}
 		}
@@ -167,16 +168,18 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		 */
 		private function buildObject():void {
 			_object = new Sprite();
-			_objectGroup = new FormComponentGroup();
+			_objectGroup = new FormComponentGroup(false, true);
 			
 			_objectHolder = new ItemPlaceholder(false, true, ItemSelectorEvent.ITEM_TYPE_OBJECT);
 			_object.addChild(_objectHolder);
 			_objectDialogue = new TextArea("editWindow-label", Label.getLabel("editWindow-type-objectDefault"), false, true, Label.getLabel("editWindow-type-objectTT"));
 			_object.addChild( _objectDialogue );
-			_cbTake = new RadioButtonKube(Label.getLabel("editWindow-type-take"), _objectGroup);
-			_cbPut = new RadioButtonKube(Label.getLabel("editWindow-type-put"), _objectGroup);
+			_cbTake = new CheckBoxKube(Label.getLabel("editWindow-type-take"));
+			_cbPut = new CheckBoxKube(Label.getLabel("editWindow-type-put"));
 			_object.addChild(_cbTake);
 			_object.addChild(_cbPut);
+			_objectGroup.add(_cbTake);
+			_objectGroup.add(_cbPut);
 			
 			_objectDialogue.width = _width - _objectHolder.width - 5;
 			_objectDialogue.height = _objectHolder.height - Math.round(_cbTake.height + 5);

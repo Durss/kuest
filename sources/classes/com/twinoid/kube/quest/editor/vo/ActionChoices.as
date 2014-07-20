@@ -77,6 +77,16 @@ package com.twinoid.kube.quest.editor.vo {
 			_choices.push(label);
 			_choicesCosts.push(choiceCost);
 		}
+		
+		/**
+		 * Clones the object
+		 */
+		public function clone():ActionChoices {
+			var a:ActionChoices = new ActionChoices();
+			a.choices = choices.concat();
+			a.choicesCost = choicesCost.concat();
+			return a;
+		}
 
 
 		

@@ -3,19 +3,25 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog81-content"><![CDATA[<ul>
-			<li>Possibilité de dupliquer un événement.</li
+		<label code="patchlog83-content"><![CDATA[<ul>
+			<li>Possibilité de dupliquer un événement.</li>
+			<li>Possibilité d'ajouter des mémos.</li>
+			<li>Ajout d'un menu de paramètres.</li>
+			<li>Possibilité de faire un événement d'objet qui ne demande pas d'action (prise/pose).</li>
 			<li>Agrandissement de certains champs de texte en popin à leur édition.</li>
+			<li>Demande de confirmation si on quitte la page en cours d'édition.</li>
 			<li>Déplacement/zoom du plateau au clavier.</li>
 			<li>Mise en évidence de la quête en cours d'édition dans la liste des quêtes.</li>
-			<li>Demande de confirmation si on quitte la page en cours d'édition.</li>>
-			<li>Ajout d'une notification quand la sauvegarde est terminée.</li>
+			<li>Ajout d'une notification quand la sauvegarde/publication est terminées.</li>
 		</ul>]]></label>
 		
 		<!-- !Global -->
 		<label code="global-magnifiedTextfieldInfo"><![CDATA[Pressez Echap, Ctrl+Entrée ou cliquez en dehors pour terminer l'édition.]]></label>
-		<label code="global-saveNotification"><![CDATA[Quête sauvegardée !]]></label>
-		<label code="global-saveNotificationError"><![CDATA[Une erreur est survenue lors de la sauvegarde...<br />Essayez à nouveau dans quelques instant.]]></label>
+        <label code="global-saveNotification"><![CDATA[Quête sauvegardée !]]></label>
+        <label code="global-saveNotificationError"><![CDATA[Une erreur est survenue lors de la sauvegarde...<br />Essayez à nouveau dans quelques instant.]]></label>
+        <label code="global-publishNotification"><![CDATA[Votre quête a été publiée avec succès !<br />Elle est maintenant jouable par tous les joueurs.<br />Dîtes-le à vos ami !]]></label>
+		<label code="global-promptsResetNotification"><![CDATA[Les confirmations ont toutes été réactivées !]]></label>
+		<label code="global-todoTitle"><![CDATA[Mémos]]></label>
 		
 		<!-- !Tutorial -->
 		<label code="tutorial-title"><![CDATA[Tutoriel (F1)]]></label>
@@ -119,7 +125,7 @@
 		They are replaced dynamically. -->
 		<label code="menu-file-publish-label"><![CDATA[Retrouvez votre quête à cette adresse :<br /><a href="{ROOT}/k/{ID}" target="_blank" class="link">{ROOT}/k/{ID}</a>]]></label>
 		<label code="menu-file-publish-promptTitle"><![CDATA[Confirmation de publication]]></label>
-		<label code="menu-file-publish-promptContent"><![CDATA[<b>Êtes-vous sûr de vouloir publier votre quête?</b><br /><b>Attention</b>, toute modification de la structure de la quête après publication <span class="window-content-big">risque de corrompre</span> la sauvegarde des utilisateurs et de les obliger reccommencer votre quête depuis le début.<br />Il est ainsi vivement conseillé de publier votre quête dans son état final.]]></label>
+		<label code="menu-file-publish-promptContent"><![CDATA[<b>Êtes-vous sûr de vouloir publier votre quête?</b><br />Une fois publiée, votre quête sera visible à tous les joueurs et tout le mondepourra y jouer !<br /><br /><b>Attention</b>, toute modification de la structure de la quête après publication <span class="window-content-big">risque de corrompre</span> la sauvegarde des utilisateurs et de les obliger reccommencer votre quête depuis le début.<br /><b>Il est ainsi vivement conseillé de publier votre quête dans son état final !</b>]]></label>
 		<!-- tooltip -->
 		<label code="menu-file-saveNewTT"><![CDATA[Enregistrer en tant<br />que nouvelle quête.]]></label>
 		<!-- tooltip -->
@@ -131,7 +137,18 @@
 		<label code="menu-file-test"><![CDATA[Tester la quête]]></label>
 		<label code="menu-file-help"><![CDATA[Exemples]]></label>
 		<label code="menu-file-help-tuto"><![CDATA[Voir le tutoriel]]></label>
-		<label code="menu-file-help-samples"><![CDATA[Exemples de quêtes:]]></label>
+		<label code="menu-file-help-samples"><![CDATA[Exemples de quêtes :]]></label>
+		<label code="menu-file-config"><![CDATA[Paramètres]]></label>
+		<label code="menu-file-config-prompts"><![CDATA[Réinitialiser les confirmations ignorées]]></label>
+		<!-- tooltip -->
+		<label code="menu-file-config-promptsHelpTT"><![CDATA[Cliquez-moi pour avoir un exemple de confirmation]]></label>
+		<label code="menu-file-config-prompts-sampleTitle"><![CDATA[Exemple de confirmation]]></label>
+		<label code="menu-file-config-prompts-sampleContent"><![CDATA[Cette fenêtre vous demande confirmation d'une action.<br />La case à cocher en bas de fenêtre permet de ne plus demander confirmation pour cette action.<br />En réinitialisant les confirmations, celles ignorées apparaîtront à nouveau.]]></label>
+		<label code="menu-file-todos"><![CDATA[Mémos]]></label>
+		<label code="menu-file-todosDetails"><![CDATA[Rechercher un mémo :]]></label>
+		<!-- tooltip -->
+		<label code="menu-file-todosDetailsTT"><![CDATA[Vous pouvez placer des mémos en gardant le<br />clique enfoncé une demie seconde sur la grille.<br /><br />Ils vous permetront de ne rien oublier !]]></label>
+		<label code="menu-file-todosSearchPlaceholder"><![CDATA[Rechercher un mémo...]]></label>
 		
 		<!-- !Objects manager -->
 		<label code="menu-objects"><![CDATA[Objets]]></label>
@@ -206,8 +223,8 @@
 		<!-- tooltip -->
 		<label code="editWindow-type-objectTT"><![CDATA[Prise/pose d'objet]]></label>
 		<label code="editWindow-type-objectDefault"><![CDATA[Texte à afficher lors de la prise/pose...]]></label>
-		<label code="editWindow-type-take"><![CDATA[Prendre]]></label>
-		<label code="editWindow-type-put"><![CDATA[Poser]]></label>
+		<label code="editWindow-type-take"><![CDATA[Obtenir]]></label>
+		<label code="editWindow-type-put"><![CDATA[Utiliser]]></label>
 		<!-- tooltip -->
 		<label code="editWindow-type-placeHolderObjectTT"><![CDATA[Sélectionner un objet.]]></label>
 		<!-- tooltip -->
@@ -243,7 +260,7 @@
 		<label code="editWindow-sound-testError"><![CDATA[<font color="#cc0000">Son invalide.</font>]]></label>
 		<label code="editWindow-sound-sfxrTitle"><![CDATA[Jouer un son <a href="http://www.superflashbros.net/as3sfxr/" target="_blank" class="link">SFXR</a> :]]></label>
 		<!-- tooltip -->
-		<label code="editWindow-sound-sfxrHelpTT"><![CDATA[Faites CTRL+C sur l'application SFXR<br />pour copier les données du son<br />puis collez-lez dans le champs ci-dessous.]]></label>
+		<label code="editWindow-sound-sfxrHelpTT"><![CDATA[Faites CTRL+C sur l'application SFXR<br />pour copier les données du son créé<br />puis collez-lez dans le champs ci-dessous.]]></label>
 		
 		<!-- !Event's money edition -->
 		<label code="editWindow-money-title"><![CDATA[Argent (Kubor)]]></label>
