@@ -284,13 +284,16 @@ package com.twinoid.kube.quest.editor.components.box {
 				clipDrawings();
 				dispatchEvent(new BoxesCommentsEvent(BoxesCommentsEvent.LEAVE_EDIT_MODE));
 			}
-			if(event.keyCode == Keyboard.Z && event.ctrlKey && _paths.length > 0) {
-				_lastDrawingTime = int.MIN_VALUE;
-				_paths.pop();
-				_viewPorts.pop();
-				clearSplittedGraphics();
-				splitGraphics();
-			}
+			//Disabled UNDO as it's not intuitive. We always do Ctrl+Z for boxes
+			//but it's not managed on it, so we remove comments without noticing it
+			//which results on mystery notes suppression that looks like a bug
+//			if(event.keyCode == Keyboard.Z && event.ctrlKey && _paths.length > 0) {
+//				_lastDrawingTime = int.MIN_VALUE;
+//				_paths.pop();
+//				_viewPorts.pop();
+//				clearSplittedGraphics();
+//				splitGraphics();
+//			}
 		}
 		
 		/**
