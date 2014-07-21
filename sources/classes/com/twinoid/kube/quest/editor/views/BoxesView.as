@@ -106,6 +106,7 @@ package com.twinoid.kube.quest.editor.views {
 		private var _todoTimeout : uint;
 		private var _todosHolder : Sprite;
 		private var _todoCreated : Boolean;
+		private var _selectedTodos : Vector.<BoxTodo>;
 		
 		
 		
@@ -324,6 +325,12 @@ package com.twinoid.kube.quest.editor.views {
 					_selectedBoxes[i].y = Math.round( (_boxesHolder.mouseY + _dragOffsets[i].y - _dragItemOffset.y) / size) * size;
 				}
 				
+				var len2:int = _selectedTodos.length;
+				for(i = 0; i < len2; ++i) {
+					_selectedTodos[i].x = Math.round( (_todosHolder.mouseX + _dragOffsets[i +  len].x - _dragItemOffset.x) / size) * size;
+					_selectedTodos[i].y = Math.round( (_todosHolder.mouseY + _dragOffsets[i +  len].y - _dragItemOffset.y) / size) * size;
+				}
+				
 				_selectRect.x = Math.round( (_boxesHolder.mouseX - _dragItemOffset.x) / size) * size;
 				_selectRect.y = Math.round( (_boxesHolder.mouseY - _dragItemOffset.y) / size) * size;
 				_selectHolder.graphics.clear();
@@ -517,8 +524,7 @@ package com.twinoid.kube.quest.editor.views {
 			_todoCreated = true;
 			_stagePressed = false;//prevents from draging the board after creation
 			var todo:BoxTodo = _todosHolder.addChild(new BoxTodo()) as BoxTodo;
-			todo.x = _todosHolder.mouseX - todo.width * .5;
-			todo.y = _todosHolder.mouseY - todo.height * .5;
+			todo.moveTo(_todosHolder.mouseX, _todosHolder.mouseY);
 			roundPos(todo);
 			todo.open();
 		}
@@ -559,6 +565,11 @@ package com.twinoid.kube.quest.editor.views {
 			for(i = 0; i < len; ++i) {
 				_selectedBoxes[0].filters = [];
 				_selectedBoxes.splice(0, 1);
+			}
+			len = _selectedTodos.length;
+			for(i = 0; i < len; ++i) {
+				_selectedTodos[0].filters = [];
+				_selectedTodos.splice(0, 1);
 			}
 		}
 
@@ -666,6 +677,8 @@ package com.twinoid.kube.quest.editor.views {
 		 * Called when mouse is pressed.
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
+			clearTimeout(_todoTimeout);
+			
 			//Detect Box dragging
 			if(!_spacePressed && event.target != this && event.target != _selectHolder && event.target != _comments) {
 				if (_boxesHolder.contains(event.target as DisplayObject)) {
@@ -715,6 +728,11 @@ package com.twinoid.kube.quest.editor.views {
 					_selectedBoxes[i].startDrag();
 					_dragOffsets[i] = new Point(_selectedBoxes[i].x - _selectRect.x, _selectedBoxes[i].y - _selectRect.y);
 				}
+				
+				var len2:int = _selectedTodos.length;
+				for(i = 0; i < len2; ++i) {
+					_dragOffsets[i+len] = new Point(_selectedTodos[i].x - _selectRect.x, _selectedTodos[i].y - _selectRect.y);
+				}
 				_dragSelection = true;
 				
 				//Prevents from scrolling on borders if we actually start to drag the
@@ -722,12 +740,11 @@ package com.twinoid.kube.quest.editor.views {
 				_startDragInGap = (stage.mouseX < DRAG_GAP || stage.mouseY < DRAG_GAP
 									|| stage.mouseX > stage.stageWidth - DRAG_GAP
 									|| stage.mouseY > stage.stageHeight - DRAG_GAP);
+			}else if(!_spacePressed){
+				_todoTimeout = setTimeout(createTodo, 250, _boxesHolder.x, _boxesHolder.y);
 			}
 			
-			clearTimeout(_todoTimeout);
-			
 			if(_spacePressed) _comments.startDraw();
-			else _todoTimeout = setTimeout(createTodo, 250, _boxesHolder.x, _boxesHolder.y);
 		}
 		
 		/**
@@ -766,6 +783,13 @@ package com.twinoid.kube.quest.editor.views {
 				for(i = 0; i < len; ++i) {
 					_selectedBoxes[i].data.boxPosition.x = _selectedBoxes[i].x;
 					_selectedBoxes[i].data.boxPosition.y = _selectedBoxes[i].y;
+				}
+				
+				//Update todos positions
+				len = _selectedTodos.length;
+				for(i = 0; i < len; ++i) {
+					_selectedTodos[i].data.pos.x = _selectedTodos[i].x;
+					_selectedTodos[i].data.pos.y = _selectedTodos[i].y;
 				}
 				_dragSelection = false;
 				FrontControler.getInstance().flagChange();
@@ -915,7 +939,7 @@ package com.twinoid.kube.quest.editor.views {
 		private function mouseRightUpHandler(event:MouseEvent):void {
 			if(_debugMode) return;
 			
-			var i:int, len:int, box:Box, minX:int, minY:int, maxX:int, maxY:int;
+			var i:int, len:int, box:Box, minX:int, minY:int, maxX:int, maxY:int, item:DisplayObject;
 			minX	= Math.min(_selectRect.x, _selectRect.right) - Box.COLS * BackgroundView.CELL_SIZE;
 			minY	= Math.min(_selectRect.y, _selectRect.bottom) - Box.ROWS* BackgroundView.CELL_SIZE;
 			maxX	= Math.max(_selectRect.right, _selectRect.left);
@@ -924,6 +948,7 @@ package com.twinoid.kube.quest.editor.views {
 			var topLeft:Point		= new Point(int.MAX_VALUE, int.MAX_VALUE);
 			var botRight:Point		= new Point(int.MIN_VALUE, int.MIN_VALUE);
 			_selectedBoxes			= new Vector.<Box>();
+			_selectedTodos			= new Vector.<BoxTodo>();
 			var selectionOn:Array	= _highlightFilter;
 			var selectionOff:Array	= [];
 			for(i = 0; i < len; ++i) {
@@ -941,7 +966,17 @@ package com.twinoid.kube.quest.editor.views {
 				}
 			}
 			
-			if(_selectedBoxes.length == 0) {
+			len = _todosHolder.numChildren;
+			for(i = 0; i < len; ++i) {
+				item = _todosHolder.getChildAt(i);
+				if(item.x > minX && item.y > minY
+				&& item.x < maxX && item.y < maxY) {
+					item.filters = selectionOn;
+					_selectedTodos.push(item);
+				}
+			}
+			
+			if(_selectedBoxes.length == 0 && _selectedTodos.length == 0) {
 				clearSelection();
 			}else{
 				_selectionDone		= true;

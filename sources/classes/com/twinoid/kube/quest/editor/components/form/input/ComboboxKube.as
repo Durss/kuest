@@ -46,7 +46,8 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		private var _displayItemLabelOnSelect:Boolean;
 		private var _listWidth:int;
 		private var _labelRenderer:Function;
-		private var _closeTimeout:uint;
+		private var _closeTimeout : uint;
+		private var _selectableItems:Boolean;
 		
 		
 		
@@ -56,8 +57,9 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		/**
 		 * Creates an instance of <code>KubeCombobox</code>.
 		 */
-		public function ComboboxKube(label:String, openToTop:Boolean = false, displayItemLabelOnSelect:Boolean = false) {
+		public function ComboboxKube(label:String, openToTop:Boolean = false, displayItemLabelOnSelect:Boolean = false, selectableItems:Boolean = true) {
 			_displayItemLabelOnSelect = displayItemLabelOnSelect;
+			_selectableItems = selectableItems;
 			_label = label;
 			super(new ButtonKube(label, openToTop ? new ComboboxIconUpGraphic() : new ComboboxIconGraphic()), new ScrollbarKube(), null, new ComboboxBackgroundGraphic(), openToTop);
 			_list.filters = [new DropShadowFilter(2,90,0,.2,0,2,1,3)];
@@ -131,7 +133,7 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		 * Adds a pre-skinned item
 		 */
 		public function addSkinnedItem(label:String, data:*):void {
-			addItem(new ComboboxItem(label), data);
+			addItem(new ComboboxItem(label, _selectableItems), data);
 		}
 		
 		/**
@@ -253,7 +255,7 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		private function renderLabel():void {
 			if(_displayItemLabelOnSelect) {
 				ButtonKube(button).label = ComboboxItem(list.scrollableList.getItemAt(list.scrollableList.selectedIndex)).label;
-			}else{
+			}else if(_selectableItems){
 				ButtonKube(button).label = _label + " ("+list.scrollableList.selectedIndexes.length+")";
 			}
 		}

@@ -206,7 +206,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_holder.addChild(_inventory);
 			_holder.addChild(_simulator);
 			computePositions();
-			_questManager.clearProgression();
+//			_questManager.clearProgression();
 			_questManager.forceEvent(event.data as KuestEvent);
 			_inventory.populate(_questManager.inventory);
 		}

@@ -11,8 +11,8 @@ package com.twinoid.kube.quest.editor.components.form.input {
 	import com.nurun.components.form.ToggleButton;
 	import com.nurun.components.vo.Margin;
 	import com.nurun.utils.text.CssManager;
-
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 
 
@@ -38,8 +38,14 @@ package com.twinoid.kube.quest.editor.components.form.input {
 		/**
 		 * Creates an instance of <code>ComboboxItem</code>.
 		 */
-		public function ComboboxItem(label:String) {
-			super(label, "comboboxButtonItem", "comboboxButtonItemSelected", new ComboboxEntryBackgroundGraphic(), new ComboboxEntrySelectedBackgroundGraphic(), new Bitmap(new BulletPointBmp(NaN, NaN)), new Bitmap(new SubmitSmallBmp(NaN, NaN)));
+		public function ComboboxItem(label:String, selectableItem:Boolean = true) {
+			var css1:String = 'comboboxButtonItem';
+			var css2:String = selectableItem? 'comboboxButtonItemSelected' : css1;
+			var back1:DisplayObject = new ComboboxEntryBackgroundGraphic();
+			var back2:DisplayObject = selectableItem? new ComboboxEntrySelectedBackgroundGraphic() : back1;
+			var icon1:DisplayObject = selectableItem? new Bitmap(new BulletPointBmp(NaN, NaN)) : null;
+			var icon2:DisplayObject = selectableItem? new Bitmap(new SubmitSmallBmp(NaN, NaN)) : null;
+			super(label, css1, css2, back1, back2, icon1, icon2);
 			iconAlign = IconAlign.LEFT;
 			textAlign = TextAlign.LEFT;
 			iconSpacing = 10;
@@ -51,7 +57,8 @@ package com.twinoid.kube.quest.editor.components.form.input {
 			height = parseInt(CssManager.getInstance().styleSheet.getStyle("."+_style)["fontSize"]) + 5;
 			
 			accept(new CssVisitor());
-			applyDefaultFrameVisitorNoTween(this, _backgroundMc, _iconMc);
+			if(defaultBackground != null) applyDefaultFrameVisitorNoTween(this, defaultBackground);
+			if(icon != null) applyDefaultFrameVisitorNoTween(this, icon, selectedIcon);
 			
 			addEventListener(NurunButtonEvent.OVER, overHandler);
 			addEventListener(NurunButtonEvent.OUT, outHandler);

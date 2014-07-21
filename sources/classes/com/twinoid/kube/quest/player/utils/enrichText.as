@@ -6,7 +6,7 @@ package com.twinoid.kube.quest.player.utils {
 	 */
 	public function enrichText(text:String):String {
 		//Convert links to <a href> tags
-		text = text.replace(/(https?:\/\/([-\w\.]+[-\w])+(:\d+)?(\/([\w\/_\.#-]*(\?\S+)?[^\.\s])?)?)/gi, '<a href="$1" target="_blank">$1</a>');
+		text = text.replace(/(https?:\/\/([-\w\.]+[-\w])+(:\d+)?(\/([\w\/_\.#-]*(\?\S+)?[^\.\s])?)?)/gi, '<a href="$1" target="_blank" class="link">$1</a>');
 		//Put un bold following patterns :
 		// (x)(y)
 		// [x][y]

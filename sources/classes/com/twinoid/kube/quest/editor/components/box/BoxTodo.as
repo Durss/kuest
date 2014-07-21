@@ -1,4 +1,7 @@
 package com.twinoid.kube.quest.editor.components.box {
+	import flash.geom.Matrix;
+	import com.twinoid.kube.quest.editor.views.BackgroundView;
+	import flash.events.Event;
 	import fl.motion.easing.Back;
 	import gs.TweenLite;
 	import com.nurun.components.button.GraphicButton;
@@ -52,6 +55,10 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 
+		public function get data() : TodoData {
+			return _data;
+		}
+
 
 
 		/* ****** *
@@ -94,6 +101,12 @@ package com.twinoid.kube.quest.editor.components.box {
 			_data = null;
 		}
 
+		public function moveTo(px:int, py:int):void {
+			x = _data.pos.x = Math.floor(px / BackgroundView.CELL_SIZE) * BackgroundView.CELL_SIZE;
+			y = _data.pos.y = Math.floor(py / BackgroundView.CELL_SIZE) * BackgroundView.CELL_SIZE;
+		}
+
+
 
 		
 		
@@ -126,9 +139,11 @@ package com.twinoid.kube.quest.editor.components.box {
 				x = _data.pos.x;
 				y = _data.pos.y;
 			}
-			
-			graphics.beginBitmapFill(_BMD);
-			graphics.drawRect(0, 0, _BMD.width, _BMD.height);
+
+			var m:Matrix = new Matrix();
+			m.translate(0, -5);
+			graphics.beginBitmapFill(_BMD,m);
+			graphics.drawRect(0, -5, _BMD.width, _BMD.height);
 			graphics.endFill();
 			
 			addEventListener(MouseEvent.CLICK, clickHandler);
@@ -161,7 +176,7 @@ package com.twinoid.kube.quest.editor.components.box {
 		private function rollOverHandler(event:MouseEvent = null):void {
 			if(contains(_DEL)) return;
 			
-			_DEL.y = height;
+			_DEL.y = height - 5;
 			_DEL.width = width;
 			addChild(_DEL);
 			
@@ -191,9 +206,18 @@ package com.twinoid.kube.quest.editor.components.box {
 			if(event.target != BoxTodo._DEL) {
 				_OFS.x = x;
 				_OFS.y = y;
-				startDrag();
+				parent.addChild(this);
 				stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+				addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			}
+		}
+		
+		/**
+		 * Called on enter_frame event to drag the item.
+		 */
+		private function enterFrameHandler(event:Event):void {
+			x = Math.floor(parent.mouseX / BackgroundView.CELL_SIZE) * BackgroundView.CELL_SIZE;
+			y = Math.floor(parent.mouseY / BackgroundView.CELL_SIZE) * BackgroundView.CELL_SIZE;
 		}
 		
 		/**
@@ -203,9 +227,9 @@ package com.twinoid.kube.quest.editor.components.box {
 			event.stopPropagation();
 			event.stopImmediatePropagation();
 			stage.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-			stopDrag();
 			_data.pos.x = x;
 			_data.pos.y = y;
+			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 		}
 		
 		/**
@@ -213,7 +237,6 @@ package com.twinoid.kube.quest.editor.components.box {
 		 * search menu.
 		 */
 		private function searchTodoHandler(event:BoxEvent):void {
-			trace("BoxTodo.searchTodoHandler(event)");
 			dispatchEvent(event);
 		}
 		

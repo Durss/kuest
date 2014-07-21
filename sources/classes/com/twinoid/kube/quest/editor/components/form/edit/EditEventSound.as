@@ -1,6 +1,4 @@
 package com.twinoid.kube.quest.editor.components.form.edit {
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
 	import gs.TweenLite;
 
 	import treefortress.sound.SoundAS;
@@ -8,6 +6,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 
 	import com.nurun.components.button.visitors.applyDefaultFrameVisitorNoTween;
 	import com.nurun.components.form.events.FormComponentEvent;
+	import com.nurun.components.form.events.ListEvent;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.label.Label;
@@ -16,6 +15,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
 	import com.twinoid.kube.quest.editor.components.form.CheckBoxKube;
+	import com.twinoid.kube.quest.editor.components.form.input.ComboboxItem;
+	import com.twinoid.kube.quest.editor.components.form.input.ComboboxKube;
 	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
 	import com.twinoid.kube.quest.editor.utils.SfxrSynth;
 	import com.twinoid.kube.quest.editor.utils.setToolTip;
@@ -31,6 +32,8 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
@@ -54,9 +57,11 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		private var _currentSound:SoundInstance;
 		private var _titleURL:CssTextField;
 		private var _titleSFXR:CssTextField;
+		private var _cbSFXR:ComboboxKube;
 		private var _inputSFXR:InputKube;
 		private var _testSFXRBt:GraphicButtonKube;
 		private var _helpSFXR:GraphicButtonKube;
+		private var _synth:SfxrSynth;
 		
 		
 		
@@ -158,15 +163,17 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 		}
 
 		private function buildUrlForm():void {
+			_synth		= new SfxrSynth();
 			_formUrlSFXRHolder = new Sprite();
 			_titleURL	= _formUrlSFXRHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
 			_inputURL	= _formUrlSFXRHolder.addChild(new InputKube("http://")) as InputKube;
 			_testBt		= _formUrlSFXRHolder.addChild(new GraphicButtonKube(new PlaySoundIcon())) as GraphicButtonKube;
 			_result		= _formUrlSFXRHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
 			_spin		= _formUrlSFXRHolder.addChild(new LoaderSpinning()) as LoaderSpinning;
-			_loop		= _formUrlSFXRHolder.addChild(new CheckBoxKube(Label.getLabel("editWindow-sound-loop"))) as CheckBoxKube;
+			_loop		= _formUrlSFXRHolder.addChild(new CheckBoxKube(Label.getLabel("editWindow-sound-sfxrPresetsTitle"))) as CheckBoxKube;
 			_titleSFXR	= _formUrlSFXRHolder.addChild(new CssTextField("editWindow-label")) as CssTextField;
-			_inputSFXR	= _formUrlSFXRHolder.addChild(new InputKube("0,,0.0488,0.5997,0.3338,0.68,,,,,,0.62,0.67,,,,,-0.02,1,0.02,,,-0.04,0.5")) as InputKube;
+			_cbSFXR		= _formUrlSFXRHolder.addChild(new ComboboxKube(Label.getLabel('editWindow-sound-sfxrPresetsTitle'), false, false, false)) as ComboboxKube;
+			_inputSFXR	= _formUrlSFXRHolder.addChild(new InputKube("SFXR...")) as InputKube;
 			_testSFXRBt	= _formUrlSFXRHolder.addChild(new GraphicButtonKube(new PlaySoundIcon())) as GraphicButtonKube;
 			_helpSFXR	= _formUrlSFXRHolder.addChild(new GraphicButtonKube(new HelpSmallIcon(), false)) as GraphicButtonKube;
 			
@@ -181,6 +188,15 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			
 			setToolTip(_helpSFXR, Label.getLabel('editWindow-sound-sfxrHelpTT'));
 			
+			//Populate SFXpresets
+			var i:int = 1;
+			while(Label.getLabel('editWindow-sound-sfxrPreset-'+i).indexOf('missing lbl') == -1) {
+				var chunks:Array = Label.getLabel('editWindow-sound-sfxrPreset-'+i).split('|');
+				_cbSFXR.addSkinnedItem(chunks[0], chunks[1]);
+				i++;
+			}
+			_cbSFXR.validate();
+			
 			_titleURL.width	= _width;
 			_testBt.enabled	= false;
 			_testBt.width	= _testBt.height = _inputURL.height;
@@ -194,15 +210,17 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_result.text	= Label.getLabel("editWindow-sound-testSuccess");
 			_result.alpha	= 0;
 			_result.visible	= false;
+			_cbSFXR.listWidth = _width - _testBt.width;
 			
 			_titleSFXR.x	= _helpSFXR.width;
 			_titleSFXR.y	= _loop.y + _loop.height + 20;
-			_inputSFXR.y	= _testSFXRBt.y = _titleSFXR.y + _titleSFXR.height;
+			_inputSFXR.y	= _testSFXRBt.y = _cbSFXR.y = _titleSFXR.y + _titleSFXR.height;
 			_titleSFXR.width= _width - _helpSFXR.width;
+			_inputSFXR.x	= _cbSFXR.x + _cbSFXR.width + 5;
 			_helpSFXR.y		= _titleSFXR.y + _titleSFXR.height - _helpSFXR.height;
-			_testSFXRBt.width= _testSFXRBt.height = _inputSFXR.height;
+			_testSFXRBt.width= _testSFXRBt.height = _cbSFXR.height = _inputSFXR.height;
 			_testSFXRBt.x	= _width - _testBt.width;
-			_inputSFXR.width= _width - _testSFXRBt.width - 2;
+			_inputSFXR.width= _width - _testSFXRBt.width - 2 - _cbSFXR.width - 2;
 			
 			SoundAS.loadFailed.addOnce(onSoundError);
 			
@@ -217,12 +235,34 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_inputURL.addEventListener(MouseEvent.MOUSE_DOWN, mouseUpInputHandler);
 			_inputURL.addEventListener(FormComponentEvent.SUBMIT, clickHandler);
 			_inputSFXR.addEventListener(FormComponentEvent.SUBMIT, clickHandler);
+			_cbSFXR.addEventListener(ListEvent.SELECT_ITEM, selectComboBoxItemHandler);
+			_cbSFXR.addEventListener(MouseEvent.MOUSE_OVER, overComboBoxItemHandler);
 			
-			roundPos(_testBt, _inputURL, _result, _loop, _inputSFXR, _titleSFXR, _testSFXRBt, _helpSFXR);
+			roundPos(_testBt, _inputURL, _result, _loop, _cbSFXR, _inputSFXR, _titleSFXR, _testSFXRBt, _helpSFXR);
 			
 			_formUrlSFXRHolder.graphics.beginFill(0x8BC9E2, 1);
 			_formUrlSFXRHolder.graphics.drawRect(0, _titleSFXR.y - 10, _width, 1);
 			_formUrlSFXRHolder.graphics.endFill();
+		}
+
+		private function overComboBoxItemHandler(event : MouseEvent) : void {
+			if(event.target is ComboboxItem) {
+				//Dirty hack to detect which item is rolled over and get its data
+				//Something should be native in the component for this...
+				var index:int = _cbSFXR.list.scrollableList.container.getChildIndex(event.target as ComboboxItem);
+				var chunks:Array = Label.getLabel('editWindow-sound-sfxrPreset-' + (index+1)).split('|');
+				
+				_synth.stop();
+				_synth.params.setSettingsString( chunks[1] );
+				_synth.play();
+			}
+		}
+		
+		/**
+		 * Called when user selects a sound from the combobox
+		 */
+		private function selectComboBoxItemHandler(event:ListEvent):void {
+			_inputSFXR.text = event.data;
 		}
 		
 		/**
@@ -273,9 +313,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			}else
 			
 			if(event.currentTarget == _testSFXRBt || event.currentTarget == _inputSFXR) {
-				var synth:SfxrSynth = new SfxrSynth();
-				synth.params.setSettingsString( _inputSFXR.text );
-				synth.play();
+				_synth.stop();
+				_synth.params.setSettingsString( _inputSFXR.text );
+				_synth.play();
 			}else
 			
 			if(event.currentTarget == _helpSFXR) {

@@ -97,6 +97,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _simulatedEvent:KuestEvent;
 		private var _lastDate:Date;
 		private var _loginAttemps:int;
+		private var _synth:SfxrSynth;
 		
 		
 		
@@ -272,9 +273,9 @@ package com.twinoid.kube.quest.player.model {
 		private function newEventHandler(event:QuestManagerEvent):void {
 			if(currentEvent != null && currentEvent.actionSound != null) {
 				if(!isEmpty(currentEvent.actionSound.sfxr)) {
-					var synth:SfxrSynth = new SfxrSynth();
-					synth.params.setSettingsString( currentEvent.actionSound.sfxr );
-					synth.play();
+					_synth.stop();
+					_synth.params.setSettingsString( currentEvent.actionSound.sfxr );
+					_synth.play();
 				}
 			}
 			dispatchEvent(new DataManagerEvent(DataManagerEvent.NEW_EVENT));
@@ -358,6 +359,7 @@ package com.twinoid.kube.quest.player.model {
 		 */
 		private function initLocalConnections():void {
 			_lcClientNames = [];
+			_synth = new SfxrSynth();
 			_lcSend = new LocalConnection();
 			_lcSend.addEventListener(StatusEvent.STATUS, statusHandler);
 			
