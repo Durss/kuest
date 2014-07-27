@@ -1,6 +1,4 @@
 package com.twinoid.kube.quest.editor.vo {
-	import flash.utils.setTimeout;
-	import flash.events.IOErrorEvent;
 	import by.blooddy.crypto.image.JPEGEncoder;
 
 	import flash.display.Bitmap;
@@ -10,6 +8,7 @@ package com.twinoid.kube.quest.editor.vo {
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.IOErrorEvent;
 	import flash.utils.ByteArray;
 	
 	[Event(name="change", type="flash.events.Event")]
