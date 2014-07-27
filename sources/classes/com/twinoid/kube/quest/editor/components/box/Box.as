@@ -216,15 +216,15 @@ package com.twinoid.kube.quest.editor.components.box {
 				
 				//Colorize box
 				if(_data.endsQuest) {
-					_background.filters = _takePut.filters = _money.filters = [new ColorMatrixFilter([0.37878480553627014,1.6029037237167358,-1.051688551902771,0,11.885000228881836,0.01224497240036726,0.5073512196540833,0.4104038178920746,0,11.885000228881836,1.1350740194320679,-0.12359676510095596,-0.08147723972797394,0,11.885000228881836,0,0,0,1,0])];
+					_background.filters = _timeIcon.filters = _deleteBt.background.filters = _copyBt.background.filters = [new ColorMatrixFilter([0.37878480553627014,1.6029037237167358,-1.051688551902771,0,11.885000228881836,0.01224497240036726,0.5073512196540833,0.4104038178920746,0,11.885000228881836,1.1350740194320679,-0.12359676510095596,-0.08147723972797394,0,11.885000228881836,0,0,0,1,0])];
 				}else
 				if(_data.loosesQuest) {
-					_background.filters = _takePut.filters = _money.filters = [new ColorMatrixFilter([-0.8141878247261047,1.2870899438858032,0.45709773898124695,0,-11.364999771118164,0.46661293506622314,0.409849613904953,0.05353740602731705,0,-11.36500072479248,0.15669459104537964,1.7636311054229736,-0.9903256893157959,0,-11.364999771118164,0,0,0,1,0])];
+					_background.filters = _timeIcon.filters = _deleteBt.background.filters = _copyBt.background.filters = [new ColorMatrixFilter([-0.8141878247261047,1.2870899438858032,0.45709773898124695,0,-11.364999771118164,0.46661293506622314,0.409849613904953,0.05353740602731705,0,-11.36500072479248,0.15669459104537964,1.7636311054229736,-0.9903256893157959,0,-11.364999771118164,0,0,0,1,0])];
 				}else
 				if(_data.startsTree) {
-					_background.filters = _takePut.filters = _money.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
+					_background.filters = _timeIcon.filters = _deleteBt.background.filters = _copyBt.background.filters = [new ColorMatrixFilter([-0.5876463055610657,2.2064313888549805,-0.61878502368927,0,51,0.30404403805732727,0.30756938457489014,0.3883865475654602,0,51,1.0775119066238403,1.017120599746704,-1.0946322679519653,0,51.000003814697266,0,0,0,1,0])];
 				}else{
-					_background.filters = _takePut.filters = _money.filters = [];
+					_background.filters = _timeIcon.filters = _deleteBt.background.filters = _copyBt.background.filters = [];
 				}
 				
 				//============ LINKS MANAGEMNT ============
@@ -264,7 +264,7 @@ package com.twinoid.kube.quest.editor.components.box {
 				
 				//Object indicator
 				_takePut.visible = _data.actionType.type == ActionType.TYPE_OBJECT && (_data.actionType.takeMode || _data.actionType.putMode);
-				_money.visible = _data.actionMoney != null && _data.actionMoney.kuborsEarned > 0;
+				_money.visible = _data.actionMoney != null && _data.actionMoney.kuborsEarned != 0;
 				_takePut.gotoAndStop(_data.actionType.takeMode? 2 : 1);
 			}
 				
@@ -488,8 +488,10 @@ package com.twinoid.kube.quest.editor.components.box {
 			if(_data.actionChoices != null && _data.actionChoices.choices.length > 0) {
 				var label:String;
 				label = _data.actionChoices.choices[ _outBoxToIndex[event.currentTarget] ];
-				var cost:uint = _data.actionChoices.choicesCost[ _outBoxToIndex[event.currentTarget] ];
-				if(cost > 0) label += ' ('+cost+'K)';
+				if(_data.actionChoices.choicesCost != null && _data.actionChoices.choicesCost.length > _outBoxToIndex[event.currentTarget]) {
+					var cost:uint = _data.actionChoices.choicesCost[ _outBoxToIndex[event.currentTarget] ];
+					if(cost > 0) label += ' ('+cost+'K)';
+				}
 				InteractiveObject(event.currentTarget).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.RIGHT));
 			}
 		}

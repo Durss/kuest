@@ -26,5 +26,7 @@ package com.twinoid.kube.quest.editor.vo {
 		public function searchForIt():void {
 			dispatchEvent(new BoxEvent(BoxEvent.SEARCH_TODO, 0, true));
 		}
+		
+		public function TodoData() { }
 	}
 }

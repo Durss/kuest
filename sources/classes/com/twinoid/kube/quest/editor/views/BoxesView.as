@@ -212,7 +212,7 @@ package com.twinoid.kube.quest.editor.views {
 			_scisors.filters		= [new DropShadowFilter(4,135,0,.35,5,5,1,2)];
 			_scisors.mouseChildren	= false;
 			_scisors.mouseEnabled	= false;
-			_highlightFilter		= [new ColorMatrixFilter([1,0,0,0,50, 0,1,0,0,50, 0,0,1,0,50, 0,0,0,1,0 ])];
+			_highlightFilter		= [new ColorMatrixFilter([1,0,0,0,50, 0,1,0,0,25, 0,0,1,0,25, 0,0,0,1,0 ])];
 			_debugFilter			= [new ColorMatrixFilter([0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0.3086000084877014,0.6093999743461609,0.0820000022649765,0,0,0,0,0,1,0])];
 			_debugSelectFilters		= [new GlowFilter(0xffffff, 1, 10, 10)];
 			_debugChildFilters		= [new ColorMatrixFilter([1.0308935642242432,0.2900744080543518,0.03903200477361679,0,-22.85999870300293,0.14689362049102783,1.1740742921829224,0.03903200477361679,0,-22.860000610351563,0.14689362049102783,0.2900744080543518,0.9230319857597351,0,-22.860000610351563,0,0,0,1,0])];

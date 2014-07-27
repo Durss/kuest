@@ -2,6 +2,8 @@ package com.twinoid.kube.quest.editor.views {
 	import gs.TweenLite;
 
 	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.twinoid.kube.quest.editor.components.LoaderSpinning;
 
 	import flash.display.Sprite;
 	import flash.errors.IllegalOperationError;
@@ -11,7 +13,7 @@ package com.twinoid.kube.quest.editor.views {
 	
 	
 	/**
-	 * Singleton ToastView
+	 * Singleton NotificationView
 	 * 
 	 * @author Durss
 	 * @date 18 juil. 2014;
@@ -22,6 +24,8 @@ package com.twinoid.kube.quest.editor.views {
 		private var _label:CssTextField;
 		private var _opened : Boolean;
 		private var _success : Boolean;
+		private var _displayLoader : Boolean;
+		private var _spin : LoaderSpinning;
 		
 		
 		
@@ -56,17 +60,25 @@ package com.twinoid.kube.quest.editor.views {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
-		public function notify(label:String, success:Boolean = true):void {
+		public function notify(label:String, success:Boolean = true, displayLoader:Boolean = false):void {
 			_label.text = label;
+			_displayLoader = displayLoader;
 			
 			visible	= true;
 			_success = success;
+			
+			if(_displayLoader) addChild(_spin);
+			else if(contains(_spin)) removeChild(_spin);
 			
 			computePositions();
 			
 			TweenLite.killTweensOf(this);
 			TweenLite.to(this, .25, {y:0});
-			TweenLite.to(this, .25, {y:-height - 5, delay:label.length * .1, onComplete:onClose});
+			if(!_displayLoader) {
+				TweenLite.to(this, .25, {y:-height - 5, delay:label.length * .1, onComplete:onClose});
+			}else{
+				_spin.open();
+			}
 			
 			_opened = true;
 		}
@@ -83,6 +95,7 @@ package com.twinoid.kube.quest.editor.views {
 		private function initialize():void {
 			visible	= false;
 			_label	= addChild(new CssTextField('notification')) as CssTextField;
+			_spin	= new LoaderSpinning();
 			filters = [new DropShadowFilter(4, 90, 0, .35, 4, 4, 1, 3)];
 			
 			mouseChildren = false;
@@ -106,15 +119,25 @@ package com.twinoid.kube.quest.editor.views {
 		 */
 		private function computePositions(event:Event = null):void {
 			var margin:int = 5;
+			var w:int = _displayLoader? Math.max(_label.width, _spin.width) : _label.width;
+			var h:int = _displayLoader? Math.max(_label.height, _spin.height) : _label.height;
 			graphics.clear();
 			graphics.beginFill(_success? 0x69AF3B : 0xC6352D, 1);
-			graphics.drawRect(0, -10, _label.width + margin * 4, _label.height + margin * 2 + 10);//10 is a margin to prevent from a fuckin half pixel of emptyness that remains sometimes at the top
+			graphics.drawRect(0, -10, w + margin * 4, h + margin * 2 + 10);//10 is a margin to prevent from a fuckin half pixel of emptyness that remains sometimes at the top
 			graphics.endFill();
 			
 			_label.x = margin * 2;
 			_label.y = margin;
 			
-			x = Math.round((stage.stageWidth - width) * .5);
+			_spin.x = _spin.width * .5 + margin * 2;
+			_spin.y = _spin.height * .5 + margin;
+			
+			var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
+			if(menu != null) {
+				x = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width) - width) * .5);
+			}else{
+				x = Math.round((stage.stageWidth - width) * .5);
+			}
 			y = _opened? 0 : -height - 5;
 		}
 		

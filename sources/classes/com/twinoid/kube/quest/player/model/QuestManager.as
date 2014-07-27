@@ -54,7 +54,7 @@ package com.twinoid.kube.quest.player.model {
 		private var _save:ByteArray;
 		private var _questComplete:Boolean;
 		private var _questLost:Boolean;
-		private var _quesEvaluated:Boolean;
+		private var _questEvaluated:Boolean;
 		private var _guidToEvent:Object;
 		private var _historyFavorites:Vector.<String>;
 		private var _moneyManager:MoneyManager;
@@ -100,12 +100,12 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Gets if the quest has been evaluated
 		 */
-		public function get questEvaluated():Boolean { return _quesEvaluated; }
+		public function get questEvaluated():Boolean { return _questEvaluated; }
 		
 		/**
 		 * Sets if the quest has been evaluated
 		 */
-		public function set questEvaluated(value:Boolean):void { _quesEvaluated = value; }
+		public function set questEvaluated(value:Boolean):void { _questEvaluated = value; }
 		
 		/**
 		 * Gets the guids history
@@ -171,7 +171,7 @@ package com.twinoid.kube.quest.player.model {
 			ba.writeUTF( _historyFavorites.join(',') );
 			ba.writeBoolean( _questComplete );
 			ba.writeBoolean( _questLost );
-			ba.writeBoolean( _quesEvaluated );
+			ba.writeBoolean( _questEvaluated );
 			ba.writeObject( _moneyManager.exportData(version) );
 			ba.deflate();
 			return ba;
@@ -330,7 +330,7 @@ package com.twinoid.kube.quest.player.model {
 					if(_timeAccessManager.isEventAccessible(event)//If it's the right periode or if there are no periode limitation
 					&& _treeManager.isEventAccessible(event)//If the event is part of the current priority of its tree
 					&& _moneyManager.isEventAccessible(event)) {//If the event
-						if(!event.actionType.takeMode) {//If an object has to be put here
+						if(event.actionType.putMode) {//If an object has to be put here
 							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
 								if(_inventoryManager.useObject(object.vo.guid) || !verifyNumber) {//Use the object
 									dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
@@ -465,7 +465,7 @@ package com.twinoid.kube.quest.player.model {
 						
 						_questComplete	= _save.readBoolean();
 						_questLost		= _save.readBoolean();
-						_quesEvaluated	= _save.readBoolean();
+						_questEvaluated	= _save.readBoolean();
 						
 						_moneyManager.importData(_save.readObject(), version);
 						break;

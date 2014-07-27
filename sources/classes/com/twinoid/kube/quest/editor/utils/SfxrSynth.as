@@ -29,6 +29,8 @@ com.twinoid.kube.quest.editor.utils{
 	 */
 	public class SfxrSynth
 	{
+		public function SfxrSynth() { }
+		
 		//--------------------------------------------------------------------------
 		//
 		//  Sound Parameters

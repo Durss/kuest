@@ -43,7 +43,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private var _simulator:GameContextSimulatorForm;
 		private var _tabIndex:int;
 		private var _inventory:GameInventorySimulatorForm;
-		private var _money:BaseButton;
+		private var _money : BaseButton;
+		private var _model : Model;
 		
 		
 		
@@ -80,10 +81,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 */
 		override public function update(model:Model):void {
 			super.update(model);
-			if(_questManager == null) return;
-			_spin.open(Label.getLabel('loader-parsingDebug'));
-			_questManager.loadData(model.kuestData.nodes, model.kuestData.objects, null, new Date().getTime(), false, true);
-			_eventDisplay.clear();
+			_model = model;
 		}
 
 
@@ -166,6 +164,9 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private function openHandler(event:Event):void {
 			FrontControler.getInstance().setDebugMode(true);
 			_questManager.clearProgression();
+			_spin.open(Label.getLabel('loader-parsingDebug'));
+			_questManager.loadData(_model.kuestData.nodes, _model.kuestData.objects, null, new Date().getTime(), false, true);
+			_eventDisplay.clear();
 		}
 
 		/**
@@ -206,7 +207,7 @@ package com.twinoid.kube.quest.editor.components.menu {
 			_holder.addChild(_inventory);
 			_holder.addChild(_simulator);
 			computePositions();
-//			_questManager.clearProgression();
+//			_questManager.clearProgression();//Do not clear, source of missunderstanding when money is cleared
 			_questManager.forceEvent(event.data as KuestEvent);
 			_inventory.populate(_questManager.inventory);
 		}

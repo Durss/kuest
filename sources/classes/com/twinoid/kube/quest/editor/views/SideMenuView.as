@@ -45,6 +45,10 @@ package com.twinoid.kube.quest.editor.views {
 	 * Characters menu provides a way to create characters that will talk to us
 	 * during the quest.
 	 * 
+	 * Debug menu provieds a way to test the quest's logic.
+	 * 
+	 * And credits simply shows so credits. (cap'n obious!)
+	 * 
 	 * 
 	 * @author Francois
 	 * @date 10 févr. 2013;
