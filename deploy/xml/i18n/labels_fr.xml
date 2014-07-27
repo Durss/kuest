@@ -8,15 +8,15 @@
 			<li>Possibilité d'ajouter des mémos.</li>
 			<li>Ajout d'un menu de paramètres.</li>
 			<li>Ajout de presets de sons SFXR.</li>
-			<li>Possibilité de faire prdre de l'argent sur un événement en spécifiant une valeur négative.</li>
+			<li>Possibilité de faire perdre de l'argent sur un événement en spécifiant une valeur négative.</li>
 			<li>Possibilité de faire un événement d'objet qui ne demande pas d'action (prise/pose).</li>
 			<li>Agrandissement de certains champs de texte en popin à leur édition.</li>
 			<li>Demande de confirmation si on quitte la page en cours d'édition.</li>
 			<li>Déplacement/zoom du plateau au clavier.</li>
 			<li>Mise en évidence de la quête en cours d'édition dans la liste des quêtes.</li>
 			<li>Ajout d'une notification quand la sauvegarde/publication est terminées.</li>
-			<liCorrection d'un important bug sur la sauvegarde de progression d'une quête qui faisait disparaître des morceaux de données..</li>
-			<liCorrection d'un léger bug au niveau du debugger (quelle ironie !) </li>
+			<li>Correction d'un important bug sur la sauvegarde de progression d'une quête qui faisait disparaître des morceaux de données..</li>
+			<li>Correction d'un léger bug au niveau du debugger (quelle ironie !) </li>
 		</ul>]]></label>
 		
 		<!-- !Global -->

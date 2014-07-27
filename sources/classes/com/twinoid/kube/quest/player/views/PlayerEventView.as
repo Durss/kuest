@@ -246,7 +246,6 @@ package com.twinoid.kube.quest.player.views {
 			}
 			if(event.target == _next) {
 				if(_simulatedMode) {
-					trace("PlayerEventView.clickHandler(event)");
 					newEventHandler();
 				}else{
 					DataManager.getInstance().next();

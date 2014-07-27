@@ -38,7 +38,6 @@ package com.twinoid.kube.quest.player.vo {
 		 */
 		public function set guidToEvent(value:Object):void {
 			_guidToEvent = value;
-			_guidToEvent[-1] = new KuestEvent(true);
 		}
 
 
@@ -128,7 +127,7 @@ package com.twinoid.kube.quest.player.vo {
 				treeID = _nodeToTreeID[ reference ];
 				//Sets an empty event as the next priority so that it can
 				//never be reached and the tree never started again.
-				_treeIDToPriorities[ treeID ] = new <KuestEvent>[_guidToEvent[-1]];
+				_treeIDToPriorities[ treeID ] = null;
 				return;
 			}else{
 				//Here we could probably be satisfied with a simple
@@ -180,7 +179,7 @@ package com.twinoid.kube.quest.player.vo {
 			for (var treeID:* in _treeIDToPriorities) {
 				var events:Vector.<KuestEvent> = _treeIDToPriorities[treeID];
 				var i:int, len:int;
-				len = events.length;
+				len = events != null? events.length : 0;
 				data[treeID] = [];
 				for(i = 0; i < len; ++i) {
 					data[treeID][i] = events[i].guid;

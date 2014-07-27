@@ -491,9 +491,9 @@ package com.twinoid.kube.quest.player.model {
 			if(event == _currentEvent) return false;
 			
 			//If this new event is an object related event.
-			if(event.actionType != null && event.actionType.type == ActionType.TYPE_OBJECT && !objectUsed) {
+			if (event.actionType != null && event.actionType.type == ActionType.TYPE_OBJECT && !objectUsed) {
 				//If its a "take mode", put it in the inventory
-				if(event.actionType.takeMode) {
+				if (event.actionType.takeMode) {
 					_inventoryManager.takeObject(event.actionType.itemGUID);
 					dispatchEvent(new QuestManagerEvent(QuestManagerEvent.INVENTORY_UPDATE));
 				}else if(event.actionType.putMode) {

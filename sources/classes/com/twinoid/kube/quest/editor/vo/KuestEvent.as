@@ -24,7 +24,7 @@ package com.twinoid.kube.quest.editor.vo {
 	 */
 	public class KuestEvent extends EventDispatcher implements Disposable {
 		
-		internal static var GUID:uint;
+		internal static var GUID:uint = 1;
 		
 		private var _dependencies:Vector.<Dependency>;
 		private var _boxPosition:Point;
