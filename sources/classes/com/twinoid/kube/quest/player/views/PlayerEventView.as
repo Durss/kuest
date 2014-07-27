@@ -110,7 +110,7 @@ package com.twinoid.kube.quest.player.views {
 		 * Called when a new event should be displayed
 		 */
 		private function newEventHandler(event:DataManagerEvent = null):void {
-			if(_data != null) {
+			if(_data != null && _data.actionType.getItem() != null) {
 				_data.actionType.getItem().image.removeEventListener(Event.CHANGE, changeImageHandler);
 			}
 			

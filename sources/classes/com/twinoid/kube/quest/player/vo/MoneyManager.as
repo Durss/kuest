@@ -73,7 +73,7 @@ package com.twinoid.kube.quest.player.vo {
 		 */
 		public function selectEvent(event:KuestEvent):Boolean {
 			if(event.actionMoney != null) {
-				if(event.actionMoney.kuborsEarned > 0) {
+				if(event.actionMoney.kuborsEarned != 0) {
 					_money += event.actionMoney.kuborsEarned;
 					return true;
 				}
