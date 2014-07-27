@@ -49,8 +49,8 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Creates an instance of <code>KuestEvent</code>.
 		 */
-		public function KuestEvent(endTreeEvent:Boolean = false, duplicateFrom:KuestEvent = null) {
-			initialize(endTreeEvent);
+		public function KuestEvent(duplicateFrom:KuestEvent = null) {
+			initialize();
 			_boxPosition = new Point(0, 0);
 			
 			if(duplicateFrom != null) {
@@ -386,12 +386,8 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize(endTreeEvent:Boolean):void {
-			if(endTreeEvent) {
-				_guid = 0;
-			}else{
-				_guid = ++GUID;
-			}
+		private function initialize():void {
+			_guid = ++GUID;
 			_dependencies = new Vector.<Dependency>();
 			_children = new Vector.<KuestEvent>();
 		}

@@ -112,7 +112,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Adds an entry point
 		 */
 		public function addEntryPoint(px:int, py:int, duplicateFrom:KuestEvent = null):void {
-			var e:KuestEvent = new KuestEvent(false, duplicateFrom);
+			var e:KuestEvent = new KuestEvent(duplicateFrom);
 			e.boxPosition.x = px;
 			e.boxPosition.y = py;
 			
