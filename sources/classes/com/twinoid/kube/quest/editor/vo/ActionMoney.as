@@ -14,7 +14,7 @@ package com.twinoid.kube.quest.editor.vo {
 		public static const GREATER_EQUALS:int = 3;
 		public static const LOWER_EQUALS:int = 4;
 		
-		private var _kuborsEarned:uint;
+		private var _kuborsEarned:int;
 		private var _unlockConditionEnabled:Boolean;
 		private var _unlockCondition:uint;
 		private var _unlockValue:uint;
@@ -36,11 +36,11 @@ package com.twinoid.kube.quest.editor.vo {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 
-		public function get kuborsEarned():uint {
+		public function get kuborsEarned():int {
 			return _kuborsEarned;
 		}
 
-		public function set kuborsEarned(value:uint):void {
+		public function set kuborsEarned(value:int):void {
 			_kuborsEarned = value;
 		}
 

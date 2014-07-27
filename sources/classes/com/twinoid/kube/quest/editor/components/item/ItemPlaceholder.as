@@ -55,8 +55,8 @@ package com.twinoid.kube.quest.editor.components.item {
 		/**
 		 * Creates an instance of <code>ItemPlaceholder</code>.
 		 */
-		public function ItemPlaceholder(browseMode:Boolean = false, selectMode:Boolean = false, selectType:String = ItemSelectorEvent.ITEM_TYPE_CHAR) {
-			_selectType = selectType;
+		public function ItemPlaceholder(browseMode:Boolean = false, selectMode:Boolean = false, selectType:String = null) {
+			_selectType = selectType == null? ItemSelectorEvent.ITEM_TYPE_CHAR : selectType;
 			_selectMode = selectMode;
 			_browseMode = browseMode;
 			initialize();

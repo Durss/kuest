@@ -365,6 +365,7 @@ package com.twinoid.kube.quest.editor.model {
 			if(optimise) {
 				prompt("menu-file-publish-promptTitle", "menu-file-publish-promptContent", _saveCmd.execute, "publish", callback, false);
 			}else{
+				NotificationView.getInstance().notify('', true, true);
 				_saveCmd.execute();
 			}
 			

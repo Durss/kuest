@@ -124,7 +124,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 			_holder		= addChild(new Sprite()) as Sprite;
 			_icon		= _holder.addChild(new MoneyIcon()) as MoneyIcon;
 			_label		= _holder.addChild(new CssTextField('editWindow-label')) as CssTextField;
-			_input		= _holder.addChild(new InputKube('?', true, 0, 9999999999)) as InputKube;
+			_input		= _holder.addChild(new InputKube('?', true, -999999999, 999999999)) as InputKube;
 			_helpBt		= _holder.addChild(new GraphicButtonKube(new HelpSmallIcon(), false)) as GraphicButtonKube;
 			_rangeCb	= _holder.addChild(new CheckBoxKube(Label.getLabel('editWindow-money-range'), 'checkBox_fade')) as CheckBoxKube;
 			_rangeCombo	= _holder.addChild(new ComboboxKube('', false, true)) as ComboboxKube;

@@ -268,7 +268,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 		 * Called when saving completes/fails
 		 */
 		private function onSaveResult(success:Boolean, errorID:String = "", progress:Number = NaN):void {
-			progress;//Cannot get progression fo upload :(
+			progress;//Cannot get progression for upload :(
 			errorID;
 			
 //			if(!isNaN(progress)) {
