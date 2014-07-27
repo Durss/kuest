@@ -24,7 +24,7 @@ package com.twinoid.kube.quest.editor.vo {
 	 */
 	public class KuestEvent extends EventDispatcher implements Disposable {
 		
-		internal static var GUID:int;
+		internal static var GUID:uint;
 		
 		private var _dependencies:Vector.<Dependency>;
 		private var _boxPosition:Point;
@@ -36,7 +36,7 @@ package com.twinoid.kube.quest.editor.vo {
 		private var _actionMoney:ActionMoney;
 		private var _endsQuest:Boolean;
 		private var _loosesQuest:Boolean;
-		private var _guid:int;
+		private var _guid:uint;
 		private var _children:Vector.<KuestEvent>;
 		private var _treeID:int;
 		private var _startsTree:Boolean;
@@ -229,13 +229,13 @@ package com.twinoid.kube.quest.editor.vo {
 		 * @private
 		 * here for serialization purpose only!
 		 */
-		public function get guid():int { return _guid; }
+		public function get guid():uint { return _guid; }
 
 		/**
 		 * @private
 		 * here for serialization purpose only!
 		 */
-		public function set guid(value:int):void {
+		public function set guid(value:uint):void {
 			_guid = value;
 			if(value > GUID) GUID = value + 1;
 		}
@@ -388,7 +388,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		private function initialize(endTreeEvent:Boolean):void {
 			if(endTreeEvent) {
-				_guid = -1;
+				_guid = 0;
 			}else{
 				_guid = ++GUID;
 			}

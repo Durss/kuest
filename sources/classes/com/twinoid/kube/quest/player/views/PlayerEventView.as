@@ -110,6 +110,9 @@ package com.twinoid.kube.quest.player.views {
 		 * Called when a new event should be displayed
 		 */
 		private function newEventHandler(event:DataManagerEvent = null):void {
+			if(_data != null) {
+				_data.actionType.getItem().image.removeEventListener(Event.CHANGE, changeImageHandler);
+			}
 			
 			if(event != null && event.type == DataManagerEvent.SIMULATE_EVENT) {
 				_simulatedMode = true;
@@ -175,6 +178,7 @@ package com.twinoid.kube.quest.player.views {
 			//Display image
 			graphics.clear();
 			if (_data.actionType.getItem() != null && _data.actionType.getItem().image != null) {
+				_data.actionType.getItem().image.addEventListener(Event.CHANGE, changeImageHandler);
 				_image.visible = true;
 				_image.setBitmapData( _data.actionType.getItem().image.getConcreteBitmapData() );
 				graphics.beginFill(0x2D89B0);
@@ -212,6 +216,16 @@ package com.twinoid.kube.quest.player.views {
 			_next.validate();
 			
 			dispatchEvent(new Event(Event.RESIZE, true));
+		}
+		
+		/**
+		 * Called when image changes.
+		 * This is usefull as images decoding might take some time and it can be displayed
+		 * before actually be fully initialized. If initialized after its display, we
+		 * refresh its rendering with the new image.
+		 */
+		private function changeImageHandler(event:Event):void {
+			_image.setBitmapData( _data.actionType.getItem().image.getConcreteBitmapData() );
 		}
 	
 		/**

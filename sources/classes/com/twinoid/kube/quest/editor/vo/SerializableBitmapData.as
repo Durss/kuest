@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.vo {
+	import flash.utils.setTimeout;
 	import flash.events.IOErrorEvent;
 	import by.blooddy.crypto.image.JPEGEncoder;
 

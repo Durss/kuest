@@ -157,21 +157,26 @@ package com.twinoid.kube.quest.player.vo {
 		/**
 		 * Exports the data as anonymous object ready to be stored to a ByteArray.
 		 * These data will then be imported back with importData().
-		 * It basically keeps the same structur but in anonymous arrays instead of
+		 * It basically keeps the same structure but in anonymous object instead of
 		 * dictionary and vectors. And it replaces the KuestEvent instances by
 		 * their GUID.
 		 * In the end we'll have something like this :
-		 * 	[
+		 * 	{
 		 * 		treeID : [guid1, guid2, guid3, ...]
 		 * 		treeID : [guid1, guid2, guid3, ...]
 		 * 		treeID : [guid1, guid2, guid3, ...]
-		 * 	]
+		 * 	}
 		 * 	
 		 * 	Where guids are the KuesEvent's GUIDs.
+		 * 	
+		 * 	DO NOT RETURN AN ARRAY !!
+		 * 	There's a REALLY weird bug with ByteArray.writeObject() that loses
+		 * 	some data parts if we serialze a keyed array instead of an anonymous
+		 * 	object. Saving as an object seems to solve the problem..
 		 */
-		public function exportData(version:uint):Array {
+		public function exportData(version:uint):Object {
 			version;
-			var data:Array = [];
+			var data:Object = {};
 			for (var treeID:* in _treeIDToPriorities) {
 				var events:Vector.<KuestEvent> = _treeIDToPriorities[treeID];
 				var i:int, len:int;
@@ -181,13 +186,14 @@ package com.twinoid.kube.quest.player.vo {
 					data[treeID][i] = events[i].guid;
 				}
 			}
+			
 			return data;
 		}
 		
 		/**
 		 * Imports data that have been previously exported by exportData() .
 		 */
-		public function importData(data:Array, version:uint):void {
+		public function importData(data:Object, version:uint):void {
 			if(_guidToEvent == null) {
 				throw new KuestException('TreeManager.initialize method must be called before importData !', 'TreeManager');
 			}
