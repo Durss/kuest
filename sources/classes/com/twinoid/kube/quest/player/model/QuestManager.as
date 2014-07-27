@@ -1,5 +1,4 @@
 package com.twinoid.kube.quest.player.model {
-	import com.twinoid.kube.quest.player.vo.MoneyManager;
 	import com.twinoid.kube.quest.editor.error.KuestException;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
 	import com.twinoid.kube.quest.editor.vo.ActionType;
@@ -11,6 +10,7 @@ package com.twinoid.kube.quest.player.model {
 	import com.twinoid.kube.quest.player.utils.getPositionId;
 	import com.twinoid.kube.quest.player.vo.InventoryManager;
 	import com.twinoid.kube.quest.player.vo.InventoryObject;
+	import com.twinoid.kube.quest.player.vo.MoneyManager;
 	import com.twinoid.kube.quest.player.vo.PositionManager;
 	import com.twinoid.kube.quest.player.vo.SaveVersion;
 	import com.twinoid.kube.quest.player.vo.TimeAccessManager;
@@ -163,7 +163,7 @@ package com.twinoid.kube.quest.player.model {
 		public function exportSave():ByteArray {
 			var version:uint = SaveVersion.V1;
 			var ba:ByteArray = new ByteArray();
-			ba.writeUnsignedInt( version );
+			ba.writeUnsignedInt(version);
 			ba.writeObject( _treeManager.exportData(version) );
 			ba.writeObject( _inventoryManager.exportData(version) );
 			ba.writeObject( _positionToIndex );

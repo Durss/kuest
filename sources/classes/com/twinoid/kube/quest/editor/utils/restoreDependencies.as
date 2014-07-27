@@ -14,7 +14,7 @@ package com.twinoid.kube.quest.editor.utils {
 	 * Also, the characters and objects' references are stored as GUIDs to prevent
 	 * from having multiple times the same BitmapData which would be a huge loss of
 	 * size for nothing.
-	 * This methods resets the links to the concrete IItem instance reference.
+	 * This method resets the links to the concrete IItem instance reference.
 	 * 
 	 * @author Francois
 	 */

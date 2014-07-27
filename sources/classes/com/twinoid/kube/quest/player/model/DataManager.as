@@ -248,7 +248,7 @@ package com.twinoid.kube.quest.player.model {
 			
 			//Local debugging
 			if(Capabilities.playerType == "StandAlone") {
-				//XXX repère local conf
+				//XXX repère local confs
 				//structure tester - 51a272f115f96
 				//MlleNolwenn - 51a1e15e398b4
 				//TFS bordel - 519e7fe42ff5a
@@ -260,7 +260,8 @@ package com.twinoid.kube.quest.player.model {
 				//2) Dépendances d'événements - 51ad0ec570134
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
 				//7) Utiliser les Kubors - 52b6070ecfe6b
-				Config.addVariable("kuestID", "52b6070ecfe6b");
+				//Les cinqs Curiosités - 52c171f1e82da
+				Config.addVariable("kuestID", "52c171f1e82da");
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
@@ -532,6 +533,16 @@ package com.twinoid.kube.quest.player.model {
 						onTouchForum();
 						_lcSend.send(_lcClientNames[i], "_touchForum", p.x, p.y, p.z);
 					}
+				}
+			}
+			
+			//Backup solution to get the current zone in case we can't connect to the game via LocalConnection.
+			//Grab it right from the zone's description.
+			if(!_connectedToGame) {
+				if(/.*li class="pos".*?\[ ?(-?[0-9]+) ?\] ?\[ ?(-?[0-9]+) ?\].*/gsi.test(text)) {
+					var extract:String = text.replace(/.*li class="pos".*?\[ ?(-?[0-9]+) ?\] ?\[ ?(-?[0-9]+) ?\].*/gsi, '$1_$2');
+					var chunks:Array = extract.split('_');
+					onUpdatePosition(parseInt(chunks[0]), parseInt(chunks[1]));
 				}
 			}
 		}
