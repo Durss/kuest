@@ -488,6 +488,8 @@ package com.twinoid.kube.quest.editor.components.box {
 			if(_data.actionChoices != null && _data.actionChoices.choices.length > 0) {
 				var label:String;
 				label = _data.actionChoices.choices[ _outBoxToIndex[event.currentTarget] ];
+				var cost:uint = _data.actionChoices.choicesCost[ _outBoxToIndex[event.currentTarget] ];
+				if(cost > 0) label += ' ('+cost+'K)';
 				InteractiveObject(event.currentTarget).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.RIGHT));
 			}
 		}

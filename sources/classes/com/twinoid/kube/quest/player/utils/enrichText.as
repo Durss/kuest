@@ -1,6 +1,6 @@
 package com.twinoid.kube.quest.player.utils {
 	/**
-	 * Puts coordinates in bold and makes links clikable
+	 * Puts coordinates in bold, makes links clikable and hglights "xx kubors" patterns
 	 * 
 	 * @author Durss
 	 */
@@ -14,7 +14,8 @@ package com.twinoid.kube.quest.player.utils {
 		// [x;y]
 		// (x;y)
 		// and some other more due to the regexp tolerence
-		text = text.replace(/([\[\(]?-?[0-9]+([\[\];\)\( ]){1,3}-?[0-9]+[\];\)]?)/gi, '<b>$1</b>');
+		text = text.replace(/([\[\(]?-?[0-9]+([\[\];\)\( ]){1,3}-?[0-9]+[\];\)]?)/gi, '<span class="kuest-coordinates">$1</span>');
+		text = text.replace(/[0-9]+ ?kubors?/gi, '<span class="kuest-kubors">$&</span>');
 		return text;
 	}
 }

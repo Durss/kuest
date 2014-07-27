@@ -81,3 +81,5 @@
 .kuest-inventoryEmpty { font-family:Verdana; font-size:18; font-weight:bold; color:#ffffff; }
 .kuest-evaluationTitle, .kuest-lostTitle { font-family:Verdana; font-size:18; font-weight:bold; color:#ffffff; text-align:center; }
 .kuest-favoritesLabel { font-family:Verdana; font-size:14; color:#ffffff; }
+.kuest-kubors { font-family:Verdana; font-weight:bold; font-size:12; color:#FFF677; }
+.kuest-coordinates { font-family:Verdana; font-weight:bold; font-size:12; color:#BD0000; }
