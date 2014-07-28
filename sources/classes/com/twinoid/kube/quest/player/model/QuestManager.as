@@ -136,7 +136,7 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Gets the money earned
 		 */
-		public function get money():uint { return _moneyManager.money; }
+		public function get money():int { return _moneyManager.money; }
 
 
 
@@ -269,20 +269,23 @@ package com.twinoid.kube.quest.player.model {
 			children = _currentEvent.getChildren();
 			len = children.length;
 			
+			//Remove as much money as the answer's cost.
+			if(_currentEvent.actionChoices == null != null
+			&& _currentEvent.actionChoices.choicesCost.length > answerIndex) {
+				if(_moneyManager.money >= _currentEvent.actionChoices.choicesCost[answerIndex]) {
+					_moneyManager.answerChoice( _currentEvent.actionChoices.choicesCost[answerIndex] );
+					dispatchEvent(new QuestManagerEvent(QuestManagerEvent.MONEY_UPDATE));
+				}
+			}
+			
 			//The current event has 1 or no choices, go for a simpler solution
 			//where all the children will get the priority.
 			if(_currentEvent.actionChoices == null
 			|| _currentEvent.actionChoices.choices.length < 2) {
-				_treeManager.givePriorityTo( children, _currentEvent );
-			}else{
 			
-				//Remove as much money as the answer's cost.
-				if(_currentEvent.actionChoices.choicesCost.length > answerIndex) {
-					if(_moneyManager.money >= _currentEvent.actionChoices.choicesCost[answerIndex]) {
-						_moneyManager.answerChoice( _currentEvent.actionChoices.choicesCost[answerIndex] );
-						dispatchEvent(new QuestManagerEvent(QuestManagerEvent.MONEY_UPDATE));
-					}
-				}
+				_treeManager.givePriorityTo( children, _currentEvent );
+			
+			}else{
 			
 				//The event has two or more choices
 				var priorities:Vector.<KuestEvent> = new Vector.<KuestEvent>();
@@ -323,13 +326,20 @@ package com.twinoid.kube.quest.player.model {
 			if(events == null) return false;
 			var i:int, len:int, event:KuestEvent;
 			len = events.length;
-			//Search for an event asking for this object
+			//Search for an event asking for this object that is in the priorities
+			//of its tree or that is a direct and accessible child of the current event
 			for(i = 0; i < len; ++i) {
 				event = events[i];
 				if(event.actionType.type == ActionType.TYPE_OBJECT) {
-					if(_timeAccessManager.isEventAccessible(event)//If it's the right periode or if there are no periode limitation
-					&& _treeManager.isEventAccessible(event)//If the event is part of the current priority of its tree
-					&& _moneyManager.isEventAccessible(event)) {//If the event
+					if((_treeManager.isEventAccessible(event) //If the event is part of the current priorities of its tree
+						|| //OR it's an object put and the event is a child the current event and has no price constraint
+							(event.actionType.putMode
+							&& _currentEvent.isParentOf(event)
+							&& !_currentEvent.hasAPriceConstraintFor(event)
+							)
+						)
+					&&	_timeAccessManager.isEventAccessible(event)//If it's the right periode of time or if there are no periode limitation
+					&& _moneyManager.isEventAccessible(event)) {//If we have enough money
 						if(event.actionType.putMode) {//If an object has to be put here
 							if(event.actionType.getItem().guid == object.vo.guid) {//If we put the good object
 								if(_inventoryManager.useObject(object.vo.guid) || !verifyNumber) {//Use the object

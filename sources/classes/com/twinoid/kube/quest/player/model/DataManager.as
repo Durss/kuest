@@ -217,7 +217,7 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Gets the money earned
 		 */
-		public function get money():uint { return _questManager.money; }
+		public function get money():int { return _questManager.money; }
 		
 		
 		

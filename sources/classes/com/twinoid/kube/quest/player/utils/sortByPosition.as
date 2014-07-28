@@ -11,9 +11,9 @@ package com.twinoid.kube.quest.player.utils {
 	 * @author Francois
 	 */
 	public function sortByPosition(a:KuestEvent, b:KuestEvent):int {
-			if(a.boxPosition.x < b.boxPosition.x) return -1;
-			if(a.boxPosition.x == b.boxPosition.x) return a.boxPosition.y < b.boxPosition.y? - 1 : 1;
-			if(a.boxPosition.x > b.boxPosition.x) return 1;
+			if(a.boxPosition.y < b.boxPosition.y) return -1;
+			if(a.boxPosition.y == b.boxPosition.y) return a.boxPosition.x < b.boxPosition.x? - 1 : 1;
+			if(a.boxPosition.y > b.boxPosition.y) return 1;
 			return 0;
 	}
 }

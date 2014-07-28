@@ -34,7 +34,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private var _width:int;
 		private var _answerToIndex:Dictionary;
 		private var _selectedAnswerIndex:int;
-		private var _money:uint;
+		private var _money:int;
 		
 		
 		
@@ -70,7 +70,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		/**
 		 * Populates the component with an event's data
 		 */
-		public function populate(event:KuestEvent, money:uint):void {
+		public function populate(event:KuestEvent, money:int):void {
 			_money = money;
 			if (event == null) {
 				clear();
@@ -170,7 +170,7 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 				bt.label = _currentEvent.actionChoices.choices[i];
 				bt.enabled = true;
 				bt.icon = null;
-				if(_currentEvent.actionChoices.choicesCost.length > i && _currentEvent.actionChoices.choicesCost[i] > 0) {
+				if(_currentEvent.actionChoices.choicesCost.length > i && _currentEvent.actionChoices.choicesCost[i] != 0) {
 					bt.icon = new MoneyIcon();
 					bt.iconAlign = IconAlign.LEFT;
 					bt.icon.scaleX = bt.icon.scaleY = 2;

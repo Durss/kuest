@@ -313,7 +313,7 @@ package com.twinoid.kube.quest.editor.vo {
 		public function getImage():BitmapData { return (_actionType != null && _actionType.getItem() != null && _actionType.getItem().image != null)? _actionType.getItem().image.getConcreteBitmapData() : null; }
 		
 		/**
-		 * Gets the dependency events.
+		 * Gets the event's dependencies.
 		 */
 		public function getDependencies():Vector.<Dependency> { return _dependencies; }
 		
@@ -328,6 +328,8 @@ package com.twinoid.kube.quest.editor.vo {
 		 * It takes all the dependencies recursively. So, the "from" parameter
 		 * mustn't be a direct node's parent or the test will return true even if
 		 * there is no loop.
+		 * 
+		 * USELESS METHOD SINCE DEEP REFACTORING OF QUEST MANAGER
 		 */
 		public function loopsFrom(from:KuestEvent):Vector.<KuestEvent> {
 			return deepDependencyCheck(from);
@@ -425,10 +427,51 @@ package com.twinoid.kube.quest.editor.vo {
 		 * The children are defined only at deserialization when loading a quest.
 		 * 
 		 * This method isn't set as a normal getter to prevent it from being
-		 * serialized on save and serialized on loading
+		 * serialized on save and deserialized on loading
 		 */
 		public function getChildren():Vector.<KuestEvent> {
 			return _children;
+		}
+		
+		/**
+		 * Gets the current node is a child of the specified one.
+		 * 
+		 * This method isn't set as a normal getter to prevent it from being
+		 * serialized on save and deserialized on loading
+		 */
+		public function isParentOf(event:KuestEvent):Boolean {
+			var i:int, len:int;
+			len = _children.length;
+			for(i = 0; i < len; ++i) {
+				if(_children[i].guid == event.guid) return true;
+			}
+			return false;
+		}
+		
+		/**
+		 * Gets the specified node has a choice constraint.
+		 * Basically, the method returns true if the event depends on
+		 * a priced choice.
+		 * 
+		 * This method isn't set as a normal getter to prevent it from being
+		 * serialized on save and deserialized on loading
+		 */
+		public function hasAPriceConstraintFor(event:KuestEvent):Boolean {
+			var dep:Vector.<Dependency> = event.getDependencies();
+			if(dep.length == 0) return false;
+			
+			var i:int, len:int, choiceIndex:int;
+			len = dep.length;
+			for(i = 0; i < len; ++i) {
+				if(dep[i].event.guid == guid) {
+					choiceIndex = dep[i].choiceIndex;
+					if(_actionChoices.choicesCost.length > choiceIndex
+					&& _actionChoices.choicesCost[ choiceIndex ] != 0) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 		
 		/**
@@ -437,6 +480,8 @@ package com.twinoid.kube.quest.editor.vo {
 		 * node is found.
 		 * 
 		 * @return	if a looped dependency has been found (true) or not (false).
+		 * 
+		 * USELESS METHOD SINCE DEEP REFACTORING OF QUEST MANAGER
 		 */
 		private function deepDependencyCheck(entry:KuestEvent, done:Dictionary = null):Vector.<KuestEvent> {
 			var i:int, len:int;

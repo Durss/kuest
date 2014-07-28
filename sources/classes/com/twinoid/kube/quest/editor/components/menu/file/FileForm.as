@@ -1,4 +1,5 @@
 package com.twinoid.kube.quest.editor.components.menu.file {
+	import com.twinoid.kube.quest.graphics.TodosIcon;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.environnement.path.Path;
 	import com.nurun.structure.mvc.views.ViewLocator;
@@ -129,7 +130,7 @@ package com.twinoid.kube.quest.editor.components.menu.file {
 			_clearBt	= addChild(new ButtonKube(Label.getLabel("menu-file-new"), new NewFileIcon(), true)) as ButtonKube;
 			_loadBt		= addChild(new ButtonKube(Label.getLabel("menu-file-load"), new LoadIcon(), true)) as ButtonKube;
 			_saveBt		= addChild(new ButtonKube(Label.getLabel("menu-file-save"), new SaveIcon(), true)) as ButtonKube;
-			_todosBt	= addChild(new ButtonKube(Label.getLabel("menu-file-todos"), new DeployIcon(), true)) as ButtonKube;
+			_todosBt	= addChild(new ButtonKube(Label.getLabel("menu-file-todos"), new TodosIcon(), true)) as ButtonKube;
 			_publishBt	= addChild(new ButtonKube(Label.getLabel("menu-file-publish"), new DeployIcon(), true)) as ButtonKube;
 			_testBt		= addChild(new ButtonKube(Label.getLabel("menu-file-test"), new ParamsIcon(), true)) as ButtonKube;
 			_helpBt		= addChild(new ButtonKube(Label.getLabel("menu-file-help"), new HelpIcon(), true)) as ButtonKube;
