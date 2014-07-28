@@ -150,7 +150,7 @@ package com.twinoid.kube.quest.player.views {
 				
 				if(_data.actionChoices.choicesCost != null
 				&& _data.actionChoices.choicesCost.length > i
-				&& _data.actionChoices.choicesCost[i] > 0) {
+				&& _data.actionChoices.choicesCost[i] != 0) {
 					if(_choicesSpool[i].icon == null) {
 						_choicesSpool[i].icon = new MoneyIcon();
 						_choicesSpool[i].iconAlign = IconAlign.LEFT;
@@ -169,7 +169,7 @@ package com.twinoid.kube.quest.player.views {
 			}
 			
 			//Add/remove next button
-			if(_simulatedMode || (_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0)) {//TODO Check for time
+			if(_simulatedMode || (_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0)) {//TODO Check for time and price
 				addChild(_next);
 			}else if(contains(_next)) {
 				removeChild(_next);

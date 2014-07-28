@@ -110,7 +110,7 @@ package com.twinoid.kube.quest.editor.components.form {
 		 */
 		private function initialize():void {
 			_input		= addChild(new InputKube(Label.getLabel("editWindow-choice-defaultText").replace(/\{I\}/gi, (_index+1).toString()))) as InputKube;
-			_inputMoney	= addChild(new InputKube('0', true, 0, 9999999999)) as InputKube;
+			_inputMoney	= addChild(new InputKube('0', true, -999999999, 999999999)) as InputKube;
 			_toggle		= addChild(new ToggleButton('', '', '', null, null, new MoneyIcon(), new MoneyIcon())) as ToggleButton;
 			
 			_input.textfield.maxChars = 100;

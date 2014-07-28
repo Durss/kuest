@@ -9,7 +9,7 @@ package com.twinoid.kube.quest.player.vo {
 	 */
 	public class MoneyManager {
 		
-		private var _money:uint = 0;
+		private var _money:int = 0;
 		
 		
 		
@@ -29,7 +29,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 
-		public function get money():uint {
+		public function get money():int {
 			return _money;
 		}
 
@@ -86,7 +86,7 @@ package com.twinoid.kube.quest.player.vo {
 		 * 
 		 * @param cost		cost of the choice
 		 */
-		public function answerChoice(cost:uint):void {
+		public function answerChoice(cost:int):void {
 			_money -= cost;
 		}
 		
