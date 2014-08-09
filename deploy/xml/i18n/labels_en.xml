@@ -191,7 +191,7 @@
     <label code="editWindow-type-objectTT"><![CDATA[Object take/put ]]></label>
     <label code="editWindow-type-objectDefault"><![CDATA[Text displayed when the object is taken/put...]]></label>
     <label code="editWindow-type-take"><![CDATA[Get]]></label>
-    <label code="editWindow-type-put"><![CDATA[User]]></label>
+    <label code="editWindow-type-put"><![CDATA[Use]]></label>
     <!-- tooltip -->
     <label code="editWindow-type-placeHolderObjectTT"><![CDATA[Select an object.]]></label>
     <!-- tooltip -->
@@ -203,6 +203,12 @@
     <label code="editWindow-choice-defaultText"><![CDATA[Choice {I}...]]></label>
     <!-- tootlip -->
     <label code="editWindow-choice-payingChoice"><![CDATA[Make this choice paying]]></label>
+	<!-- tooltip -->
+	<label code="editWindow-choice-mode_choice"><![CDATA[This answer will be displayed<br />as a clickable button.]]></label>
+	<!-- tooltip -->
+	<label code="editWindow-choice-mode_strict"><![CDATA[The player will have to write this<br />answer precisely in an input field.<br /><i>(uppercase, lowercase, numbers,<br />etc..will have to be the same !)</i>]]></label>
+	<!-- tooltip -->
+	<label code="editWindow-choice-mode_tolerant"><![CDATA[The player will have to write this<br />answer with a typo tolerance<br />in an input field..]]></label>
     <!-- !Event's time edition -->
     <label code="editWindow-time-title"><![CDATA[Event's date]]></label>
     <!-- tooltip -->
@@ -289,50 +295,8 @@
     <label code="player-historyFavTT"><![CDATA[Pin]]></label>
     <label code="player-questLost"><![CDATA[You failed the quest.<br />Restart from the begining and try to complete it again !]]></label>
     <label code="player-questLostRestart"><![CDATA[Restart]]></label>
-    <!-- !HTML pages -->
-    <label code="menu_createButton"><![CDATA[Create a quest]]></label>
-    <label code="menu_createButtonTT"><![CDATA[Discover the quest editor and create your own quest for the game Kube !]]></label>
-    <label code="menu_kuests"><![CDATA[Quests list]]></label>
-    <label code="menu_connect"><![CDATA[Connect]]></label>
-    <label code="menu_history"><![CDATA[Played quests]]></label>
-    <label code="menu_histoButtonTT"><![CDATA[browse the quest you played]]></label>
-    <label code="menu_kuestsTT"><![CDATA[Back to the quests list.]]></label>
-    <label code="browse_search"><![CDATA[Search for a quest]]></label>
-    <label code="browse_searchPlaceholder"><![CDATA[Enter a keyword or a nickname...]]></label>
-    <label code="browse_searchSubmit"><![CDATA[Search]]></label>
-    <label code="browse_results"><![CDATA[Search results]]></label>
-    <label code="browse_titleLeft"><![CDATA[Best quests]]></label>
-    <label code="browse_titleRight"><![CDATA[Last created quests]]></label>
-    <label code="browse_players"><![CDATA[<span class='totalPlays'>This quest has been played by {TOTAL} players.</span>]]></label>
-    <label code="loading"><![CDATA[Loading...]]></label>
-    <label code="noResults"><![CDATA[No result.]]></label>
-    <label code="loadingError"><![CDATA[Woops... an error has occurred while loading quests list.]]></label>
-    <label code="history_titleRight"><![CDATA[Played quests]]></label>
-    <label code="history_noResults"><![CDATA[You haven't played any quest for now !<br/><br/>Why don't you try this one ?]]></label>
-    <label code="history_complete"><![CDATA[<strong>You have complete this quest !</strong>]]></label>
-    <label code="history_inProgress"><![CDATA[<b>You haven't complete this quest yet.</b>]]></label>
-    <label code="down_content"><![CDATA[Twinoid is unavailable for the moment, which makes this application unusable.<br /><br />Please try again later.<br /><br /><i>Sorry for the inconvenience.</i>]]></label>
-    <label code="down_title"><![CDATA[Server error]]></label>
-    <label code="redirect_title"><![CDATA[If you are not automatically redirected, <a href=\"{URL}\" target=\"_blank\">click here</a>.]]></label>
-    <label code="syncer_description"><![CDATA[<strong class='collapser collapserOpen'>Quest description :</strong>]]></label>
-    <label code="syncer_load"><![CDATA[Launch this quest]]></label>
-    <label code="syncer_installScript"><![CDATA[Install script Kuest]]></label>
-    <label code="syncer_installGM"><![CDATA[Install GreaseMonkey]]></label>
-    <label code="syncer_installTM"><![CDATA[Install TamperMonkey ]]></label>
-    <label code="syncer_installInstructions"><![CDATA[<img src='/kuest/img/warning.png' alt='warning' />To play this quest, install <span id='extension-GM'><a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>GreaseMonkey</a></span><span id='extension-TM'><a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a></span> as well as the script <b>Kuest</b> :]]></label>
-    <label code="syncer_infoTitle"><![CDATA[Help :]]></label>
-    <label code="syncer_infoContent"><![CDATA[Here are the steps to be able to play a quest.<br /><ul><li>If you use <b>Firefox</b>, <a href='https://addons.mozilla.org/firefox/addon/greasemonkey/' target='_blank'>install GreaseMonkey</a> then click on <a href='/kuest/js/kuest.user.js' target='_blank'>that link</a>.</li><li>If you use <b>Google Chrome</b>, install <a href='https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo' target='_blank'>TamperMonkey</a> then click on <a href='/kuest/js/kuest.user.js' target='_blank'>that link</a>.<br />Or go to the page <b>chrome://extensions</b> then drag&drop the file <a href='/kuest/js/kuest.user.js' target='_blank'>Kuest.user.js</a> inside the page.</li><li>The script hasen't been tested on <b>Opera</b></li><li><b>Internet Explorer</b> doesn't support the script.</li></ul>Once installed, you only need to click on "<b>Launch this quest</b>" under to start the quest.]]></label>
-    <label code="syncer_notFoundTitle"><![CDATA[Quest not found]]></label>
-    <label code="syncer_notFoundContent"><![CDATA[<img src='/kuest/img/error.png' alt='error'/> Quest not found]]></label>
-    <label code="error_title"><![CDATA[API error]]></label>
-    <label code="error_content"><![CDATA[An error has occured while connecting to the application.<br /><br />Twinoid's APID has answered :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>]]></label>
-    <label code="error_auth_title"><![CDATA[Connection failed]]></label>
-    <label code="error_auth_content"><![CDATA[In order to use this application, you need to grant it authorization to access your personnal informations.<br /><br />Your informations will be used to :<ul><li>Authenticate</li><li>Weight your evaluations depending on your Kube's statistics</li></ul><br />Click on the button above to connect again.]]></label>
-    <label code="error_db_title"><![CDATA[Database connection error]]></label>
-    <label code="error_db_content"><![CDATA[<br/><br/><br/>Unable to connect database.<br />Please try again later !]]></label>
-    <label code="error_api_title"><![CDATA[API error]]></label>
-    <label code="error_api_content"><![CDATA[An error has occured while connecting to the application.<br /><br />Twinoid's API has answered :<br /><div class='error'><i><b>{CODE}</b> for graph API request <b>{API}</b></i></div>]]></label>
-    <label code="syncer_players"><![CDATA[Players that finished this quest]]></label>
-    <label code="syncer_playersContent"><![CDATA[Nobody has finished this quest yet.<br />A quest is considered as complete when the player evaluated it.]]></label>
+	<!-- tooltip -->
+	<label code="player-moneyTT"><![CDATA[Kubors]]></label>
+	<label code="player-inputAnswerPlaceholder"><![CDATA[Answer...]]></label>
   </labels>
 </root>

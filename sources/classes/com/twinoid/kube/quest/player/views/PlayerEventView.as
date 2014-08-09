@@ -1,20 +1,26 @@
 package com.twinoid.kube.quest.player.views {
-	import com.twinoid.kube.quest.player.utils.enrichText;
 	import com.nurun.components.bitmap.ImageResizer;
 	import com.nurun.components.bitmap.ImageResizerAlign;
+	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
 	import com.nurun.components.button.TextAlign;
+	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.vector.VectorUtils;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.buttons.GraphicButtonKube;
+	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
 	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
+	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
 	import com.twinoid.kube.quest.graphics.MoneyIcon;
+	import com.twinoid.kube.quest.graphics.SubmitArrowIcon;
 	import com.twinoid.kube.quest.player.events.DataManagerEvent;
 	import com.twinoid.kube.quest.player.model.DataManager;
+	import com.twinoid.kube.quest.player.utils.enrichText;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -40,6 +46,8 @@ package com.twinoid.kube.quest.player.views {
 		private var _next:ButtonKube;
 		private var _choicesSpool:Vector.<ButtonKube>;
 		private var _simulatedMode:Boolean;
+		private var _input:InputKube;
+		private var _inputSubmit:GraphicButton;
 		
 		
 		
@@ -85,9 +93,11 @@ package com.twinoid.kube.quest.player.views {
 			_choicesSpool = new Vector.<ButtonKube>();
 			_buttonToIndex = new Dictionary();
 			
-			_image	= addChild(new ImageResizer(ImageResizerAlign.CENTER, true, true, 100, 100)) as ImageResizer;
-			_tf		= addChild(new CssTextField("kuest-description")) as CssTextField;
-			_next	= addChild(new ButtonKube('')) as ButtonKube;
+			_image			= addChild(new ImageResizer(ImageResizerAlign.CENTER, true, true, 100, 100)) as ImageResizer;
+			_tf				= addChild(new CssTextField("kuest-description")) as CssTextField;
+			_next			= addChild(new ButtonKube('')) as ButtonKube;
+			_input			= addChild(new InputKube(Label.getLabel('player-inputAnswerPlaceholder'))) as InputKube;
+			_inputSubmit	= addChild(new GraphicButtonKube(new SubmitArrowIcon())) as GraphicButtonKube;
 			
 			_tf.selectable = true;
 			
@@ -95,9 +105,10 @@ package com.twinoid.kube.quest.player.views {
 			
 			DataManager.getInstance().addEventListener(DataManagerEvent.NEW_EVENT, newEventHandler);
 			DataManager.getInstance().addEventListener(DataManagerEvent.SIMULATE_EVENT, newEventHandler);
-			computePositions();
 			_image.addEventListener(MouseEvent.ROLL_OVER, rollOverImageHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
+			_input.addEventListener(FormComponentEvent.SUBMIT, submitInputHandler);
+			computePositions();
 		}
 		
 		/**
@@ -133,13 +144,21 @@ package com.twinoid.kube.quest.player.views {
 			alpha = 1;
 			
 			//Remove choices buttons
-			var i:int, len:int, maxWidth:int;
+			var i:int, len:int, maxWidth:int, hasAnInputChoice:Boolean;
 			len = _choicesSpool.length;
 			for(i = 0; i < len; ++i) if(contains(_choicesSpool[i])) removeChild(_choicesSpool[i]);
 			
 			//Add necessary choices buttons.
 			len = _data.actionChoices.choices.length;
 			for(i = 0; i < len; ++i) {
+				if (_data.actionChoices.choicesModes != null
+				&& _data.actionChoices.choicesModes.length > i
+				&& (_data.actionChoices.choicesModes[i] == null
+				|| _data.actionChoices.choicesModes[i] != ActionChoices.MODE_CHOICE)) {
+					hasAnInputChoice = true;
+					continue;//Don't create button ! Just need the input.
+				}
+				
 				if(_choicesSpool.length <= i) {
 					_choicesSpool[i] = new ButtonKube("");
 					_choicesSpool[i].textAlign = TextAlign.LEFT;
@@ -171,8 +190,16 @@ package com.twinoid.kube.quest.player.views {
 			//Add/remove next button
 			if(_simulatedMode || (_data.actionChoices.choices.length == 0 && _data.getChildren().length > 0)) {//TODO Check for time and price
 				addChild(_next);
-			}else if(contains(_next)) {
-				removeChild(_next);
+			}else if(contains(_next)) removeChild(_next);
+			
+			//Add/remove input field
+			if(hasAnInputChoice) {
+				addChild(_input);
+				addChild(_inputSubmit);
+			}
+			else if(contains(_input)) {
+				removeChild(_input);
+				removeChild(_inputSubmit);
 			}
 			
 			//Display image
@@ -197,11 +224,16 @@ package com.twinoid.kube.quest.player.views {
 			}
 			
 			//Place elements
-			_tf.x = _image.visible? _image.width + 10 : 10;
-			_tf.width = _image.visible? _width - _image.width - 10 : _width - 20;
+			_tf.x				= _image.visible? _image.width + 10 : 10;
+			_tf.width			= _image.visible? _width - _image.width - 10 : _width - 20;
+			_input.width		= 300;
 			
 			if(_data.actionChoices.choices.length > 0) {
-				PosUtils.vPlaceNext(5, _tf, VectorUtils.toArray(_choicesSpool), _next);
+				if(hasAnInputChoice) {
+					PosUtils.vPlaceNext(5, _tf, _input, VectorUtils.toArray(_choicesSpool), _next);
+				}else{
+					PosUtils.vPlaceNext(5, _tf, VectorUtils.toArray(_choicesSpool), _next);
+				}
 			}else{
 				PosUtils.vPlaceNext(5, _tf, _next);
 			}
@@ -212,7 +244,11 @@ package com.twinoid.kube.quest.player.views {
 				_choicesSpool[i].enabled = _choicesSpool[i].enabled && !_simulatedMode;
 //				PosUtils.hCenterIn(_choicesSpool[i], _tf);
 			}
-			_next.x = _tf.x;
+			_input.x			= _tf.x;
+			_inputSubmit.y		= _input.y;
+			_inputSubmit.x		= _input.x + _input.width;
+			_inputSubmit.height	= _input.height;
+			_next.x				= _tf.x;
 			_next.validate();
 			
 			dispatchEvent(new Event(Event.RESIZE, true));
@@ -251,7 +287,18 @@ package com.twinoid.kube.quest.player.views {
 					DataManager.getInstance().next();
 				}
 			}
+			if(event.target == _inputSubmit) {
+				submitInputHandler();
+			}
 		}
 		
+		/**
+		 * Called when user submits an answer from the input
+		 */
+		private function submitInputHandler(event:FormComponentEvent = null):void {
+			if(!DataManager.getInstance().answer(0, _input.text)) {
+				_input.errorFlash();
+			}
+		}
 	}
 }

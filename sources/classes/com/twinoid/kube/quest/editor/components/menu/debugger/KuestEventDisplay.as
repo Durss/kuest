@@ -1,11 +1,14 @@
 package com.twinoid.kube.quest.editor.components.menu.debugger {
 	import com.nurun.components.button.IconAlign;
+	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
 	import com.nurun.utils.pos.roundPos;
 	import com.twinoid.kube.quest.editor.components.buttons.ButtonKube;
+	import com.twinoid.kube.quest.editor.components.form.input.InputKube;
 	import com.twinoid.kube.quest.editor.components.item.ItemPlaceholder;
+	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
 	import com.twinoid.kube.quest.graphics.MoneyIcon;
 	import com.twinoid.kube.quest.player.utils.enrichText;
@@ -34,7 +37,8 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private var _width:int;
 		private var _answerToIndex:Dictionary;
 		private var _selectedAnswerIndex:int;
-		private var _money:int;
+		private var _money : int;
+		private var _input : InputKube;
 		
 		
 		
@@ -60,6 +64,14 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		 */
 		public function get selectedAnswerIndex():int {
 			return _selectedAnswerIndex;
+		}
+		
+		/**
+		 * Gets the input's content or null if it's not a textual answer
+		 */
+		public function get textualAnswer():String {
+			if(!contains(_input)) return null;
+			return _input.text;
 		}
 
 
@@ -107,6 +119,14 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 			_label.text = "";
 			_image.clear();
 		}
+		
+		/**
+		 * Makes the input blink red
+		 */
+		public function flashErrorInput():void {
+			_input.errorFlash();
+		}
+
 
 
 		
@@ -120,11 +140,13 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private function initialize():void {
 			_image	= addChild(new ItemPlaceholder()) as ItemPlaceholder;
 			_label	= addChild(new CssTextField('menu-label')) as CssTextField;
+			_input	= addChild(new InputKube(Label.getLabel('player-inputAnswerPlaceholder'))) as InputKube;
 			_answersSpool = new Vector.<ButtonKube>();
 			_answerToIndex = new Dictionary();
 			
 			computePositions();
 			addEventListener(MouseEvent.CLICK, clickHandler);
+			_input.addEventListener(FormComponentEvent.SUBMIT, submitInputHandler);
 		}
 		
 		/**
@@ -138,12 +160,20 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 			var i:int, len:int, py:int;
 			len = _answersSpool.length;
 			py = _label.y + _label.height + 5;
+			
+			
+			if(contains(_input)) {
+				_input.y = py;
+				py = _input.y + _input.height + 5;
+			}
 			for(i = 0; i < len; ++i) {
 				_answersSpool[i].y = py;
 				_answersSpool[i].width = _width;
 				py += _answersSpool[i].height + 5;
 				roundPos(_answersSpool[i]);
 			}
+			
+			_input.width = _width;
 			
 			roundPos(_label, _image);
 		}
@@ -152,13 +182,21 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		 * Builds the choices buttons
 		 */
 		private function buildChoices():void {
-			var i:int, len:int, bt:ButtonKube;
+			var i:int, len:int, bt:ButtonKube, hasAnInputChoice:Boolean;
 			len = _answersSpool.length;
 			//Remove everyone
 			for(i = 0; i < len; ++i) if(contains(_answersSpool[i])) removeChild(_answersSpool[i]);
 			
 			len = _currentEvent.actionChoices.choices.length;
 			for(i = 0; i < len; ++i) {
+				if (_currentEvent.actionChoices.choicesModes != null
+				&& _currentEvent.actionChoices.choicesModes.length > i
+				&& (_currentEvent.actionChoices.choicesModes[i] == null
+				|| _currentEvent.actionChoices.choicesModes[i] != ActionChoices.MODE_CHOICE)) {
+					hasAnInputChoice = true;
+					continue;//Don't create button ! Just need the input.
+				}
+				
 				if(_answersSpool.length <= i) {
 					bt = new ButtonKube('');
 					_answersSpool.push(bt);
@@ -178,6 +216,10 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 					bt.enabled = _money >= _currentEvent.actionChoices.choicesCost[i];
 				}
 			}
+			
+			//Add/remove input field
+			if(hasAnInputChoice) addChild(_input);
+			else if(contains(_input)) removeChild(_input);
 			
 			if(len == 0) {
 				if(_answersSpool.length <= i) {
@@ -202,6 +244,13 @@ package com.twinoid.kube.quest.editor.components.menu.debugger {
 		private function clickHandler(event:MouseEvent):void {
 			if(_answerToIndex[ event.target ] == undefined) return;
 			_selectedAnswerIndex = _answerToIndex[ event.target ];
+			dispatchEvent(new Event(Event.SELECT));
+		}
+		
+		/**
+		 * Called when user submits an answer from the input
+		 */
+		private function submitInputHandler(event:FormComponentEvent):void {
 			dispatchEvent(new Event(Event.SELECT));
 		}
 		

@@ -70,7 +70,7 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				len = _choices.length;
 				for(i = 0; i < len; ++i) {
 					if(StringUtils.trim(_choices[i].value as String).length > 0) {
-						data.actionChoices.addChoice(_choices[i].text, _choices[i].choiceCost);
+						data.actionChoices.addChoice(_choices[i].text, _choices[i].choiceCost, _choices[i].choiceMode);
 					}
 				}
 			}
@@ -91,7 +91,9 @@ package com.twinoid.kube.quest.editor.components.form.edit {
 				for(i = 0; i < len; ++i) {
 					if (data.actionChoices.choices.length > i && data.actionChoices.choices[i].length > 0) {
 						enabled = true;
-						_choices[i].populate( data.actionChoices.choices[i], data.actionChoices.choicesCost.length > i? data.actionChoices.choicesCost[i] : 0 );
+						_choices[i].populate(	data.actionChoices.choices[i],
+												data.actionChoices.choicesCost.length > i? data.actionChoices.choicesCost[i] : 0,
+												data.actionChoices.choicesModes.length > i? data.actionChoices.choicesModes[i] : ActionChoices.MODE_CHOICE );
 					}
 				}
 				super.onload(enabled, 0);
