@@ -1,14 +1,14 @@
 function Editor() {
 	var onload = function () {
-        if(lang.length == 0) {//Get browser's language if we couldn't get the user's language from Twinoid's API because ... dunno.
+        if(lang.length == 0) {//Get browser's language if we couldn't get the user's language from Twinoid's API because ... dunno, just in case :D
             lang = (navigator.language) ? navigator.language : navigator.userLanguage;
             lang = lang.split("-")[0];
         }
-        //Compute this languages list via PHP depending on the folder's content.
+        //TODO Compute this languages list via PHP depending on the folder's content.
         if(lang != "fr" && lang != "en") lang = "en";
 
         var flashvars = {};
-        flashvars["version"] = "85";
+        flashvars["version"] = "86";
         flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
         flashvars["lang"] = lang;
         var attributes = {};

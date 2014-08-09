@@ -1,4 +1,8 @@
 package com.twinoid.kube.quest.editor.components.form {
+	import com.twinoid.kube.quest.editor.events.ToolTipEvent;
+	import flash.events.MouseEvent;
+	import com.nurun.utils.pos.roundPos;
+	import com.twinoid.kube.quest.graphics.ChoiceModeIcon;
 	import com.twinoid.kube.quest.editor.vo.ToolTipAlign;
 	import com.twinoid.kube.quest.editor.utils.setToolTip;
 	import gs.TweenLite;
@@ -21,8 +25,9 @@ package com.twinoid.kube.quest.editor.components.form {
 		private var _width:int;
 		private var _color:uint;
 		private var _input:InputKube;
-		private var _toggle:ToggleButton;
-		private var _inputMoney:InputKube;
+		private var _toggleMoney:ToggleButton;
+		private var _inputMoney : InputKube;
+		private var _mode : ChoiceModeIcon;
 		
 		
 		
@@ -65,7 +70,7 @@ package com.twinoid.kube.quest.editor.components.form {
 		 * Gets if the choice is a paying one
 		 */
 		public function get payingChoice():Boolean {
-			return _toggle.selected;
+			return _toggleMoney.selected;
 		}
 		
 		/**
@@ -73,6 +78,13 @@ package com.twinoid.kube.quest.editor.components.form {
 		 */
 		public function get choiceCost():uint {
 			return _inputMoney.numValue;
+		}
+		
+		/**
+		 * Gets the current choice mode (choice, strict, tolerant)
+		 */
+		public function get choiceMode():String {
+			return _mode.currentFrameLabel;
 		}
 
 
@@ -82,7 +94,7 @@ package com.twinoid.kube.quest.editor.components.form {
 		 * ****** */
 		public function reset():void {
 			_input.text = _input.defaultLabel;
-			_toggle.selected = false;
+			_toggleMoney.selected = false;
 			_inputMoney.text = '0';
 			_inputMoney.scaleX = 0;
 			computePositions();
@@ -91,11 +103,12 @@ package com.twinoid.kube.quest.editor.components.form {
 		/**
 		 * Populates the component
 		 */
-		public function populate(label:String, cost:uint):void {
+		public function populate(label:String, cost:uint, mode:String):void {
 			_input.text = label;
-			_toggle.selected = cost > 0;
+			_toggleMoney.selected = cost > 0;
 			_inputMoney.text = cost.toString();
 			_inputMoney.scaleX = cost > 0? 1 : 0;
+			_mode.gotoAndStop( mode );
 			computePositions();
 		}
 
@@ -109,36 +122,59 @@ package com.twinoid.kube.quest.editor.components.form {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_input		= addChild(new InputKube(Label.getLabel("editWindow-choice-defaultText").replace(/\{I\}/gi, (_index+1).toString()))) as InputKube;
-			_inputMoney	= addChild(new InputKube('0', true, -999999999, 999999999)) as InputKube;
-			_toggle		= addChild(new ToggleButton('', '', '', null, null, new MoneyIcon(), new MoneyIcon())) as ToggleButton;
+			_input			= addChild(new InputKube(Label.getLabel("editWindow-choice-defaultText").replace(/\{I\}/gi, (_index+1).toString()))) as InputKube;
+			_inputMoney		= addChild(new InputKube('0', true, -999999999, 999999999)) as InputKube;
+			_toggleMoney	= addChild(new ToggleButton('', '', '', null, null, new MoneyIcon(), new MoneyIcon())) as ToggleButton;
+			_mode			= addChild(new ChoiceModeIcon()) as ChoiceModeIcon;
 			
+			_mode.stop();
 			_input.textfield.maxChars = 100;
-			_toggle.defaultIcon.alpha = .5;
+			_toggleMoney.defaultIcon.alpha = .5;
 			_inputMoney.width = 50;
 			_inputMoney.scaleX = 0;
+			_mode.buttonMode = true;
 			
-			setToolTip(_toggle, Label.getLabel('editWindow-choice-payingChoice'), ToolTipAlign.TOP_LEFT);
+			setToolTip(_toggleMoney, Label.getLabel('editWindow-choice-payingChoice'), ToolTipAlign.TOP_LEFT);
 			
 			computePositions();
 			
-			_toggle.addEventListener(Event.CHANGE, toggleMoneyHandler);
+			_mode.addEventListener(MouseEvent.CLICK, clickModeHandler);
+			_mode.addEventListener(MouseEvent.ROLL_OVER, rollOverModeHandler);
+			_toggleMoney.addEventListener(Event.CHANGE, toggleMoneyHandler);
+		}
+		
+		/**
+		 * Called when "mode" icon is rolled over to display a tooltip
+		 */
+		private function rollOverModeHandler(event:MouseEvent):void {
+			_mode.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel('editWindow-choice-mode_' + _mode.currentFrameLabel)));
+		}
+
+		/**
+		 * Called when "mode" icon is clicked to switch answer mode
+		 */
+		private function clickModeHandler(event:MouseEvent):void {
+			_mode.gotoAndStop( _mode.currentFrame % _mode.totalFrames + 1 );
+			rollOverModeHandler(event);
 		}
 		
 		/**
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			_toggle.icon.scaleX	= _toggle.selectedIcon.scaleX	= 
-			_toggle.icon.scaleY	= _toggle.selectedIcon.scaleY	= 1;
-			_toggle.icon.scaleX	= _toggle.selectedIcon.scaleX	= 
-			_toggle.icon.scaleY	= _toggle.selectedIcon.scaleY	= _input.height / _toggle.icon.height;
+			_toggleMoney.icon.scaleX	= _toggleMoney.selectedIcon.scaleX	= 
+			_toggleMoney.icon.scaleY	= _toggleMoney.selectedIcon.scaleY	= 1;
+			_toggleMoney.icon.scaleX	= _toggleMoney.selectedIcon.scaleX	= 
+			_toggleMoney.icon.scaleY	= _toggleMoney.selectedIcon.scaleY	= _input.height / _toggleMoney.icon.height;
 			
-			_input.x		= 11;
-			_input.width	= _width - _input.x - _toggle.width - 5 - ((_inputMoney.width+5) * _inputMoney.scaleX);
-			_toggle.x		= _input.x + _input.width;
-			_inputMoney.x	= _toggle.x + _toggle.width + 5;
+			_input.x			= 11;
+			_input.width		= _width - _input.x - _toggleMoney.width - 5 - ((_inputMoney.width+5) * _inputMoney.scaleX) - _mode.width - 5;
+			_toggleMoney.x		= _input.x + _input.width;
+			_inputMoney.x		= _toggleMoney.x + _toggleMoney.width + 5;
 			_inputMoney.validate();
+			_mode.x				= _width - _mode.width - 5;
+			
+			roundPos(_input, _inputMoney, _toggleMoney, _mode);
 			
 			graphics.clear();
 			graphics.beginFill(_color, 1);
@@ -150,7 +186,7 @@ package com.twinoid.kube.quest.editor.components.form {
 		 * Called when money form is toggled
 		 */
 		private function toggleMoneyHandler(event:Event):void {
-			if(_toggle.selected) {
+			if(_toggleMoney.selected) {
 				TweenLite.to(_inputMoney, .25, {scaleX:1, onUpdate:computePositions});
 			}else{
 				TweenLite.to(_inputMoney, .25, {scaleX:0, onUpdate:computePositions});

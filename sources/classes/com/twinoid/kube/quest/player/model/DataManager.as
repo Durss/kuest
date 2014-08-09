@@ -261,7 +261,8 @@ package com.twinoid.kube.quest.player.model {
 				//4) Exemple poser/prendre objets - 51ad12eca65b6
 				//7) Utiliser les Kubors - 52b6070ecfe6b
 				//Les cinqs Curiosités - 52c171f1e82da
-				Config.addVariable("kuestID", "52c171f1e82da");
+				//Test choix input - 53d6b0b096166
+				Config.addVariable("kuestID", "53d6b0b096166");
 				Config.addVariable("currentUID", "48");
 				Config.addVariable("testMode", 'true');
 			}
@@ -418,8 +419,8 @@ package com.twinoid.kube.quest.player.model {
 		/**
 		 * Answers a question
 		 */
-		public function answer(index:int):void {
-			_questManager.completeEvent(index);
+		public function answer(index:int, text:String = null):Boolean {
+			return _questManager.completeEvent(index, true, text);
 		}
 		
 		/**

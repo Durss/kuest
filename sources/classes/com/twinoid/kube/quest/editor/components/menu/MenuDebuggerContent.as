@@ -43,8 +43,8 @@ package com.twinoid.kube.quest.editor.components.menu {
 		private var _simulator:GameContextSimulatorForm;
 		private var _tabIndex:int;
 		private var _inventory:GameInventorySimulatorForm;
-		private var _money : BaseButton;
-		private var _model : Model;
+		private var _money:BaseButton;
+		private var _model:Model;
 		
 		
 		
@@ -228,7 +228,9 @@ package com.twinoid.kube.quest.editor.components.menu {
 		 * Called when the user answers a choice
 		 */
 		private function answerHandler(event:Event):void {
-			_questManager.completeEvent(_eventDisplay.selectedAnswerIndex);
+			if(!_questManager.completeEvent(_eventDisplay.selectedAnswerIndex, true, _eventDisplay.textualAnswer)) {
+				_eventDisplay.flashErrorInput();
+			}
 		}
 		
 		/**

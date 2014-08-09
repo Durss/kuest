@@ -1,5 +1,7 @@
 package com.twinoid.kube.quest.player.model {
+	import com.nurun.utils.string.StringUtils;
 	import com.twinoid.kube.quest.editor.error.KuestException;
+	import com.twinoid.kube.quest.editor.vo.ActionChoices;
 	import com.twinoid.kube.quest.editor.vo.ActionPlace;
 	import com.twinoid.kube.quest.editor.vo.ActionType;
 	import com.twinoid.kube.quest.editor.vo.KuestEvent;
@@ -256,21 +258,62 @@ package com.twinoid.kube.quest.player.model {
 		 * 
 		 * @param answerIndex	answer index
 		 */
-		public function completeEvent(answerIndex:int = 0, autoContinue:Boolean = true):void {
+		public function completeEvent(answerIndex:int = 0, autoContinue:Boolean = true, text:String = null):Boolean {
+			var i:int, len:int, children:Vector.<KuestEvent>, child:KuestEvent, goodAnswer:Boolean;
+			
+			//If it's a textual answer, check if the answer is ok depending on the tolerance
+			if(text != null) {
+				len = currentEvent.actionChoices.choices.length;
+				for(i = 0; i < len; ++i) {
+					//Check if we have enough money for this answer, if not, check next answer
+					if(currentEvent.actionChoices.choicesCost != null
+					&& currentEvent.actionChoices.choicesCost.length > i
+					&& currentEvent.actionChoices.choicesCost[i] < _moneyManager.money) continue;
+					
+					//Check if the choice is an input choice
+					if (currentEvent.actionChoices.choicesModes != null
+					&& currentEvent.actionChoices.choicesModes.length > i
+					&& currentEvent.actionChoices.choicesModes[i] != null
+					&& currentEvent.actionChoices.choicesModes[i] != ActionChoices.MODE_CHOICE) {
+						//Check if answer is valid depending on the tolerance
+						switch(currentEvent.actionChoices.choicesModes[i]) {
+							case ActionChoices.MODE_INPUT_STRICT :
+								if(StringUtils.trim(text) == StringUtils.trim(currentEvent.actionChoices.choices[i])) {
+									goodAnswer = true;
+									answerIndex = i;
+									break;
+								}
+								break;//loop
+							case ActionChoices.MODE_INPUT_TOLERANT :
+								var tolerance:uint = Math.floor(currentEvent.actionChoices.choices[i].length / 5) + 1;//Allow one error every 5 chars
+								if(StringUtils.distance(StringUtils.trim(text),  StringUtils.trim(currentEvent.actionChoices.choices[i])) < tolerance) {
+									goodAnswer = true;
+									answerIndex = i;
+									break;
+								}
+								break;//loop
+						}
+					}
+				}
+				//If no good answer, stop there
+				if(!goodAnswer) return false;
+			}
+			
+			//If the textual answer is good or if it's a simple button choice, proceed to next event
+			
 			//Adds the event to the history
 			if(_currentEvent != null) {
 				_eventsHistory.push(_currentEvent.guid);
 				dispatchEvent(new QuestManagerEvent(QuestManagerEvent.HISTORY_UPDATE));
 			}else{
-				return;
+				return false;
 			}
 			
-			var i:int, len:int, children:Vector.<KuestEvent>, child:KuestEvent;
 			children = _currentEvent.getChildren();
 			len = children.length;
 			
 			//Remove as much money as the answer's cost.
-			if(_currentEvent.actionChoices == null != null
+			if(_currentEvent.actionChoices != null
 			&& _currentEvent.actionChoices.choicesCost.length > answerIndex) {
 				if(_moneyManager.money >= _currentEvent.actionChoices.choicesCost[answerIndex]) {
 					_moneyManager.answerChoice( _currentEvent.actionChoices.choicesCost[answerIndex] );
@@ -313,6 +356,8 @@ package com.twinoid.kube.quest.player.model {
 			
 			//Search for next item
 			if(autoContinue) setCurrentPosition(_lastPosData);
+			
+			return true;
 		}
 		
 		/**

@@ -3,7 +3,8 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog85-content"><![CDATA[<ul>
+		<label code="patchlog86-content"><![CDATA[<ul>
+			<li>Possibilité de demander une réponse écrite au joueur. <i>(mot de passe, phrase, nombre etc..)<i/></li>
 			<li>Possibilité de dupliquer un événement.</li>
 			<li>Possibilité d'ajouter des mémos.</li>
 			<li>Ajout d'un menu de paramètres.</li>
@@ -242,6 +243,12 @@
 		<label code="editWindow-choice-defaultText"><![CDATA[Choix {I}...]]></label>
 		<!-- tooltip -->
 		<label code="editWindow-choice-payingChoice"><![CDATA[Rendre ce choix payant]]></label>
+		<!-- tooltip -->
+		<label code="editWindow-choice-mode_choice"><![CDATA[Cette réponse sera proposée<br />sous forme d'un bouton clickable.]]></label>
+		<!-- tooltip -->
+		<label code="editWindow-choice-mode_strict"><![CDATA[Le joueur sera invité à saisir précisemment<br />cette réponse dans un champ de saisie.<br /><i>(les majuscules, minuscules, chiffres,<br />etc.. devront être identiques !)</i>]]></label>
+		<!-- tooltip -->
+		<label code="editWindow-choice-mode_tolerant"><![CDATA[Le joueur sera invité à saisir cette<br />réponse avec une tolérence d'erreur<br />dans un champ de saisie.]]></label>
 		
 		<!-- !Event's time edition -->
 		<label code="editWindow-time-title"><![CDATA[Temporalité de l'évènement]]></label>
@@ -336,6 +343,7 @@
 		<label code="player-questLostRestart"><![CDATA[Recommencer]]></label>
 		<!-- tooltip -->
 		<label code="player-moneyTT"><![CDATA[Kubors]]></label>
+		<label code="player-inputAnswerPlaceholder"><![CDATA[Réponse...]]></label>
 	</labels>
 	
 </root>

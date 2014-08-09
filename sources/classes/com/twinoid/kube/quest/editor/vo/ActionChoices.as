@@ -7,8 +7,13 @@ package com.twinoid.kube.quest.editor.vo {
 	 */
 	public class ActionChoices {
 		
+		public static const MODE_CHOICE:String = "choice";
+		public static const MODE_INPUT_STRICT:String = "strict";
+		public static const MODE_INPUT_TOLERANT:String = "tolerant";
+		
 		private var _choices:Vector.<String>;
 		private var _choicesCosts:Vector.<int>;
+		private var _choicesModes:Vector.<String>;
 		
 		
 		
@@ -21,6 +26,7 @@ package com.twinoid.kube.quest.editor.vo {
 		 */
 		public function ActionChoices() {
 			_choices = new Vector.<String>();
+			_choicesModes = new Vector.<String>();
 			_choicesCosts = new Vector.<int>();
 		}
 
@@ -51,6 +57,21 @@ package com.twinoid.kube.quest.editor.vo {
 		 * Here just for serialisation
 		 */
 		public function set choicesCost(choices:Vector.<int>):void { _choicesCosts = choices; }
+		
+		/**
+		 * Gets the choices modes.
+		 */
+		public function get choicesModes():Vector.<String> {
+			return _choicesModes;
+		}
+		
+		/**
+		 * @private
+		 * Here just for serialisation
+		 */
+		public function set choicesModes(choicesModes:Vector.<String>):void {
+			_choicesModes = choicesModes;
+		}
 
 
 
@@ -73,18 +94,20 @@ package com.twinoid.kube.quest.editor.vo {
 		/**
 		 * Adds a choice to the list
 		 */
-		public function addChoice(label:String, choiceCost:int):void {
+		public function addChoice(label:String, choiceCost:int, choiceMode:String = MODE_CHOICE):void {
 			_choices.push(label);
 			_choicesCosts.push(choiceCost);
+			_choicesModes.push(choiceMode);
 		}
 		
 		/**
 		 * Clones the object
 		 */
 		public function clone():ActionChoices {
-			var a:ActionChoices = new ActionChoices();
-			a.choices = choices.concat();
-			a.choicesCost = choicesCost.concat();
+			var a:ActionChoices	= new ActionChoices();
+			a.choices			= choices.concat();
+			a.choicesCost		= choicesCost.concat();
+			a.choicesModes		= choicesModes.concat();
 			return a;
 		}
 
