@@ -367,8 +367,8 @@ package com.twinoid.kube.quest.editor.views {
 		/**
 		 * Called when a box is delete
 		 */
-		private function deleteBoxHandler(event:BoxEvent):void {
-			var target:Box = event.currentTarget as Box;
+		private function deleteBoxHandler(event:BoxEvent = null, box:Box = null):void {
+			var target:Box = event == null? box : event.currentTarget as Box;
 			target.removeEventListener(BoxEvent.CREATE_LINK, createLinkHandler);
 			target.removeEventListener(BoxEvent.DELETE, deleteBoxHandler);
 			target.removeEventListener(BoxEvent.DUPLICATE, duplicateBoxHandler);
@@ -618,6 +618,7 @@ package com.twinoid.kube.quest.editor.views {
 		 * Used to cancel temp box.
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
+			//Stop dragging
 			if(event.keyCode == Keyboard.SPACE) {
 				if (_spacePressed) {
 					addChildAt(_comments, 0);
@@ -628,15 +629,45 @@ package com.twinoid.kube.quest.editor.views {
 					}
 				}
 				_spacePressed = false;
-			}
+			}else 
+			//Clears debug
 			if(event.keyCode == Keyboard.ESCAPE) {
 				if(event.shiftKey) {
 					computeTreeGUIDs(_nodes, onComputeTreeComplete);
 				}else {
 					_boxesHolder.graphics.clear();
+					clearSelection();
+				}
+			}else 
+			//Deletes selected boxes and todos
+			if(event.keyCode == Keyboard.DELETE || event.keyCode == Keyboard.BACKSPACE) {
+				if(_selectedBoxes.length > 0 || _selectedTodos.length > 0) {
+					prompt("box-delete-promptTitle", "box-delete-selection-promptContent", onDeleteSelectedObjects, "deleteSelectedItems");
 				}
 			}
 		}
+		
+		/**
+		 * Called when user confirms the deletetion of currrently selected items.
+		 */
+		private function onDeleteSelectedObjects():void {
+			var i:int, len:int;
+			len = _selectedBoxes.length;
+			//Delete boxes
+			for(i = 0; i < len; ++i) {
+				deleteBoxHandler(null, _selectedBoxes[0]);
+				_selectedBoxes.splice(0, 1);
+			}
+			
+			//Delete todos
+			len = _selectedTodos.length;
+			for(i = 0; i < len; ++i) {
+				_selectedTodos[i].dispose();
+			}
+					
+			clearSelection();
+		}
+
 
 		
 		/**
@@ -1137,6 +1168,7 @@ package com.twinoid.kube.quest.editor.views {
 			var item:BoxTodo = event.target as BoxTodo;
 			
 			if(item != null) {
+				setTimeout(item.highlight, 500);
 				var menu:SideMenuView = ViewLocator.getInstance().locateViewByType(SideMenuView) as SideMenuView;
 				if(menu != null) {
 					_endX = menu.x + menu.width + Math.round((stage.stageWidth - (menu.x + menu.width)) * .5 - item.x * _todosHolder.scaleX);

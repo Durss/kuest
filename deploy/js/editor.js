@@ -8,7 +8,7 @@ function Editor() {
         if(lang != "fr" && lang != "en") lang = "en";
 
         var flashvars = {};
-        flashvars["version"] = "86";
+        flashvars["version"] = "87";
         flashvars["configXml"] = "./xml/config.xml?v="+flashvars["version"];
         flashvars["lang"] = lang;
         var attributes = {};
