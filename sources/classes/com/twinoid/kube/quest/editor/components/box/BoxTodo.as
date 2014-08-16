@@ -82,6 +82,16 @@ package com.twinoid.kube.quest.editor.components.box {
 		}
 		
 		/**
+		 * Highlights the todo when searching for it from menu
+		 */
+		public function highlight():void {
+			x = _data.pos.x;
+			y = _data.pos.y;
+			scaleX = scaleY = 1;
+			TweenLite.from(this, .5, {transformAroundCenter:{scaleX:3, scaleY:3}, ease:Back.easeOut});
+		}
+		
+		/**
 		 * Makes the component garbage collectable.
 		 */
 		public function dispose():void {
@@ -100,7 +110,10 @@ package com.twinoid.kube.quest.editor.components.box {
 			FrontControler.getInstance().deleteTodo(_data);
 			_data = null;
 		}
-
+		
+		/**
+		 * Sets the todo's position
+		 */
 		public function moveTo(px:int, py:int):void {
 			x = _data.pos.x = Math.floor(px / BackgroundView.CELL_SIZE) * BackgroundView.CELL_SIZE;
 			y = _data.pos.y = Math.floor(py / BackgroundView.CELL_SIZE) * BackgroundView.CELL_SIZE;

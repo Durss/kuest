@@ -72,6 +72,8 @@
     <label code="box-delete-promptTitle"><![CDATA[Delete]]></label>
     <!-- Content of the prompt window displayed when deleting an event -->
     <label code="box-delete-promptContent"><![CDATA[Do you really want to deleted this event?<br />Every related links will be destroyed.]]></label>
+	<!-- Content of the prompt window displayed when deleting a group of events/todos -->
+	<label code="box-delete-selection-promptContent"><![CDATA[Do you really want to delete the selected items ?<br />The operation cannot be undone.]]></label>
     <!-- Tootltip displayed on time icon's roll when the event time access is limited -->
     <label code="box-timeIcon"><![CDATA[This event is available only<br />during specific moments.]]></label>
     <!-- !Boxes links -->
@@ -291,6 +293,7 @@
     <label code="player-noNeedObject"><![CDATA[This object isn't useful here.]]></label>
     <label code="player-history"><![CDATA[History]]></label>
     <label code="player-historyFav"><![CDATA[Pinned event]]></label>
+	<label code="player-historySearchField"><![CDATA[Search for an event...]]></label>
     <!-- tooltip -->
     <label code="player-historyFavTT"><![CDATA[Pin]]></label>
     <label code="player-questLost"><![CDATA[You failed the quest.<br />Restart from the begining and try to complete it again !]]></label>

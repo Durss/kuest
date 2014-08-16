@@ -3,19 +3,21 @@
 	<labels>
 		<!-- Patch logs -->
 		<label code="patchlog-title"><![CDATA[Mises à jour]]></label>
-		<label code="patchlog86-content"><![CDATA[<ul>
+		<label code="patchlog87-content"><![CDATA[<ul>
 			<li>Possibilité de demander une réponse écrite au joueur. <i>(mot de passe, phrase, nombre etc..)<i/></li>
 			<li>Possibilité de dupliquer un événement.</li>
 			<li>Possibilité d'ajouter des mémos.</li>
 			<li>Ajout d'un menu de paramètres.</li>
 			<li>Ajout de presets de sons SFXR.</li>
+			<li>Possibilité de supprimer une sélection via SUPPR/DEL.</li>
 			<li>Possibilité de faire perdre de l'argent sur un événement en spécifiant une valeur négative.</li>
 			<li>Possibilité de faire un événement d'objet qui ne demande pas d'action (prise/pose).</li>
+			<li>Possibilité de rechercher un événement dans l'historique du lecteur de quête.</li>
 			<li>Agrandissement de certains champs de texte en popin à leur édition.</li>
 			<li>Demande de confirmation si on quitte la page en cours d'édition.</li>
 			<li>Déplacement/zoom du plateau au clavier.</li>
 			<li>Mise en évidence de la quête en cours d'édition dans la liste des quêtes.</li>
-			<li>Ajout d'une notification quand la sauvegarde/publication est terminées.</li>
+			<li>Ajout d'une notification quand la sauvegarde/publication est terminée.</li>
 			<li>Correction d'un important bug sur la sauvegarde de progression d'une quête qui faisait disparaître des morceaux de données..</li>
 			<li>Correction d'un léger bug au niveau du debugger (quelle ironie !) </li>
 		</ul>]]></label>
@@ -97,6 +99,8 @@
 		<label code="box-delete-promptTitle"><![CDATA[Suppression]]></label>
 		<!-- Content of the prompt window displayed when deleting an event -->
 		<label code="box-delete-promptContent"><![CDATA[Êtes-vous certain de vouloir supprimer cet évènement?<br />Toutes les liaisons associées seront détruites.]]></label>
+		<!-- Content of the prompt window displayed when deleting a group of events/todos -->
+		<label code="box-delete-selection-promptContent"><![CDATA[Êtes-vous certain de vouloir supprimer les éléments sélectionnés ?<br />Leur suppression est irréversible.]]></label>
 		<!-- Tootltip displayed on time icon's roll when the event time access is limited -->
 		<label code="box-timeIcon"><![CDATA[Cette action n'est disponible<br />qu'à certains moments précis.]]></label>
 		
@@ -337,6 +341,7 @@
 		<label code="player-noNeedObject"><![CDATA[Cet objet ne sert à rien ici.]]></label>
 		<label code="player-history"><![CDATA[Historique]]></label>
 		<label code="player-historyFav"><![CDATA[Événements épinglés]]></label>
+		<label code="player-historySearchField"><![CDATA[Rechercher un événement...]]></label>
 		<!-- tooltip -->
 		<label code="player-historyFavTT"><![CDATA[Epingler]]></label>
 		<label code="player-questLost"><![CDATA[Vous avez échoué la quête.<br />Recommencez du début et tentez à nouveau de la terminer !]]></label>
