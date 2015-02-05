@@ -3,6 +3,7 @@
 	 * Open this script to the browser to download a CSV file containing all
 	 * the labels ready to be imported in a google spreadsheet.
 	 */
+	session_start();
 	$files = get_included_files();
 	$isIncluded = $files[0] != __FILE__;
 	
@@ -12,7 +13,9 @@
 	else
 		$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	
-	if(!$isIncluded && isset($_GET['lang'])) $lang = $_GET['lang'];
+	if(isset($_GET['lang'])) {
+		$_SESSION['kuest_lang'] = $lang = $_GET['lang'];
+	}
 		
 	//Check if the application is localized in this lang or not. If not, force english.
 	$availableLanguages = array('fr', 'en');
