@@ -1,5 +1,0 @@
-h1. Kuest
-
-Tool to create quests on an old voxel based game.  
-More info here :  
-https://durss.ninja/#project-kuest
